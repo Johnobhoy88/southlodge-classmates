@@ -194,37 +194,51 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .pupil-name-bar strong{color:#11998e}
 
 /* ===== TEACHER DASHBOARD ===== */
-.teacher-screen{background:#f8f9fa}
-.teacher-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:white;border-bottom:3px solid #11998e}
-.teacher-topbar h2{font-size:1rem;color:#11998e}
-.teacher-topbar .school-name{font-size:0.8rem;color:#636e72;cursor:pointer}
-.teacher-topbar .school-name:hover{text-decoration:underline}
-.teacher-exit{padding:8px 16px;border:2px solid #e0e0e0;border-radius:10px;background:white;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.8rem;color:#636e72;cursor:pointer}
-.teacher-body{padding:20px;max-width:700px;margin:0 auto}
-.teacher-section{background:white;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
-.teacher-section h3{font-size:1rem;color:#2d3436;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #f0f0f0}
+.teacher-screen{background:#f1f3f5;font-family:'Nunito','Trebuchet MS',sans-serif}
+.teacher-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#1a2332;color:white;position:sticky;top:0;z-index:10}
+.teacher-topbar h2{font-size:0.95rem;color:white;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800}
+.teacher-topbar .school-name{font-size:0.75rem;color:#8899aa;cursor:pointer;text-align:center}
+.teacher-topbar .school-name:hover{color:white;text-decoration:underline}
+.teacher-exit{padding:6px 14px;border:1px solid #3a4a5c;border-radius:8px;background:transparent;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.75rem;color:#8899aa;cursor:pointer;transition:all 0.15s}
+.teacher-exit:hover{background:#2a3a4c;color:white}
+.teacher-tabs{display:flex;background:#1a2332;padding:0 20px;gap:0;border-bottom:2px solid #11998e}
+.teacher-tab{padding:10px 20px;color:#667788;font-weight:700;font-size:0.8rem;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Nunito','Trebuchet MS',sans-serif}
+.teacher-tab:hover{color:#aabbcc}
+.teacher-tab.active{color:white;border-bottom-color:#11998e}
+.teacher-body{padding:20px;max-width:800px;margin:0 auto}
+.teacher-page{display:none}
+.teacher-page.active{display:block}
+.teacher-section{background:white;border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #e4e8ec;box-shadow:none}
+.teacher-section h3{font-size:0.9rem;color:#1a2332;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e4e8ec;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
 .teacher-input-row{display:flex;gap:8px;margin-bottom:12px}
-.teacher-input{flex:1;padding:10px 14px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.9rem;outline:none}
-.teacher-input:focus{border-color:#11998e}
-.teacher-btn{padding:10px 16px;border:none;border-radius:10px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.15s}
+.teacher-input{flex:1;padding:10px 14px;border:1px solid #d0d5dd;border-radius:8px;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.85rem;outline:none;background:white}
+.teacher-input:focus{border-color:#11998e;box-shadow:0 0 0 3px rgba(17,153,142,0.1)}
+.teacher-btn{padding:8px 16px;border:none;border-radius:8px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.15s}
+.teacher-btn:hover{opacity:0.9}
 .teacher-btn:active{transform:scale(0.97)}
 .teacher-btn.teal{background:#11998e;color:white}
-.teacher-btn.grey{background:#f0f0f0;color:#636e72}
+.teacher-btn.grey{background:#e4e8ec;color:#4a5568}
 .teacher-btn.red{background:#e74c3c;color:white}
-.pupil-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.teacher-btn.outline{background:white;color:#11998e;border:1px solid #11998e}
+.pupil-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f0f0f0;border-radius:6px;transition:background 0.1s}
+.pupil-row:hover{background:#f8fafa}
 .pupil-row:last-child{border-bottom:none}
-.pupil-row .pupil-name{font-weight:700;color:#2d3436}
-.progress-table{width:100%;border-collapse:collapse;font-size:0.8rem}
-.progress-table th{background:#11998e;color:white;padding:10px 8px;text-align:left;cursor:pointer;font-weight:700;white-space:nowrap}
-.progress-table th:hover{background:#0e7a6e}
-.progress-table td{padding:8px;border-bottom:1px solid #f0f0f0}
+.pupil-row .pupil-name{font-weight:700;color:#1a2332;font-size:0.9rem}
+.progress-table{width:100%;border-collapse:collapse;font-size:0.75rem}
+.progress-table th{background:#1a2332;color:white;padding:10px 8px;text-align:left;cursor:pointer;font-weight:700;white-space:nowrap;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.3px}
+.progress-table th:hover{background:#2a3a4c}
+.progress-table td{padding:8px;border-bottom:1px solid #f0f0f0;color:#4a5568}
 .progress-table tr:nth-child(even){background:#f8f9fa}
-.progress-table-wrap{overflow-x:auto;margin:12px 0;border-radius:10px;border:1px solid #e0e0e0}
-.actions-row{display:flex;gap:10px;flex-wrap:wrap}
-.collapse-header{cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;color:#636e72;padding:12px 0}
+.progress-table tr:hover{background:#e8f5f3}
+.progress-table-wrap{overflow-x:auto;margin:12px 0;border-radius:8px;border:1px solid #e4e8ec}
+.actions-row{display:flex;gap:8px;flex-wrap:wrap}
+.collapse-header{cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;color:#4a5568;padding:12px 0;font-size:0.85rem}
 .collapse-header:hover{color:#11998e}
-.collapse-content{display:none;padding:12px 0;font-size:0.85rem;color:#636e72;line-height:1.7}
+.collapse-content{display:none;padding:12px 0;font-size:0.85rem;color:#4a5568;line-height:1.7}
 .collapse-content.open{display:block}
+.stat-card{background:white;border:1px solid #e4e8ec;border-radius:12px;padding:16px;text-align:center;flex:1;min-width:120px}
+.stat-card .sc-val{font-size:1.8rem;font-weight:800;color:#1a2332;display:block}
+.stat-card .sc-label{font-size:0.7rem;color:#8899aa;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
 
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
@@ -718,50 +732,120 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 <!-- TEACHER DASHBOARD -->
 <div id="teacher" class="screen teacher-screen">
   <div class="teacher-topbar">
-    <h2>Classmates — Staff Dashboard</h2>
+    <h2>Classmates</h2>
     <span class="school-name" id="schoolName" onclick="editSchoolName()">South Lodge Primary</span>
-    <button class="teacher-exit" onclick="showScreen('landing')">&#x2190; Exit</button>
+    <button class="teacher-exit" onclick="showScreen('landing')">&#x2190; Sign Out</button>
+  </div>
+  <div class="teacher-tabs">
+    <button class="teacher-tab active" onclick="showTeacherTab('overview',this)">Overview</button>
+    <button class="teacher-tab" onclick="showTeacherTab('pupils',this)">Pupils</button>
+    <button class="teacher-tab" onclick="showTeacherTab('progress',this)">Progress</button>
+    <button class="teacher-tab" onclick="showTeacherTab('tools',this)">Tools</button>
+    <button class="teacher-tab" onclick="showTeacherTab('settings',this)">Settings</button>
   </div>
   <div class="teacher-body">
-    <div class="teacher-section">
-      <h3>Pupil Manager</h3>
-      <div class="teacher-input-row">
-        <input class="teacher-input" id="newPupilInput" placeholder="Pupil name" onkeydown="if(event.key==='Enter')addPupil()">
-        <button class="teacher-btn teal" onclick="addPupil()">Add Pupil</button>
+
+    <!-- OVERVIEW TAB -->
+    <div class="teacher-page active" id="tp-overview">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" id="classSummary"></div>
+      <div class="teacher-section">
+        <h3>Quick Actions</h3>
+        <div class="actions-row">
+          <button class="teacher-btn teal" onclick="launchWhiteboard()">&#x1F4FA; Whole-Class Mode</button>
+          <button class="teacher-btn teal" onclick="generateWorksheet()">&#x1F4C4; Generate Worksheet</button>
+          <button class="teacher-btn outline" onclick="showTeacherTab('progress',document.querySelectorAll('.teacher-tab')[2])">&#x1F4CA; View Progress</button>
+        </div>
       </div>
-      <div style="margin-bottom:8px;"><button class="teacher-btn grey" style="font-size:0.7rem" onclick="bulkAddPupils()">Bulk Add (paste list)</button></div>
-      <div id="pupilList"></div>
-      <div style="margin-top:8px;font-size:0.75rem;color:#b2bec3;" id="pupilCount"></div>
-    </div>
-    <div class="teacher-section">
-      <h3>Class Progress Overview</h3>
-      <div id="classSummary"></div>
-      <div id="progressArea"></div>
-    </div>
-    <div class="teacher-section">
-      <h3>Tools</h3>
-      <div class="actions-row" style="margin-bottom:8px">
-        <button class="teacher-btn teal" onclick="launchWhiteboard()">Whole-Class Mode</button>
-        <button class="teacher-btn teal" onclick="generateWorksheet()">Print Worksheet</button>
-      </div>
-      <div class="actions-row" style="margin-bottom:8px">
-        <button class="teacher-btn teal" onclick="printReport()">Print Report</button>
-        <button class="teacher-btn grey" onclick="exportCSV()">Export CSV</button>
-      </div>
-      <div class="actions-row">
-        <button class="teacher-btn red" onclick="resetAllData()">Reset All Data</button>
+      <div class="teacher-section">
+        <h3>Curriculum Alignment</h3>
+        <div style="font-size:0.85rem;color:#4a5568;line-height:1.8">
+          <div style="display:grid;grid-template-columns:1fr;gap:12px">
+            <div style="background:#f8fafa;border-left:4px solid #ffd200;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 1 — Early (P1, Ages 5-6)</strong><br>Short words, counting to 20, simple addition/subtraction, basic reading</div>
+            <div style="background:#f8fafa;border-left:4px solid #0984e3;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 2 — First (P2-P4, Ages 6-8)</strong><br>Longer words, place value, multiplication introduction, paragraph comprehension</div>
+            <div style="background:#f8fafa;border-left:4px solid #e17055;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 3 — Second (P5-P7, Ages 8-10)</strong><br>Complex spelling, all four operations, fractions, rich comprehension texts</div>
+          </div>
+          <p style="margin-top:12px;font-size:0.8rem;color:#8899aa">Aligned to Scottish Curriculum for Excellence — Literacy &amp; English and Numeracy &amp; Mathematics.</p>
+        </div>
       </div>
     </div>
-    <div class="teacher-section">
-      <div class="collapse-header" onclick="this.nextElementSibling.classList.toggle('open')">&#x2139;&#xFE0F; Level Guide &amp; Curriculum Alignment &#x25BC;</div>
-      <div class="collapse-content">
-        <strong>Level 1 — Early (P1, Ages 5-6)</strong><br>Short words, simple sums, basic reading<br><br>
-        <strong>Level 2 — First (P2-P4, Ages 6-8)</strong><br>Longer words, two-digit maths, paragraph reading<br><br>
-        <strong>Level 3 — Second (P5-P7, Ages 8-10)</strong><br>Complex words, multiplication/division, rich comprehension texts<br><br>
-        <em>All content is aligned to the Scottish Curriculum for Excellence Experiences and Outcomes for Literacy &amp; English and Numeracy &amp; Mathematics.</em><br><br>
-        <em>Classmates was built for South Lodge Primary School.</em>
+
+    <!-- PUPILS TAB -->
+    <div class="teacher-page" id="tp-pupils">
+      <div class="teacher-section">
+        <h3>Add Pupils</h3>
+        <div class="teacher-input-row">
+          <input class="teacher-input" id="newPupilInput" placeholder="Enter pupil name..." onkeydown="if(event.key==='Enter')addPupil()">
+          <button class="teacher-btn teal" onclick="addPupil()">Add</button>
+        </div>
+        <button class="teacher-btn grey" style="font-size:0.75rem;margin-bottom:12px" onclick="bulkAddPupils()">&#x1F4CB; Bulk Add (paste list)</button>
+        <div style="font-size:0.75rem;color:#8899aa;margin-bottom:8px" id="pupilCount"></div>
+      </div>
+      <div class="teacher-section">
+        <h3>Class List</h3>
+        <div id="pupilList"></div>
       </div>
     </div>
+
+    <!-- PROGRESS TAB -->
+    <div class="teacher-page" id="tp-progress">
+      <div class="teacher-section">
+        <h3>Class Progress Table</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:8px">Click any column header to sort. Scroll horizontally on mobile.</p>
+        <div id="progressArea"></div>
+      </div>
+    </div>
+
+    <!-- TOOLS TAB -->
+    <div class="teacher-page" id="tp-tools">
+      <div class="teacher-section">
+        <h3>Classroom Tools</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#f8fafa;border-radius:12px;padding:20px;text-align:center;cursor:pointer;border:1px solid #e4e8ec;transition:all 0.15s" onclick="launchWhiteboard()" onmouseover="this.style.borderColor='#11998e'" onmouseout="this.style.borderColor='#e4e8ec'">
+            <div style="font-size:2rem;margin-bottom:8px">&#x1F4FA;</div>
+            <div style="font-weight:800;color:#1a2332;font-size:0.9rem">Whole-Class Mode</div>
+            <div style="font-size:0.75rem;color:#8899aa;margin-top:4px">Project questions on the board</div>
+          </div>
+          <div style="background:#f8fafa;border-radius:12px;padding:20px;text-align:center;cursor:pointer;border:1px solid #e4e8ec;transition:all 0.15s" onclick="generateWorksheet()" onmouseover="this.style.borderColor='#11998e'" onmouseout="this.style.borderColor='#e4e8ec'">
+            <div style="font-size:2rem;margin-bottom:8px">&#x1F4C4;</div>
+            <div style="font-weight:800;color:#1a2332;font-size:0.9rem">Print Worksheet</div>
+            <div style="font-size:0.75rem;color:#8899aa;margin-top:4px">Generate maths + spelling sheet</div>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-section">
+        <h3>Reports &amp; Export</h3>
+        <div class="actions-row">
+          <button class="teacher-btn teal" onclick="printReport()">&#x1F5A8; Print Progress Report</button>
+          <button class="teacher-btn outline" onclick="exportCSV()">&#x1F4E5; Export as CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="teacher-page" id="tp-settings">
+      <div class="teacher-section">
+        <h3>School Details</h3>
+        <p style="font-size:0.85rem;color:#4a5568;margin-bottom:8px">Click the school name in the top bar to edit.</p>
+      </div>
+      <div class="teacher-section">
+        <h3>Data Management</h3>
+        <p style="font-size:0.85rem;color:#4a5568;margin-bottom:12px">Caution: these actions cannot be undone.</p>
+        <div class="actions-row">
+          <button class="teacher-btn red" onclick="resetAllData()">&#x26A0; Reset All Data</button>
+        </div>
+      </div>
+      <div class="teacher-section">
+        <h3>About Classmates</h3>
+        <div style="font-size:0.85rem;color:#4a5568;line-height:1.7">
+          <p><strong>Version:</strong> 1.0</p>
+          <p><strong>Content:</strong> 16 learning modes, 18 stories, 151 spelling words, 31 achievements</p>
+          <p><strong>Curriculum:</strong> Scottish Curriculum for Excellence (Early, First, Second Level)</p>
+          <p><strong>Data:</strong> All data stored locally on this device. No internet required.</p>
+          <p style="margin-top:8px;color:#8899aa">Built for South Lodge Primary School.</p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1905,7 +1989,8 @@ function resetPupilProgress(name){if(!confirm('Reset all progress for '+name+'?'
 function renderPupilList(){const el=document.getElementById('pupilList');const pupils=getPupils();if(pupils.length===0){el.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet.</p>';return}el.innerHTML='';pupils.forEach(p=>{const esc=p.replace(/'/g,"\\'");const row=document.createElement('div');row.className='pupil-row';row.innerHTML='<span class="pupil-name">'+p+'</span><div style="display:flex;gap:6px;"><button class="teacher-btn grey" style="font-size:0.75rem" onclick="resetPupilProgress(\''+esc+'\')">Reset</button><button class="teacher-btn red" style="font-size:0.75rem" onclick="removePupil(\''+esc+'\')">Remove</button></div>';el.appendChild(row)})}
 
 // ==================== TEACHER DASHBOARD ====================
-function renderTeacher(){renderPupilList();renderClassSummary();renderProgressTable();const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';document.getElementById('schoolName').textContent=sn;const pc=document.getElementById('pupilCount');if(pc)pc.textContent=getPupils().length+' pupils registered'}
+function showTeacherTab(tabId,btn){document.querySelectorAll('.teacher-page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.teacher-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tp-'+tabId).classList.add('active');if(btn)btn.classList.add('active');if(tabId==='progress')renderProgressTable();if(tabId==='overview')renderClassSummary()}
+function renderTeacher(){renderPupilList();renderClassSummary();renderProgressTable();const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';document.getElementById('schoolName').textContent=sn;const pc=document.getElementById('pupilCount');if(pc)pc.textContent=getPupils().length+' pupils registered';showTeacherTab('overview',document.querySelector('.teacher-tab'))}
 function renderClassSummary(){const el=document.getElementById('classSummary');const pupils=getPupils();if(pupils.length===0){el.innerHTML='';return}let totalStars=0,totalGames=0,activeToday=0,totalAch=0;const today=new Date().toDateString();pupils.forEach(p=>{const s=loadPupilState(p);if(s){totalStars+=s.stars||0;totalGames+=s.games||0;totalAch+=(s.achievements||[]).length;if(s.lastPlayed===today)activeToday++}});el.innerHTML='<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'+'<div style="background:#e8fff5;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#11998e">'+activeToday+'/'+pupils.length+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Active Today</div></div>'+'<div style="background:#fff8e6;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#d4a520">'+totalStars+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Total Stars</div></div>'+'<div style="background:#f0ecff;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#6c5ce7">'+totalGames+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Games Played</div></div>'+'<div style="background:#fff0f5;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#e84393">'+totalAch+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Badges Earned</div></div></div>'}
 function editSchoolName(){const name=prompt('School name:',document.getElementById('schoolName').textContent);if(name){document.getElementById('schoolName').textContent=name;localStorage.setItem('classmates_school',name)}}
 function renderProgressTable(){const area=document.getElementById('progressArea');const pupils=getPupils();if(pupils.length===0){area.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet. Add pupil names above to track progress.</p>';return}let sortCol=0,sortDir=1;const headers=['Name','Stars','Games','Spelling','Maths','Tables','Stories','Badges','Streak','Last Active'];const rows=[];pupils.forEach(p=>{const s=loadPupilState(p);if(s){rows.push([p,s.stars||0,s.games||0,s.spellingCorrect||0,s.mathsCorrect||0,(s.ttCompleted||[]).length+'/11',(s.storiesRead||[]).length+'/18',(s.achievements||[]).length+'/31',s.streak||0,s.lastPlayed?new Date(s.lastPlayed).toLocaleDateString('en-GB'):'Never'])}else{rows.push([p,0,0,0,0,'0/11','0/18','0/31',0,'Never'])}});function renderTable(){let h='<div class="progress-table-wrap"><table class="progress-table"><thead><tr>';headers.forEach((hd,i)=>{h+='<th data-col="'+i+'">'+hd+(sortCol===i?(sortDir===1?' &#x25B2;':' &#x25BC;'):'')+'</th>'});h+='</tr></thead><tbody>';const sorted=[...rows].sort((a,b)=>{const va=typeof a[sortCol]==='number'?a[sortCol]:String(a[sortCol]).toLowerCase();const vb=typeof b[sortCol]==='number'?b[sortCol]:String(b[sortCol]).toLowerCase();if(va<vb)return -sortDir;if(va>vb)return sortDir;return 0});sorted.forEach(r=>{h+='<tr>';r.forEach(c=>{h+='<td>'+c+'</td>'});h+='</tr>'});h+='</tbody></table></div>';area.innerHTML=h;area.querySelectorAll('th').forEach(th=>{th.onclick=()=>{const col=parseInt(th.dataset.col);if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1}renderTable()}})}renderTable()}
