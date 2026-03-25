@@ -73,6 +73,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-punctuation .card-icon{background:rgba(255,255,255,0.3)}
 .card-vocab{background:linear-gradient(135deg,#4776e6,#8e54e9)}
 .card-vocab .card-icon{background:rgba(255,255,255,0.3)}
+.card-missnum{background:linear-gradient(135deg,#134e5e,#71b280)}
+.card-missnum .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -446,6 +448,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Vocabulary</div>
         <div class="card-desc">Words and meanings</div>
       </div>
+      <div class="subject-card card-missnum" onclick="startGame('missnum')">
+        <div class="card-icon">?=</div>
+        <div class="card-title">Missing Number</div>
+        <div class="card-desc">Find the gap</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -611,6 +618,28 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="numpad" id="speedNumpad"></div>
     </div>
   </div>
+</div>
+
+<!-- MISSING NUMBER -->
+<div id="missnum" class="screen game-screen">
+  <div class="game-header" style="border-color:#71b280"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
+  <div class="game-body">
+    <div id="mnLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+      </div>
+    </div>
+    <div id="mnGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#134e5e,#71b280)"></div></div>
+      <div class="progress-text" id="mnProgressText"></div>
+      <div class="maths-display"><div class="maths-q" id="mnQuestion" style="color:#134e5e"></div><div class="maths-ans" id="mnAnswer" style="color:#134e5e">_</div></div>
+      <div class="numpad" id="mnNumpad"></div>
+    </div>
+  </div>
+  <div class="feedback-overlay" id="mnFeedback"><div class="fb-content" id="mnFeedbackContent"></div></div>
 </div>
 
 <!-- VOCABULARY -->
@@ -1415,6 +1444,19 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== MISSING NUMBER ====================
+let mn={level:1,idx:0,total:10,correct:0,answer:'',question:null};
+
+function genMNQ(lv){const type=Math.random()<0.7?'equation':'sequence';if(type==='sequence'){let start,step;if(lv===1){step=rand(1,2);start=rand(1,5)}else if(lv===2){step=rand(2,5);start=rand(1,10)}else{step=rand(5,10)*rand(1,3);start=rand(1,20)}const seq=[];for(let i=0;i<5;i++)seq.push(start+step*i);const miss=rand(1,3);const ans=seq[miss];seq[miss]='?';return{text:seq.join(', '),answer:ans}}let a,b,op,ans,display;if(lv===1){const r=Math.random();if(r<0.5){a=rand(1,9);ans=rand(1,10-a);op='+';display=a+' + ? = '+(a+ans)}else{a=rand(3,10);ans=rand(1,a-1);op='-';display=a+' - ? = '+(a-ans)}}else if(lv===2){const r=Math.random();if(r<0.3){ans=rand(1,15);b=rand(1,20-ans);op='+';display='? + '+b+' = '+(ans+b)}else if(r<0.6){a=rand(5,20);ans=rand(1,a);op='-';display=a+' - ? = '+(a-ans)}else{a=rand(2,5);ans=rand(2,5);op='*';display=a+' \u00D7 ? = '+(a*ans)}}else{const r=Math.random();if(r<0.25){ans=rand(10,80);b=rand(5,100-ans);display='? + '+b+' = '+(ans+b)}else if(r<0.5){a=rand(20,100);ans=rand(5,a);display=a+' - ? = '+(a-ans)}else if(r<0.75){a=rand(2,12);ans=rand(2,12);display=a+' \u00D7 ? = '+(a*ans)}else{a=rand(2,12);b=rand(2,12);ans=b;display=(a*b)+' \u00F7 ? = '+a}}return{text:display,answer:ans}}
+
+function startMN(lv){mn.level=lv;mn.idx=0;mn.correct=0;mn.answer='';hide('mnLevelSelect');show('mnGame');renderNumpad('mnNumpad',mnPress);loadMNQ()}
+function loadMNQ(){mn.question=genMNQ(mn.level);mn.answer='';document.getElementById('mnQuestion').textContent=mn.question.text;document.getElementById('mnAnswer').textContent='_';document.getElementById('mnProgress').style.width=(mn.idx/mn.total*100)+'%';document.getElementById('mnProgressText').textContent='Question '+(mn.idx+1)+' of '+mn.total;document.getElementById('mnFeedback').classList.remove('show')}
+function mnPress(v){if(v==='C')mn.answer='';else if(v==='enter'){checkMNAns();return}else{if(mn.answer.length<4)mn.answer+=v}document.getElementById('mnAnswer').textContent=mn.answer||'_'}
+function checkMNAns(){if(!mn.answer)return;const ok=parseInt(mn.answer)===mn.question.answer;const fb=document.getElementById('mnFeedback');const fbc=document.getElementById('mnFeedbackContent');if(ok){mn.correct++;fbc.innerHTML='<div class="fb-correct"><div class="fb-icon" style="background:linear-gradient(135deg,#134e5e,#71b280)">YES</div><div class="fb-text" style="color:#00b894">Correct!</div></div>'}else{fbc.innerHTML='<div class="fb-wrong"><div class="fb-icon">'+mn.question.answer+'</div><div class="fb-text">Not quite!</div></div>'}fb.classList.add('show');setTimeout(()=>{fb.classList.remove('show');mn.idx++;if(mn.idx>=mn.total)finishMN();else loadMNQ()},ok?600:1200)}
+function finishMN(){show('mnLevelSelect');hide('mnGame');const pct=mn.correct/mn.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);state.mathsCorrect+=mn.correct;saveState();addStars(stars);recordPlay();showResults('#134e5e','?=','Missing Number Done!','Level '+mn.level,stars,mn.correct,mn.total,()=>{showScreen('missnum')},null)}
+
+document.addEventListener('keydown',function(e){if(document.getElementById('missnum').classList.contains('active')&&document.getElementById('mnGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))mnPress(e.key);else if(e.key==='Enter')mnPress('enter');else if(e.key==='Backspace'||e.key==='Delete')mnPress('C')}});
 
 // ==================== VOCABULARY ====================
 const VOCAB_DATA = {
