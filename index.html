@@ -85,6 +85,21 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-fractions .card-icon{background:rgba(255,255,255,0.3);color:#c0392b!important}
 .card-wordprob{background:linear-gradient(135deg,#373b44,#4286f4)}
 .card-wordprob .card-icon{background:rgba(255,255,255,0.3)}
+
+/* ===== AVATAR ===== */
+.avatar-preview{width:100px;height:100px;border-radius:50%;margin:0 auto 12px;position:relative;overflow:hidden;border:4px solid #ddd}
+.avatar-face{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative}
+.avatar-eyes{font-size:1.2rem;margin-top:20px;letter-spacing:12px}
+.avatar-mouth{font-size:0.9rem;margin-top:2px}
+.avatar-hair{position:absolute;top:0;left:0;right:0;height:35px;border-radius:50px 50px 0 0}
+.avatar-mini{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:2px solid #ddd;font-size:0.5rem;overflow:hidden;position:relative;vertical-align:middle;margin-right:8px}
+.avatar-option{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;border:3px solid #f0f0f0;cursor:pointer;margin:4px;transition:all 0.15s}
+.avatar-option:hover{border-color:#6c5ce7}
+.avatar-option.selected{border-color:#6c5ce7;background:#f0ecff}
+.avatar-section{margin:12px 0}
+.avatar-section-title{font-size:0.8rem;font-weight:800;color:#636e72;margin-bottom:4px}
+.coin-display-home{display:inline-flex;align-items:center;gap:4px;background:#fff8e6;border:2px solid #ffd700;border-radius:20px;padding:4px 12px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#d4a520}
+
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -532,6 +547,7 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
       </div>
     </div>
+    <div style="text-align:center;margin:12px 0 4px;"><span class="coin-display-home" id="coinDisplay">&#x1FA99; <span id="coinCount">0</span> coins</span></div>
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-val" id="statStars">0</span><span class="stat-lbl">Stars</span></div>
       <div class="stat-item"><span class="stat-val" id="statGames">0</span><span class="stat-lbl">Games</span></div>
@@ -1545,7 +1561,7 @@ function resetProgress(){if(confirm('This will delete all your stars, badges and
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily()}
-function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;renderBadges()}
+function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges()}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
 
 // ==================== SPELLING ====================
@@ -2039,7 +2055,7 @@ function finishBonds(){show('bondsLevelSelect');hide('bondsGame');checkAch('firs
 document.addEventListener('keydown',function(e){if(document.getElementById('bonds').classList.contains('active')&&document.getElementById('bondsGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))nbPress(e.key);else if(e.key==='Enter')nbPress('enter');else if(e.key==='Backspace'||e.key==='Delete')nbPress('C')}});
 
 // ==================== RESULTS ====================
-function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn,missed){showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=sub;const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num">'+correct+'/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num">'+Math.round(correct/total*100)+'%</div><div class="rs-lbl">Score</div></div>';const mb=document.getElementById('missedWords');if(missed&&missed.length>0){let h='<div style="margin-top:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Words I missed:</div>';missed.forEach(m=>{h+='<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">'+m.w+'</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— '+m.h+'</span></div>'});h+='</div>';mb.innerHTML=h}else{mb.innerHTML=''}document.getElementById('resultsPlayAgain').onclick=playAgainFn}
+function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn,missed){showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=sub;const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num">'+correct+'/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num">'+Math.round(correct/total*100)+'%</div><div class="rs-lbl">Score</div></div>';const mb=document.getElementById('missedWords');if(missed&&missed.length>0){let h='<div style="margin-top:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Words I missed:</div>';missed.forEach(m=>{h+='<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">'+m.w+'</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— '+m.h+'</span></div>'});h+='</div>';mb.innerHTML=h}else{mb.innerHTML=''}let coins=correct+(correct===total?10:0);addCoins(coins);document.getElementById('resultsPlayAgain').onclick=playAgainFn}
 function lighten(hex){return hex+'99'}
 
 // ==================== UTILITIES ====================
@@ -2050,6 +2066,11 @@ function hide(id){document.getElementById(id).style.display='none'}
 
 // ==================== KEYBOARD ====================
 document.addEventListener('keydown',function(e){if(document.getElementById('spelling').classList.contains('active')&&document.getElementById('spellingGame').style.display!=='none'){if(/^[a-z]$/i.test(e.key))pressKey(e.key.toLowerCase())}});
+
+// ==================== COINS (session only) ====================
+let sessionCoins=0;
+function addCoins(n){sessionCoins+=n;document.getElementById('coinCount').textContent=sessionCoins}
+function updateCoinDisplay(){document.getElementById('coinCount').textContent=sessionCoins}
 
 // ==================== INIT ====================
 loadState();updateHomeStats();
