@@ -1756,9 +1756,9 @@ const ACHIEVEMENTS = [
 const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>';
 
 // ==================== STATE ====================
-let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{}};
+let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{}};
 
-const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{}};
+const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{}};
 function stateKey(){return currentPupil?'classmates_state_'+currentPupil:'classmates_state'}
 function loadState(){state=JSON.parse(JSON.stringify(DEFAULT_STATE));try{const s=localStorage.getItem(stateKey());if(s)Object.assign(state,JSON.parse(s))}catch(e){}updateStreak()}
 function saveState(){try{localStorage.setItem(stateKey(),JSON.stringify(state))}catch(e){}}
@@ -2307,6 +2307,12 @@ function hide(id){document.getElementById(id).style.display='none'}
 
 // ==================== KEYBOARD ====================
 document.addEventListener('keydown',function(e){if(document.getElementById('spelling').classList.contains('active')&&document.getElementById('spellingGame').style.display!=='none'){if(/^[a-z]$/i.test(e.key))pressKey(e.key.toLowerCase())}});
+
+// ==================== SPACED REPETITION ====================
+// Track wrong answers per topic. Mix 20-30% of weak-area questions into future sessions.
+function recordWeak(topic,item){if(!state.weakItems)state.weakItems={};if(!state.weakItems[topic])state.weakItems[topic]=[];const arr=state.weakItems[topic];if(!arr.find(x=>JSON.stringify(x)===JSON.stringify(item))){arr.push(item);if(arr.length>20)arr.shift()}saveState()}
+function getWeakItems(topic,count){if(!state.weakItems||!state.weakItems[topic])return[];const arr=[...state.weakItems[topic]];shuffle(arr);return arr.slice(0,count)}
+function clearWeakItem(topic,item){if(!state.weakItems||!state.weakItems[topic])return;state.weakItems[topic]=state.weakItems[topic].filter(x=>JSON.stringify(x)!==JSON.stringify(item));saveState()}
 
 // ==================== WHITEBOARD MODE ====================
 let wb={questions:[],idx:0,answerShown:false};
