@@ -7,10 +7,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+@font-face{font-family:'Fredoka One';font-style:normal;font-weight:400;src:local('Fredoka One')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:400;src:local('Nunito')}
+@font-face{font-family:'Dancing Script';font-style:normal;font-weight:700;src:local('Dancing Script')}
+</style>
+<style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:18px;-webkit-tap-highlight-color:transparent}
-body{font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;background:#f0f4ff}
-h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
+body{font-family:'Nunito','Trebuchet MS',sans-serif;min-height:100vh;overflow-x:hidden;background:#f0f4ff}
+h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 
 /* ===== FULL-SCREEN LAYOUT ===== */
 .app{width:100%;min-height:100vh;position:relative}
@@ -25,7 +30,7 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .home-header{text-align:center;padding:28px 20px 8px;position:relative;z-index:1}
 .logo-img{width:120px;height:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.1));animation:floatLogo 3s ease-in-out infinite}
 @keyframes floatLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.classmates-text{font-family:'Dancing Script',cursive;font-size:2.8rem;color:#c0392b;line-height:1;margin:4px 0}
+.classmates-text{font-family:'Dancing Script','Georgia',cursive;font-size:2.8rem;color:#c0392b;line-height:1;margin:4px 0}
 .home-subtitle{font-size:0.85rem;color:#7f8c8d;margin-top:2px}
 
 .home-content{flex:1;padding:16px 20px 24px;position:relative;z-index:1}
@@ -36,8 +41,8 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .subject-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,0.12)}
 .subject-card:active{transform:scale(0.97)}
 
-.subject-card .card-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-family:'Fredoka One',cursive;font-size:1.6rem;color:white;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
-.subject-card .card-title{font-family:'Fredoka One',cursive;font-size:1.1rem;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.subject-card .card-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.6rem;color:white;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+.subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
 .subject-card .card-desc{font-size:0.7rem;color:rgba(255,255,255,0.85);margin-top:3px;font-weight:600}
 .subject-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.1)}
 
@@ -57,18 +62,18 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 /* ===== STATS BAR ===== */
 .stats-bar{display:flex;justify-content:space-around;background:white;border-radius:18px;padding:14px 8px;margin:18px 0 8px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
 .stat-item{text-align:center}
-.stat-val{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#6c5ce7;display:block}
+.stat-val{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#6c5ce7;display:block}
 .stat-lbl{font-size:0.65rem;color:#b2bec3;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
 
 /* ===== BADGES ===== */
 .badges-section{margin:8px 0 16px}
 .badges-title{text-align:center;font-size:0.85rem;color:#636e72;margin-bottom:8px}
 .badges-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.badge{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;transition:transform 0.2s;position:relative;font-family:'Fredoka One',cursive;color:white;border:3px solid rgba(255,255,255,0.5)}
+.badge{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:800;transition:transform 0.2s;position:relative;font-family:'Fredoka One','Comic Sans MS',cursive;color:white;border:3px solid rgba(255,255,255,0.5)}
 .badge.locked{background:#dfe6e9;color:#b2bec3;border-color:#ced6d9;filter:grayscale(1);opacity:0.5}
 .badge.earned{box-shadow:0 3px 10px rgba(0,0,0,0.15);animation:badgePop 0.4s ease}
 .badge:hover .badge-tip{display:block}
-.badge-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2d3436;color:white;font-size:0.6rem;padding:4px 10px;border-radius:8px;white-space:nowrap;z-index:10;font-family:'Nunito',sans-serif;font-weight:600}
+.badge-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2d3436;color:white;font-size:0.6rem;padding:4px 10px;border-radius:8px;white-space:nowrap;z-index:10;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:600}
 @keyframes badgePop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
 /* ===== GAME SCREENS ===== */
@@ -95,11 +100,11 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .level-card{flex:1;background:white;border:3px solid #f0f0f0;border-radius:18px;padding:20px 12px;text-align:center;cursor:pointer;transition:all 0.2s}
 .level-card:hover{border-color:#6c5ce7;transform:translateY(-3px);box-shadow:0 8px 20px rgba(108,92,231,0.15)}
 .level-card:active{transform:scale(0.97)}
-.level-card .lc-icon{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-family:'Fredoka One',cursive;color:white}
+.level-card .lc-icon{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-family:'Fredoka One','Comic Sans MS',cursive;color:white}
 .lc-1 .lc-icon{background:linear-gradient(135deg,#fdcb6e,#f7971e)}
 .lc-2 .lc-icon{background:linear-gradient(135deg,#74b9ff,#0984e3)}
 .lc-3 .lc-icon{background:linear-gradient(135deg,#e17055,#d63031)}
-.level-card .lc-title{font-family:'Fredoka One',cursive;font-size:1rem;color:#2d3436}
+.level-card .lc-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;color:#2d3436}
 .level-card .lc-sub{font-size:0.7rem;color:#b2bec3;font-weight:600;margin-top:2px}
 
 /* ===== SPELLING ===== */
@@ -109,7 +114,7 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .spell-picture svg{width:80px;height:80px}
 .daily-box svg{width:64px;height:64px;display:block;margin:0 auto}
 .spell-slots{display:flex;justify-content:center;gap:8px;margin:16px 0;flex-wrap:wrap}
-.letter-slot{width:40px;height:48px;border-radius:10px;background:#f8f8f8;border:3px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:1.5rem;color:#2d3436;text-transform:uppercase;transition:all 0.3s}
+.letter-slot{width:40px;height:48px;border-radius:10px;background:#f8f8f8;border:3px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#2d3436;text-transform:uppercase;transition:all 0.3s}
 .letter-slot.revealed{border-color:#00b894;background:#e8fff5;color:#00b894;animation:slotPop 0.3s ease}
 .letter-slot.wrong-reveal{border-color:#e17055;background:#fff0ed;color:#e17055}
 @keyframes slotPop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
@@ -122,22 +127,22 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .life-heart::after{right:0;transform:rotate(45deg);transform-origin:bottom left}
 .life.lost .life-heart::before,.life.lost .life-heart::after{background:#dfe6e9}
 
-.hint-btn{background:linear-gradient(135deg,#fdcb6e,#ffeaa7);color:#856404;border:none;border-radius:12px;padding:10px 20px;font-family:'Nunito',sans-serif;font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s;box-shadow:0 3px 0 #e0b050}
+.hint-btn{background:linear-gradient(135deg,#fdcb6e,#ffeaa7);color:#856404;border:none;border-radius:12px;padding:10px 20px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s;box-shadow:0 3px 0 #e0b050}
 .hint-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #e0b050}
 
 .keyboard{display:flex;flex-direction:column;gap:7px;margin:14px 0}
 .kb-row{display:flex;justify-content:center;gap:5px}
-.kb-key{min-width:34px;height:46px;border-radius:10px;border:none;background:white;color:#2d3436;font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;text-transform:uppercase;transition:all 0.15s;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #d0d0d0,0 3px 8px rgba(0,0,0,0.06);border:2px solid #e8e8e8}
+.kb-key{min-width:34px;height:46px;border-radius:10px;border:none;background:white;color:#2d3436;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;text-transform:uppercase;transition:all 0.15s;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #d0d0d0,0 3px 8px rgba(0,0,0,0.06);border:2px solid #e8e8e8}
 .kb-key:active{transform:translateY(2px);box-shadow:0 1px 0 #d0d0d0}
 .kb-key.correct{background:#00b894;color:white;border-color:#00a383;box-shadow:0 3px 0 #00a383}
 .kb-key.wrong{background:#ff7675;color:white;border-color:#e17055;opacity:0.5;box-shadow:0 3px 0 #d63031}
 
 /* ===== MATHS ===== */
 .maths-display{text-align:center;padding:20px 0}
-.maths-q{font-family:'Fredoka One',cursive;font-size:2.4rem;color:#2d3436;margin:16px 0}
-.maths-ans{font-family:'Fredoka One',cursive;font-size:3rem;color:#0984e3;min-height:60px;margin:12px 0}
+.maths-q{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.4rem;color:#2d3436;margin:16px 0}
+.maths-ans{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3rem;color:#0984e3;min-height:60px;margin:12px 0}
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:280px;margin:16px auto}
-.num-key{height:58px;border-radius:14px;border:2px solid #e8e8e8;background:white;font-family:'Fredoka One',cursive;font-size:1.5rem;color:#2d3436;cursor:pointer;transition:all 0.1s;box-shadow:0 3px 0 #d0d0d0}
+.num-key{height:58px;border-radius:14px;border:2px solid #e8e8e8;background:white;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#2d3436;cursor:pointer;transition:all 0.1s;box-shadow:0 3px 0 #d0d0d0}
 .num-key:active{transform:translateY(2px);box-shadow:0 1px 0 #d0d0d0}
 .num-key.enter-key{background:linear-gradient(135deg,#0984e3,#74b9ff);color:white;border-color:#0984e3;box-shadow:0 3px 0 #065a9e}
 .num-key.clear-key{background:linear-gradient(135deg,#fdcb6e,#ffeaa7);color:#856404;border-color:#f0c040;box-shadow:0 3px 0 #d4a520}
@@ -145,39 +150,39 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .feedback-overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(4px)}
 .feedback-overlay.show{display:flex}
 .fb-content{text-align:center;animation:popIn 0.3s ease}
-.fb-icon{width:100px;height:100px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-family:'Fredoka One',cursive;color:white}
+.fb-icon{width:100px;height:100px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-family:'Fredoka One','Comic Sans MS',cursive;color:white}
 .fb-correct .fb-icon{background:linear-gradient(135deg,#00b894,#55efc4)}
 .fb-wrong .fb-icon{background:linear-gradient(135deg,#e17055,#ff7675)}
-.fb-text{font-family:'Fredoka One',cursive;font-size:1.5rem}
+.fb-text{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem}
 .fb-correct .fb-text{color:#00b894}
 .fb-wrong .fb-text{color:#e17055}
 @keyframes popIn{0%{transform:scale(0.5);opacity:0}100%{transform:scale(1);opacity:1}}
 
 /* ===== TIMES TABLES ===== */
 .tt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
-.tt-btn{padding:16px 8px;border-radius:14px;border:3px solid #f0f0f0;background:white;font-family:'Fredoka One',cursive;font-size:1.2rem;color:#2d3436;cursor:pointer;transition:all 0.2s;text-align:center}
+.tt-btn{padding:16px 8px;border-radius:14px;border:3px solid #f0f0f0;background:white;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.2rem;color:#2d3436;cursor:pointer;transition:all 0.2s;text-align:center}
 .tt-btn:hover{border-color:#e44d26;background:#fff5f2;transform:translateY(-3px);box-shadow:0 6px 15px rgba(228,77,38,0.15)}
 .tt-btn:active{transform:scale(0.97)}
-.tt-btn .tt-pb{display:block;font-family:'Nunito',sans-serif;font-size:0.6rem;font-weight:700;color:#b2bec3;margin-top:3px}
+.tt-btn .tt-pb{display:block;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.6rem;font-weight:700;color:#b2bec3;margin-top:3px}
 .tt-btn .tt-pb.has{color:#00b894}
-.tt-timer{font-family:'Fredoka One',cursive;font-size:2rem;color:#e44d26;text-align:center;margin:12px 0}
+.tt-timer{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;color:#e44d26;text-align:center;margin:12px 0}
 
 /* ===== READING ===== */
 .story-card{background:white;border:3px solid #f0f0f0;border-radius:16px;padding:16px 20px;margin-bottom:12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:16px}
 .story-card:hover{border-color:#56ab2f;transform:translateX(6px);box-shadow:0 4px 15px rgba(86,171,47,0.15)}
 .story-card:active{transform:scale(0.98)}
-.story-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:1.3rem;color:white;flex-shrink:0}
+.story-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.3rem;color:white;flex-shrink:0}
 .si-1{background:linear-gradient(135deg,#fdcb6e,#f7971e)}
 .si-2{background:linear-gradient(135deg,#74b9ff,#0984e3)}
 .si-3{background:linear-gradient(135deg,#e17055,#d63031)}
-.story-card .sc-title{font-family:'Fredoka One',cursive;font-size:0.95rem;color:#2d3436}
+.story-card .sc-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.95rem;color:#2d3436}
 .story-card .sc-desc{font-size:0.75rem;color:#b2bec3;font-weight:600;margin-top:2px}
 .story-card .sc-done{color:#00b894;font-size:0.7rem;font-weight:800;margin-top:2px}
 
 .story-text{background:#fffdf8;border:2px solid #f0ede8;border-radius:16px;padding:20px;font-size:1rem;line-height:1.8;color:#2d3436;margin:16px 0;max-height:50vh;overflow-y:auto}
 .story-text p{margin-bottom:10px}
-.q-text{font-family:'Fredoka One',cursive;font-size:1.05rem;color:#2d3436;margin-bottom:12px}
-.ans-btn{display:block;width:100%;padding:14px 18px;border:3px solid #f0f0f0;border-radius:14px;background:white;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:700;color:#2d3436;cursor:pointer;text-align:left;transition:all 0.15s;margin-bottom:10px}
+.q-text{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.05rem;color:#2d3436;margin-bottom:12px}
+.ans-btn{display:block;width:100%;padding:14px 18px;border:3px solid #f0f0f0;border-radius:14px;background:white;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.95rem;font-weight:700;color:#2d3436;cursor:pointer;text-align:left;transition:all 0.15s;margin-bottom:10px}
 .ans-btn:hover{border-color:#56ab2f;background:#f0fff0}
 .ans-btn.correct-ans{border-color:#00b894;background:#e8fff5;color:#00b894}
 .ans-btn.wrong-ans{border-color:#e17055;background:#fff0ed;color:#e17055}
@@ -190,16 +195,16 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .step-dot.done{background:#00b894;box-shadow:0 0 8px rgba(0,184,148,0.3)}
 .daily-box{background:white;border-radius:18px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin:12px 0}
 .daily-box h3{margin-bottom:12px}
-.daily-input{width:100%;padding:16px;font-size:1.3rem;border:3px solid #f0f0f0;border-radius:14px;font-family:'Fredoka One',cursive;text-align:center;text-transform:lowercase;outline:none;transition:border-color 0.2s}
+.daily-input{width:100%;padding:16px;font-size:1.3rem;border:3px solid #f0f0f0;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;text-align:center;text-transform:lowercase;outline:none;transition:border-color 0.2s}
 .daily-input:focus{border-color:#6c5ce7}
-.daily-submit{width:100%;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One',cursive;font-size:1.1rem;color:white;cursor:pointer;margin-top:12px;transition:all 0.15s}
+.daily-submit{width:100%;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;margin-top:12px;transition:all 0.15s}
 .daily-submit:active{transform:scale(0.98)}
 .ds-purple{background:linear-gradient(135deg,#6c5ce7,#a29bfe);box-shadow:0 4px 0 #5a4bd1}
 .ds-blue{background:linear-gradient(135deg,#0984e3,#74b9ff);box-shadow:0 4px 0 #065a9e}
 
 /* ===== RESULTS ===== */
 .results-screen{background:linear-gradient(180deg,#f0f4ff,#fff9f0);align-items:center;justify-content:center;text-align:center;padding:40px 24px}
-.results-icon{width:120px;height:120px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:3rem;font-family:'Fredoka One',cursive;color:white;animation:popIn 0.5s ease;box-shadow:0 8px 30px rgba(0,0,0,0.15)}
+.results-icon{width:120px;height:120px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:3rem;font-family:'Fredoka One','Comic Sans MS',cursive;color:white;animation:popIn 0.5s ease;box-shadow:0 8px 30px rgba(0,0,0,0.15)}
 .results-title{font-size:1.8rem;margin-bottom:4px}
 .results-sub{color:#636e72;font-size:0.95rem}
 .star-row{margin:20px 0;display:flex;justify-content:center;gap:12px}
@@ -210,10 +215,10 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 .star.earned{animation:starBounce 0.5s ease}
 @keyframes starBounce{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
 .results-stats{display:flex;justify-content:center;gap:32px;margin:20px 0}
-.rs-item .rs-num{font-family:'Fredoka One',cursive;font-size:2rem;color:#6c5ce7}
+.rs-item .rs-num{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;color:#6c5ce7}
 .rs-item .rs-lbl{font-size:0.75rem;color:#b2bec3;font-weight:700}
 .results-btns{display:flex;gap:12px;justify-content:center;margin-top:24px}
-.r-btn{padding:14px 28px;border:none;border-radius:14px;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;transition:all 0.15s}
+.r-btn{padding:14px 28px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;cursor:pointer;transition:all 0.15s}
 .r-btn:active{transform:scale(0.97)}
 .r-btn-primary{background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:white;box-shadow:0 4px 0 #5a4bd1}
 .r-btn-ghost{background:white;color:#6c5ce7;border:2px solid #f0f0f0}
@@ -285,6 +290,9 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
     <div class="badges-section">
       <div class="badges-title">Achievements</div>
       <div class="badges-grid" id="badgesRow"></div>
+    </div>
+    <div style="text-align:center;margin-top:24px;padding-bottom:16px;">
+      <button onclick="resetProgress()" style="background:none;border:none;color:#b2bec3;font-size:0.7rem;font-family:'Nunito','Trebuchet MS',sans-serif;cursor:pointer;padding:8px 16px;">Reset Progress</button>
     </div>
   </div>
 </div>
@@ -399,8 +407,18 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
 <div id="daily" class="screen game-screen">
   <div class="game-header" style="border-color:#a29bfe"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#6c5ce7">Daily Challenge</h2></div>
   <div class="game-body">
-    <div class="daily-steps" id="dailySteps"></div>
-    <div id="dailyContent"></div>
+    <div id="dailyLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startDaily(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startDaily(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startDaily(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="dailyGame" style="display:none;">
+      <div class="daily-steps" id="dailySteps"></div>
+      <div id="dailyContent"></div>
+    </div>
   </div>
 </div>
 
@@ -412,6 +430,7 @@ h1,h2,h3{font-family:'Fredoka One',cursive;color:#2d3436}
     <div class="results-sub" id="resultsSub"></div>
     <div class="star-row" id="starRow"></div>
     <div class="results-stats" id="resultsStats"></div>
+    <div id="missedWords"></div>
     <div class="results-btns">
       <button class="r-btn r-btn-primary" id="resultsPlayAgain">Play Again</button>
       <button class="r-btn r-btn-ghost" onclick="goHome()">Menu</button>
@@ -887,22 +906,22 @@ const READING = {
 };
 
 const ACHIEVEMENTS = [
-  {id:'first_game',name:'First Steps',desc:'Complete your first game',bg:'#6c5ce7'},
-  {id:'spell_10',name:'Word Wizard',desc:'Spell 10 words correctly',bg:'#f7971e'},
-  {id:'spell_50',name:'Spelling Star',desc:'Spell 50 words correctly',bg:'#ffd200'},
-  {id:'math_10',name:'Number Pro',desc:'Answer 10 maths questions',bg:'#0984e3'},
-  {id:'math_50',name:'Maths Master',desc:'Answer 50 maths questions',bg:'#00b4db'},
-  {id:'tt_complete',name:'Table Turner',desc:'Complete a times table',bg:'#e44d26'},
-  {id:'tt_speed',name:'Lightning',desc:'Table in under 30 seconds',bg:'#f16529'},
-  {id:'read_3',name:'Bookworm',desc:'Read 3 stories',bg:'#56ab2f'},
-  {id:'read_all',name:'Library Legend',desc:'Read all stories',bg:'#a8e063'},
-  {id:'daily_1',name:'Daily Doer',desc:'Complete a Daily Challenge',bg:'#6c5ce7'},
-  {id:'streak_3',name:'Streak Star',desc:'3-day streak',bg:'#e17055'},
-  {id:'streak_7',name:'Week Warrior',desc:'7-day streak',bg:'#d63031'},
-  {id:'perfect_spell',name:'Perfect Spell',desc:'10/10 in spelling',bg:'#fdcb6e'},
-  {id:'perfect_math',name:'Perfect Score',desc:'10/10 in maths',bg:'#74b9ff'},
-  {id:'stars_50',name:'Star Collector',desc:'Earn 50 stars',bg:'#a29bfe'},
-  {id:'stars_100',name:'Superstar',desc:'Earn 100 stars',bg:'#fd79a8'}
+  {id:'first_game',icon:'\u{1F3AE}',name:'First Game',desc:'Complete your first game',bg:'#6c5ce7'},
+  {id:'spell_10',icon:'\u{270F}\u{FE0F}',name:'Speller (10)',desc:'Spell 10 words correctly',bg:'#f7971e'},
+  {id:'spell_50',icon:'\u{1F524}',name:'Word Wizard',desc:'Spell 50 words correctly',bg:'#ffd200'},
+  {id:'math_10',icon:'\u{2795}',name:'Mathematician',desc:'Answer 10 maths questions',bg:'#0984e3'},
+  {id:'math_50',icon:'\u{1F9EE}',name:'Maths Master',desc:'Answer 50 maths questions',bg:'#00b4db'},
+  {id:'tt_complete',icon:'\u{23F1}\u{FE0F}',name:'Table Tackler',desc:'Complete a times table',bg:'#e44d26'},
+  {id:'tt_speed',icon:'\u{26A1}',name:'Speed Star',desc:'Table in under 30 seconds',bg:'#f16529'},
+  {id:'read_3',icon:'\u{1F4D6}',name:'Book Worm',desc:'Read 3 stories',bg:'#56ab2f'},
+  {id:'read_all',icon:'\u{1F4DA}',name:'Story Champion',desc:'Read all stories',bg:'#a8e063'},
+  {id:'daily_1',icon:'\u{2600}\u{FE0F}',name:'Daily Player',desc:'Complete a Daily Challenge',bg:'#6c5ce7'},
+  {id:'streak_3',icon:'\u{1F525}',name:'3 Day Streak',desc:'3-day streak',bg:'#e17055'},
+  {id:'streak_7',icon:'\u{1F525}',name:'Week Warrior',desc:'7-day streak',bg:'#d63031'},
+  {id:'perfect_spell',icon:'\u{2B50}',name:'Perfect Speller',desc:'10/10 in spelling',bg:'#fdcb6e'},
+  {id:'perfect_math',icon:'\u{2B50}',name:'Perfect Mathematician',desc:'10/10 in maths',bg:'#74b9ff'},
+  {id:'stars_50',icon:'\u{1F31F}',name:'Star Collector',desc:'Earn 50 stars',bg:'#a29bfe'},
+  {id:'stars_100',icon:'\u{1F451}',name:'Star Champion',desc:'Earn 100 stars',bg:'#fd79a8'}
 ];
 
 const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>';
@@ -916,27 +935,28 @@ function updateStreak(){const today=new Date().toDateString();if(state.lastPlaye
 function recordPlay(){const today=new Date().toDateString();if(state.lastPlayed!==today){const last=state.lastPlayed?new Date(state.lastPlayed):null;if(last){const diff=Math.floor((new Date(today)-new Date(last.toDateString()))/864e5);state.streak=diff===1?state.streak+1:1}else state.streak=1;state.lastPlayed=today}state.games++;saveState()}
 function addStars(n){state.stars+=n;checkAch('stars_50',state.stars>=50);checkAch('stars_100',state.stars>=100);saveState()}
 function checkAch(id,cond){if(cond&&!state.achievements.includes(id)){state.achievements.push(id);saveState();return true}return false}
+function resetProgress(){if(confirm('This will delete all your stars, badges and progress. Are you sure?')){state={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{}};saveState();updateHomeStats()}}
 
 // ==================== NAVIGATION ====================
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily()}
 function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;renderBadges()}
-function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=(a.name[0]||'?')+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
+function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
 
 // ==================== SPELLING ====================
-let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false};
+let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false,missed:[]};
 
-function setSpellingLevel(lv){sp.level=lv;sp.maxLives=lv===1?7:lv===2?6:5;const pool=[...SPELLING[lv]];shuffle(pool);sp.words=pool.slice(0,sp.total);sp.idx=0;sp.correct=0;hide('spellingLevelSelect');show('spellingGame');loadSpellWord()}
+function setSpellingLevel(lv){sp.level=lv;sp.maxLives=lv===1?7:lv===2?6:5;const pool=[...SPELLING[lv]];shuffle(pool);sp.words=pool.slice(0,sp.total);sp.idx=0;sp.correct=0;sp.missed=[];hide('spellingLevelSelect');show('spellingGame');loadSpellWord()}
 function loadSpellWord(){const item=sp.words[sp.idx];sp.word=item.w.toLowerCase();sp.revealed=new Array(sp.word.length).fill(false);sp.lives=sp.maxLives;sp.hintUsed=false;const pic=document.getElementById('spellPic');const eFn=WORD_EMOJI[sp.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn]}else{pic.textContent='?'};document.getElementById('spellHint').textContent='';document.getElementById('hintBtn').style.display='inline-block';updateSpellProgress();renderSpellWord();renderLives();renderKeyboard()}
 function updateSpellProgress(){document.getElementById('spellProgress').style.width=(sp.idx/sp.total*100)+'%';document.getElementById('spellProgressText').textContent='Word '+(sp.idx+1)+' of '+sp.total}
 function renderSpellWord(){const el=document.getElementById('spellWord');el.innerHTML='';for(let i=0;i<sp.word.length;i++){const s=document.createElement('div');s.className='letter-slot'+(sp.revealed[i]?' revealed':'');s.textContent=sp.revealed[i]?sp.word[i]:'';el.appendChild(s)}}
 function renderLives(){const el=document.getElementById('spellLives');el.innerHTML='';for(let i=0;i<sp.maxLives;i++){const d=document.createElement('div');d.className='life'+(i>=sp.lives?' lost':'');d.innerHTML='<div class="life-heart"></div>';el.appendChild(d)}}
 function renderKeyboard(){const rows=['qwertyuiop','asdfghjkl','zxcvbnm'];const kb=document.getElementById('keyboard');kb.innerHTML='';rows.forEach(row=>{const r=document.createElement('div');r.className='kb-row';for(const ch of row){const k=document.createElement('button');k.className='kb-key';k.textContent=ch;k.id='key_'+ch;k.onclick=()=>pressKey(ch);r.appendChild(k)}kb.appendChild(r)})}
-function pressKey(ch){const btn=document.getElementById('key_'+ch);if(!btn||btn.classList.contains('correct')||btn.classList.contains('wrong'))return;let found=false;for(let i=0;i<sp.word.length;i++){if(sp.word[i]===ch&&!sp.revealed[i]){sp.revealed[i]=true;found=true}}if(found){btn.classList.add('correct')}else{btn.classList.add('wrong');sp.lives--;renderLives();document.getElementById('spellWord').classList.add('shake');setTimeout(()=>document.getElementById('spellWord').classList.remove('shake'),300)}renderSpellWord();if(sp.revealed.every(r=>r)){sp.correct++;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();setTimeout(nextSpellWord,800)}else if(sp.lives<=0){sp.revealed=sp.revealed.map(()=>true);renderSpellWord();document.querySelectorAll('.letter-slot').forEach(s=>{s.classList.remove('revealed');s.classList.add('wrong-reveal')});setTimeout(nextSpellWord,1200)}}
+function pressKey(ch){const btn=document.getElementById('key_'+ch);if(!btn||btn.classList.contains('correct')||btn.classList.contains('wrong'))return;let found=false;for(let i=0;i<sp.word.length;i++){if(sp.word[i]===ch&&!sp.revealed[i]){sp.revealed[i]=true;found=true}}if(found){btn.classList.add('correct')}else{btn.classList.add('wrong');sp.lives--;renderLives();document.getElementById('spellWord').classList.add('shake');setTimeout(()=>document.getElementById('spellWord').classList.remove('shake'),300)}renderSpellWord();if(sp.revealed.every(r=>r)){sp.correct++;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();setTimeout(nextSpellWord,800)}else if(sp.lives<=0){sp.missed.push({w:sp.word,h:sp.words[sp.idx].h});sp.revealed=sp.revealed.map(()=>true);renderSpellWord();document.querySelectorAll('.letter-slot').forEach(s=>{s.classList.remove('revealed');s.classList.add('wrong-reveal')});setTimeout(nextSpellWord,1200)}}
 function showHint(){if(!sp.hintUsed){sp.hintUsed=true;document.getElementById('spellHint').textContent=sp.words[sp.idx].h;document.getElementById('hintBtn').style.display='none'}}
 function nextSpellWord(){sp.idx++;if(sp.idx>=sp.total)finishSpelling();else loadSpellWord()}
-function finishSpelling(){show('spellingLevelSelect');hide('spellingGame');const pct=sp.correct/sp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);addStars(stars);recordPlay();showResults('#f7971e','Aa','Spelling Done!','Level '+sp.level,stars,sp.correct,sp.total,()=>{showScreen('spelling')})}
+function finishSpelling(){show('spellingLevelSelect');hide('spellingGame');const pct=sp.correct/sp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);addStars(stars);recordPlay();showResults('#f7971e','Aa','Spelling Done!','Level '+sp.level,stars,sp.correct,sp.total,()=>{showScreen('spelling')},sp.missed)}
 
 // ==================== MATHS ====================
 let ma={level:1,idx:0,total:10,correct:0,answer:'',question:null};
@@ -972,18 +992,19 @@ function selectReadAns(btn,sel,cor){document.querySelectorAll('#readingQA .ans-b
 function finishReading(){const key=rd.level+'_'+rd.storyIdx;if(!state.storiesRead.includes(key))state.storiesRead.push(key);checkAch('read_3',state.storiesRead.length>=3);const total=Object.values(READING).reduce((s,l)=>s+l.length,0);checkAch('read_all',state.storiesRead.length>=total);checkAch('first_game',true);show('readingLevelSelect');hide('readingStorySelect');hide('readingGame');const pct=rd.correct/rd.totalQ;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;addStars(stars);recordPlay();showResults('#56ab2f','Bb','Story Complete!',rd.story.title,stars,rd.correct,rd.totalQ,()=>{showScreen('reading')})}
 
 // ==================== DAILY ====================
-let dy={step:0,totalSteps:3,spellWord:null,mathQ:null,readQ:null,correct:0};
+let dy={step:0,totalSteps:3,level:2,spellWord:null,mathQ:null,readQ:null,correct:0};
 
-function initDaily(){dy.step=0;dy.correct=0;dy.spellWord=SPELLING[2][Math.floor(Math.random()*SPELLING[2].length)];dy.mathQ=genMathQ(2);const stories=READING[2];const story=stories[Math.floor(Math.random()*stories.length)];const qIdx=Math.floor(Math.random()*story.questions.length);dy.readQ={story:story.title,q:story.questions[qIdx]};renderDailySteps();loadDailyStep()}
+function initDaily(){show('dailyLevelSelect');hide('dailyGame')}
+function startDaily(lv){dy.level=lv;dy.step=0;dy.correct=0;dy.spellWord=SPELLING[lv][Math.floor(Math.random()*SPELLING[lv].length)];dy.mathQ=genMathQ(lv);const stories=READING[lv];const story=stories[Math.floor(Math.random()*stories.length)];const qIdx=Math.floor(Math.random()*story.questions.length);dy.readQ={story:story.title,q:story.questions[qIdx]};hide('dailyLevelSelect');show('dailyGame');renderDailySteps();loadDailyStep()}
 function renderDailySteps(){const el=document.getElementById('dailySteps');el.innerHTML='';for(let i=0;i<dy.totalSteps;i++){const d=document.createElement('div');d.className='step-dot'+(i===dy.step?' active':(i<dy.step?' done':''));el.appendChild(d)}}
-function loadDailyStep(){renderDailySteps();const c=document.getElementById('dailyContent');if(dy.step===0){const w=dy.spellWord;c.innerHTML='<div class="daily-box"><h3>Spell the word</h3><div id="dailyPic" style="text-align:center;font-size:3rem;margin:12px 0;">'+(WORD_EMOJI[w.w]&&EMOJI_SVG[WORD_EMOJI[w.w]]?EMOJI_SVG[WORD_EMOJI[w.w]]:'?')+'</div><p style="text-align:center;color:#636e72;font-style:italic;">'+w.h+'</p><input type="text" id="dSpell" class="daily-input" autocomplete="off" autocapitalize="off" placeholder="Type the word..."><button class="daily-submit ds-purple" onclick="checkDSpell()">Check</button></div>';if(window.twemoji)twemoji.parse(document.getElementById('dailyPic'),{folder:'svg',ext:'.svg'});setTimeout(()=>document.getElementById('dSpell').focus(),100)}else if(dy.step===1){c.innerHTML='<div class="daily-box"><h3>Solve the sum</h3><div style="text-align:center;font-family:Fredoka One,cursive;font-size:2.2rem;margin:16px 0;">'+dy.mathQ.text+'</div><input type="number" id="dMath" class="daily-input" placeholder="?"><button class="daily-submit ds-blue" onclick="checkDMath()">Check</button></div>';setTimeout(()=>document.getElementById('dMath').focus(),100)}else if(dy.step===2){let h='<div class="daily-box"><h3>Reading Question</h3><p style="font-size:0.8rem;color:#b2bec3;margin-bottom:8px;">From: '+dy.readQ.story+'</p><div class="q-text">'+dy.readQ.q.q+'</div>';dy.readQ.q.a.forEach((a,i)=>{h+='<button class="ans-btn" onclick="checkDRead(this,'+i+','+dy.readQ.q.c+')">'+a+'</button>'});h+='</div>';c.innerHTML=h}}
+function loadDailyStep(){renderDailySteps();const c=document.getElementById('dailyContent');if(dy.step===0){const w=dy.spellWord;c.innerHTML='<div class="daily-box"><h3>Spell the word</h3><div id="dailyPic" style="text-align:center;font-size:3rem;margin:12px 0;">'+(WORD_EMOJI[w.w]&&EMOJI_SVG[WORD_EMOJI[w.w]]?EMOJI_SVG[WORD_EMOJI[w.w]]:'?')+'</div><p style="text-align:center;color:#636e72;font-style:italic;">'+w.h+'</p><input type="text" id="dSpell" class="daily-input" autocomplete="off" autocapitalize="off" placeholder="Type the word..."><button class="daily-submit ds-purple" onclick="checkDSpell()">Check</button></div>';setTimeout(()=>document.getElementById('dSpell').focus(),100)}else if(dy.step===1){c.innerHTML='<div class="daily-box"><h3>Solve the sum</h3><div style="text-align:center;font-family:Fredoka One,Comic Sans MS,cursive;font-size:2.2rem;margin:16px 0;">'+dy.mathQ.text+'</div><input type="number" id="dMath" class="daily-input" placeholder="?"><button class="daily-submit ds-blue" onclick="checkDMath()">Check</button></div>';setTimeout(()=>document.getElementById('dMath').focus(),100)}else if(dy.step===2){let h='<div class="daily-box"><h3>Reading Question</h3><p style="font-size:0.8rem;color:#b2bec3;margin-bottom:8px;">From: '+dy.readQ.story+'</p><div class="q-text">'+dy.readQ.q.q+'</div>';dy.readQ.q.a.forEach((a,i)=>{h+='<button class="ans-btn" onclick="checkDRead(this,'+i+','+dy.readQ.q.c+')">'+a+'</button>'});h+='</div>';c.innerHTML=h}}
 function checkDSpell(){const v=document.getElementById('dSpell').value.trim().toLowerCase();if(v===dy.spellWord.w){dy.correct++;state.spellingCorrect++;saveState()}dy.step++;loadDailyStep()}
 function checkDMath(){const v=parseInt(document.getElementById('dMath').value);if(v===dy.mathQ.answer){dy.correct++;state.mathsCorrect++;saveState()}dy.step++;loadDailyStep()}
 function checkDRead(btn,sel,cor){btn.parentElement.querySelectorAll('.ans-btn').forEach((o,i)=>{if(i===cor)o.classList.add('correct-ans');else if(i===sel)o.classList.add('wrong-ans');o.classList.add('disabled')});if(sel===cor)dy.correct++;setTimeout(()=>{dy.step++;finishDaily()},1000)}
-function finishDaily(){state.dailyCompleted=new Date().toDateString();checkAch('daily_1',true);checkAch('first_game',true);checkAch('streak_3',state.streak>=3);checkAch('streak_7',state.streak>=7);const pct=dy.correct/dy.totalSteps;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;addStars(stars);recordPlay();showResults('#6c5ce7','GO','Daily Challenge Done!',dy.correct+'/'+dy.totalSteps+' correct',stars,dy.correct,dy.totalSteps,()=>{showScreen('daily');initDaily()})}
+function finishDaily(){state.dailyCompleted=new Date().toDateString();checkAch('daily_1',true);checkAch('first_game',true);checkAch('streak_3',state.streak>=3);checkAch('streak_7',state.streak>=7);const pct=dy.correct/dy.totalSteps;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;addStars(stars);recordPlay();showResults('#6c5ce7','GO','Daily Challenge Done!',dy.correct+'/'+dy.totalSteps+' correct',stars,dy.correct,dy.totalSteps,()=>{showScreen('daily');initDaily()},null)}
 
 // ==================== RESULTS ====================
-function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn){showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=sub;const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num">'+correct+'/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num">'+Math.round(correct/total*100)+'%</div><div class="rs-lbl">Score</div></div>';document.getElementById('resultsPlayAgain').onclick=playAgainFn}
+function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn,missed){showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=sub;const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num">'+correct+'/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num">'+Math.round(correct/total*100)+'%</div><div class="rs-lbl">Score</div></div>';const mb=document.getElementById('missedWords');if(missed&&missed.length>0){let h='<div style="margin-top:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Words I missed:</div>';missed.forEach(m=>{h+='<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">'+m.w+'</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— '+m.h+'</span></div>'});h+='</div>';mb.innerHTML=h}else{mb.innerHTML=''}document.getElementById('resultsPlayAgain').onclick=playAgainFn}
 function lighten(hex){return hex+'99'}
 
 // ==================== UTILITIES ====================
