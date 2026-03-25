@@ -90,6 +90,13 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mute-btn{background:none;border:2px solid #e0e0e0;border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:#636e72;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:8px}
 .mute-btn:hover{border-color:#11998e}
 .mute-btn.muted{background:#fff0ed;border-color:#e17055;color:#e17055}
+.dyslexia-btn{background:none;border:2px solid #e0e0e0;border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:#636e72;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:4px}
+.dyslexia-btn:hover{border-color:#11998e}
+.dyslexia-btn.active{background:#e8fff5;border-color:#11998e;color:#11998e}
+body.dyslexia-mode{font-family:'Comic Sans MS',cursive,sans-serif!important;background:#fdf6e3!important;letter-spacing:0.05em;word-spacing:0.1em}
+body.dyslexia-mode *{font-family:inherit!important}
+body.dyslexia-mode .game-screen,body.dyslexia-mode .home-bg,body.dyslexia-mode .landing-bg{background:#fdf6e3!important}
+body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!important;line-height:2!important}
 
 /* ===== WHITEBOARD MODE ===== */
 .wb-screen{background:#1a1a2e;color:white}
@@ -549,7 +556,7 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
     <div class="pupil-name-bar" id="pupilNameBar"></div>
   </div>
   <div class="home-content">
-    <div style="text-align:center;margin:8px 0 4px;"><span class="coin-display-home" id="coinDisplay">&#x1FA99; <span id="coinCount">0</span> coins</span><button class="mute-btn" id="muteBtn" onclick="toggleMute()">&#x1F50A; Sound On</button></div>
+    <div style="text-align:center;margin:8px 0 4px;"><span class="coin-display-home" id="coinDisplay">&#x1FA99; <span id="coinCount">0</span> coins</span><button class="mute-btn" id="muteBtn" onclick="toggleMute()">&#x1F50A; Sound On</button><button class="dyslexia-btn" id="dyslexiaBtn" onclick="toggleDyslexia()">Aa Dyslexia</button></div>
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-val" id="statStars">0</span><span class="stat-lbl">Stars</span></div>
       <div class="stat-item"><span class="stat-val" id="statGames">0</span><span class="stat-lbl">Games</span></div>
@@ -640,6 +647,7 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <h3>Actions</h3>
       <div class="actions-row">
         <button class="teacher-btn teal" onclick="launchWhiteboard()">Whole-Class Mode</button>
+        <button class="teacher-btn teal" onclick="generateWorksheet()">Print Worksheet</button>
         <button class="teacher-btn teal" onclick="printReport()">Print Report</button>
         <button class="teacher-btn grey" onclick="exportCSV()">Export CSV</button>
         <button class="teacher-btn red" onclick="resetAllData()">Reset All Data</button>
@@ -2308,6 +2316,9 @@ function hide(id){document.getElementById(id).style.display='none'}
 // ==================== KEYBOARD ====================
 document.addEventListener('keydown',function(e){if(document.getElementById('spelling').classList.contains('active')&&document.getElementById('spellingGame').style.display!=='none'){if(/^[a-z]$/i.test(e.key))pressKey(e.key.toLowerCase())}});
 
+// ==================== WORKSHEET GENERATOR ====================
+function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))||2;const w=window.open('','_blank');const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const questions=[];const answers=[];for(let i=0;i<20;i++){const q=genMathQ(lv);questions.push((i+1)+'. '+q.text);answers.push((i+1)+'. '+q.answer)}const spellWords=[...SPELLING[lv]];shuffle(spellWords);const spellingSection=spellWords.slice(0,10).map((s,i)=>(i+1)+'. '+s.h+' (____________________)').join('<br>');w.document.write('<!DOCTYPE html><html><head><title>Worksheet</title><style>@page{margin:15mm}body{font-family:Arial,sans-serif;font-size:14px;line-height:2}h1{font-size:1.3rem;color:#11998e;margin-bottom:4px}h2{font-size:1rem;margin-top:20px;color:#333;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#888;font-size:0.85rem}.answers{page-break-before:always;color:#888;font-size:0.85rem}ol{padding-left:20px}</style></head><body><h1>'+sn+' — Classmates Worksheet</h1><p class="meta">'+today+' | Level '+lv+'</p><p><strong>Name:</strong> _______________________________</p><h2>Maths</h2><p>'+questions.join('<br>')+'</p><h2>Spelling</h2><p>Write the word that matches each clue:</p><p>'+spellingSection+'</p><div class="answers"><h2>Answer Key (Maths)</h2><p>'+answers.join(' &nbsp; ')+'</p></div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+
 // ==================== SPACED REPETITION ====================
 // Track wrong answers per topic. Mix 20-30% of weak-area questions into future sessions.
 function recordWeak(topic,item){if(!state.weakItems)state.weakItems={};if(!state.weakItems[topic])state.weakItems[topic]=[];const arr=state.weakItems[topic];if(!arr.find(x=>JSON.stringify(x)===JSON.stringify(item))){arr.push(item);if(arr.length>20)arr.shift()}saveState()}
@@ -2346,6 +2357,7 @@ function sfxLevelUp(){playTone(392,0.1,'sine',0.2);setTimeout(()=>playTone(523,0
 function sfxClick(){playTone(800,0.05,'sine',0.1)}
 function sfxStar(){playTone(880,0.1,'triangle',0.2);setTimeout(()=>playTone(1108,0.15,'triangle',0.25),120)}
 function toggleMute(){soundMuted=!soundMuted;const btn=document.getElementById('muteBtn');if(soundMuted){btn.textContent='\u{1F507} Sound Off';btn.classList.add('muted')}else{btn.textContent='\u{1F50A} Sound On';btn.classList.remove('muted');sfxClick()}}
+function toggleDyslexia(){document.body.classList.toggle('dyslexia-mode');const btn=document.getElementById('dyslexiaBtn');btn.classList.toggle('active')}
 
 // ==================== CERTIFICATE ====================
 function printCert(achievement,detail){const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>Certificate</title><style>@page{size:landscape;margin:0}body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:Georgia,serif}' +'.cert{width:297mm;height:210mm;border:12px solid #ffd700;padding:40px 60px;text-align:center;position:relative;background:white;box-sizing:border-box}' +'.cert::before{content:"";position:absolute;inset:16px;border:3px solid #ffd700;border-radius:8px}' +'.cert h1{font-size:3rem;color:#c0392b;margin:20px 0 10px}' +'.cert h2{font-size:1.8rem;color:#2d3436;margin:20px 0}' +'.cert .detail{font-size:1.3rem;color:#636e72;margin:10px 0}' +'.cert .stars{font-size:3rem;margin:20px 0;color:#ffd700}' +'.cert .date{font-size:1rem;color:#b2bec3;margin-top:30px}' +'.cert .footer{font-size:0.8rem;color:#b2bec3;margin-top:20px;font-style:italic}' +'</style></head><body><div class="cert">' +'<h1>Classmates</h1>' +'<div class="detail">This certificate is awarded to</div>' +'<h2>_________________________</h2>' +'<div class="detail">for achieving</div>' +'<h2>'+achievement+'</h2>' +'<div class="detail">'+detail+' &mdash; Three Stars!</div>' +'<div class="stars">&starf; &starf; &starf;</div>' +'<div class="date">'+today+'</div>' +'<div class="footer">South Lodge Primary School</div>' +'</div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
