@@ -65,6 +65,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-anagram .card-icon{background:rgba(255,255,255,0.3)}
 .card-phonics{background:linear-gradient(135deg,#0abde3,#48dbfb)}
 .card-phonics .card-icon{background:rgba(255,255,255,0.3)}
+.card-wordfam{background:linear-gradient(135deg,#8e44ad,#c39bd3)}
+.card-wordfam .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -398,6 +400,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Phonics</div>
         <div class="card-desc">Sound patterns</div>
       </div>
+      <div class="subject-card card-wordfam" onclick="startGame('wordfam')">
+        <div class="card-icon">-ing</div>
+        <div class="card-title">Word Families</div>
+        <div class="card-desc">Common endings</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -561,6 +568,26 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- WORD FAMILIES -->
+<div id="wordfam" class="screen game-screen">
+  <div class="game-header" style="border-color:#c39bd3"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#8e44ad">Word Families</h2></div>
+  <div class="game-body">
+    <div id="wfLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startWF(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">-at, -an, -ig</div></div>
+        <div class="level-card lc-2" onclick="startWF(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">-ight, -tion</div></div>
+        <div class="level-card lc-3" onclick="startWF(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Suffixes</div></div>
+      </div>
+    </div>
+    <div id="wfGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="wfProgress" style="background:linear-gradient(90deg,#8e44ad,#c39bd3)"></div></div>
+      <div class="progress-text" id="wfProgressText"></div>
+      <div id="wfDisplay"></div>
     </div>
   </div>
 </div>
@@ -1280,6 +1307,45 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== WORD FAMILIES ====================
+const WORDFAM_DATA = {
+  1: [
+    {ending:'-at',words:['cat','hat','bat','mat','sat','rat','fat','pat'],wrong:['can','him','bit','mop']},
+    {ending:'-an',words:['man','can','van','pan','ran','fan','ban','tan'],wrong:['mat','cup','vet','pin']},
+    {ending:'-ig',words:['big','pig','dig','fig','wig','jig'],wrong:['bag','peg','dog','bug']},
+    {ending:'-og',words:['dog','log','fog','hog','jog','bog'],wrong:['dig','lag','fig','bug']},
+    {ending:'-op',words:['hop','top','mop','pop','stop','shop','drop'],wrong:['hip','tap','map','pup']},
+    {ending:'-ug',words:['bug','hug','mug','rug','tug','jug','dug','pug'],wrong:['bag','hog','mig','rig']},
+    {ending:'-et',words:['net','wet','pet','get','set','let','met','bet'],wrong:['not','wit','pot','gut']}
+  ],
+  2: [
+    {ending:'-ight',words:['light','night','fight','right','sight','might','bright','flight'],wrong:['lit','nit','fit','ring']},
+    {ending:'-tion',words:['station','nation','action','fiction','section','mention'],wrong:['stain','nasty','acting','fixing']},
+    {ending:'-ake',words:['cake','lake','make','take','wake','shake','bake','snake'],wrong:['cook','lock','mock','tuck']},
+    {ending:'-ine',words:['mine','fine','line','vine','pine','nine','shine','wine'],wrong:['man','fun','lane','van']},
+    {ending:'-eat',words:['heat','meat','beat','seat','neat','treat','wheat','cheat'],wrong:['hit','mat','bit','set']},
+    {ending:'-ound',words:['round','found','sound','ground','pound','hound','bound','mound'],wrong:['rind','fund','sand','grind']}
+  ],
+  3: [
+    {ending:'-ing',words:['running','playing','singing','reading','jumping','swimming','writing','thinking'],wrong:['runner','player','singer','reader']},
+    {ending:'-ed',words:['played','jumped','walked','talked','cooked','cleaned','looked','opened'],wrong:['playing','jumping','walking','talking']},
+    {ending:'-er',words:['bigger','faster','taller','smaller','louder','harder','softer','brighter'],wrong:['biggest','fastest','tallest','smallest']},
+    {ending:'-est',words:['biggest','fastest','tallest','smallest','loudest','hardest','softest','brightest'],wrong:['bigger','faster','taller','smaller']},
+    {ending:'-ous',words:['famous','dangerous','enormous','nervous','curious','serious','generous','precious'],wrong:['famine','danger','energy','nerve']},
+    {ending:'-ation',words:['celebration','imagination','education','information','decoration','exploration'],wrong:['celebrate','imagine','educate','inform']}
+  ]
+};
+
+let wf={level:1,questions:[],idx:0,total:10,correct:0,missed:[]};
+
+function startWF(lv){wf.level=lv;wf.idx=0;wf.correct=0;wf.missed=[];const groups=[...WORDFAM_DATA[lv]];wf.questions=[];for(let i=0;i<12;i++){const g=groups[i%groups.length];const type=Math.random()<0.5?'which':'suffix';if(type==='which'){const correct=g.words[rand(0,g.words.length-1)];const wrongs=shuffle([...g.wrong]).slice(0,3);wf.questions.push({type:'which',ending:g.ending,correct:correct,options:shuffle([correct,...wrongs])})}else{const word=g.words[rand(0,g.words.length-1)];const stem=word.replace(new RegExp(g.ending.slice(1)+'$'),'');if(stem===word||stem.length<1){const correct=g.words[rand(0,g.words.length-1)];const wrongs=shuffle([...g.wrong]).slice(0,3);wf.questions.push({type:'which',ending:g.ending,correct:correct,options:shuffle([correct,...wrongs])})}else{const wrongEndings=WORDFAM_DATA[lv].filter(x=>x.ending!==g.ending).map(x=>x.ending.slice(1)).slice(0,3);wf.questions.push({type:'suffix',ending:g.ending,word:word,stem:stem,suffix:g.ending.slice(1),options:shuffle([g.ending.slice(1),...wrongEndings])})}}}shuffle(wf.questions);wf.questions=wf.questions.slice(0,10);hide('wfLevelSelect');show('wfGame');loadWFQ()}
+
+function loadWFQ(){const q=wf.questions[wf.idx];document.getElementById('wfProgress').style.width=(wf.idx/wf.total*100)+'%';document.getElementById('wfProgressText').textContent='Question '+(wf.idx+1)+' of '+wf.total;const d=document.getElementById('wfDisplay');if(q.type==='which'){d.innerHTML='<div class="ph-sound" style="background:#f3e6f9;border-color:#c39bd3;color:#8e44ad">Which word belongs to the '+q.ending+' family?</div><div class="ph-options" id="wfOpts"></div>';const opts=document.getElementById('wfOpts');q.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectWFAns(b,o===q.correct,q);opts.appendChild(b)})}else{d.innerHTML='<div class="ph-prompt">Add the correct ending:</div><div class="ph-word-display">'+q.stem+'<span class="ph-blank" style="border-color:#8e44ad;color:#8e44ad">?</span></div><div class="ph-options" id="wfOpts"></div>';const opts=document.getElementById('wfOpts');q.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent='-'+o;b.onclick=()=>selectWFAns(b,o===q.suffix,q);opts.appendChild(b)})}}
+
+function selectWFAns(btn,correct,q){document.querySelectorAll('#wfOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled')});if(correct){wf.correct++;btn.classList.add('ph-correct')}else{wf.missed.push(q);btn.classList.add('ph-wrong');document.querySelectorAll('#wfOpts .ph-opt').forEach(o=>{if(o.textContent===q.correct||o.textContent==='-'+q.suffix)o.classList.add('ph-correct')})}setTimeout(()=>{wf.idx++;if(wf.idx>=wf.total)finishWF();else loadWFQ()},correct?500:1200)}
+
+function finishWF(){show('wfLevelSelect');hide('wfGame');const pct=wf.correct/wf.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#8e44ad','-ing','Word Families Done!','Level '+wf.level,stars,wf.correct,wf.total,()=>{showScreen('wordfam')},null)}
 
 // ==================== PHONICS ====================
 const PHONICS_DATA = {
