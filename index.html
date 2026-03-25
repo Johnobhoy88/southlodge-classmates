@@ -106,6 +106,23 @@ body.dyslexia-mode *{font-family:inherit!important}
 body.dyslexia-mode .game-screen,body.dyslexia-mode .home-bg,body.dyslexia-mode .landing-bg{background:#fdf6e3!important}
 body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!important;line-height:2!important}
 
+/* ===== AVATAR & PUPIL SELECT ===== */
+.avatar-svg{border-radius:50%;overflow:hidden;background:#e8f4f8}
+.pupil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:16px;margin:20px 0;max-width:600px;margin-left:auto;margin-right:auto}
+.pupil-profile{text-align:center;cursor:pointer;padding:16px 8px;border-radius:18px;border:3px solid #f0f0f0;background:white;transition:all 0.2s}
+.pupil-profile:hover{border-color:#11998e;transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+.pupil-profile:active{transform:scale(0.97)}
+.pupil-profile .pp-avatar{width:80px;height:80px;margin:0 auto 8px;border-radius:50%;overflow:hidden}
+.pupil-profile .pp-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.9rem;color:#2d3436}
+.avatar-builder-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+.av-option{width:48px;height:48px;border-radius:12px;border:3px solid #f0f0f0;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.av-option:hover{border-color:#11998e}
+.av-option.selected{border-color:#11998e;box-shadow:0 0 0 2px #11998e}
+.av-color{width:32px;height:32px;border-radius:50%}
+.av-section{margin:14px 0}
+.av-section-label{font-size:0.8rem;font-weight:800;color:#636e72;margin-bottom:6px}
+.avatar-preview-lg{width:140px;height:140px;margin:0 auto 16px;border-radius:50%;overflow:hidden;border:4px solid #11998e;box-shadow:0 4px 15px rgba(17,153,142,0.2)}
+
 /* ===== WHITEBOARD MODE ===== */
 .wb-screen{background:#1a1a2e;color:white}
 .wb-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #333}
@@ -538,7 +555,6 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
     <img src="logo.jpg" alt="South Lodge Primary" class="landing-logo">
     <div class="landing-title">Classmates</div>
     <div class="landing-sub">South Lodge Primary School</div>
-    <div id="pupilSelectArea"></div>
     <button class="landing-btn btn-learn" onclick="enterPupilHome()">Let's Learn!</button>
     <button class="landing-btn btn-staff" onclick="showStaffLogin()">Staff Access</button>
   </div>
@@ -553,6 +569,38 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
     <button class="modal-submit" onclick="checkStaffPwd()">Enter</button><br>
     <button class="modal-cancel" onclick="hideStaffLogin()">Cancel</button>
     <div style="margin-top:12px;font-size:0.7rem;color:#b2bec3;cursor:help" title="Contact your school administrator to change the staff password">?</div>
+  </div>
+</div>
+
+<!-- PUPIL SELECT -->
+<div id="pupilselect" class="screen landing-bg">
+  <div style="text-align:center;padding:28px 20px 8px;">
+    <img src="logo.jpg" alt="South Lodge Primary" class="logo-img" style="width:80px;border-radius:50%;border:4px solid white;box-shadow:0 4px 15px rgba(0,0,0,0.1)">
+    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#11998e;margin:8px 0;">Who are you today?</div>
+  </div>
+  <div class="pupil-grid" id="pupilGrid"></div>
+  <div style="text-align:center;padding:16px;">
+    <button onclick="showScreen('landing')" style="background:none;border:none;color:#b2bec3;font-size:0.8rem;cursor:pointer;font-family:'Nunito','Trebuchet MS',sans-serif;">&#x2190; Back</button>
+  </div>
+</div>
+
+<!-- AVATAR BUILDER -->
+<div id="avatarbuilder" class="screen game-screen">
+  <div class="game-header" style="border-color:#11998e">
+    <button class="nav-btn" onclick="finishAvatar()" title="Done">&larr;</button>
+    <h2 class="game-title" style="color:#11998e">Create Your Avatar</h2>
+  </div>
+  <div class="game-body">
+    <div class="avatar-preview-lg" id="avatarPreviewLg"></div>
+    <div class="av-section"><div class="av-section-label">Skin Colour</div><div class="avatar-builder-grid" id="avSkin"></div></div>
+    <div class="av-section"><div class="av-section-label">Hair Style</div><div class="avatar-builder-grid" id="avHair"></div></div>
+    <div class="av-section"><div class="av-section-label">Hair Colour</div><div class="avatar-builder-grid" id="avHairColor"></div></div>
+    <div class="av-section"><div class="av-section-label">Eyes</div><div class="avatar-builder-grid" id="avEyes"></div></div>
+    <div class="av-section"><div class="av-section-label">Mouth</div><div class="avatar-builder-grid" id="avMouth"></div></div>
+    <div class="av-section"><div class="av-section-label">Outfit Colour</div><div class="avatar-builder-grid" id="avOutfit"></div></div>
+    <div style="text-align:center;margin:16px 0;">
+      <button class="r-btn r-btn-primary" onclick="finishAvatar()">Done!</button>
+    </div>
   </div>
 </div>
 
@@ -1794,7 +1842,7 @@ let currentPupil=null;
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily()}
-function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');nb.textContent=currentPupil?'Playing as: '+currentPupil:''}
+function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}}
 function renderProgressMap(){const pm=document.getElementById('progressMap');if(!pm)return;const topics=[{id:'spelling',name:'Spelling',color:'#f7971e'},{id:'maths',name:'Maths',color:'#0083b0'},{id:'times',name:'Tables',color:'#e44d26'},{id:'reading',name:'Reading',color:'#56ab2f'},{id:'bonds',name:'Bonds',color:'#11998e'},{id:'phonics',name:'Phonics',color:'#0abde3'}];let h='';topics.forEach(t=>{const lv=state.adaptive&&state.adaptive[t.id]?state.adaptive[t.id].level:1;const pct=lv/3*100;h+='<div class="pmap-row"><span class="pmap-label">'+t.name+'</span><div class="pmap-bar"><div class="pmap-fill" style="width:'+pct+'%;background:'+t.color+'"></div></div><span class="pmap-level">Lv'+lv+'</span></div>'});pm.innerHTML=h}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
 
@@ -1803,7 +1851,7 @@ function showStaffLogin(){document.getElementById('staffModal').classList.add('s
 function hideStaffLogin(){document.getElementById('staffModal').classList.remove('show')}
 function checkStaffPwd(){const pwd=document.getElementById('staffPwd').value;if(pwd==='classmates2026'){hideStaffLogin();showScreen('teacher');renderTeacher()}else{document.getElementById('staffError').textContent='Incorrect password';document.getElementById('staffPwd').classList.add('shake');setTimeout(()=>document.getElementById('staffPwd').classList.remove('shake'),300)}}
 document.addEventListener('keydown',function(e){if(document.getElementById('staffModal').classList.contains('show')&&e.key==='Enter')checkStaffPwd()});
-function enterPupilHome(){loadState();showScreen('home');updateHomeStats()}
+function enterPupilHome(){const pupils=getPupils();if(pupils.length>0){renderPupilGrid();showScreen('pupilselect')}else{loadState();showScreen('home');updateHomeStats()}}
 function renderPupilSelect(){const area=document.getElementById('pupilSelectArea');const pupils=getPupils();if(pupils.length===0){area.innerHTML='';return}let h='<div class="pupil-select"><div class="pupil-select-title">Who are you today?</div><div class="pupil-list">';pupils.forEach(p=>{h+='<div class="pupil-chip'+(currentPupil===p?' selected':'')+'" onclick="selectPupil(\''+p.replace(/'/g,"\\'")+'\')">'+p+'</div>'});h+='</div></div>';area.innerHTML=h}
 function selectPupil(name){currentPupil=name;loadState();renderPupilSelect()}
 
@@ -2352,6 +2400,29 @@ const CFE_TAGS={
   fractions:{1:'MNU 0-07a',2:'MNU 1-07a',3:'MNU 2-07a'},
   wordprob:{1:'MNU 0-03a',2:'MNU 1-03a',3:'MNU 2-03a'}
 };
+
+// ==================== AVATAR SYSTEM ====================
+const AV_SKINS=['#FDDBB4','#E8B98D','#C68642','#8D5524','#4A2912'];
+const AV_HAIRS=[{id:'short',d:'M10,2 Q25,-4 40,2 L40,16 Q25,12 10,16Z'},{id:'long',d:'M8,2 Q25,-5 42,2 L44,30 Q42,34 38,32 L38,18 Q25,14 12,18 L12,32 Q8,34 6,30Z'},{id:'curly',d:'M8,0 Q12,-4 18,-2 Q22,-5 28,-2 Q32,-5 38,-2 Q42,-4 42,2 L42,16 Q25,12 8,16Z'},{id:'spiky',d:'M10,14 L6,0 L14,8 L18,-2 L22,8 L28,-2 L32,8 L36,-2 L40,8 L44,0 L40,14Z'},{id:'bun',d:'M10,4 Q25,-4 40,4 L40,14 Q25,10 10,14Z M20,-6 Q25,-12 30,-6 Q34,-2 25,0 Q16,-2 20,-6Z'},{id:'none',d:''}];
+const AV_HAIR_COLORS=['#2C1810','#4A2C1A','#8B4513','#D4A76A','#E8C07A','#C0392B','#F39C12','#1A1A2E'];
+const AV_EYES=[{id:'round',d:'M14,22 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M30,22 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0'},{id:'happy',d:'M14,23 Q17,19 20,23 M30,23 Q33,19 36,23'},{id:'wide',d:'M13,22 a4,3 0 1,0 8,0 a4,3 0 1,0 -8,0 M29,22 a4,3 0 1,0 8,0 a4,3 0 1,0 -8,0'},{id:'wink',d:'M14,22 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0 M30,23 L36,23'}];
+const AV_MOUTHS=[{id:'smile',d:'M18,32 Q25,38 32,32'},{id:'grin',d:'M17,32 Q25,40 33,32 Z'},{id:'small',d:'M21,33 Q25,36 29,33'}];
+const AV_OUTFITS=['#e74c3c','#3498db','#2ecc71','#9b59b6','#f39c12','#1abc9c','#e84393','#2c3e50'];
+
+let currentAvatar={skin:0,hair:0,hairColor:0,eyes:0,mouth:0,outfit:0};
+
+function renderAvatarSVG(av,size){const s=size||50;const skin=AV_SKINS[av.skin]||AV_SKINS[0];const hair=AV_HAIRS[av.hair]||AV_HAIRS[0];const hc=AV_HAIR_COLORS[av.hairColor]||AV_HAIR_COLORS[0];const eyes=AV_EYES[av.eyes]||AV_EYES[0];const mouth=AV_MOUTHS[av.mouth]||AV_MOUTHS[0];const outfit=AV_OUTFITS[av.outfit]||AV_OUTFITS[0];return'<svg viewBox="0 0 50 50" width="'+s+'" height="'+s+'" class="avatar-svg"><rect x="0" y="0" width="50" height="50" fill="'+skin+'" rx="25"/><rect x="10" y="38" width="30" height="14" fill="'+outfit+'" rx="6"/>'+(hair.d?'<path d="'+hair.d+'" fill="'+hc+'"/>':'')+'<path d="'+eyes.d+'" fill="#2c3e50" stroke="#2c3e50" stroke-width="1.5" fill-rule="evenodd"/><path d="'+mouth.d+'" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/></svg>'}
+
+function getAvatarData(pupilName){try{const d=localStorage.getItem('classmates_avatar_'+pupilName);return d?JSON.parse(d):{skin:0,hair:0,hairColor:0,eyes:0,mouth:0,outfit:0}}catch(e){return{skin:0,hair:0,hairColor:0,eyes:0,mouth:0,outfit:0}}}
+function saveAvatarData(pupilName,av){try{localStorage.setItem('classmates_avatar_'+pupilName,JSON.stringify(av))}catch(e){}}
+
+function renderPupilGrid(){const grid=document.getElementById('pupilGrid');const pupils=getPupils();grid.innerHTML='';pupils.forEach(p=>{const av=getAvatarData(p);const div=document.createElement('div');div.className='pupil-profile';div.innerHTML='<div class="pp-avatar">'+renderAvatarSVG(av,80)+'</div><div class="pp-name">'+p+'</div>';div.onclick=()=>{currentPupil=p;currentAvatar=getAvatarData(p);loadState();showScreen('home');updateHomeStats()};grid.appendChild(div)});const addDiv=document.createElement('div');addDiv.className='pupil-profile';addDiv.style.borderStyle='dashed';addDiv.innerHTML='<div class="pp-avatar" style="display:flex;align-items:center;justify-content:center;width:80px;height:80px;margin:0 auto 8px;background:#f0f0f0;border-radius:50%;font-size:2rem;color:#b2bec3">+</div><div class="pp-name" style="color:#b2bec3">Guest</div>';addDiv.onclick=()=>{currentPupil=null;loadState();showScreen('home');updateHomeStats()};grid.appendChild(addDiv)}
+
+function openAvatarBuilder(){if(!currentPupil){alert('Select a pupil first');return}currentAvatar=getAvatarData(currentPupil);showScreen('avatarbuilder');renderAvatarBuilder()}
+
+function renderAvatarBuilder(){document.getElementById('avatarPreviewLg').innerHTML=renderAvatarSVG(currentAvatar,140);const sections=[{id:'avSkin',items:AV_SKINS,key:'skin',render:c=>'<div class="av-color" style="background:'+c+'"></div>'},{id:'avHairColor',items:AV_HAIR_COLORS,key:'hairColor',render:c=>'<div class="av-color" style="background:'+c+'"></div>'},{id:'avOutfit',items:AV_OUTFITS,key:'outfit',render:c=>'<div class="av-color" style="background:'+c+'"></div>'}];sections.forEach(sec=>{const el=document.getElementById(sec.id);el.innerHTML='';sec.items.forEach((item,i)=>{const opt=document.createElement('div');opt.className='av-option'+(currentAvatar[sec.key]===i?' selected':'');opt.innerHTML=sec.render(item);opt.onclick=()=>{currentAvatar[sec.key]=i;renderAvatarBuilder()};el.appendChild(opt)})});const hairEl=document.getElementById('avHair');hairEl.innerHTML='';AV_HAIRS.forEach((h,i)=>{const opt=document.createElement('div');opt.className='av-option'+(currentAvatar.hair===i?' selected':'');opt.style.background='#f8f8f8';const tmpAv={...currentAvatar,hair:i};opt.innerHTML=renderAvatarSVG(tmpAv,40);opt.onclick=()=>{currentAvatar.hair=i;renderAvatarBuilder()};hairEl.appendChild(opt)});const eyeEl=document.getElementById('avEyes');eyeEl.innerHTML='';AV_EYES.forEach((e,i)=>{const opt=document.createElement('div');opt.className='av-option'+(currentAvatar.eyes===i?' selected':'');opt.style.background='#f8f8f8';const tmpAv={...currentAvatar,eyes:i};opt.innerHTML=renderAvatarSVG(tmpAv,40);opt.onclick=()=>{currentAvatar.eyes=i;renderAvatarBuilder()};eyeEl.appendChild(opt)});const mouthEl=document.getElementById('avMouth');mouthEl.innerHTML='';AV_MOUTHS.forEach((m,i)=>{const opt=document.createElement('div');opt.className='av-option'+(currentAvatar.mouth===i?' selected':'');opt.style.background='#f8f8f8';const tmpAv={...currentAvatar,mouth:i};opt.innerHTML=renderAvatarSVG(tmpAv,40);opt.onclick=()=>{currentAvatar.mouth=i;renderAvatarBuilder()};mouthEl.appendChild(opt)})}
+
+function finishAvatar(){if(currentPupil)saveAvatarData(currentPupil,currentAvatar);goHome()}
 
 // ==================== WORKSHEET GENERATOR ====================
 function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))||2;const w=window.open('','_blank');const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const questions=[];const answers=[];for(let i=0;i<20;i++){const q=genMathQ(lv);questions.push((i+1)+'. '+q.text);answers.push((i+1)+'. '+q.answer)}const spellWords=[...SPELLING[lv]];shuffle(spellWords);const spellingSection=spellWords.slice(0,10).map((s,i)=>(i+1)+'. '+s.h+' (____________________)').join('<br>');w.document.write('<!DOCTYPE html><html><head><title>Worksheet</title><style>@page{margin:15mm}body{font-family:Arial,sans-serif;font-size:14px;line-height:2}h1{font-size:1.3rem;color:#11998e;margin-bottom:4px}h2{font-size:1rem;margin-top:20px;color:#333;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#888;font-size:0.85rem}.answers{page-break-before:always;color:#888;font-size:0.85rem}ol{padding-left:20px}</style></head><body><h1>'+sn+' — Classmates Worksheet</h1><p class="meta">'+today+' | Level '+lv+'</p><p><strong>Name:</strong> _______________________________</p><h2>Maths</h2><p>'+questions.join('<br>')+'</p><h2>Spelling</h2><p>Write the word that matches each clue:</p><p>'+spellingSection+'</p><div class="answers"><h2>Answer Key (Maths)</h2><p>'+answers.join(' &nbsp; ')+'</p></div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
