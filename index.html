@@ -610,7 +610,11 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 <!-- PUPIL HOME -->
 <div id="home" class="screen home-bg">
   <div class="home-header">
-    <img src="logo.jpg" alt="South Lodge Primary" class="logo-img" style="width:80px">
+    <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:8px;">
+      <button class="nav-btn home-btn" onclick="showScreen('landing')" style="font-size:0.8rem">&#x1F3E0; Home</button>
+      <img src="logo.jpg" alt="South Lodge Primary" class="logo-img" style="width:60px">
+      <div style="width:90px"></div>
+    </div>
     <div class="classmates-text" style="font-size:2rem">Classmates</div>
     <div class="pupil-name-bar" id="pupilNameBar"></div>
   </div>
