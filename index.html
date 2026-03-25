@@ -1912,7 +1912,11 @@ const SPELLING = {
     {w:'bat',h:'Flies at night'},{w:'rat',h:'A mouse but bigger'},{w:'mat',h:'You wipe your feet on it'},
     {w:'tap',h:'Water comes out of it'},{w:'nap',h:'A short sleep'},{w:'lip',h:'Part of your mouth'},
     {w:'tip',h:'The very end of something'},{w:'dig',h:'Making a hole in the ground'},{w:'fig',h:'A sweet fruit'},
-    {w:'cob',h:'Corn on the...'},{w:'sob',h:'To cry hard'},{w:'hop',h:'Jump on one foot'},{w:'mop',h:'For cleaning the floor'}
+    {w:'cob',h:'Corn on the...'},{w:'sob',h:'To cry hard'},{w:'hop',h:'Jump on one foot'},{w:'mop',h:'For cleaning the floor'},
+    {w:'bee',h:'Makes honey'},{w:'egg',h:'Comes from a chicken'},{w:'ant',h:'Tiny insect'},{w:'owl',h:'Night bird'},{w:'cow',h:'Gives us milk'},
+    {w:'pie',h:'Baked with pastry'},{w:'toy',h:'Something to play with'},{w:'key',h:'Opens a lock'},{w:'web',h:'A spider makes one'},
+    {w:'mud',h:'Wet dirt'},{w:'gum',h:'You chew it'},{w:'zip',h:'Fastens your jacket'},{w:'fog',h:'Thick mist'},{w:'den',h:'An animal home'},
+    {w:'vet',h:'Animal doctor'},{w:'gem',h:'A precious stone'}
   ],
   2: [
     {w:'play',h:'Having fun with games'},{w:'stay',h:'Not leaving'},{w:'tree',h:'Tall with leaves and branches'},
@@ -1931,7 +1935,11 @@ const SPELLING = {
     {w:'green',h:'The colour of grass'},{w:'brown',h:'The colour of chocolate'},{w:'black',h:'The darkest colour'},
     {w:'white',h:'The colour of snow'},{w:'stone',h:'A small rock'},{w:'flame',h:'Fire makes this'},
     {w:'brave',h:'Not afraid'},{w:'dream',h:'You have them when you sleep'},{w:'cloud',h:'White and fluffy in the sky'},
-    {w:'happy',h:'Feeling good'},{w:'funny',h:'Makes you laugh'},{w:'carry',h:'Hold and move something'},{w:'lunch',h:'Midday meal'}
+    {w:'happy',h:'Feeling good'},{w:'funny',h:'Makes you laugh'},{w:'carry',h:'Hold and move something'},{w:'lunch',h:'Midday meal'},
+    {w:'bridge',h:'Goes over a river'},{w:'quiet',h:'Not loud'},{w:'wrong',h:'Not correct'},{w:'smile',h:'You do it when happy'},
+    {w:'climb',h:'Go up something'},{w:'giant',h:'Very very big person'},{w:'fairy',h:'Magical tiny person'},{w:'beach',h:'Sandy place by the sea'},
+    {w:'world',h:'The whole planet'},{w:'fresh',h:'New and clean'},{w:'story',h:'A tale or adventure'},{w:'horse',h:'You can ride it'},
+    {w:'music',h:'Sounds that make songs'},{w:'clock',h:'Tells the time'},{w:'plate',h:'You eat food from it'},{w:'guess',h:'Try to get the answer'}
   ],
   3: [
     {w:'beautiful',h:'Very pretty'},{w:'different',h:'Not the same'},{w:'important',h:'Really matters'},
@@ -1950,7 +1958,14 @@ const SPELLING = {
     {w:'elephant',h:'The biggest land animal'},{w:'shoulder',h:'Between your neck and arm'},{w:'daughter',h:'A female child'},
     {w:'mountain',h:'Very high land'},{w:'sandwich',h:'Bread with filling'},{w:'hospital',h:'Where doctors work'},
     {w:'tomorrow',h:'The day after today'},{w:'calendar',h:'Shows days and months'},{w:'dinosaur',h:'Extinct giant reptile'},
-    {w:'everyone',h:'All the people'},{w:'language',h:'English or French for example'},{w:'princess',h:'A royal daughter'}
+    {w:'everyone',h:'All the people'},{w:'language',h:'English or French for example'},{w:'princess',h:'A royal daughter'},
+    {w:'orchestra',h:'A large group of musicians'},{w:'chocolate',h:'Sweet brown treat'},{w:'telescope',h:'See things far away'},
+    {w:'invisible',h:'Cannot be seen'},{w:'desperate',h:'In great need'},{w:'continent',h:'A large landmass like Africa'},
+    {w:'passenger',h:'Someone riding in a vehicle'},{w:'companion',h:'A friend or partner'},{w:'guarantee',h:'A promise it will work'},
+    {w:'equipment',h:'Tools and machines for a job'},{w:'brilliant',h:'Very clever or shining brightly'},{w:'catalogue',h:'A list of items'},
+    {w:'furniture',h:'Tables, chairs, beds etc'},{w:'elaborate',h:'Very detailed and complex'},{w:'hurricane',h:'A powerful tropical storm'},
+    {w:'nightmare',h:'A scary dream'},{w:'volunteer',h:'Someone who helps for free'},{w:'threshold',h:'The entrance or doorway'},
+    {w:'abundance',h:'A very large quantity'}
   ]
 };
 
@@ -2279,8 +2294,8 @@ function finishMaths(){show('mathsLevelSelect');hide('mathsGame');const pct=ma.c
 // ==================== TIMES TABLES ====================
 let tt={table:0,questions:[],idx:0,total:12,correct:0,answer:'',startTime:0,timer:null,elapsed:0};
 
-function renderTTSelect(){const g=document.getElementById('tableGrid');g.innerHTML='';for(let t=2;t<=12;t++){const b=document.createElement('button');b.className='tt-btn';const pb=state.ttPersonalBests[t];b.innerHTML=t+'x<span class="tt-pb'+(pb?' has':'')+'\">'+(pb?(pb/1000).toFixed(1)+'s':'---')+'</span>';b.onclick=()=>startTT(t);g.appendChild(b)}}
-function startTT(t){tt.table=t;tt.idx=0;tt.correct=0;tt.answer='';tt.questions=[];for(let i=1;i<=12;i++)tt.questions.push({a:t,b:i,answer:t*i});shuffle(tt.questions);hide('timesTableSelect');show('timesGame');renderNumpad('ttNumpad',ttPress);tt.startTime=Date.now();tt.timer=setInterval(()=>{tt.elapsed=Date.now()-tt.startTime;document.getElementById('ttTimer').textContent=(tt.elapsed/1000).toFixed(1)+'s'},100);loadTTQ()}
+function renderTTSelect(){const g=document.getElementById('tableGrid');g.innerHTML='';const mix=document.createElement('button');mix.className='tt-btn';mix.style.gridColumn='1/-1';mix.style.background='linear-gradient(135deg,#e44d26,#f16529)';mix.style.color='white';mix.style.borderColor='#e44d26';mix.innerHTML='Mixed Tables';mix.onclick=()=>startTT(0);g.appendChild(mix);for(let t=2;t<=12;t++){const b=document.createElement('button');b.className='tt-btn';const pb=state.ttPersonalBests[t];b.innerHTML=t+'x<span class="tt-pb'+(pb?' has':'')+'\">'+(pb?(pb/1000).toFixed(1)+'s':'---')+'</span>';b.onclick=()=>startTT(t);g.appendChild(b)}}
+function startTT(t){tt.table=t;tt.idx=0;tt.correct=0;tt.answer='';tt.questions=[];if(t===0){for(let i=0;i<12;i++){const a=rand(2,12);const b=rand(2,12);tt.questions.push({a:a,b:b,answer:a*b})}}else{for(let i=1;i<=12;i++)tt.questions.push({a:t,b:i,answer:t*i})}shuffle(tt.questions);hide('timesTableSelect');show('timesGame');renderNumpad('ttNumpad',ttPress);tt.startTime=Date.now();tt.timer=setInterval(()=>{tt.elapsed=Date.now()-tt.startTime;document.getElementById('ttTimer').textContent=(tt.elapsed/1000).toFixed(1)+'s'},100);loadTTQ()}
 function loadTTQ(){const q=tt.questions[tt.idx];tt.answer='';document.getElementById('ttQuestion').textContent=q.a+' \u00D7 '+q.b+' = ?';document.getElementById('ttAnswer').textContent='_';document.getElementById('ttProgress').style.width=(tt.idx/tt.total*100)+'%';document.getElementById('ttProgressText').textContent=(tt.idx+1)+' of '+tt.total;document.getElementById('ttFeedback').classList.remove('show')}
 function ttPress(v){if(v==='C')tt.answer='';else if(v==='enter'){checkTTAns();return}else{if(tt.answer.length<4)tt.answer+=v}document.getElementById('ttAnswer').textContent=tt.answer||'_'}
 function checkTTAns(){if(!tt.answer)return;const q=tt.questions[tt.idx];const ok=parseInt(tt.answer)===q.answer;const fb=document.getElementById('ttFeedback');const fbc=document.getElementById('ttFeedbackContent');if(ok){tt.correct++;fbc.innerHTML='<div class="fb-correct"><div class="fb-icon">YES</div><div class="fb-text">Yes!</div></div>'}else{fbc.innerHTML='<div class="fb-wrong"><div class="fb-icon">'+q.answer+'</div><div class="fb-text">'+q.a+' \u00D7 '+q.b+' = '+q.answer+'</div></div>'}fb.classList.add('show');setTimeout(()=>{fb.classList.remove('show');tt.idx++;if(tt.idx>=tt.total)finishTT();else loadTTQ()},ok?500:1200)}
@@ -2472,7 +2487,11 @@ const VOCAB_DATA = {
     {w:'shiver',d:'To shake because you are cold or scared',wrong:['To jump very high','To run very fast','To shout very loud']},
     {w:'whisper',d:'To speak very quietly',wrong:['To speak very loudly','To run quickly','To eat slowly']},
     {w:'enormous',d:'Extremely big and large',wrong:['Extremely small','Extremely fast','Extremely quiet']},
-    {w:'search',d:'To look carefully for something',wrong:['To eat quickly','To sleep deeply','To run far']}
+    {w:'search',d:'To look carefully for something',wrong:['To eat quickly','To sleep deeply','To run far']},
+    {w:'frosty',d:'Covered in ice crystals',wrong:['Very hot','Very loud','Very dark']},
+    {w:'greedy',d:'Wanting more than you need',wrong:['Very kind','Very brave','Very quiet']},
+    {w:'hollow',d:'Empty inside',wrong:['Very full','Very heavy','Very tall']},
+    {w:'patient',d:'Able to wait calmly',wrong:['Very fast','Very angry','Very hungry']}
   ],
   2: [
     {w:'courageous',d:'Very brave, willing to face danger',wrong:['Very careful','Very clever','Very quiet']},
@@ -2531,7 +2550,11 @@ const PUNCT_DATA = {
     {wrong:'i can see the big hill',right:'I can see the big hill.'},
     {wrong:'the fish swam in the loch',right:'The fish swam in the loch.'},
     {wrong:'we played in the park',right:'We played in the park.'},
-    {wrong:'sam and ben are friends',right:'Sam and Ben are friends.'}
+    {wrong:'sam and ben are friends',right:'Sam and Ben are friends.'},
+    {wrong:'the cat is on the mat',right:'The cat is on the mat.'},
+    {wrong:'we went to edinburgh zoo',right:'We went to Edinburgh Zoo.'},
+    {wrong:'isla likes to read books',right:'Isla likes to read books.'},
+    {wrong:'they live in scotland',right:'They live in Scotland.'}
   ],
   2: [
     {wrong:'where is my hat',right:'Where is my hat?'},
@@ -2607,7 +2630,9 @@ const WORDFAM_DATA = {
     {ending:'-og',words:['dog','log','fog','hog','jog','bog'],wrong:['dig','lag','fig','bug']},
     {ending:'-op',words:['hop','top','mop','pop','stop','shop','drop'],wrong:['hip','tap','map','pup']},
     {ending:'-ug',words:['bug','hug','mug','rug','tug','jug','dug','pug'],wrong:['bag','hog','mig','rig']},
-    {ending:'-et',words:['net','wet','pet','get','set','let','met','bet'],wrong:['not','wit','pot','gut']}
+    {ending:'-et',words:['net','wet','pet','get','set','let','met','bet'],wrong:['not','wit','pot','gut']},
+    {ending:'-in',words:['bin','fin','pin','tin','win','grin','thin','skin'],wrong:['ban','fun','pan','ten']},
+    {ending:'-un',words:['bun','fun','gun','run','sun','spun','stun'],wrong:['bin','fan','gin','ran']}
   ],
   2: [
     {ending:'-ight',words:['light','night','fight','right','sight','might','bright','flight'],wrong:['lit','nit','fit','ring']},
@@ -2667,7 +2692,9 @@ const PHONICS_DATA = {
     {sound:'er',words:['water','under','never','better','winter'],wrong:['waist','until','nerve','butter']},
     {sound:'air',words:['chair','fair','pair','stair','repair'],wrong:['chain','far','pan','star']},
     {sound:'ear',words:['hear','near','dear','clear','appear'],wrong:['here','neat','deer','clean']},
-    {sound:'ough',words:['though','through','thought','bought','enough'],wrong:['throw','three','thin','bout']}
+    {sound:'ough',words:['though','through','thought','bought','enough'],wrong:['throw','three','thin','bout']},
+    {sound:'ful',words:['beautiful','wonderful','careful','hopeful','grateful'],wrong:['beauty','wonder','caring','hoping']},
+    {sound:'less',words:['careless','homeless','endless','hopeless','fearless'],wrong:['caring','home','ending','fearing']}
   ]
 };
 
@@ -2850,7 +2877,7 @@ function toggleDyslexia(){document.body.classList.toggle('dyslexia-mode');const 
 
 // ==================== MEMORY MATCH ====================
 let mem={cards:[],flipped:[],matched:0,total:0,moves:0,busy:false};
-function startMemoryMatch(){mem.matched=0;mem.moves=0;mem.flipped=[];mem.busy=false;const pairs=[{a:'3+7',b:'10'},{a:'6+4',b:'10'},{a:'8+2',b:'10'},{a:'5+5',b:'10'},{a:'9+1',b:'10'},{a:'2\u00D73',b:'6'},{a:'4\u00D75',b:'20'},{a:'7+3',b:'10'}];shuffle(pairs);const selected=pairs.slice(0,6);const cards=[];selected.forEach((p,i)=>{cards.push({id:i,text:p.a,pair:i});cards.push({id:i,text:p.b,pair:i})});shuffle(cards);mem.cards=cards;mem.total=selected.length;const grid=document.getElementById('memGrid');grid.innerHTML='';cards.forEach((c,idx)=>{const div=document.createElement('div');div.className='mem-card';div.innerHTML='<div class="mem-face mem-front">?</div><div class="mem-face mem-back">'+c.text+'</div>';div.onclick=()=>flipCard(idx,div);grid.appendChild(div)});document.getElementById('memStatus').textContent='Find all pairs! Moves: 0'}
+function startMemoryMatch(){mem.matched=0;mem.moves=0;mem.flipped=[];mem.busy=false;const allPairs=[{a:'3+7',b:'10'},{a:'6+4',b:'10'},{a:'8+2',b:'10'},{a:'5+5',b:'10'},{a:'9+1',b:'10'},{a:'2\u00D73',b:'6'},{a:'4\u00D75',b:'20'},{a:'7+3',b:'10'},{a:'big',b:'small'},{a:'hot',b:'cold'},{a:'up',b:'down'},{a:'fast',b:'slow'},{a:'happy',b:'sad'},{a:'day',b:'night'},{a:'3\u00D74',b:'12'},{a:'6\u00D76',b:'36'},{a:'half',b:'\u00BD'},{a:'quarter',b:'\u00BC'}];const pairs=shuffle(allPairs);shuffle(pairs);const selected=pairs.slice(0,6);const cards=[];selected.forEach((p,i)=>{cards.push({id:i,text:p.a,pair:i});cards.push({id:i,text:p.b,pair:i})});shuffle(cards);mem.cards=cards;mem.total=selected.length;const grid=document.getElementById('memGrid');grid.innerHTML='';cards.forEach((c,idx)=>{const div=document.createElement('div');div.className='mem-card';div.innerHTML='<div class="mem-face mem-front">?</div><div class="mem-face mem-back">'+c.text+'</div>';div.onclick=()=>flipCard(idx,div);grid.appendChild(div)});document.getElementById('memStatus').textContent='Find all pairs! Moves: 0'}
 function flipCard(idx,el){if(mem.busy||el.classList.contains('flipped')||el.classList.contains('matched'))return;el.classList.add('flipped');sfxClick();mem.flipped.push({idx:idx,el:el,pair:mem.cards[idx].pair});if(mem.flipped.length===2){mem.moves++;mem.busy=true;const[a,b]=mem.flipped;if(a.pair===b.pair){mem.matched++;sfxCorrect();a.el.classList.add('matched');b.el.classList.add('matched');mem.flipped=[];mem.busy=false;if(mem.matched>=mem.total){document.getElementById('memStatus').textContent='You did it in '+mem.moves+' moves!';sfxLevelUp();const stars=mem.moves<=8?3:mem.moves<=12?2:1;addStars(stars);recordPlay();checkAch('first_game',true);setTimeout(()=>showResults('#e056a0','\u{1F0CF}','Memory Match!',mem.moves+' moves',stars,mem.total,mem.total,()=>{showScreen('memorymatch');startMemoryMatch()},null),1500)}else{document.getElementById('memStatus').textContent='Pairs: '+mem.matched+'/'+mem.total+' | Moves: '+mem.moves}}else{sfxWrong();setTimeout(()=>{a.el.classList.remove('flipped');b.el.classList.remove('flipped');mem.flipped=[];mem.busy=false},800);document.getElementById('memStatus').textContent='Pairs: '+mem.matched+'/'+mem.total+' | Moves: '+mem.moves}}}
 
 // ==================== GRAMMAR ====================
@@ -2889,8 +2916,8 @@ function loadSeqQ(){const q=genSeqQ(seq.level);seq.question=q;document.getElemen
 function finishSeq(){show('seqLevelSelect');hide('seqGame');const pct=seq.correct/seq.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#00cec9','1,2,?','Sequences Done!','Level '+seq.level,stars,seq.correct,seq.total,()=>{showScreen('sequence')},null)}
 
 // ==================== SCOTTISH QUIZ ====================
-const SCOT_QUIZ=[{q:'What is the capital of Scotland?',correct:'Edinburgh',opts:['Glasgow','Edinburgh','Aberdeen','Dundee']},{q:'What is the tallest mountain in Scotland?',correct:'Ben Nevis',opts:['Ben Lomond','Ben Nevis','Cairn Gorm','Ben Macdui']},{q:'What is the national animal of Scotland?',correct:'Unicorn',opts:['Lion','Eagle','Unicorn','Stag']},{q:'What instrument is Scotland famous for?',correct:'Bagpipes',opts:['Guitar','Violin','Bagpipes','Drums']},{q:'What is a loch?',correct:'A lake',opts:['A mountain','A lake','A river','A forest']},{q:'What is haggis?',correct:'A traditional Scottish dish',opts:['A type of dance','A traditional Scottish dish','A castle','A musical instrument']},{q:'What river runs through Glasgow?',correct:'The Clyde',opts:['The Thames','The Clyde','The Tay','The Forth']},{q:'What is a ceilidh?',correct:'A Scottish dance',opts:['A type of food','A Scottish dance','A mountain','A boat']},{q:'What are the Highland Games famous for?',correct:'Caber toss and athletics',opts:['Football','Swimming','Caber toss and athletics','Chess']},{q:'Who is considered Scotland\'s national poet?',correct:'Robert Burns',opts:['William Shakespeare','Robert Burns','Walter Scott','Robert Louis Stevenson']},{q:'What is the longest river in Scotland?',correct:'The Tay',opts:['The Clyde','The Forth','The Tay','The Dee']},{q:'What is tartan?',correct:'A patterned fabric',opts:['A type of food','A patterned fabric','A dance','A mountain']},{q:'Which Scottish city is called the Granite City?',correct:'Aberdeen',opts:['Edinburgh','Glasgow','Aberdeen','Inverness']},{q:'What bridge crosses the Firth of Forth?',correct:'The Forth Bridge',opts:['Tower Bridge','The Forth Bridge','London Bridge','Tay Bridge']},{q:'What is Hogmanay?',correct:'New Year celebration',opts:['Christmas','New Year celebration','Easter','Halloween']}];
-let scot={questions:[],idx:0,total:15,correct:0};
+const SCOT_QUIZ=[{q:'What is the capital of Scotland?',correct:'Edinburgh',opts:['Glasgow','Edinburgh','Aberdeen','Dundee']},{q:'What is the tallest mountain in Scotland?',correct:'Ben Nevis',opts:['Ben Lomond','Ben Nevis','Cairn Gorm','Ben Macdui']},{q:'What is the national animal of Scotland?',correct:'Unicorn',opts:['Lion','Eagle','Unicorn','Stag']},{q:'What instrument is Scotland famous for?',correct:'Bagpipes',opts:['Guitar','Violin','Bagpipes','Drums']},{q:'What is a loch?',correct:'A lake',opts:['A mountain','A lake','A river','A forest']},{q:'What is haggis?',correct:'A traditional Scottish dish',opts:['A type of dance','A traditional Scottish dish','A castle','A musical instrument']},{q:'What river runs through Glasgow?',correct:'The Clyde',opts:['The Thames','The Clyde','The Tay','The Forth']},{q:'What is a ceilidh?',correct:'A Scottish dance',opts:['A type of food','A Scottish dance','A mountain','A boat']},{q:'What are the Highland Games famous for?',correct:'Caber toss and athletics',opts:['Football','Swimming','Caber toss and athletics','Chess']},{q:'Who is considered Scotland\'s national poet?',correct:'Robert Burns',opts:['William Shakespeare','Robert Burns','Walter Scott','Robert Louis Stevenson']},{q:'What is the longest river in Scotland?',correct:'The Tay',opts:['The Clyde','The Forth','The Tay','The Dee']},{q:'What is tartan?',correct:'A patterned fabric',opts:['A type of food','A patterned fabric','A dance','A mountain']},{q:'Which Scottish city is called the Granite City?',correct:'Aberdeen',opts:['Edinburgh','Glasgow','Aberdeen','Inverness']},{q:'What bridge crosses the Firth of Forth?',correct:'The Forth Bridge',opts:['Tower Bridge','The Forth Bridge','London Bridge','Tay Bridge']},{q:'What is Hogmanay?',correct:'New Year celebration',opts:['Christmas','New Year celebration','Easter','Halloween']},{q:'What is the largest city in Scotland?',correct:'Glasgow',opts:['Edinburgh','Glasgow','Aberdeen','Dundee']},{q:'Which island group is furthest north?',correct:'Shetland',opts:['Orkney','Shetland','Skye','Lewis']},{q:'What animal appears on the Scottish flag?',correct:'None — it has a cross',opts:['A lion','A unicorn','None — it has a cross','An eagle']},{q:'What colour is the Scottish flag?',correct:'Blue and white',opts:['Red and white','Blue and white','Green and white','Red and blue']},{q:'What is a glen?',correct:'A narrow valley',opts:['A mountain top','A narrow valley','A wide river','A deep loch']},{q:'What is the most famous loch monster called?',correct:'Nessie',opts:['Nessie','Hamish','Angus','Morag']},{q:'Which castle is in the centre of Edinburgh?',correct:'Edinburgh Castle',opts:['Stirling Castle','Edinburgh Castle','Balmoral Castle','Glamis Castle']},{q:'What sport was invented in Scotland?',correct:'Golf',opts:['Tennis','Golf','Cricket','Rugby']},{q:'What is neeps and tatties?',correct:'Turnip and potatoes',opts:['Meat and gravy','Turnip and potatoes','Fish and chips','Bread and butter']}];
+let scot={questions:[],idx:0,total:20,correct:0};
 function startScotQuiz(){scot.questions=[...SCOT_QUIZ];shuffle(scot.questions);scot.idx=0;scot.correct=0;loadScotQ()}
 function loadScotQ(){const q=scot.questions[scot.idx];document.getElementById('scotProgress').style.width=(scot.idx/scot.total*100)+'%';document.getElementById('scotProgressText').textContent=(scot.idx+1)+'/'+scot.total;document.getElementById('scotDisplay').innerHTML='<div class="ph-sound" style="background:#e8f0ff;border-color:#0084C8;color:#005EB8;font-size:1rem">'+q.q+'</div>';const opts=document.getElementById('scotOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#scotOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){scot.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{scot.idx++;if(scot.idx>=scot.total)finishScot();else loadScotQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
 function finishScot(){const pct=scot.correct/scot.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#005EB8','\u{1F3F4}','Scotland Quiz Done!',scot.correct+'/'+scot.total,stars,scot.correct,scot.total,()=>{showScreen('scotquiz');startScotQuiz()},null)}
@@ -2924,7 +2951,9 @@ const SHAPES_DATA={
     {q:'How many corners does a square have?',svg:'<svg viewBox="0 0 100 100" width="120"><rect x="10" y="10" width="80" height="80" fill="#6c5ce7" stroke="#2d3436" stroke-width="3"/></svg>',correct:'4',opts:['3','4','5','6']},
     {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><polygon points="50,5 95,35 80,90 20,90 5,35" fill="#e84393"/></svg>',correct:'Pentagon',opts:['Hexagon','Pentagon','Octagon','Square']},
     {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><polygon points="50,10 90,50 50,90 10,50" fill="#f39c12"/></svg>',correct:'Diamond',opts:['Square','Diamond','Kite','Triangle']},
-    {q:'Which shape has no corners?',svg:'',correct:'Circle',opts:['Square','Triangle','Circle','Rectangle']}
+    {q:'Which shape has no corners?',svg:'',correct:'Circle',opts:['Square','Triangle','Circle','Rectangle']},
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><polygon points="50,5 93,27 93,73 50,95 7,73 7,27" fill="#0abde3"/></svg>',correct:'Hexagon',opts:['Pentagon','Hexagon','Octagon','Circle']},
+    {q:'How many sides does this shape have?',svg:'<svg viewBox="0 0 100 100" width="120"><rect x="10" y="10" width="80" height="60" fill="#f39c12" stroke="#2d3436" stroke-width="3"/></svg>',correct:'4',opts:['3','4','5','6']}
   ],
   2:[
     {q:'How many sides does a hexagon have?',svg:'<svg viewBox="0 0 100 100" width="130"><polygon points="50,5 93,27 93,73 50,95 7,73 7,27" fill="#0abde3"/></svg>',correct:'6',opts:['5','6','7','8']},
