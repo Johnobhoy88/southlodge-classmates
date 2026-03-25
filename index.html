@@ -38,8 +38,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 /* ===== SUBJECT CARDS ===== */
 .subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
 .subject-card{border-radius:16px;padding:14px 8px 12px;text-align:center;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;user-select:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}
-.subject-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.12)}
-.subject-card:active{transform:scale(0.96)}
+.subject-card:hover{box-shadow:0 6px 16px rgba(0,0,0,0.15)}
+.subject-card:active{transform:scale(0.95)}
 
 .subject-card .card-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:6px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
 .subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.75rem;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.1);line-height:1.2}
@@ -217,11 +217,6 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .home-bg::after{content:'';position:absolute;top:20px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(108,92,231,0.15),transparent 70%);border-radius:50%}
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .home-bg-animated{background:linear-gradient(135deg,#FFF8F0,#FFF0F5,#F0F8FF,#FFFDF0),radial-gradient(circle at 12% 18%,rgba(255,217,61,0.22) 6px,transparent 6px),radial-gradient(circle at 88% 25%,rgba(255,107,107,0.18) 5px,transparent 5px),radial-gradient(circle at 25% 50%,rgba(78,205,196,0.18) 7px,transparent 7px),radial-gradient(circle at 75% 60%,rgba(167,139,250,0.18) 5px,transparent 5px),radial-gradient(circle at 55% 85%,rgba(107,203,119,0.18) 6px,transparent 6px),radial-gradient(circle at 35% 75%,rgba(255,107,107,0.15) 4px,transparent 4px),radial-gradient(circle at 90% 80%,rgba(255,217,61,0.2) 7px,transparent 7px),radial-gradient(circle at 5% 90%,rgba(10,189,227,0.18) 5px,transparent 5px),radial-gradient(circle at 65% 15%,rgba(232,67,147,0.15) 4px,transparent 4px),radial-gradient(circle at 45% 35%,rgba(17,153,142,0.18) 6px,transparent 6px),radial-gradient(circle at 8% 45%,rgba(243,151,30,0.18) 5px,transparent 5px),radial-gradient(circle at 80% 90%,rgba(167,139,250,0.2) 5px,transparent 5px);background-size:400% 400%;animation:bgShift 30s ease infinite}
-@keyframes cardEnter{0%{opacity:0;transform:translateY(30px) scale(0.95)}60%{opacity:1;transform:translateY(-3px) scale(1.01)}100%{opacity:1;transform:translateY(0) scale(1)}}
-.subject-card{animation:cardEnter 0.4s ease backwards}
-.subject-card:nth-child(1){animation-delay:0.03s}.subject-card:nth-child(2){animation-delay:0.06s}.subject-card:nth-child(3){animation-delay:0.09s}.subject-card:nth-child(4){animation-delay:0.12s}.subject-card:nth-child(5){animation-delay:0.15s}.subject-card:nth-child(6){animation-delay:0.18s}.subject-card:nth-child(7){animation-delay:0.21s}.subject-card:nth-child(8){animation-delay:0.24s}.subject-card:nth-child(9){animation-delay:0.27s}.subject-card:nth-child(10){animation-delay:0.30s}
-@keyframes subtleWobble{0%,100%{transform:rotate(-0.5deg)}50%{transform:rotate(0.5deg)}}
-.subject-card:hover{animation:none}
 
 /* ===== WHITEBOARD MODE ===== */
 .wb-screen{background:#1a1a2e;color:white}
