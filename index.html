@@ -85,6 +85,36 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-fractions .card-icon{background:rgba(255,255,255,0.3);color:#c0392b!important}
 .card-wordprob{background:linear-gradient(135deg,#373b44,#4286f4)}
 .card-wordprob .card-icon{background:rgba(255,255,255,0.3)}
+.card-shapes{background:linear-gradient(135deg,#6c5ce7,#fd79a8)}
+.card-shapes .card-icon{background:rgba(255,255,255,0.3)}
+.card-data{background:linear-gradient(135deg,#00b894,#55efc4)}
+.card-data .card-icon{background:rgba(255,255,255,0.3)}
+.card-h2h{background:linear-gradient(135deg,#d63031,#e17055)}
+.card-h2h .card-icon{background:rgba(255,255,255,0.3)}
+
+/* ===== SHAPES ===== */
+.shape-display{text-align:center;margin:16px 0}
+.shape-display svg{max-width:200px;max-height:150px;margin:0 auto;display:block}
+
+/* ===== DATA HANDLING ===== */
+.chart-bar{display:flex;align-items:flex-end;gap:8px;justify-content:center;height:150px;margin:16px 0;padding:0 8px}
+.chart-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.chart-fill{width:100%;border-radius:6px 6px 0 0;transition:height 0.4s;min-width:30px}
+.chart-label{font-size:0.7rem;font-weight:700;color:#636e72}
+.chart-val{font-size:0.75rem;font-weight:800;color:#2d3436}
+
+/* ===== HEAD TO HEAD ===== */
+.h2h-split{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:70vh}
+.h2h-side{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;position:relative}
+.h2h-side.left{background:#f0f8ff;border-right:3px solid #ddd}
+.h2h-side.right{background:#fff5f5}
+.h2h-score{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3rem;margin:8px 0}
+.h2h-q{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;margin:8px 0;color:#2d3436}
+.h2h-input{width:80%;max-width:150px;padding:12px;font-size:1.3rem;border:3px solid #e0e0e0;border-radius:12px;text-align:center;font-family:'Fredoka One','Comic Sans MS',cursive;outline:none}
+.h2h-input:focus{border-color:#6c5ce7}
+.h2h-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;color:#636e72;margin-bottom:8px}
+.h2h-winner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.95);z-index:5}
+.h2h-winner-text{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;text-align:center;animation:popIn 0.5s ease}
 
 .coin-display-home{display:inline-flex;align-items:center;gap:4px;background:#fff8e6;border:2px solid #ffd700;border-radius:20px;padding:4px 12px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#d4a520}
 .mute-btn{background:none;border:2px solid #e0e0e0;border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:#636e72;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:8px}
@@ -692,11 +722,14 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="subject-card card-money" onclick="startGame('money')"><div class="card-icon">&#xA3;p</div><div class="card-title">Money</div><div class="card-desc">Coins and change</div></div>
       <div class="subject-card card-fractions" onclick="startGame('fractions')"><div class="card-icon">&#xBD;</div><div class="card-title">Fractions</div><div class="card-desc">Halves, quarters &amp; more</div></div>
       <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
+      <div class="subject-card card-shapes" onclick="startGame('shapes')"><div class="card-icon">&#x25B3;</div><div class="card-title">Shapes</div><div class="card-desc">Geometry</div></div>
+      <div class="subject-card card-data" onclick="startGame('datahandling')"><div class="card-icon">&#x1F4CA;</div><div class="card-title">Data</div><div class="card-desc">Charts</div></div>
     </div>
 
     <div class="section-header"><span>&#x1F3C6; Challenges</span></div>
     <div class="subject-grid">
       <div class="subject-card card-daily" onclick="startGame('daily')"><div class="card-icon">GO</div><div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">5 daily challenges — spelling, maths, reading &amp; more</div></div></div>
+      <div class="subject-card card-h2h" onclick="startGame('h2h')"><div class="card-icon">VS</div><div class="card-title">Head to Head</div><div class="card-desc">Race!</div></div>
     </div>
 
     <div class="badges-section">
@@ -706,6 +739,10 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
     <div class="progress-map">
       <div class="progress-map-title">My Progress</div>
       <div id="progressMap"></div>
+    </div>
+    <div id="leaderboardSection" style="margin:16px 0;display:none">
+      <div style="text-align:center;font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:8px">&#x1F3C6; Top Stars</div>
+      <div id="leaderboard"></div>
     </div>
     <div style="text-align:center;padding:12px 0;">
       <button onclick="showScreen('landing')" style="background:none;border:none;color:#b2bec3;font-size:0.75rem;font-family:'Nunito','Trebuchet MS',sans-serif;cursor:pointer;padding:8px 16px;">&#x2190; Back to start</button>
@@ -1325,6 +1362,75 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div id="nbDisplay"></div>
       <div class="nb-ans" id="nbAns">_</div>
       <div class="numpad" id="nbNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SHAPES -->
+<div id="shapes" class="screen game-screen">
+  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Shapes</h2></div>
+  <div class="game-body">
+    <div id="shapesLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startShapes(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">2D shapes</div></div>
+        <div class="level-card lc-2" onclick="startShapes(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Properties</div></div>
+        <div class="level-card lc-3" onclick="startShapes(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">3D &amp; angles</div></div>
+      </div>
+    </div>
+    <div id="shapesGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="shapeProgress" style="background:linear-gradient(90deg,#6c5ce7,#fd79a8)"></div></div>
+      <div class="progress-text" id="shapeProgressText"></div>
+      <div class="shape-display" id="shapeDisplay"></div>
+      <div class="ph-options" id="shapeOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DATA HANDLING -->
+<div id="datahandling" class="screen game-screen">
+  <div class="game-header" style="border-color:#55efc4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00b894">Data Handling</h2></div>
+  <div class="game-body">
+    <div id="dataLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startData(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Read charts</div></div>
+        <div class="level-card lc-2" onclick="startData(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Compare data</div></div>
+        <div class="level-card lc-3" onclick="startData(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mean &amp; totals</div></div>
+      </div>
+    </div>
+    <div id="dataGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="dataProgress" style="background:linear-gradient(90deg,#00b894,#55efc4)"></div></div>
+      <div class="progress-text" id="dataProgressText"></div>
+      <div id="dataDisplay"></div>
+      <div class="ph-options" id="dataOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- HEAD TO HEAD -->
+<div id="h2h" class="screen game-screen">
+  <div class="game-header" style="border-color:#e17055"><button class="nav-btn" onclick="endH2H();goHome()" title="Back">&larr; Back</button><h2 class="game-title" style="color:#d63031">Head to Head</h2></div>
+  <div id="h2hSetup" class="game-body" style="text-align:center;">
+    <h3 style="margin-bottom:16px">Enter player names:</h3>
+    <input class="mv-input" id="h2hName1" placeholder="Player 1" style="margin-bottom:8px;max-width:250px"><br>
+    <input class="mv-input" id="h2hName2" placeholder="Player 2" style="margin-bottom:16px;max-width:250px"><br>
+    <button class="r-btn r-btn-primary" style="background:linear-gradient(135deg,#d63031,#e17055)" onclick="startH2H()">Start Race!</button>
+  </div>
+  <div id="h2hGame" style="display:none;">
+    <div class="h2h-split">
+      <div class="h2h-side left">
+        <div class="h2h-name" id="h2hP1Name">Player 1</div>
+        <div class="h2h-score" id="h2hP1Score" style="color:#0984e3">0</div>
+        <div class="h2h-q" id="h2hP1Q"></div>
+        <input class="h2h-input" id="h2hP1Input" autocomplete="off" onkeydown="if(event.key==='Enter')checkH2H(1)">
+      </div>
+      <div class="h2h-side right">
+        <div class="h2h-name" id="h2hP2Name">Player 2</div>
+        <div class="h2h-score" id="h2hP2Score" style="color:#d63031">0</div>
+        <div class="h2h-q" id="h2hP2Q"></div>
+        <input class="h2h-input" id="h2hP2Input" autocomplete="off" onkeydown="if(event.key==='Enter')checkH2H(2)">
+      </div>
     </div>
   </div>
 </div>
@@ -1967,7 +2073,8 @@ let currentPupil=null;
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily()}
-function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}}
+function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard()}
+function renderLeaderboard(){const sec=document.getElementById('leaderboardSection');const el=document.getElementById('leaderboard');const pupils=getPupils();if(pupils.length<2){sec.style.display='none';return}const data=pupils.map(p=>{const s=loadPupilState(p);return{name:p,stars:s?s.stars||0:0}}).sort((a,b)=>b.stars-a.stars).slice(0,5);if(data[0].stars===0){sec.style.display='none';return}sec.style.display='block';const medals=['\u{1F947}','\u{1F948}','\u{1F949}','4','5'];el.innerHTML=data.map((d,i)=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:'+(d.name===currentPupil?'#e8fff5':'#f8f8f8')+';border-radius:10px;margin-bottom:4px;font-size:0.85rem"><span style="width:24px;text-align:center">'+medals[i]+'</span><span style="flex:1;font-weight:700;color:#2d3436">'+d.name+'</span><span style="color:#FFD93D;font-weight:800">'+d.stars+' &#x2B50;</span></div>').join('')}
 function renderProgressMap(){const pm=document.getElementById('progressMap');if(!pm)return;const topics=[{id:'spelling',name:'Spelling',color:'#f7971e'},{id:'maths',name:'Maths',color:'#0083b0'},{id:'times',name:'Tables',color:'#e44d26'},{id:'reading',name:'Reading',color:'#56ab2f'},{id:'bonds',name:'Bonds',color:'#11998e'},{id:'phonics',name:'Phonics',color:'#0abde3'}];let h='';topics.forEach(t=>{const lv=state.adaptive&&state.adaptive[t.id]?state.adaptive[t.id].level:1;const pct=lv/3*100;h+='<div class="pmap-row"><span class="pmap-label">'+t.name+'</span><div class="pmap-bar"><div class="pmap-fill" style="width:'+pct+'%;background:'+t.color+'"></div></div><span class="pmap-level">Lv'+lv+'</span></div>'});pm.innerHTML=h}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
 
@@ -2595,6 +2702,75 @@ function sfxClick(){playTone(800,0.05,'sine',0.1)}
 function sfxStar(){playTone(880,0.1,'triangle',0.2);setTimeout(()=>playTone(1108,0.15,'triangle',0.25),120)}
 function toggleMute(){soundMuted=!soundMuted;const btn=document.getElementById('muteBtn');if(soundMuted){btn.textContent='\u{1F507} Sound Off';btn.classList.add('muted')}else{btn.textContent='\u{1F50A} Sound On';btn.classList.remove('muted');sfxClick()}}
 function toggleDyslexia(){document.body.classList.toggle('dyslexia-mode');const btn=document.getElementById('dyslexiaBtn');btn.classList.toggle('active')}
+
+// ==================== SHAPES & GEOMETRY ====================
+const SHAPES_DATA={
+  1:[
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><rect x="10" y="10" width="80" height="80" fill="#6c5ce7" rx="2"/></svg>',correct:'Square',opts:['Square','Circle','Triangle','Rectangle']},
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><circle cx="50" cy="50" r="40" fill="#e17055"/></svg>',correct:'Circle',opts:['Square','Circle','Triangle','Star']},
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><polygon points="50,10 90,90 10,90" fill="#00b894"/></svg>',correct:'Triangle',opts:['Triangle','Diamond','Pentagon','Square']},
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 120 80" width="170"><rect x="10" y="10" width="100" height="60" fill="#0984e3" rx="2"/></svg>',correct:'Rectangle',opts:['Square','Rectangle','Oval','Trapezoid']},
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><ellipse cx="50" cy="50" rx="45" ry="30" fill="#fdcb6e"/></svg>',correct:'Oval',opts:['Circle','Oval','Egg','Rectangle']},
+    {q:'How many sides does a triangle have?',svg:'<svg viewBox="0 0 100 100" width="120"><polygon points="50,10 90,90 10,90" fill="#00b894" stroke="#2d3436" stroke-width="3"/></svg>',correct:'3',opts:['2','3','4','5']},
+    {q:'How many corners does a square have?',svg:'<svg viewBox="0 0 100 100" width="120"><rect x="10" y="10" width="80" height="80" fill="#6c5ce7" stroke="#2d3436" stroke-width="3"/></svg>',correct:'4',opts:['3','4','5','6']},
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><polygon points="50,5 95,35 80,90 20,90 5,35" fill="#e84393"/></svg>',correct:'Pentagon',opts:['Hexagon','Pentagon','Octagon','Square']},
+    {q:'What shape is this?',svg:'<svg viewBox="0 0 100 100" width="150"><polygon points="50,10 90,50 50,90 10,50" fill="#f39c12"/></svg>',correct:'Diamond',opts:['Square','Diamond','Kite','Triangle']},
+    {q:'Which shape has no corners?',svg:'',correct:'Circle',opts:['Square','Triangle','Circle','Rectangle']}
+  ],
+  2:[
+    {q:'How many sides does a hexagon have?',svg:'<svg viewBox="0 0 100 100" width="130"><polygon points="50,5 93,27 93,73 50,95 7,73 7,27" fill="#0abde3"/></svg>',correct:'6',opts:['5','6','7','8']},
+    {q:'What is a shape with 8 sides called?',svg:'<svg viewBox="0 0 100 100" width="130"><polygon points="30,5 70,5 95,30 95,70 70,95 30,95 5,70 5,30" fill="#e17055"/></svg>',correct:'Octagon',opts:['Hexagon','Heptagon','Octagon','Decagon']},
+    {q:'How many lines of symmetry does a square have?',svg:'',correct:'4',opts:['1','2','4','8']},
+    {q:'A triangle with all sides equal is called?',svg:'',correct:'Equilateral',opts:['Isosceles','Equilateral','Scalene','Right-angle']},
+    {q:'How many faces does a cube have?',svg:'',correct:'6',opts:['4','6','8','12']},
+    {q:'How many edges does a cube have?',svg:'',correct:'12',opts:['6','8','12','16']},
+    {q:'What is the name of a 3D sphere shape?',svg:'',correct:'Sphere',opts:['Circle','Ball','Sphere','Globe']},
+    {q:'A rectangle has how many lines of symmetry?',svg:'',correct:'2',opts:['1','2','4','0']},
+    {q:'What 3D shape is a tin of beans?',svg:'',correct:'Cylinder',opts:['Cube','Cuboid','Cylinder','Cone']},
+    {q:'Which shape has exactly 3 lines of symmetry?',svg:'',correct:'Equilateral triangle',opts:['Square','Equilateral triangle','Rectangle','Pentagon']}
+  ],
+  3:[
+    {q:'What is the angle in a right angle?',svg:'',correct:'90 degrees',opts:['45 degrees','90 degrees','180 degrees','360 degrees']},
+    {q:'An angle less than 90 degrees is called?',svg:'',correct:'Acute',opts:['Acute','Obtuse','Reflex','Right']},
+    {q:'An angle greater than 90 degrees is called?',svg:'',correct:'Obtuse',opts:['Acute','Obtuse','Straight','Sharp']},
+    {q:'How many degrees in a full turn?',svg:'',correct:'360',opts:['90','180','270','360']},
+    {q:'How many vertices does a triangular prism have?',svg:'',correct:'6',opts:['3','5','6','8']},
+    {q:'What is the net of a cube made of?',svg:'',correct:'6 squares',opts:['4 squares','5 squares','6 squares','8 squares']},
+    {q:'A parallelogram has how many pairs of parallel sides?',svg:'',correct:'2',opts:['0','1','2','4']},
+    {q:'What shape has 4 sides and no right angles?',svg:'',correct:'Rhombus',opts:['Square','Rectangle','Rhombus','Trapezium']},
+    {q:'How many faces does a triangular pyramid have?',svg:'',correct:'4',opts:['3','4','5','6']},
+    {q:'Coordinates (3,5) means 3 along and 5...?',svg:'',correct:'Up',opts:['Down','Up','Left','Along']}
+  ]
+};
+
+let shp={level:1,questions:[],idx:0,total:10,correct:0};
+function startShapes(lv){shp.level=lv;shp.questions=[...SHAPES_DATA[lv]];shuffle(shp.questions);shp.idx=0;shp.correct=0;hide('shapesLevelSelect');show('shapesGame');loadShapeQ()}
+function loadShapeQ(){const q=shp.questions[shp.idx];document.getElementById('shapeProgress').style.width=(shp.idx/shp.total*100)+'%';document.getElementById('shapeProgressText').textContent='Question '+(shp.idx+1)+' of '+shp.total;document.getElementById('shapeDisplay').innerHTML=(q.svg||'')+'<div class="ph-sound" style="background:#f5f0ff;border-color:#a29bfe;color:#6c5ce7;font-size:1rem;margin-top:12px">'+q.q+'</div>';const opts=document.getElementById('shapeOpts');opts.innerHTML='';shuffle(q.opts).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectShapeAns(b,o===q.correct,q.correct);opts.appendChild(b)})}
+function selectShapeAns(btn,correct,right){document.querySelectorAll('#shapeOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===right)o.classList.add('ph-correct')});if(correct){shp.correct++;sfxCorrect();btn.classList.add('ph-correct')}else{sfxWrong();btn.classList.add('ph-wrong')}setTimeout(()=>{shp.idx++;if(shp.idx>=shp.total)finishShapes();else loadShapeQ()},correct?500:1200)}
+function finishShapes(){show('shapesLevelSelect');hide('shapesGame');const pct=shp.correct/shp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('shapes');else if(pct<0.4)adaptiveWrong('shapes');addStars(stars);recordPlay();showResults('#6c5ce7','\u25B3','Shapes Done!','Level '+shp.level,stars,shp.correct,shp.total,()=>{showScreen('shapes')},null)}
+
+// ==================== DATA HANDLING ====================
+let dh={level:1,questions:[],idx:0,total:10,correct:0};
+
+function genDataQ(lv){const items=lv===1?['Apples','Bananas','Oranges']:lv===2?['Monday','Tuesday','Wednesday','Thursday','Friday']:['Isla','Ewan','Finn','Priya','Marcus','Ailsa'];const vals=items.map(()=>lv===1?rand(1,6):lv===2?rand(2,15):rand(5,30));const colors=['#FF6B6B','#FFD93D','#4ECDC4','#A78BFA','#6BCB77','#e84393'];const maxVal=Math.max(...vals);const type=rand(0,2);let q,correct,opts;if(type===0){const idx=rand(0,items.length-1);q='How many for '+items[idx]+'?';correct=String(vals[idx]);opts=shuffle([correct,String(vals[idx]+rand(1,3)),String(Math.max(1,vals[idx]-rand(1,3))),String(vals[(idx+1)%items.length])].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4)}else if(type===1){const maxIdx=vals.indexOf(maxVal);q='Which has the most?';correct=items[maxIdx];opts=shuffle([...items]).slice(0,4);if(!opts.includes(correct)){opts[0]=correct;shuffle(opts)}}else{const total=vals.reduce((a,b)=>a+b,0);q='What is the total?';correct=String(total);opts=shuffle([correct,String(total+rand(1,5)),String(total-rand(1,5)),String(Math.round(total/2))].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4)}let chart='<div class="chart-bar">';items.forEach((item,i)=>{const h=Math.round(vals[i]/maxVal*120);chart+='<div class="chart-col"><div class="chart-val">'+vals[i]+'</div><div class="chart-fill" style="height:'+h+'px;background:'+colors[i%colors.length]+'"></div><div class="chart-label">'+item+'</div></div>'});chart+='</div>';return{chart:chart,q:q,correct:correct,opts:opts}}
+
+function startData(lv){dh.level=lv;dh.idx=0;dh.correct=0;dh.questions=[];for(let i=0;i<10;i++)dh.questions.push(genDataQ(lv));hide('dataLevelSelect');show('dataGame');loadDataQ()}
+function loadDataQ(){const q=dh.questions[dh.idx];document.getElementById('dataProgress').style.width=(dh.idx/dh.total*100)+'%';document.getElementById('dataProgressText').textContent='Question '+(dh.idx+1)+' of '+dh.total;document.getElementById('dataDisplay').innerHTML=q.chart+'<div class="ph-sound" style="background:#e8fff5;border-color:#55efc4;color:#00b894;font-size:1rem">'+q.q+'</div>';const opts=document.getElementById('dataOpts');opts.innerHTML='';q.opts.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectDataAns(b,o===q.correct,q.correct);opts.appendChild(b)})}
+function selectDataAns(btn,correct,right){document.querySelectorAll('#dataOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===right)o.classList.add('ph-correct')});if(correct){dh.correct++;sfxCorrect();btn.classList.add('ph-correct')}else{sfxWrong();btn.classList.add('ph-wrong')}setTimeout(()=>{dh.idx++;if(dh.idx>=dh.total)finishData();else loadDataQ()},correct?500:1200)}
+function finishData(){show('dataLevelSelect');hide('dataGame');const pct=dh.correct/dh.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#00b894','\u{1F4CA}','Data Handling Done!','Level '+dh.level,stars,dh.correct,dh.total,()=>{showScreen('datahandling')},null)}
+
+// ==================== HEAD TO HEAD ====================
+let h2h={p1:{score:0,q:null},p2:{score:0,q:null},target:10,active:false};
+
+function startH2H(){const n1=document.getElementById('h2hName1').value.trim()||'Player 1';const n2=document.getElementById('h2hName2').value.trim()||'Player 2';h2h.p1={score:0,q:null,name:n1};h2h.p2={score:0,q:null,name:n2};h2h.active=true;document.getElementById('h2hP1Name').textContent=n1;document.getElementById('h2hP2Name').textContent=n2;document.getElementById('h2hP1Score').textContent='0';document.getElementById('h2hP2Score').textContent='0';hide('h2hSetup');show('h2hGame');loadH2HQ(1);loadH2HQ(2);document.getElementById('h2hP1Input').focus()}
+
+function loadH2HQ(player){const q=genMathQ(2);h2h['p'+player].q=q;document.getElementById('h2hP'+player+'Q').textContent=q.text;document.getElementById('h2hP'+player+'Input').value='';document.getElementById('h2hP'+player+'Input').style.borderColor='#e0e0e0'}
+
+function checkH2H(player){if(!h2h.active)return;const input=document.getElementById('h2hP'+player+'Input');const val=parseInt(input.value);if(isNaN(val))return;const correct=val===h2h['p'+player].q.answer;if(correct){h2h['p'+player].score++;sfxCorrect();document.getElementById('h2hP'+player+'Score').textContent=h2h['p'+player].score;input.style.borderColor='#00b894';if(h2h['p'+player].score>=h2h.target){endH2HWin(player);return}loadH2HQ(player)}else{sfxWrong();input.style.borderColor='#e17055';input.value=''}setTimeout(()=>{input.style.borderColor='#e0e0e0'},300)}
+
+function endH2HWin(player){h2h.active=false;const name=h2h['p'+player].name;const side=document.querySelector('.h2h-side.'+(player===1?'left':'right'));const overlay=document.createElement('div');overlay.className='h2h-winner';overlay.innerHTML='<div class="h2h-winner-text" style="color:'+(player===1?'#0984e3':'#d63031')+'">'+name+' WINS!</div>';side.appendChild(overlay);sfxLevelUp();setTimeout(()=>{show('h2hSetup');hide('h2hGame');side.removeChild(overlay)},3000)}
+
+function endH2H(){h2h.active=false}
 
 // ==================== CERTIFICATE ====================
 function printCert(achievement,detail){const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>Certificate</title><style>@page{size:landscape;margin:0}body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:Georgia,serif}' +'.cert{width:297mm;height:210mm;border:12px solid #ffd700;padding:40px 60px;text-align:center;position:relative;background:white;box-sizing:border-box}' +'.cert::before{content:"";position:absolute;inset:16px;border:3px solid #ffd700;border-radius:8px}' +'.cert h1{font-size:3rem;color:#c0392b;margin:20px 0 10px}' +'.cert h2{font-size:1.8rem;color:#2d3436;margin:20px 0}' +'.cert .detail{font-size:1.3rem;color:#636e72;margin:10px 0}' +'.cert .stars{font-size:3rem;margin:20px 0;color:#ffd700}' +'.cert .date{font-size:1rem;color:#b2bec3;margin-top:30px}' +'.cert .footer{font-size:0.8rem;color:#b2bec3;margin-top:20px;font-style:italic}' +'</style></head><body><div class="cert">' +'<h1>Classmates</h1>' +'<div class="detail">This certificate is awarded to</div>' +'<h2>_________________________</h2>' +'<div class="detail">for achieving</div>' +'<h2>'+achievement+'</h2>' +'<div class="detail">'+detail+' &mdash; Three Stars!</div>' +'<div class="stars">&starf; &starf; &starf;</div>' +'<div class="date">'+today+'</div>' +'<div class="footer">South Lodge Primary School</div>' +'</div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
