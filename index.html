@@ -367,16 +367,16 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 /* ===== GAME SCREENS ===== */
 .game-screen{background:white}
-.game-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:2px solid #f0f0f0;background:white;position:sticky;top:0;z-index:10}
-.nav-btn{width:44px;height:44px;border-radius:14px;border:2px solid #f0f0f0;background:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;color:#636e72}
-.nav-btn:hover{background:#f8f8f8;border-color:#ddd}
+.game-header{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:2px solid #f0f0f0;background:white;position:sticky;top:0;z-index:10}
+.nav-btn{height:48px;border-radius:14px;border:2px solid #e0e0e0;background:white;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:all 0.15s;color:#636e72;padding:0 14px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800}
+.nav-btn:hover{background:#f8f8f8;border-color:#bbb}
 .nav-btn:active{transform:scale(0.95);background:#f0f0f0}
-.nav-btn.home-btn{background:#f0fff8;border-color:#38ef7d;color:#11998e}
-.nav-btn.home-btn:hover{background:#e0fff0}
-.back-btn{width:44px;height:44px;border-radius:14px;border:2px solid #f0f0f0;background:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;color:#636e72}
-.back-btn:hover{background:#f8f8f8;border-color:#ddd}
+.nav-btn.home-btn{background:linear-gradient(135deg,#e8fff5,#f0fff8);border-color:#38ef7d;color:#11998e}
+.nav-btn.home-btn:hover{background:#d0ffe8}
+.back-btn{height:48px;border-radius:14px;border:2px solid #e0e0e0;background:white;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:all 0.15s;color:#636e72;padding:0 14px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800}
+.back-btn:hover{background:#f8f8f8;border-color:#bbb}
 .back-btn:active{transform:scale(0.95)}
-.game-title{font-size:1.2rem;flex:1}
+.game-title{font-size:1.1rem;flex:1}
 .game-body{flex:1;padding:20px;max-width:600px;margin:0 auto;width:100%}
 
 /* ===== PROGRESS ===== */
@@ -543,6 +543,9 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
   .clock-face{width:150px;height:150px}
   .landing-logo{width:120px;height:120px}
   .landing-title{font-size:2.2rem}
+  .nav-btn,.back-btn{height:40px;padding:0 10px;font-size:0.75rem}
+  .game-header{padding:8px 10px}
+  .pupil-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
 }
 </style>
 </head>
@@ -587,7 +590,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 <!-- AVATAR BUILDER -->
 <div id="avatarbuilder" class="screen game-screen">
   <div class="game-header" style="border-color:#11998e">
-    <button class="nav-btn" onclick="finishAvatar()" title="Done">&larr;</button>
+    <button class="nav-btn" onclick="finishAvatar()" title="Done">&larr; Done</button>
     <h2 class="game-title" style="color:#11998e">Create Your Avatar</h2>
   </div>
   <div class="game-body">
@@ -728,7 +731,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- SPELLING -->
 <div id="spelling" class="screen game-screen">
-  <div class="game-header" style="border-color:#ffd200"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#f7971e">Spelling</h2></div>
+  <div class="game-header" style="border-color:#ffd200"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#f7971e">Spelling</h2></div>
   <div class="game-body">
     <div id="spellingLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -757,7 +760,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- MATHS -->
 <div id="maths" class="screen game-screen">
-  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#0984e3">Maths</h2></div>
+  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Maths</h2></div>
   <div class="game-body">
     <div id="mathsLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -782,7 +785,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- TIMES TABLES -->
 <div id="times" class="screen game-screen">
-  <div class="game-header" style="border-color:#f16529"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#e44d26">Times Tables</h2></div>
+  <div class="game-header" style="border-color:#f16529"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e44d26">Times Tables</h2></div>
   <div class="game-body">
     <div id="timesTableSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Pick a table to practise:</p>
@@ -804,7 +807,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- READING -->
 <div id="reading" class="screen game-screen">
-  <div class="game-header" style="border-color:#a8e063"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#56ab2f">Reading</h2></div>
+  <div class="game-header" style="border-color:#a8e063"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#56ab2f">Reading</h2></div>
   <div class="game-body">
     <div id="readingLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -834,7 +837,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- DAILY -->
 <div id="daily" class="screen game-screen">
-  <div class="game-header" style="border-color:#a29bfe"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#6c5ce7">Daily Challenge</h2></div>
+  <div class="game-header" style="border-color:#a29bfe"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Daily Challenge</h2></div>
   <div class="game-body">
     <div id="dailyLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
@@ -853,7 +856,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- SPEED MATHS -->
 <div id="speed" class="screen game-screen">
-  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
+  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
   <div class="game-body">
     <div id="speedLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
@@ -875,7 +878,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- WORD PROBLEMS -->
 <div id="wordprob" class="screen game-screen">
-  <div class="game-header" style="border-color:#4286f4"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#373b44">Word Problems</h2></div>
+  <div class="game-header" style="border-color:#4286f4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#373b44">Word Problems</h2></div>
   <div class="game-body">
     <div id="wpLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -898,7 +901,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- FRACTIONS -->
 <div id="fractions" class="screen game-screen">
-  <div class="game-header" style="border-color:#ee9ca7"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
+  <div class="game-header" style="border-color:#ee9ca7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
   <div class="game-body">
     <div id="fracLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -919,7 +922,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- MONEY -->
 <div id="money" class="screen game-screen">
-  <div class="game-header" style="border-color:#2ecc71"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#1a5276">Money</h2></div>
+  <div class="game-header" style="border-color:#2ecc71"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#1a5276">Money</h2></div>
   <div class="game-body">
     <div id="moneyLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -940,7 +943,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- TELLING TIME -->
 <div id="telltime" class="screen game-screen">
-  <div class="game-header" style="border-color:#3498db"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#2c3e50">Telling Time</h2></div>
+  <div class="game-header" style="border-color:#3498db"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2c3e50">Telling Time</h2></div>
   <div class="game-body">
     <div id="ttimeLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -962,7 +965,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- PLACE VALUE -->
 <div id="placeval" class="screen game-screen">
-  <div class="game-header" style="border-color:#eea849"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#f46b45">Place Value</h2></div>
+  <div class="game-header" style="border-color:#eea849"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#f46b45">Place Value</h2></div>
   <div class="game-body">
     <div id="pvLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -983,7 +986,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- MISSING NUMBER -->
 <div id="missnum" class="screen game-screen">
-  <div class="game-header" style="border-color:#71b280"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
+  <div class="game-header" style="border-color:#71b280"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
   <div class="game-body">
     <div id="mnLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1005,7 +1008,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- VOCABULARY -->
 <div id="vocab" class="screen game-screen">
-  <div class="game-header" style="border-color:#8e54e9"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#4776e6">Vocabulary</h2></div>
+  <div class="game-header" style="border-color:#8e54e9"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#4776e6">Vocabulary</h2></div>
   <div class="game-body">
     <div id="vocabLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1026,7 +1029,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- PUNCTUATION -->
 <div id="punctuation" class="screen game-screen">
-  <div class="game-header" style="border-color:#f0932b"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#ee5a24">Punctuation</h2></div>
+  <div class="game-header" style="border-color:#f0932b"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ee5a24">Punctuation</h2></div>
   <div class="game-body">
     <div id="punctLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1048,7 +1051,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- SENTENCE ORDERING -->
 <div id="sentence" class="screen game-screen">
-  <div class="game-header" style="border-color:#5fc3e4"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#e55d87">Sentences</h2></div>
+  <div class="game-header" style="border-color:#5fc3e4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e55d87">Sentences</h2></div>
   <div class="game-body">
     <div id="sentLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1072,7 +1075,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- WORD FAMILIES -->
 <div id="wordfam" class="screen game-screen">
-  <div class="game-header" style="border-color:#c39bd3"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#8e44ad">Word Families</h2></div>
+  <div class="game-header" style="border-color:#c39bd3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#8e44ad">Word Families</h2></div>
   <div class="game-body">
     <div id="wfLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1092,7 +1095,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- PHONICS -->
 <div id="phonics" class="screen game-screen">
-  <div class="game-header" style="border-color:#48dbfb"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#0abde3">Phonics</h2></div>
+  <div class="game-header" style="border-color:#48dbfb"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0abde3">Phonics</h2></div>
   <div class="game-body">
     <div id="phonicsLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1112,7 +1115,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- ANAGRAM -->
 <div id="anagram" class="screen game-screen">
-  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#c44569">Anagrams</h2></div>
+  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c44569">Anagrams</h2></div>
   <div class="game-body">
     <div id="anagramLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1137,7 +1140,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- DICTATION -->
 <div id="dictation" class="screen game-screen">
-  <div class="game-header" style="border-color:#ab83a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#6a0572">Dictation</h2></div>
+  <div class="game-header" style="border-color:#ab83a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6a0572">Dictation</h2></div>
   <div class="game-body">
     <div id="dictLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1161,7 +1164,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- MISSING VOWELS -->
 <div id="vowels" class="screen game-screen">
-  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#e84393">Missing Vowels</h2></div>
+  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e84393">Missing Vowels</h2></div>
   <div class="game-body">
     <div id="vowelsLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1185,7 +1188,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 <!-- NUMBER BONDS -->
 <div id="bonds" class="screen game-screen">
-  <div class="game-header" style="border-color:#38ef7d"><button class="nav-btn" onclick="goHome()" title="Back">&larr;</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0;</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
+  <div class="game-header" style="border-color:#38ef7d"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
   <div class="game-body">
     <div id="bondsLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -1216,7 +1219,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
     <div id="missedWords"></div>
     <div class="results-btns">
       <button class="r-btn r-btn-primary" id="resultsPlayAgain">Play Again</button>
-      <button class="r-btn r-btn-ghost" onclick="goHome()">Menu</button>
+      <button class="r-btn r-btn-ghost" onclick="goHome()">&#x2190; Menu</button>
+      <button class="r-btn r-btn-ghost" onclick="showScreen('landing')" style="color:#11998e">&#x1F3E0; Home</button>
       <button class="r-btn r-btn-ghost" id="certBtn" style="display:none;color:#ffd700">Print Certificate</button>
     </div>
   </div>
