@@ -36,18 +36,15 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .home-content{flex:1;padding:16px 20px 24px;position:relative;z-index:1}
 
 /* ===== SUBJECT CARDS ===== */
-.subject-grid{display:flex;gap:12px;margin:12px 0;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:#d0d0d0 transparent}
-.subject-grid::-webkit-scrollbar{height:6px}
-.subject-grid::-webkit-scrollbar-track{background:transparent}
-.subject-grid::-webkit-scrollbar-thumb{background:#d0d0d0;border-radius:3px}
-.subject-card{border-radius:18px;padding:16px 14px 14px;text-align:center;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;position:relative;overflow:hidden;user-select:none;border:none;min-width:120px;max-width:120px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;scroll-snap-align:start}
-.subject-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 8px 20px rgba(0,0,0,0.12)}
-.subject-card:active{transform:scale(0.97)}
+.subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.subject-card{border-radius:16px;padding:14px 8px 12px;text-align:center;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;user-select:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0}
+.subject-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.12)}
+.subject-card:active{transform:scale(0.96)}
 
-.subject-card .card-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.3rem;color:white;box-shadow:0 3px 8px rgba(0,0,0,0.15)}
-.subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
-.subject-card .card-desc{font-size:0.6rem;color:rgba(255,255,255,0.85);margin-top:2px;font-weight:600}
-.subject-card::after{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.1)}
+.subject-card .card-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:6px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;box-shadow:0 2px 6px rgba(0,0,0,0.15)}
+.subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.75rem;color:white;text-shadow:0 1px 2px rgba(0,0,0,0.1);line-height:1.2}
+.subject-card .card-desc{display:none}
+.subject-card::after{content:'';position:absolute;top:-15px;right:-15px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,0.1)}
 
 .card-spelling{background:linear-gradient(135deg,#f7971e,#ffd200)}
 .card-spelling .card-icon{background:rgba(255,255,255,0.3)}
@@ -244,7 +241,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .stat-card .sc-val{font-size:1.8rem;font-weight:800;color:#1a2332;display:block}
 .stat-card .sc-label{font-size:0.7rem;color:#8899aa;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
 
-.card-daily{background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-width:200px;max-width:200px;flex-direction:row;gap:12px;padding:16px 20px}
+.card-daily{background:linear-gradient(135deg,#6c5ce7,#a29bfe);grid-column:1/-1;flex-direction:row;gap:10px;padding:14px 16px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
 
@@ -574,9 +571,10 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
   html{font-size:15px}
   .kb-key{min-width:28px;height:40px;font-size:0.9rem}
   .letter-slot{width:32px;height:40px;font-size:1.2rem}
-  .subject-card{padding:12px 10px 10px;min-width:100px;max-width:100px}
-  .subject-card .card-icon{width:42px;height:42px;font-size:1.1rem}
-  .subject-card .card-title{font-size:0.75rem}
+  .subject-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .subject-card{padding:10px 6px 8px}
+  .subject-card .card-icon{width:36px;height:36px;font-size:0.9rem}
+  .subject-card .card-title{font-size:0.65rem}
   .tt-grid{grid-template-columns:repeat(3,1fr)}
   .anagram-tile{width:36px;height:42px;font-size:1.1rem}
   .word-chip{padding:8px 10px;font-size:0.8rem}
