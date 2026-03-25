@@ -92,6 +92,14 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mute-btn.muted{background:#fff0ed;border-color:#e17055;color:#e17055}
 .dyslexia-btn{background:none;border:2px solid #e0e0e0;border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:#636e72;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:4px}
 .dyslexia-btn:hover{border-color:#11998e}
+.progress-map{margin:16px 0}
+.progress-map-title{text-align:center;font-size:0.85rem;color:#636e72;margin-bottom:8px}
+.pmap-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0}
+.pmap-row:last-child{border-bottom:none}
+.pmap-label{font-size:0.75rem;font-weight:700;color:#2d3436;width:80px;flex-shrink:0}
+.pmap-bar{flex:1;height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden}
+.pmap-fill{height:100%;border-radius:4px;transition:width 0.4s}
+.pmap-level{font-size:0.65rem;color:#b2bec3;font-weight:700;width:30px;text-align:right}
 .dyslexia-btn.active{background:#e8fff5;border-color:#11998e;color:#11998e}
 body.dyslexia-mode{font-family:'Comic Sans MS',cursive,sans-serif!important;background:#fdf6e3!important;letter-spacing:0.05em;word-spacing:0.1em}
 body.dyslexia-mode *{font-family:inherit!important}
@@ -599,6 +607,10 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
     <div class="badges-section">
       <div class="badges-title">Achievements</div>
       <div class="badges-grid" id="badgesRow"></div>
+    </div>
+    <div class="progress-map">
+      <div class="progress-map-title">My Progress</div>
+      <div id="progressMap"></div>
     </div>
     <div style="text-align:center;padding:12px 0;">
       <button onclick="showScreen('landing')" style="background:none;border:none;color:#b2bec3;font-size:0.75rem;font-family:'Nunito','Trebuchet MS',sans-serif;cursor:pointer;padding:8px 16px;">&#x2190; Back to start</button>
@@ -1782,7 +1794,8 @@ let currentPupil=null;
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily()}
-function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();const nb=document.getElementById('pupilNameBar');nb.textContent=currentPupil?'Playing as: '+currentPupil:''}
+function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');nb.textContent=currentPupil?'Playing as: '+currentPupil:''}
+function renderProgressMap(){const pm=document.getElementById('progressMap');if(!pm)return;const topics=[{id:'spelling',name:'Spelling',color:'#f7971e'},{id:'maths',name:'Maths',color:'#0083b0'},{id:'times',name:'Tables',color:'#e44d26'},{id:'reading',name:'Reading',color:'#56ab2f'},{id:'bonds',name:'Bonds',color:'#11998e'},{id:'phonics',name:'Phonics',color:'#0abde3'}];let h='';topics.forEach(t=>{const lv=state.adaptive&&state.adaptive[t.id]?state.adaptive[t.id].level:1;const pct=lv/3*100;h+='<div class="pmap-row"><span class="pmap-label">'+t.name+'</span><div class="pmap-bar"><div class="pmap-fill" style="width:'+pct+'%;background:'+t.color+'"></div></div><span class="pmap-level">Lv'+lv+'</span></div>'});pm.innerHTML=h}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
 
 // ==================== LANDING PAGE ====================
@@ -2315,6 +2328,30 @@ function hide(id){document.getElementById(id).style.display='none'}
 
 // ==================== KEYBOARD ====================
 document.addEventListener('keydown',function(e){if(document.getElementById('spelling').classList.contains('active')&&document.getElementById('spellingGame').style.display!=='none'){if(/^[a-z]$/i.test(e.key))pressKey(e.key.toLowerCase())}});
+
+// ==================== CFE BENCHMARK TAGS ====================
+const CFE_TAGS={
+  spelling:{1:'LIT 0-21a',2:'LIT 1-21a',3:'LIT 2-21a'},
+  dictation:{1:'LIT 0-21a',2:'LIT 1-21a',3:'LIT 2-21a'},
+  vowels:{1:'LIT 0-21a',2:'LIT 1-21a',3:'LIT 2-21a'},
+  anagram:{1:'LIT 0-21a',2:'LIT 1-21a',3:'LIT 2-21a'},
+  phonics:{1:'ENG 0-12a',2:'ENG 1-12a',3:'ENG 2-12a'},
+  wordfam:{1:'ENG 0-12a',2:'ENG 1-12a',3:'ENG 2-12a'},
+  sentence:{1:'ENG 0-31a',2:'ENG 1-31a',3:'ENG 2-31a'},
+  punctuation:{1:'ENG 0-30a',2:'ENG 1-30a',3:'ENG 2-30a'},
+  vocab:{1:'ENG 0-17a',2:'ENG 1-17a',3:'ENG 2-17a'},
+  reading:{1:'ENG 0-17a',2:'ENG 1-17a',3:'ENG 2-17a'},
+  maths:{1:'MNU 0-03a',2:'MNU 1-03a',3:'MNU 2-03a'},
+  times:{1:'MNU 0-03a',2:'MNU 1-03a',3:'MNU 2-03a'},
+  speed:{1:'MNU 0-03a',2:'MNU 1-03a',3:'MNU 2-03a'},
+  bonds:{1:'MNU 0-03a',2:'MNU 1-03a',3:'MNU 2-03a'},
+  missnum:{1:'MNU 0-03a',2:'MNU 1-03a',3:'MNU 2-03a'},
+  placeval:{1:'MNU 0-02a',2:'MNU 1-02a',3:'MNU 2-02a'},
+  time:{1:'MNU 0-10a',2:'MNU 1-10a',3:'MNU 2-10a'},
+  money:{1:'MNU 0-09a',2:'MNU 1-09a',3:'MNU 2-09a'},
+  fractions:{1:'MNU 0-07a',2:'MNU 1-07a',3:'MNU 2-07a'},
+  wordprob:{1:'MNU 0-03a',2:'MNU 1-03a',3:'MNU 2-03a'}
+};
 
 // ==================== WORKSHEET GENERATOR ====================
 function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))||2;const w=window.open('','_blank');const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const questions=[];const answers=[];for(let i=0;i<20;i++){const q=genMathQ(lv);questions.push((i+1)+'. '+q.text);answers.push((i+1)+'. '+q.answer)}const spellWords=[...SPELLING[lv]];shuffle(spellWords);const spellingSection=spellWords.slice(0,10).map((s,i)=>(i+1)+'. '+s.h+' (____________________)').join('<br>');w.document.write('<!DOCTYPE html><html><head><title>Worksheet</title><style>@page{margin:15mm}body{font-family:Arial,sans-serif;font-size:14px;line-height:2}h1{font-size:1.3rem;color:#11998e;margin-bottom:4px}h2{font-size:1rem;margin-top:20px;color:#333;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#888;font-size:0.85rem}.answers{page-break-before:always;color:#888;font-size:0.85rem}ol{padding-left:20px}</style></head><body><h1>'+sn+' — Classmates Worksheet</h1><p class="meta">'+today+' | Level '+lv+'</p><p><strong>Name:</strong> _______________________________</p><h2>Maths</h2><p>'+questions.join('<br>')+'</p><h2>Spelling</h2><p>Write the word that matches each clue:</p><p>'+spellingSection+'</p><div class="answers"><h2>Answer Key (Maths)</h2><p>'+answers.join(' &nbsp; ')+'</p></div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
