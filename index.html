@@ -79,6 +79,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-placeval .card-icon{background:rgba(255,255,255,0.3)}
 .card-time{background:linear-gradient(135deg,#2c3e50,#3498db)}
 .card-time .card-icon{background:rgba(255,255,255,0.3)}
+.card-money{background:linear-gradient(135deg,#1a5276,#2ecc71)}
+.card-money .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -129,6 +131,18 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mv-submit{display:block;width:100%;max-width:320px;margin:12px auto 0;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;background:linear-gradient(135deg,#e84393,#fd79a8);box-shadow:0 4px 0 #c0357a;transition:all 0.15s}
 .mv-submit:active{transform:translateY(2px);box-shadow:0 2px 0 #c0357a}
 .mv-hint{text-align:center;color:#636e72;font-size:0.85rem;margin-top:8px;min-height:20px;font-style:italic}
+
+/* ===== MONEY ===== */
+.coin-display{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:16px 0}
+.coin{border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One','Comic Sans MS',cursive;font-weight:700;box-shadow:0 3px 8px rgba(0,0,0,0.15);border:3px solid rgba(255,255,255,0.3)}
+.coin-1p{width:36px;height:36px;background:linear-gradient(135deg,#cd7f32,#b87333);color:white;font-size:0.65rem}
+.coin-2p{width:40px;height:40px;background:linear-gradient(135deg,#cd7f32,#b87333);color:white;font-size:0.7rem}
+.coin-5p{width:36px;height:36px;background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#333;font-size:0.65rem}
+.coin-10p{width:42px;height:42px;background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#333;font-size:0.7rem}
+.coin-20p{width:42px;height:42px;background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#333;font-size:0.7rem;border-radius:40%}
+.coin-50p{width:48px;height:48px;background:linear-gradient(135deg,#c0c0c0,#a8a8a8);color:#333;font-size:0.75rem;border-radius:40%}
+.coin-100{width:48px;height:48px;background:linear-gradient(135deg,#ffd700,#daa520);color:#333;font-size:0.7rem}
+.coin-200{width:52px;height:52px;background:linear-gradient(135deg,#ffd700,#c0c0c0);color:#333;font-size:0.7rem;border:4px solid #ffd700}
 
 /* ===== TELLING TIME ===== */
 .clock-face{width:180px;height:180px;border-radius:50%;border:6px solid #2c3e50;margin:16px auto;position:relative;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
@@ -486,6 +500,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Telling Time</div>
         <div class="card-desc">Read the clock</div>
       </div>
+      <div class="subject-card card-money" onclick="startGame('money')">
+        <div class="card-icon">&#xA3;p</div>
+        <div class="card-title">Money</div>
+        <div class="card-desc">Coins and change</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -649,6 +668,27 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MONEY -->
+<div id="money" class="screen game-screen">
+  <div class="game-header" style="border-color:#2ecc71"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#1a5276">Money</h2></div>
+  <div class="game-body">
+    <div id="moneyLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startMoney(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 20p</div></div>
+        <div class="level-card lc-2" onclick="startMoney(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to &#xA3;1</div></div>
+        <div class="level-card lc-3" onclick="startMoney(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">&#xA3; and change</div></div>
+      </div>
+    </div>
+    <div id="moneyGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="moneyProgress" style="background:linear-gradient(90deg,#1a5276,#2ecc71)"></div></div>
+      <div class="progress-text" id="moneyProgressText"></div>
+      <div id="moneyDisplay"></div>
+      <div class="ph-options" id="moneyOpts"></div>
     </div>
   </div>
 </div>
@@ -1520,6 +1560,22 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== MONEY ====================
+const COINS=[{v:1,label:'1p',cls:'coin-1p'},{v:2,label:'2p',cls:'coin-2p'},{v:5,label:'5p',cls:'coin-5p'},{v:10,label:'10p',cls:'coin-10p'},{v:20,label:'20p',cls:'coin-20p'},{v:50,label:'50p',cls:'coin-50p'},{v:100,label:'\u00A31',cls:'coin-100'},{v:200,label:'\u00A32',cls:'coin-200'}];
+
+let money={level:1,idx:0,total:10,correct:0};
+
+function renderCoins(vals){let h='<div class="coin-display">';vals.forEach(v=>{const c=COINS.find(x=>x.v===v);if(c)h+='<div class="coin '+c.cls+'">'+c.label+'</div>'});h+='</div>';return h}
+
+function formatMoney(p){if(p>=100)return'\u00A3'+(p/100).toFixed(2);return p+'p'}
+
+function genMoneyQ(lv){const type=rand(0,1);if(type===0){let available,target;if(lv===1){available=[1,1,2,2,5,5,10];target=rand(3,20)}else if(lv===2){available=[1,2,5,10,10,20,20,50];target=rand(15,100)}else{available=[10,20,20,50,50,100,100,200];target=rand(50,500)}const picked=[];let sum=0;const pool=[...available];shuffle(pool);for(const c of pool){if(sum+c<=target+10&&picked.length<6){picked.push(c);sum+=c}}if(picked.length<2){picked.push(pool[0]);sum+=pool[0]}const correct=formatMoney(sum);const wrongs=[];while(wrongs.length<3){const w=formatMoney(sum+rand(-10,10)*(lv===3?10:1));if(w!==correct&&!wrongs.includes(w)&&!w.startsWith('-'))wrongs.push(w)}return{prompt:'How much money is shown?',coins:picked,correct:correct,options:shuffle([correct,...wrongs])}}else{let from;if(lv===1)from=20;else if(lv===2)from=100;else from=rand(2,5)*100;const spent=rand(Math.floor(from*0.2),Math.floor(from*0.7));const change=from-spent;const correct=formatMoney(change);const wrongs=[];while(wrongs.length<3){const w=formatMoney(change+rand(-15,15)*(lv===3?5:1));if(w!==correct&&!wrongs.includes(w)&&!w.startsWith('-')&&w!=='0p')wrongs.push(w)}return{prompt:'You spend '+formatMoney(spent)+'. How much change from '+formatMoney(from)+'?',coins:null,correct:correct,options:shuffle([correct,...wrongs])}}}
+
+function startMoney(lv){money.level=lv;money.idx=0;money.correct=0;hide('moneyLevelSelect');show('moneyGame');loadMoneyQ()}
+function loadMoneyQ(){const q=genMoneyQ(money.level);money.question=q;document.getElementById('moneyProgress').style.width=(money.idx/money.total*100)+'%';document.getElementById('moneyProgressText').textContent='Question '+(money.idx+1)+' of '+money.total;document.getElementById('moneyDisplay').innerHTML=(q.coins?renderCoins(q.coins):'')+'<div class="ph-sound" style="background:#f0fff5;border-color:#2ecc71;color:#1a5276;font-size:1rem">'+q.prompt+'</div>';const opts=document.getElementById('moneyOpts');opts.innerHTML='';q.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectMoneyAns(b,o===q.correct,q.correct);opts.appendChild(b)})}
+function selectMoneyAns(btn,correct,rightAnswer){document.querySelectorAll('#moneyOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===rightAnswer)o.classList.add('ph-correct')});if(correct){money.correct++;btn.classList.add('ph-correct')}else{btn.classList.add('ph-wrong')}setTimeout(()=>{money.idx++;if(money.idx>=money.total)finishMoney();else loadMoneyQ()},correct?500:1200)}
+function finishMoney(){show('moneyLevelSelect');hide('moneyGame');const pct=money.correct/money.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#1a5276','\u00A3p','Money Done!','Level '+money.level,stars,money.correct,money.total,()=>{showScreen('money')},null)}
 
 // ==================== TELLING TIME ====================
 let ttime={level:1,idx:0,total:10,correct:0};
