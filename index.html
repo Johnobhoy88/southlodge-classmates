@@ -141,9 +141,28 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .subject-card:nth-child(1){animation-delay:0.03s}.subject-card:nth-child(2){animation-delay:0.06s}.subject-card:nth-child(3){animation-delay:0.09s}.subject-card:nth-child(4){animation-delay:0.12s}.subject-card:nth-child(5){animation-delay:0.15s}.subject-card:nth-child(6){animation-delay:0.18s}.subject-card:nth-child(7){animation-delay:0.21s}.subject-card:nth-child(8){animation-delay:0.24s}.subject-card:nth-child(9){animation-delay:0.27s}.subject-card:nth-child(10){animation-delay:0.30s}
 @keyframes subtleWobble{0%,100%{transform:rotate(-0.5deg)}50%{transform:rotate(0.5deg)}}
 .subject-card:hover{animation:none}
-/* floating bg shapes use fixed positioning, hidden via parent overflow */
-.bg-deco{position:fixed;pointer-events:none;z-index:0;opacity:0.15;font-size:2rem;animation:floatDeco 10s ease-in-out infinite}
-@keyframes floatDeco{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-16px) rotate(6deg)}}
+/* floating bg decorations */
+.bg-deco{position:fixed;pointer-events:none;z-index:0;opacity:0.35;font-size:2.2rem;animation:floatDeco 8s ease-in-out infinite}
+@keyframes floatDeco{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-18px) rotate(8deg)}}
+
+/* CSS confetti/pattern background */
+.confetti-bg{background-image:
+  radial-gradient(circle at 10% 15%, #FFD93D33 6px, transparent 6px),
+  radial-gradient(circle at 85% 20%, #FF6B6B33 5px, transparent 5px),
+  radial-gradient(circle at 20% 45%, #4ECDC433 7px, transparent 7px),
+  radial-gradient(circle at 75% 55%, #A78BFA33 5px, transparent 5px),
+  radial-gradient(circle at 50% 80%, #6BCB7733 6px, transparent 6px),
+  radial-gradient(circle at 30% 70%, #FF6B6B33 4px, transparent 4px),
+  radial-gradient(circle at 90% 75%, #FFD93D33 7px, transparent 7px),
+  radial-gradient(circle at 5% 85%, #0abde333 5px, transparent 5px),
+  radial-gradient(circle at 60% 10%, #e8439333 4px, transparent 4px),
+  radial-gradient(circle at 40% 30%, #11998e33 6px, transparent 6px),
+  radial-gradient(circle at 95% 40%, #f3971e33 5px, transparent 5px),
+  radial-gradient(circle at 15% 60%, #FFD93D33 4px, transparent 4px),
+  radial-gradient(circle at 70% 35%, #4ECDC433 3px, transparent 3px),
+  radial-gradient(circle at 45% 90%, #A78BFA33 5px, transparent 5px),
+  radial-gradient(circle at 25% 5%, #6BCB7733 4px, transparent 4px),
+  radial-gradient(circle at 80% 85%, #FF6B6B33 6px, transparent 6px)
 
 /* ===== WHITEBOARD MODE ===== */
 .wb-screen{background:#1a1a2e;color:white}
@@ -164,6 +183,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 /* ===== LANDING PAGE ===== */
 .landing-bg{background:linear-gradient(180deg,#e8f4f8 0%,#f0f9ff 50%,#fff 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px}
+.landing-bg.confetti-bg,.home-bg.confetti-bg{background-color:transparent}
 .landing-logo{width:160px;height:160px;border-radius:50%;object-fit:cover;border:6px solid white;box-shadow:0 8px 30px rgba(0,0,0,0.12);animation:floatLogo 3s ease-in-out infinite}
 .landing-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.2rem;margin:16px 0 4px;color:#11998e;letter-spacing:-1px}
 .landing-title span{display:inline-block;animation:letterBounce 2s ease-in-out infinite}
@@ -593,15 +613,19 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 <div class="app">
 
 <!-- LANDING PAGE -->
-<div id="landing" class="screen landing-bg active">
-  <span class="bg-deco" style="top:8%;left:5%;color:#11998e;animation-delay:0s">A</span>
-  <span class="bg-deco" style="top:22%;right:8%;color:#FFD93D;animation-delay:2s;font-size:2.5rem">3</span>
-  <span class="bg-deco" style="top:50%;left:4%;color:#FF6B6B;animation-delay:4s">&#x2605;</span>
-  <span class="bg-deco" style="top:70%;right:12%;color:#A78BFA;animation-delay:6s">b</span>
-  <span class="bg-deco" style="top:85%;left:20%;color:#4ECDC4;animation-delay:8s;font-size:2.5rem">+</span>
-  <span class="bg-deco" style="top:15%;right:22%;color:#FF6B6B;animation-delay:10s">&#x2764;</span>
-  <span class="bg-deco" style="top:40%;right:3%;color:#6BCB77;animation-delay:1s">&#x270F;</span>
-  <span class="bg-deco" style="top:60%;left:12%;color:#FFD93D;animation-delay:5s">&#x2606;</span>
+<div id="landing" class="screen landing-bg confetti-bg active">
+  <span class="bg-deco" style="top:5%;left:3%;color:#11998e">A</span>
+  <span class="bg-deco" style="top:12%;right:6%;color:#FFD93D;animation-delay:1s;font-size:2.8rem">3</span>
+  <span class="bg-deco" style="top:25%;left:5%;color:#FF6B6B;animation-delay:2s">&#x2605;</span>
+  <span class="bg-deco" style="top:35%;right:4%;color:#A78BFA;animation-delay:3s;font-size:2.5rem">b</span>
+  <span class="bg-deco" style="top:48%;left:8%;color:#4ECDC4;animation-delay:4s;font-size:3rem">+</span>
+  <span class="bg-deco" style="top:58%;right:10%;color:#FF6B6B;animation-delay:5s;font-size:2.5rem">&#x2764;</span>
+  <span class="bg-deco" style="top:70%;left:4%;color:#6BCB77;animation-delay:6s;font-size:2.5rem">&#x270F;</span>
+  <span class="bg-deco" style="top:80%;right:8%;color:#FFD93D;animation-delay:7s">&#x2606;</span>
+  <span class="bg-deco" style="top:18%;left:40%;color:#e84393;animation-delay:8s;font-size:1.8rem">&#x266B;</span>
+  <span class="bg-deco" style="top:42%;right:30%;color:#0984e3;animation-delay:9s;font-size:2.8rem">7</span>
+  <span class="bg-deco" style="top:88%;left:30%;color:#11998e;animation-delay:10s;font-size:2.5rem">&#x2713;</span>
+  <span class="bg-deco" style="top:8%;right:35%;color:#f39c12;animation-delay:11s">&#x25B2;</span>
   <div style="position:relative;z-index:1">
     <img src="logo.jpg" alt="South Lodge Primary" class="landing-logo">
     <div class="landing-title"><span>C</span><span>l</span><span>a</span><span>s</span><span>s</span><span>m</span><span>a</span><span>t</span><span>e</span><span>s</span></div>
@@ -658,13 +682,17 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 </div>
 
 <!-- PUPIL HOME -->
-<div id="home" class="screen home-bg home-bg-animated">
-  <span class="bg-deco" style="top:5%;left:3%;color:#FFD93D;animation-delay:0s">&#x2605;</span>
-  <span class="bg-deco" style="top:25%;right:5%;color:#4ECDC4;animation-delay:3s;font-size:2.5rem">&#x25CF;</span>
-  <span class="bg-deco" style="top:45%;left:6%;color:#FF6B6B;animation-delay:5s">&#x25B2;</span>
-  <span class="bg-deco" style="top:65%;right:8%;color:#A78BFA;animation-delay:7s;font-size:2.5rem">&#x25A0;</span>
-  <span class="bg-deco" style="top:80%;left:15%;color:#FF6B6B;animation-delay:9s">&#x2764;</span>
-  <span class="bg-deco" style="top:12%;right:20%;color:#6BCB77;animation-delay:2s">&#x2606;</span>
+<div id="home" class="screen home-bg home-bg-animated confetti-bg">
+  <span class="bg-deco" style="top:3%;left:2%;color:#FFD93D">&#x2605;</span>
+  <span class="bg-deco" style="top:15%;right:4%;color:#4ECDC4;animation-delay:1s;font-size:2.8rem">&#x25CF;</span>
+  <span class="bg-deco" style="top:28%;left:5%;color:#FF6B6B;animation-delay:2s;font-size:2.5rem">&#x25B2;</span>
+  <span class="bg-deco" style="top:40%;right:6%;color:#A78BFA;animation-delay:3s;font-size:2.5rem">&#x25A0;</span>
+  <span class="bg-deco" style="top:52%;left:3%;color:#FF6B6B;animation-delay:4s">&#x2764;</span>
+  <span class="bg-deco" style="top:8%;right:18%;color:#6BCB77;animation-delay:5s;font-size:2.5rem">&#x2606;</span>
+  <span class="bg-deco" style="top:65%;right:5%;color:#FFD93D;animation-delay:6s;font-size:2.8rem">&#x2729;</span>
+  <span class="bg-deco" style="top:78%;left:8%;color:#0984e3;animation-delay:7s">&#x25CF;</span>
+  <span class="bg-deco" style="top:35%;left:45%;color:#e84393;animation-delay:8s;font-size:1.8rem">&#x266A;</span>
+  <span class="bg-deco" style="top:90%;right:20%;color:#11998e;animation-delay:9s;font-size:2.5rem">+</span>
   <div class="home-header">
     <div style="display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:8px;">
       <button class="nav-btn home-btn" onclick="showScreen('landing')" style="font-size:0.8rem">&#x1F3E0; Home</button>
