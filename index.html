@@ -91,6 +91,23 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mute-btn:hover{border-color:#11998e}
 .mute-btn.muted{background:#fff0ed;border-color:#e17055;color:#e17055}
 
+/* ===== WHITEBOARD MODE ===== */
+.wb-screen{background:#1a1a2e;color:white}
+.wb-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #333}
+.wb-header h2{color:white;font-size:1.1rem}
+.wb-exit{padding:8px 16px;border:2px solid #555;border-radius:10px;background:transparent;color:#aaa;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;cursor:pointer;font-size:0.85rem}
+.wb-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.wb-question{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:4rem;color:white;margin-bottom:16px;line-height:1.2}
+.wb-answer{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:5rem;color:#38ef7d;margin:16px 0;min-height:80px;transition:opacity 0.3s}
+.wb-answer.hidden{opacity:0}
+.wb-controls{display:flex;gap:16px;justify-content:center;margin-top:24px}
+.wb-btn{padding:16px 32px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;cursor:pointer;transition:all 0.15s}
+.wb-btn:active{transform:scale(0.97)}
+.wb-btn.wb-show{background:#38ef7d;color:#1a1a2e}
+.wb-btn.wb-next{background:#4776e6;color:white}
+.wb-counter{color:#555;font-size:0.9rem;margin-top:16px}
+@media(max-width:500px){.wb-question{font-size:2.5rem}.wb-answer{font-size:3.5rem}}
+
 /* ===== LANDING PAGE ===== */
 .landing-bg{background:linear-gradient(180deg,#e8f4f8 0%,#f0f9ff 50%,#fff 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px}
 .landing-logo{width:160px;height:160px;border-radius:50%;object-fit:cover;border:6px solid white;box-shadow:0 8px 30px rgba(0,0,0,0.12);animation:floatLogo 3s ease-in-out infinite}
@@ -582,6 +599,23 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
   </div>
 </div>
 
+<!-- WHITEBOARD MODE -->
+<div id="whiteboard" class="screen wb-screen">
+  <div class="wb-header">
+    <h2>Whole-Class Mode</h2>
+    <button class="wb-exit" onclick="showScreen('teacher')">Exit</button>
+  </div>
+  <div class="wb-body">
+    <div class="wb-question" id="wbQuestion"></div>
+    <div class="wb-answer hidden" id="wbAnswer"></div>
+    <div class="wb-controls">
+      <button class="wb-btn wb-show" id="wbShowBtn" onclick="wbShowAnswer()">Show Answer</button>
+      <button class="wb-btn wb-next" onclick="wbNext()">Next &rarr;</button>
+    </div>
+    <div class="wb-counter" id="wbCounter"></div>
+  </div>
+</div>
+
 <!-- TEACHER DASHBOARD -->
 <div id="teacher" class="screen teacher-screen">
   <div class="teacher-topbar">
@@ -605,6 +639,7 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
     <div class="teacher-section">
       <h3>Actions</h3>
       <div class="actions-row">
+        <button class="teacher-btn teal" onclick="launchWhiteboard()">Whole-Class Mode</button>
         <button class="teacher-btn teal" onclick="printReport()">Print Report</button>
         <button class="teacher-btn grey" onclick="exportCSV()">Export CSV</button>
         <button class="teacher-btn red" onclick="resetAllData()">Reset All Data</button>
@@ -2272,6 +2307,19 @@ function hide(id){document.getElementById(id).style.display='none'}
 
 // ==================== KEYBOARD ====================
 document.addEventListener('keydown',function(e){if(document.getElementById('spelling').classList.contains('active')&&document.getElementById('spellingGame').style.display!=='none'){if(/^[a-z]$/i.test(e.key))pressKey(e.key.toLowerCase())}});
+
+// ==================== WHITEBOARD MODE ====================
+let wb={questions:[],idx:0,answerShown:false};
+
+function launchWhiteboard(){wb.questions=[];for(let i=0;i<20;i++){const q=genMathQ(rand(1,3));wb.questions.push(q)}wb.idx=0;wb.answerShown=false;showScreen('whiteboard');loadWbQ()}
+
+function loadWbQ(){const q=wb.questions[wb.idx];document.getElementById('wbQuestion').textContent=q.text;const ans=document.getElementById('wbAnswer');ans.textContent=q.answer;ans.classList.add('hidden');wb.answerShown=false;document.getElementById('wbShowBtn').textContent='Show Answer';document.getElementById('wbCounter').textContent='Question '+(wb.idx+1)+' of '+wb.questions.length}
+
+function wbShowAnswer(){if(wb.answerShown)return;document.getElementById('wbAnswer').classList.remove('hidden');wb.answerShown=true;document.getElementById('wbShowBtn').textContent='Shown!';sfxCorrect()}
+
+function wbNext(){wb.idx++;if(wb.idx>=wb.questions.length){wb.idx=0;wb.questions=[];for(let i=0;i<20;i++)wb.questions.push(genMathQ(rand(1,3)))}loadWbQ()}
+
+document.addEventListener('keydown',function(e){if(document.getElementById('whiteboard').classList.contains('active')){if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!wb.answerShown)wbShowAnswer();else wbNext()}else if(e.key==='ArrowRight')wbNext()}});
 
 // ==================== ADAPTIVE DIFFICULTY ====================
 // Track per-topic streaks. After 3 correct in a row, suggest harder level. After 2 wrong, suggest easier.
