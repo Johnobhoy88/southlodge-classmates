@@ -86,19 +86,71 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-wordprob{background:linear-gradient(135deg,#373b44,#4286f4)}
 .card-wordprob .card-icon{background:rgba(255,255,255,0.3)}
 
-/* ===== AVATAR ===== */
-.avatar-preview{width:100px;height:100px;border-radius:50%;margin:0 auto 12px;position:relative;overflow:hidden;border:4px solid #ddd}
-.avatar-face{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative}
-.avatar-eyes{font-size:1.2rem;margin-top:20px;letter-spacing:12px}
-.avatar-mouth{font-size:0.9rem;margin-top:2px}
-.avatar-hair{position:absolute;top:0;left:0;right:0;height:35px;border-radius:50px 50px 0 0}
-.avatar-mini{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;border:2px solid #ddd;font-size:0.5rem;overflow:hidden;position:relative;vertical-align:middle;margin-right:8px}
-.avatar-option{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;border:3px solid #f0f0f0;cursor:pointer;margin:4px;transition:all 0.15s}
-.avatar-option:hover{border-color:#6c5ce7}
-.avatar-option.selected{border-color:#6c5ce7;background:#f0ecff}
-.avatar-section{margin:12px 0}
-.avatar-section-title{font-size:0.8rem;font-weight:800;color:#636e72;margin-bottom:4px}
 .coin-display-home{display:inline-flex;align-items:center;gap:4px;background:#fff8e6;border:2px solid #ffd700;border-radius:20px;padding:4px 12px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#d4a520}
+
+/* ===== LANDING PAGE ===== */
+.landing-bg{background:linear-gradient(180deg,#e8f4f8 0%,#f0f9ff 50%,#fff 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px}
+.landing-logo{width:160px;height:160px;border-radius:50%;object-fit:cover;border:6px solid white;box-shadow:0 8px 30px rgba(0,0,0,0.12);animation:floatLogo 3s ease-in-out infinite}
+.landing-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.8rem;color:#11998e;margin:16px 0 4px}
+.landing-sub{font-size:0.95rem;color:#7f8c8d;margin-bottom:24px}
+.landing-btn{display:block;width:260px;margin:10px auto;padding:16px 24px;border:none;border-radius:16px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;cursor:pointer;transition:all 0.15s}
+.landing-btn:active{transform:scale(0.97)}
+.landing-btn.btn-learn{background:linear-gradient(135deg,#11998e,#38ef7d);color:white;box-shadow:0 4px 0 #0e7a6e}
+.landing-btn.btn-staff{background:white;color:#7f8c8d;border:2px solid #e0e0e0;box-shadow:0 2px 0 #d0d0d0;font-size:0.9rem}
+.pupil-select{margin:20px auto;max-width:300px}
+.pupil-select-title{font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:8px}
+.pupil-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.pupil-chip{padding:8px 16px;border-radius:20px;background:white;border:2px solid #e0e0e0;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.15s}
+.pupil-chip:hover{border-color:#11998e;background:#e8fff5}
+.pupil-chip.selected{background:#11998e;color:white;border-color:#11998e}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:200}
+.modal-overlay.show{display:flex}
+.modal-box{background:white;border-radius:20px;padding:32px;max-width:340px;width:90%;text-align:center;animation:popIn 0.3s ease}
+.modal-box h3{margin-bottom:16px;color:#2d3436}
+.modal-input{width:100%;padding:14px;border:3px solid #f0f0f0;border-radius:12px;font-size:1rem;text-align:center;outline:none;font-family:'Nunito','Trebuchet MS',sans-serif}
+.modal-input:focus{border-color:#11998e}
+.modal-error{color:#e74c3c;font-size:0.85rem;font-weight:700;margin-top:8px;min-height:24px}
+.modal-submit{margin-top:12px;padding:12px 32px;border:none;border-radius:12px;background:#11998e;color:white;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;cursor:pointer}
+.modal-cancel{margin-top:8px;padding:8px 16px;border:none;background:none;color:#b2bec3;cursor:pointer;font-size:0.85rem}
+
+/* ===== SECTION HEADERS ===== */
+.section-header{display:flex;align-items:center;gap:8px;margin:20px 0 10px;padding-bottom:8px;border-bottom:2px solid #f0f0f0}
+.section-header span{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#11998e;text-transform:uppercase;letter-spacing:2px}
+.pupil-name-bar{text-align:center;font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:4px}
+.pupil-name-bar strong{color:#11998e}
+
+/* ===== TEACHER DASHBOARD ===== */
+.teacher-screen{background:#f8f9fa}
+.teacher-topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:white;border-bottom:3px solid #11998e}
+.teacher-topbar h2{font-size:1rem;color:#11998e}
+.teacher-topbar .school-name{font-size:0.8rem;color:#636e72;cursor:pointer}
+.teacher-topbar .school-name:hover{text-decoration:underline}
+.teacher-exit{padding:8px 16px;border:2px solid #e0e0e0;border-radius:10px;background:white;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.8rem;color:#636e72;cursor:pointer}
+.teacher-body{padding:20px;max-width:700px;margin:0 auto}
+.teacher-section{background:white;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.teacher-section h3{font-size:1rem;color:#2d3436;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #f0f0f0}
+.teacher-input-row{display:flex;gap:8px;margin-bottom:12px}
+.teacher-input{flex:1;padding:10px 14px;border:2px solid #e0e0e0;border-radius:10px;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.9rem;outline:none}
+.teacher-input:focus{border-color:#11998e}
+.teacher-btn{padding:10px 16px;border:none;border-radius:10px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.15s}
+.teacher-btn:active{transform:scale(0.97)}
+.teacher-btn.teal{background:#11998e;color:white}
+.teacher-btn.grey{background:#f0f0f0;color:#636e72}
+.teacher-btn.red{background:#e74c3c;color:white}
+.pupil-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.pupil-row:last-child{border-bottom:none}
+.pupil-row .pupil-name{font-weight:700;color:#2d3436}
+.progress-table{width:100%;border-collapse:collapse;font-size:0.8rem}
+.progress-table th{background:#11998e;color:white;padding:10px 8px;text-align:left;cursor:pointer;font-weight:700;white-space:nowrap}
+.progress-table th:hover{background:#0e7a6e}
+.progress-table td{padding:8px;border-bottom:1px solid #f0f0f0}
+.progress-table tr:nth-child(even){background:#f8f9fa}
+.progress-table-wrap{overflow-x:auto;margin:12px 0;border-radius:10px;border:1px solid #e0e0e0}
+.actions-row{display:flex;gap:10px;flex-wrap:wrap}
+.collapse-header{cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;color:#636e72;padding:12px 0}
+.collapse-header:hover{color:#11998e}
+.collapse-content{display:none;padding:12px 0;font-size:0.85rem;color:#636e72;line-height:1.7}
+.collapse-content.open{display:block}
 
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
@@ -425,140 +477,140 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
   html{font-size:15px}
   .kb-key{min-width:28px;height:40px;font-size:0.9rem}
   .letter-slot{width:32px;height:40px;font-size:1.2rem}
-  .subject-card{padding:18px 10px 14px;min-height:120px}
+  .subject-card{padding:14px 8px 12px;min-height:110px}
+  .subject-card .card-icon{width:48px;height:48px;font-size:1.2rem}
+  .subject-card .card-title{font-size:0.9rem}
   .tt-grid{grid-template-columns:repeat(3,1fr)}
+  .anagram-tile{width:36px;height:42px;font-size:1.1rem}
+  .word-chip{padding:8px 10px;font-size:0.8rem}
+  .clock-face{width:150px;height:150px}
+  .landing-logo{width:120px;height:120px}
+  .landing-title{font-size:2.2rem}
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- HOME -->
-<div id="home" class="screen home-bg active">
+<!-- LANDING PAGE -->
+<div id="landing" class="screen landing-bg active">
+  <div>
+    <img src="logo.jpg" alt="South Lodge Primary" class="landing-logo">
+    <div class="landing-title">Classmates</div>
+    <div class="landing-sub">South Lodge Primary School</div>
+    <div id="pupilSelectArea"></div>
+    <button class="landing-btn btn-learn" onclick="enterPupilHome()">Let's Learn!</button>
+    <button class="landing-btn btn-staff" onclick="showStaffLogin()">Staff Access</button>
+  </div>
+</div>
+
+<!-- STAFF PASSWORD MODAL -->
+<div class="modal-overlay" id="staffModal">
+  <div class="modal-box">
+    <h3>Staff Access</h3>
+    <input type="password" class="modal-input" id="staffPwd" placeholder="Enter staff password">
+    <div class="modal-error" id="staffError"></div>
+    <button class="modal-submit" onclick="checkStaffPwd()">Enter</button><br>
+    <button class="modal-cancel" onclick="hideStaffLogin()">Cancel</button>
+    <div style="margin-top:12px;font-size:0.7rem;color:#b2bec3;cursor:help" title="Contact your school administrator to change the staff password">?</div>
+  </div>
+</div>
+
+<!-- PUPIL HOME -->
+<div id="home" class="screen home-bg">
   <div class="home-header">
-    <img src="logo.jpg" alt="South Lodge Primary" class="logo-img">
-    <div class="classmates-text">Classmates</div>
-    <div class="home-subtitle">Learn, play, and grow together</div>
+    <img src="logo.jpg" alt="South Lodge Primary" class="logo-img" style="width:80px">
+    <div class="classmates-text" style="font-size:2rem">Classmates</div>
+    <div class="pupil-name-bar" id="pupilNameBar"></div>
   </div>
   <div class="home-content">
-    <div class="subject-grid">
-      <div class="subject-card card-spelling" onclick="startGame('spelling')">
-        <div class="card-icon">Aa</div>
-        <div class="card-title">Spelling</div>
-        <div class="card-desc">Guess the word!</div>
-      </div>
-      <div class="subject-card card-maths" onclick="startGame('maths')">
-        <div class="card-icon">1+2</div>
-        <div class="card-title">Maths</div>
-        <div class="card-desc">Solve the sums</div>
-      </div>
-      <div class="subject-card card-times" onclick="startGame('times')">
-        <div class="card-icon">3x4</div>
-        <div class="card-title">Times Tables</div>
-        <div class="card-desc">Beat the clock!</div>
-      </div>
-      <div class="subject-card card-reading" onclick="startGame('reading')">
-        <div class="card-icon">Bb</div>
-        <div class="card-title">Reading</div>
-        <div class="card-desc">Stories &amp; questions</div>
-      </div>
-      <div class="subject-card card-speed" onclick="startGame('speed')">
-        <div class="card-icon">60s</div>
-        <div class="card-title">Speed Maths</div>
-        <div class="card-desc">How many in 60 seconds?</div>
-      </div>
-      <div class="subject-card card-bonds" onclick="startGame('bonds')">
-        <div class="card-icon">?+3</div>
-        <div class="card-title">Number Bonds</div>
-        <div class="card-desc">Find the missing number</div>
-      </div>
-      <div class="subject-card card-vowels" onclick="startGame('vowels')">
-        <div class="card-icon">_e_</div>
-        <div class="card-title">Missing Vowels</div>
-        <div class="card-desc">Fill in the gaps!</div>
-      </div>
-      <div class="subject-card card-dictation" onclick="startGame('dictation')">
-        <div class="card-icon">&#x1F50A;</div>
-        <div class="card-title">Dictation</div>
-        <div class="card-desc">Listen and spell!</div>
-      </div>
-      <div class="subject-card card-anagram" onclick="startGame('anagram')">
-        <div class="card-icon">ABC</div>
-        <div class="card-title">Anagrams</div>
-        <div class="card-desc">Unjumble the letters!</div>
-      </div>
-      <div class="subject-card card-phonics" onclick="startGame('phonics')">
-        <div class="card-icon">ai</div>
-        <div class="card-title">Phonics</div>
-        <div class="card-desc">Sound patterns</div>
-      </div>
-      <div class="subject-card card-wordfam" onclick="startGame('wordfam')">
-        <div class="card-icon">-ing</div>
-        <div class="card-title">Word Families</div>
-        <div class="card-desc">Common endings</div>
-      </div>
-      <div class="subject-card card-sentence" onclick="startGame('sentence')">
-        <div class="card-icon">1 2 3</div>
-        <div class="card-title">Sentences</div>
-        <div class="card-desc">Put words in order</div>
-      </div>
-      <div class="subject-card card-punctuation" onclick="startGame('punctuation')">
-        <div class="card-icon">.?!</div>
-        <div class="card-title">Punctuation</div>
-        <div class="card-desc">Add the missing marks</div>
-      </div>
-      <div class="subject-card card-vocab" onclick="startGame('vocab')">
-        <div class="card-icon">A-Z</div>
-        <div class="card-title">Vocabulary</div>
-        <div class="card-desc">Words and meanings</div>
-      </div>
-      <div class="subject-card card-missnum" onclick="startGame('missnum')">
-        <div class="card-icon">?=</div>
-        <div class="card-title">Missing Number</div>
-        <div class="card-desc">Find the gap</div>
-      </div>
-      <div class="subject-card card-placeval" onclick="startGame('placeval')">
-        <div class="card-icon">HTO</div>
-        <div class="card-title">Place Value</div>
-        <div class="card-desc">Hundreds, tens &amp; ones</div>
-      </div>
-      <div class="subject-card card-time" onclick="startGame('telltime')">
-        <div class="card-icon">3:00</div>
-        <div class="card-title">Telling Time</div>
-        <div class="card-desc">Read the clock</div>
-      </div>
-      <div class="subject-card card-money" onclick="startGame('money')">
-        <div class="card-icon">&#xA3;p</div>
-        <div class="card-title">Money</div>
-        <div class="card-desc">Coins and change</div>
-      </div>
-      <div class="subject-card card-fractions" onclick="startGame('fractions')">
-        <div class="card-icon">&#xBD;</div>
-        <div class="card-title">Fractions</div>
-        <div class="card-desc">Halves, quarters &amp; more</div>
-      </div>
-      <div class="subject-card card-wordprob" onclick="startGame('wordprob')">
-        <div class="card-icon">Q&amp;A</div>
-        <div class="card-title">Word Problems</div>
-        <div class="card-desc">Real-world maths</div>
-      </div>
-      <div class="subject-card card-daily" onclick="startGame('daily')">
-        <div class="card-icon">GO</div>
-        <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
-      </div>
-    </div>
-    <div style="text-align:center;margin:12px 0 4px;"><span class="coin-display-home" id="coinDisplay">&#x1FA99; <span id="coinCount">0</span> coins</span></div>
+    <div style="text-align:center;margin:8px 0 4px;"><span class="coin-display-home" id="coinDisplay">&#x1FA99; <span id="coinCount">0</span> coins</span></div>
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-val" id="statStars">0</span><span class="stat-lbl">Stars</span></div>
       <div class="stat-item"><span class="stat-val" id="statGames">0</span><span class="stat-lbl">Games</span></div>
       <div class="stat-item"><span class="stat-val" id="statStreak">0</span><span class="stat-lbl">Day Streak</span></div>
     </div>
+
+    <div class="section-header"><span>&#x270F;&#xFE0F; Literacy</span></div>
+    <div class="subject-grid">
+      <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
+      <div class="subject-card card-dictation" onclick="startGame('dictation')"><div class="card-icon">&#x1F50A;</div><div class="card-title">Dictation</div><div class="card-desc">Listen and spell!</div></div>
+      <div class="subject-card card-vowels" onclick="startGame('vowels')"><div class="card-icon">_e_</div><div class="card-title">Missing Vowels</div><div class="card-desc">Fill in the gaps!</div></div>
+      <div class="subject-card card-anagram" onclick="startGame('anagram')"><div class="card-icon">ABC</div><div class="card-title">Anagrams</div><div class="card-desc">Unjumble the letters!</div></div>
+      <div class="subject-card card-phonics" onclick="startGame('phonics')"><div class="card-icon">ai</div><div class="card-title">Phonics</div><div class="card-desc">Sound patterns</div></div>
+      <div class="subject-card card-wordfam" onclick="startGame('wordfam')"><div class="card-icon">-ing</div><div class="card-title">Word Families</div><div class="card-desc">Common endings</div></div>
+      <div class="subject-card card-sentence" onclick="startGame('sentence')"><div class="card-icon">1 2 3</div><div class="card-title">Sentences</div><div class="card-desc">Put words in order</div></div>
+      <div class="subject-card card-punctuation" onclick="startGame('punctuation')"><div class="card-icon">.?!</div><div class="card-title">Punctuation</div><div class="card-desc">Add the missing marks</div></div>
+      <div class="subject-card card-vocab" onclick="startGame('vocab')"><div class="card-icon">A-Z</div><div class="card-title">Vocabulary</div><div class="card-desc">Words and meanings</div></div>
+    </div>
+
+    <div class="section-header"><span>&#x1F522; Numeracy</span></div>
+    <div class="subject-grid">
+      <div class="subject-card card-maths" onclick="startGame('maths')"><div class="card-icon">1+2</div><div class="card-title">Maths</div><div class="card-desc">Solve the sums</div></div>
+      <div class="subject-card card-times" onclick="startGame('times')"><div class="card-icon">3x4</div><div class="card-title">Times Tables</div><div class="card-desc">Beat the clock!</div></div>
+      <div class="subject-card card-speed" onclick="startGame('speed')"><div class="card-icon">60s</div><div class="card-title">Speed Maths</div><div class="card-desc">60 second challenge</div></div>
+      <div class="subject-card card-bonds" onclick="startGame('bonds')"><div class="card-icon">?+3</div><div class="card-title">Number Bonds</div><div class="card-desc">Find the missing number</div></div>
+      <div class="subject-card card-missnum" onclick="startGame('missnum')"><div class="card-icon">?=</div><div class="card-title">Missing Number</div><div class="card-desc">Find the gap</div></div>
+      <div class="subject-card card-placeval" onclick="startGame('placeval')"><div class="card-icon">HTO</div><div class="card-title">Place Value</div><div class="card-desc">Hundreds, tens &amp; ones</div></div>
+      <div class="subject-card card-time" onclick="startGame('telltime')"><div class="card-icon">3:00</div><div class="card-title">Telling Time</div><div class="card-desc">Read the clock</div></div>
+      <div class="subject-card card-money" onclick="startGame('money')"><div class="card-icon">&#xA3;p</div><div class="card-title">Money</div><div class="card-desc">Coins and change</div></div>
+      <div class="subject-card card-fractions" onclick="startGame('fractions')"><div class="card-icon">&#xBD;</div><div class="card-title">Fractions</div><div class="card-desc">Halves, quarters &amp; more</div></div>
+      <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
+    </div>
+
+    <div class="section-header"><span>&#x1F3C6; Challenges</span></div>
+    <div class="subject-grid">
+      <div class="subject-card card-daily" onclick="startGame('daily')"><div class="card-icon">GO</div><div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">5 daily challenges — spelling, maths, reading &amp; more</div></div></div>
+      <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
+    </div>
+
     <div class="badges-section">
       <div class="badges-title">Achievements</div>
       <div class="badges-grid" id="badgesRow"></div>
     </div>
-    <div style="text-align:center;margin-top:24px;padding-bottom:16px;">
-      <button onclick="resetProgress()" style="background:none;border:none;color:#b2bec3;font-size:0.7rem;font-family:'Nunito','Trebuchet MS',sans-serif;cursor:pointer;padding:8px 16px;">Reset Progress</button>
+    <div style="text-align:center;padding:12px 0;">
+      <button onclick="showScreen('landing')" style="background:none;border:none;color:#b2bec3;font-size:0.75rem;font-family:'Nunito','Trebuchet MS',sans-serif;cursor:pointer;padding:8px 16px;">&#x2190; Back to start</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHER DASHBOARD -->
+<div id="teacher" class="screen teacher-screen">
+  <div class="teacher-topbar">
+    <h2>Classmates — Staff Dashboard</h2>
+    <span class="school-name" id="schoolName" onclick="editSchoolName()">South Lodge Primary</span>
+    <button class="teacher-exit" onclick="showScreen('landing')">&#x2190; Exit</button>
+  </div>
+  <div class="teacher-body">
+    <div class="teacher-section">
+      <h3>Pupil Manager</h3>
+      <div class="teacher-input-row">
+        <input class="teacher-input" id="newPupilInput" placeholder="Pupil name" onkeydown="if(event.key==='Enter')addPupil()">
+        <button class="teacher-btn teal" onclick="addPupil()">Add Pupil</button>
+      </div>
+      <div id="pupilList"></div>
+    </div>
+    <div class="teacher-section">
+      <h3>Progress</h3>
+      <div id="progressArea"></div>
+    </div>
+    <div class="teacher-section">
+      <h3>Actions</h3>
+      <div class="actions-row">
+        <button class="teacher-btn teal" onclick="printReport()">Print Report</button>
+        <button class="teacher-btn grey" onclick="exportCSV()">Export CSV</button>
+        <button class="teacher-btn red" onclick="resetAllData()">Reset All Data</button>
+      </div>
+    </div>
+    <div class="teacher-section">
+      <div class="collapse-header" onclick="this.nextElementSibling.classList.toggle('open')">&#x2139;&#xFE0F; Level Guide &amp; Curriculum Alignment &#x25BC;</div>
+      <div class="collapse-content">
+        <strong>Level 1 — Early (P1, Ages 5-6)</strong><br>Short words, simple sums, basic reading<br><br>
+        <strong>Level 2 — First (P2-P4, Ages 6-8)</strong><br>Longer words, two-digit maths, paragraph reading<br><br>
+        <strong>Level 3 — Second (P5-P7, Ages 8-10)</strong><br>Complex words, multiplication/division, rich comprehension texts<br><br>
+        <em>All content is aligned to the Scottish Curriculum for Excellence Experiences and Outcomes for Literacy &amp; English and Numeracy &amp; Mathematics.</em><br><br>
+        <em>Classmates was built for South Lodge Primary School.</em>
+      </div>
     </div>
   </div>
 </div>
@@ -1654,7 +1706,8 @@ const ACHIEVEMENTS = [
   {id:'first_missnum',icon:'\u{2753}',name:'Gap Finder',desc:'Complete missing number',bg:'#134e5e'},
   {id:'first_time',icon:'\u{1F570}\u{FE0F}',name:'Clockwatcher',desc:'Complete telling time',bg:'#2c3e50'},
   {id:'first_money',icon:'\u{1FA99}',name:'Money Counter',desc:'Complete money',bg:'#1a5276'},
-  {id:'first_fractions',icon:'\u{1F4CA}',name:'Fraction Fan',desc:'Complete fractions',bg:'#c0392b'}
+  {id:'first_fractions',icon:'\u{1F4CA}',name:'Fraction Fan',desc:'Complete fractions',bg:'#c0392b'},
+  {id:'first_placeval',icon:'\u{1F522}',name:'Place Value Pro',desc:'Complete place value',bg:'#f46b45'}
 ];
 
 const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>';
@@ -1671,11 +1724,36 @@ function checkAch(id,cond){if(cond&&!state.achievements.includes(id)){state.achi
 function resetProgress(){if(confirm('This will delete all your stars, badges and progress. Are you sure?')){state={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{}};saveState();updateHomeStats()}}
 
 // ==================== NAVIGATION ====================
+let currentPupil=null;
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily()}
-function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges()}
+function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();const nb=document.getElementById('pupilNameBar');nb.textContent=currentPupil?'Playing as: '+currentPupil:''}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
+
+// ==================== LANDING PAGE ====================
+function showStaffLogin(){document.getElementById('staffModal').classList.add('show');document.getElementById('staffPwd').value='';document.getElementById('staffError').textContent='';setTimeout(()=>document.getElementById('staffPwd').focus(),100)}
+function hideStaffLogin(){document.getElementById('staffModal').classList.remove('show')}
+function checkStaffPwd(){const pwd=document.getElementById('staffPwd').value;if(pwd==='classmates2026'){hideStaffLogin();showScreen('teacher');renderTeacher()}else{document.getElementById('staffError').textContent='Incorrect password';document.getElementById('staffPwd').classList.add('shake');setTimeout(()=>document.getElementById('staffPwd').classList.remove('shake'),300)}}
+document.addEventListener('keydown',function(e){if(document.getElementById('staffModal').classList.contains('show')&&e.key==='Enter')checkStaffPwd()});
+function enterPupilHome(){showScreen('home');updateHomeStats()}
+function renderPupilSelect(){const area=document.getElementById('pupilSelectArea');const pupils=getPupils();if(pupils.length===0){area.innerHTML='';return}let h='<div class="pupil-select"><div class="pupil-select-title">Who are you today?</div><div class="pupil-list">';pupils.forEach(p=>{h+='<div class="pupil-chip'+(currentPupil===p?' selected':'')+'" onclick="selectPupil(\''+p.replace(/'/g,"\\'")+'\')">'+p+'</div>'});h+='</div></div>';area.innerHTML=h}
+function selectPupil(name){currentPupil=name;renderPupilSelect()}
+
+// ==================== PUPIL MANAGER ====================
+function getPupils(){try{return JSON.parse(localStorage.getItem('classmates_pupils')||'[]')}catch(e){return[]}}
+function savePupils(list){try{localStorage.setItem('classmates_pupils',JSON.stringify(list))}catch(e){}}
+function addPupil(){const inp=document.getElementById('newPupilInput');const name=inp.value.trim();if(!name)return;const pupils=getPupils();if(!pupils.includes(name)){pupils.push(name);savePupils(pupils)}inp.value='';renderPupilList();renderPupilSelect()}
+function removePupil(name){if(!confirm('Remove '+name+'? This will not delete their progress.')){return}const pupils=getPupils().filter(p=>p!==name);savePupils(pupils);renderPupilList();renderPupilSelect()}
+function renderPupilList(){const el=document.getElementById('pupilList');const pupils=getPupils();if(pupils.length===0){el.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet.</p>';return}el.innerHTML='';pupils.forEach(p=>{const row=document.createElement('div');row.className='pupil-row';row.innerHTML='<span class="pupil-name">'+p+'</span><div><button class="teacher-btn grey" onclick="removePupil(\''+p.replace(/'/g,"\\'")+'\')">Remove</button></div>';el.appendChild(row)})}
+
+// ==================== TEACHER DASHBOARD ====================
+function renderTeacher(){renderPupilList();renderProgressTable();const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';document.getElementById('schoolName').textContent=sn}
+function editSchoolName(){const name=prompt('School name:',document.getElementById('schoolName').textContent);if(name){document.getElementById('schoolName').textContent=name;localStorage.setItem('classmates_school',name)}}
+function renderProgressTable(){const area=document.getElementById('progressArea');const pupils=getPupils();if(pupils.length===0){area.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet. Add pupil names above to track progress.</p>';return}area.innerHTML='<div class="progress-table-wrap"><table class="progress-table"><thead><tr><th>Name</th><th>Stars</th><th>Games</th><th>Spelling</th><th>Maths</th><th>Stories</th></tr></thead><tbody id="progressBody"></tbody></table></div>';const body=document.getElementById('progressBody');body.innerHTML='<tr><td colspan="6" style="text-align:center;color:#b2bec3;padding:16px;">Per-pupil tracking requires pupils to select their name on the landing page. Currently showing combined progress.</td></tr>'}
+function printReport(){const w=window.open('','_blank');const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});w.document.write('<!DOCTYPE html><html><head><title>Progress Report</title><style>@page{size:landscape;margin:20mm}body{font-family:Arial,sans-serif}h1{color:#11998e;font-size:1.5rem}h2{font-size:1rem;color:#636e72}.meta{color:#636e72;font-size:0.9rem;margin-bottom:16px}</style></head><body><h1>'+sn+' — Classmates Progress Report</h1><p class="meta">'+today+'</p><p>Stars: '+state.stars+' | Games: '+state.games+' | Streak: '+state.streak+' days</p><p>Spelling correct: '+state.spellingCorrect+' | Maths correct: '+state.mathsCorrect+'</p><p>Stories read: '+state.storiesRead.length+'/18 | Times tables completed: '+state.ttCompleted.length+'/11</p></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+function exportCSV(){const rows=[['Name','Stars','Games','Streak','Spelling','Maths','Stories','Tables']];rows.push(['Combined',state.stars,state.games,state.streak,state.spellingCorrect,state.mathsCorrect,state.storiesRead.length,state.ttCompleted.length]);const csv=rows.map(r=>r.join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='classmates-progress-'+new Date().toISOString().slice(0,10)+'.csv';a.click()}
+function resetAllData(){if(!confirm('This will delete ALL pupil data and progress. This cannot be undone.'))return;if(!confirm('Are you absolutely sure?'))return;localStorage.removeItem('classmates_state');localStorage.removeItem('classmates_pupils');state={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{}};saveState();renderTeacher()}
 
 // ==================== SPELLING ====================
 let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false,missed:[]};
@@ -1722,7 +1800,7 @@ function startReading(idx){rd.storyIdx=idx;rd.questionIdx=0;rd.correct=0;rd.stor
 function readingShowQuestion(){hide('readingReadBtn');show('readingQuestion');loadReadQ()}
 function loadReadQ(){const q=rd.story.questions[rd.questionIdx];document.getElementById('readProgress').style.width=(rd.questionIdx/rd.totalQ*100)+'%';document.getElementById('readProgressText').textContent='Question '+(rd.questionIdx+1)+' of '+rd.totalQ;const qa=document.getElementById('readingQA');qa.innerHTML='<div class="q-text">'+q.q+'</div>';q.a.forEach((a,i)=>{const btn=document.createElement('button');btn.className='ans-btn';btn.textContent=a;btn.onclick=()=>selectReadAns(btn,i,q.c);qa.appendChild(btn)})}
 function selectReadAns(btn,sel,cor){document.querySelectorAll('#readingQA .ans-btn').forEach((o,i)=>{if(i===cor)o.classList.add('correct-ans');else if(i===sel)o.classList.add('wrong-ans');o.classList.add('disabled')});if(sel===cor)rd.correct++;setTimeout(()=>{rd.questionIdx++;if(rd.questionIdx>=rd.totalQ)finishReading();else loadReadQ()},1200)}
-function finishReading(){const key=rd.level+'_'+rd.storyIdx;if(!state.storiesRead.includes(key))state.storiesRead.push(key);checkAch('read_3',state.storiesRead.length>=3);const total=Object.values(READING).reduce((s,l)=>s+l.length,0);checkAch('read_all',state.storiesRead.length>=total);checkAch('first_game',true);show('readingLevelSelect');hide('readingStorySelect');hide('readingGame');const pct=rd.correct/rd.totalQ;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;addStars(stars);recordPlay();showResults('#56ab2f','Bb','Story Complete!',rd.story.title,stars,rd.correct,rd.totalQ,()=>{showScreen('reading')})}
+function finishReading(){const key=rd.level+'_'+rd.storyIdx;if(!state.storiesRead.includes(key))state.storiesRead.push(key);checkAch('read_3',state.storiesRead.length>=5);const total=Object.values(READING).reduce((s,l)=>s+l.length,0);checkAch('read_all',state.storiesRead.length>=total);checkAch('first_game',true);show('readingLevelSelect');hide('readingStorySelect');hide('readingGame');const pct=rd.correct/rd.totalQ;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;addStars(stars);recordPlay();showResults('#56ab2f','Bb','Story Complete!',rd.story.title,stars,rd.correct,rd.totalQ,()=>{showScreen('reading')},null)}
 
 // ==================== DAILY ====================
 let dy={step:0,totalSteps:5,level:2,spellWord:null,mathQ:null,readQ:null,bondsQ:null,bonusQ:null,correct:0};
@@ -1736,6 +1814,7 @@ function checkDMath(){const v=parseInt(document.getElementById('dMath').value);i
 function checkDRead(btn,sel,cor){btn.parentElement.querySelectorAll('.ans-btn').forEach((o,i)=>{if(i===cor)o.classList.add('correct-ans');else if(i===sel)o.classList.add('wrong-ans');o.classList.add('disabled')});if(sel===cor)dy.correct++;setTimeout(()=>{dy.step++;loadDailyStep()},1000)}
 function checkDBonds(){const v=parseInt(document.getElementById('dBonds').value);if(v===dy.bondsQ.answer){dy.correct++}dy.step++;loadDailyStep()}
 function checkDBonus(){const v=parseInt(document.getElementById('dBonus').value);if(v===dy.bonusQ.answer){dy.correct++;addCoins(2)}dy.step++;finishDaily()}
+document.addEventListener('keydown',function(e){if(document.getElementById('daily').classList.contains('active')&&e.key==='Enter'){e.preventDefault();if(document.getElementById('dSpell'))checkDSpell();else if(document.getElementById('dMath'))checkDMath();else if(document.getElementById('dBonds'))checkDBonds();else if(document.getElementById('dBonus'))checkDBonus()}});
 function finishDaily(){state.dailyCompleted=new Date().toDateString();checkAch('daily_1',true);checkAch('first_game',true);checkAch('streak_3',state.streak>=3);checkAch('streak_7',state.streak>=7);const pct=dy.correct/dy.totalSteps;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;addStars(stars);recordPlay();showResults('#6c5ce7','GO','Daily Challenge Done!',dy.correct+'/'+dy.totalSteps+' correct',stars,dy.correct,dy.totalSteps,()=>{showScreen('daily');initDaily()},null)}
 
 // ==================== SPEED MATHS ====================
@@ -1868,7 +1947,7 @@ function genPVQ(lv){const type=rand(0,2);if(lv===1){const num=rand(11,99);const 
 function startPV(lv){pv.level=lv;pv.idx=0;pv.correct=0;hide('pvLevelSelect');show('pvGame');loadPVQ()}
 function loadPVQ(){pv.question=genPVQ(pv.level);document.getElementById('pvProgress').style.width=(pv.idx/pv.total*100)+'%';document.getElementById('pvProgressText').textContent='Question '+(pv.idx+1)+' of '+pv.total;const d=document.getElementById('pvDisplay');d.innerHTML=(pv.question.blocks||'')+'<div class="ph-sound" style="background:#fff5f0;border-color:#eea849;color:#f46b45;font-size:1.1rem">'+pv.question.prompt+'</div>';const opts=document.getElementById('pvOpts');opts.innerHTML='';pv.question.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectPVAns(b,o===pv.question.answer,pv.question.answer);opts.appendChild(b)})}
 function selectPVAns(btn,correct,rightAnswer){document.querySelectorAll('#pvOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(Number(o.textContent)===rightAnswer)o.classList.add('ph-correct')});if(correct){pv.correct++;btn.classList.add('ph-correct')}else{btn.classList.add('ph-wrong')}setTimeout(()=>{pv.idx++;if(pv.idx>=pv.total)finishPV();else loadPVQ()},correct?500:1200)}
-function finishPV(){show('pvLevelSelect');hide('pvGame');const pct=pv.correct/pv.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#f46b45','HTO','Place Value Done!','Level '+pv.level,stars,pv.correct,pv.total,()=>{showScreen('placeval')},null)}
+function finishPV(){show('pvLevelSelect');hide('pvGame');const pct=pv.correct/pv.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_placeval',true);addStars(stars);recordPlay();showResults('#f46b45','HTO','Place Value Done!','Level '+pv.level,stars,pv.correct,pv.total,()=>{showScreen('placeval')},null)}
 
 // ==================== MISSING NUMBER ====================
 let mn={level:1,idx:0,total:10,correct:0,answer:'',question:null};
@@ -2183,7 +2262,7 @@ function hide(id){document.getElementById(id).style.display='none'}
 document.addEventListener('keydown',function(e){if(document.getElementById('spelling').classList.contains('active')&&document.getElementById('spellingGame').style.display!=='none'){if(/^[a-z]$/i.test(e.key))pressKey(e.key.toLowerCase())}});
 
 // ==================== CERTIFICATE ====================
-function printCert(achievement,detail){const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>Certificate</title><style>@page{size:landscape;margin:0}body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:Georgia,serif}' +'.cert{width:297mm;height:210mm;border:12px solid #ffd700;padding:40px 60px;text-align:center;position:relative;background:white;box-sizing:border-box}' +'.cert::before{content:"";position:absolute;inset:16px;border:3px solid #ffd700;border-radius:8px}' +'.cert h1{font-size:3rem;color:#c0392b;margin:20px 0 10px}' +'.cert h2{font-size:1.8rem;color:#2d3436;margin:20px 0}' +'.cert .detail{font-size:1.3rem;color:#636e72;margin:10px 0}' +'.cert .stars{font-size:3rem;margin:20px 0;color:#ffd700}' +'.cert .date{font-size:1rem;color:#b2bec3;margin-top:30px}' +'.cert .footer{font-size:0.8rem;color:#b2bec3;margin-top:20px;font-style:italic}' +'</style></head><body><div class="cert">' +'<h1>Classmates</h1>' +'<div class="detail">This certificate is awarded to</div>' +'<h2>_________________________</h2>' +'<div class="detail">for achieving</div>' +'<h2>'+achievement+'</h2>' +'<div class="detail">'+detail+' &mdash; Three Stars!</div>' +'<div class="stars">&starf; &starf; &starf;</div>' +'<div class="date">'+today+'</div>' +'<div class="footer">South Lodge Primary &bull; Scottish Curriculum for Excellence</div>' +'</div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+function printCert(achievement,detail){const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>Certificate</title><style>@page{size:landscape;margin:0}body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:Georgia,serif}' +'.cert{width:297mm;height:210mm;border:12px solid #ffd700;padding:40px 60px;text-align:center;position:relative;background:white;box-sizing:border-box}' +'.cert::before{content:"";position:absolute;inset:16px;border:3px solid #ffd700;border-radius:8px}' +'.cert h1{font-size:3rem;color:#c0392b;margin:20px 0 10px}' +'.cert h2{font-size:1.8rem;color:#2d3436;margin:20px 0}' +'.cert .detail{font-size:1.3rem;color:#636e72;margin:10px 0}' +'.cert .stars{font-size:3rem;margin:20px 0;color:#ffd700}' +'.cert .date{font-size:1rem;color:#b2bec3;margin-top:30px}' +'.cert .footer{font-size:0.8rem;color:#b2bec3;margin-top:20px;font-style:italic}' +'</style></head><body><div class="cert">' +'<h1>Classmates</h1>' +'<div class="detail">This certificate is awarded to</div>' +'<h2>_________________________</h2>' +'<div class="detail">for achieving</div>' +'<h2>'+achievement+'</h2>' +'<div class="detail">'+detail+' &mdash; Three Stars!</div>' +'<div class="stars">&starf; &starf; &starf;</div>' +'<div class="date">'+today+'</div>' +'<div class="footer">South Lodge Primary School</div>' +'</div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
 
 // ==================== COINS (session only) ====================
 let sessionCoins=0;
@@ -2191,7 +2270,7 @@ function addCoins(n){sessionCoins+=n;document.getElementById('coinCount').textCo
 function updateCoinDisplay(){document.getElementById('coinCount').textContent=sessionCoins}
 
 // ==================== INIT ====================
-loadState();updateHomeStats();
+loadState();updateHomeStats();renderPupilSelect();
 </script>
 </body>
 </html>
