@@ -69,6 +69,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-wordfam .card-icon{background:rgba(255,255,255,0.3)}
 .card-sentence{background:linear-gradient(135deg,#e55d87,#5fc3e4)}
 .card-sentence .card-icon{background:rgba(255,255,255,0.3)}
+.card-punctuation{background:linear-gradient(135deg,#e55d87,#5fc3e4);background:linear-gradient(135deg,#f7971e,#ffd200);background:linear-gradient(135deg,#ee5a24,#f0932b)}
+.card-punctuation .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -119,6 +121,14 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mv-submit{display:block;width:100%;max-width:320px;margin:12px auto 0;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;background:linear-gradient(135deg,#e84393,#fd79a8);box-shadow:0 4px 0 #c0357a;transition:all 0.15s}
 .mv-submit:active{transform:translateY(2px);box-shadow:0 2px 0 #c0357a}
 .mv-hint{text-align:center;color:#636e72;font-size:0.85rem;margin-top:8px;min-height:20px;font-style:italic}
+
+/* ===== PUNCTUATION ===== */
+.punct-sentence{font-size:1.2rem;line-height:2;color:#2d3436;text-align:center;margin:16px 0;padding:16px;background:#fff8f0;border-radius:14px;border:2px solid #f0932b}
+.punct-toolbar{display:flex;justify-content:center;gap:8px;margin:12px 0;flex-wrap:wrap}
+.punct-btn{width:44px;height:44px;border-radius:10px;border:2px solid #e0e0e0;background:white;font-size:1.2rem;cursor:pointer;font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436;transition:all 0.15s;box-shadow:0 2px 0 #d0d0d0}
+.punct-btn:hover{border-color:#ee5a24}
+.punct-btn:active{transform:translateY(2px);box-shadow:none}
+.punct-btn.selected{background:linear-gradient(135deg,#ee5a24,#f0932b);color:white;border-color:#ee5a24}
 
 /* ===== SENTENCE ORDERING ===== */
 .sent-ans{min-height:60px;padding:12px;background:#f0f8ff;border:3px dashed #5fc3e4;border-radius:14px;margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
@@ -424,6 +434,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Sentences</div>
         <div class="card-desc">Put words in order</div>
       </div>
+      <div class="subject-card card-punctuation" onclick="startGame('punctuation')">
+        <div class="card-icon">.?!</div>
+        <div class="card-title">Punctuation</div>
+        <div class="card-desc">Add the missing marks</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -587,6 +602,28 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PUNCTUATION -->
+<div id="punctuation" class="screen game-screen">
+  <div class="game-header" style="border-color:#f0932b"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#ee5a24">Punctuation</h2></div>
+  <div class="game-body">
+    <div id="punctLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startPunct(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">. and ABC</div></div>
+        <div class="level-card lc-2" onclick="startPunct(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">, ? !</div></div>
+        <div class="level-card lc-3" onclick="startPunct(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">' " : ;</div></div>
+      </div>
+    </div>
+    <div id="punctGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="punctProgress" style="background:linear-gradient(90deg,#ee5a24,#f0932b)"></div></div>
+      <div class="progress-text" id="punctProgressText"></div>
+      <div class="ph-prompt" id="punctPrompt"></div>
+      <div class="punct-sentence" id="punctSentence"></div>
+      <div class="ph-options" id="punctOpts"></div>
     </div>
   </div>
 </div>
@@ -1350,6 +1387,71 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== PUNCTUATION ====================
+const PUNCT_DATA = {
+  1: [
+    {wrong:'the cat sat on the mat',right:'The cat sat on the mat.'},
+    {wrong:'i like to play outside',right:'I like to play outside.'},
+    {wrong:'mum went to the shop',right:'Mum went to the shop.'},
+    {wrong:'the dog ran very fast',right:'The dog ran very fast.'},
+    {wrong:'we had lunch at school',right:'We had lunch at school.'},
+    {wrong:'dad made a cup of tea',right:'Dad made a cup of tea.'},
+    {wrong:'the bird flew over the tree',right:'The bird flew over the tree.'},
+    {wrong:'she likes red and blue',right:'She likes red and blue.'},
+    {wrong:'the sun is shining today',right:'The sun is shining today.'},
+    {wrong:'my name is isla',right:'My name is Isla.'},
+    {wrong:'he went to edinburgh',right:'He went to Edinburgh.'},
+    {wrong:'i can see the big hill',right:'I can see the big hill.'},
+    {wrong:'the fish swam in the loch',right:'The fish swam in the loch.'},
+    {wrong:'we played in the park',right:'We played in the park.'},
+    {wrong:'sam and ben are friends',right:'Sam and Ben are friends.'}
+  ],
+  2: [
+    {wrong:'where is my hat',right:'Where is my hat?'},
+    {wrong:'can you help me please',right:'Can you help me, please?'},
+    {wrong:'wow that is amazing',right:'Wow, that is amazing!'},
+    {wrong:'stop dont touch that',right:'Stop! Don\'t touch that!'},
+    {wrong:'we need milk bread and eggs',right:'We need milk, bread and eggs.'},
+    {wrong:'is it time to go home',right:'Is it time to go home?'},
+    {wrong:'hooray we won the game',right:'Hooray! We won the game!'},
+    {wrong:'i like apples oranges and bananas',right:'I like apples, oranges and bananas.'},
+    {wrong:'what time does school start',right:'What time does school start?'},
+    {wrong:'oh no i forgot my bag',right:'Oh no! I forgot my bag!'},
+    {wrong:'after lunch we went swimming',right:'After lunch, we went swimming.'},
+    {wrong:'how old are you',right:'How old are you?'},
+    {wrong:'yes i would like some please',right:'Yes, I would like some, please.'},
+    {wrong:'quick run to the door',right:'Quick! Run to the door!'},
+    {wrong:'in the morning we had porridge',right:'In the morning, we had porridge.'}
+  ],
+  3: [
+    {wrong:'the boys ball rolled away',right:'The boy\'s ball rolled away.'},
+    {wrong:'its a beautiful day said mum',right:'"It\'s a beautiful day," said Mum.'},
+    {wrong:'the childrens coats were wet',right:'The children\'s coats were wet.'},
+    {wrong:'where are you going asked dad',right:'"Where are you going?" asked Dad.'},
+    {wrong:'she brought three things a book a pen and a ruler',right:'She brought three things: a book, a pen and a ruler.'},
+    {wrong:'im not sure said isla however ill try my best',right:'"I\'m not sure," said Isla; "however, I\'ll try my best."'},
+    {wrong:'the dogs tail wagged happily',right:'The dog\'s tail wagged happily.'},
+    {wrong:'dont forget your homework said the teacher',right:'"Don\'t forget your homework," said the teacher.'},
+    {wrong:'scots language has many words haggis ceilidh loch',right:'Scots language has many words: haggis, ceilidh, loch.'},
+    {wrong:'can i come too asked ewan',right:'"Can I come too?" asked Ewan.'},
+    {wrong:'the ladys hat blew away in the wind',right:'The lady\'s hat blew away in the wind.'},
+    {wrong:'although it rained we still had fun',right:'Although it rained, we still had fun.'},
+    {wrong:'thats not fair shouted the boy',right:'"That\'s not fair!" shouted the boy.'},
+    {wrong:'the schools playground was covered in snow',right:'The school\'s playground was covered in snow.'},
+    {wrong:'they needed supplies food water and blankets',right:'They needed supplies: food, water and blankets.'}
+  ]
+};
+
+let pnct={level:1,questions:[],idx:0,total:10,correct:0};
+
+function startPunct(lv){pnct.level=lv;const pool=[...PUNCT_DATA[lv]];shuffle(pool);pnct.questions=pool.slice(0,10);pnct.idx=0;pnct.correct=0;hide('punctLevelSelect');show('punctGame');loadPunctQ()}
+
+function loadPunctQ(){const q=pnct.questions[pnct.idx];document.getElementById('punctProgress').style.width=(pnct.idx/pnct.total*100)+'%';document.getElementById('punctProgressText').textContent='Question '+(pnct.idx+1)+' of '+pnct.total;document.getElementById('punctPrompt').textContent='Which version has the correct punctuation?';const d=document.getElementById('punctOpts');d.innerHTML='';const opts=shuffle([{text:q.right,correct:true},{text:q.wrong,correct:false}]);opts.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o.text;b.style.textAlign='left';b.onclick=()=>selectPunctAns(b,o.correct,q.right);d.appendChild(b)})}
+
+function selectPunctAns(btn,correct,rightAnswer){document.querySelectorAll('#punctOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===rightAnswer)o.classList.add('ph-correct')});if(correct){pnct.correct++;btn.classList.add('ph-correct')}else{btn.classList.add('ph-wrong')}setTimeout(()=>{pnct.idx++;if(pnct.idx>=pnct.total)finishPunct();else loadPunctQ()},correct?500:1500)}
+
+function finishPunct(){show('punctLevelSelect');hide('punctGame');const pct=pnct.correct/pnct.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#ee5a24','.?!','Punctuation Done!','Level '+pnct.level,stars,pnct.correct,pnct.total,()=>{showScreen('punctuation')},null)}
 
 // ==================== SENTENCE ORDERING ====================
 const SENTENCES = {
