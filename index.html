@@ -1314,7 +1314,7 @@ const WORD_EMOJI = {
   'fish':'1f41f',
   'ship':'1f6a2',
   'shop':'1f6cd',
-  'them':'1f46b',
+  'them':'1f465',
   'when':'231a',
   'each':'261d',
   'much':'1f4af',
@@ -1324,19 +1324,19 @@ const WORD_EMOJI = {
   'here':'1f4cd',
   'they':'1f465',
   'said':'1f4ac',
-  'about':'1f4dd',
+  'about':'1f4d6',
   'water':'1f4a7',
   'where':'1f50d',
   'first':'1f947',
-  'other':'1f500',
-  'right':'2714',
+  'other':'1f449',
+  'right':'2705',
   'their':'1f46a',
-  'would':'1f914',
-  'could':'1f4aa',
+  'would':'1f4ad',
+  'could':'1f4ad',
   'under':'1f447',
   'after':'23e9',
-  'think':'1f914',
-  'which':'2753',
+  'think':'1f9e0',
+  'which':'1f914',
   'these':'1f449',
   'night':'1f319',
   'light':'1f4a1',
@@ -1352,7 +1352,7 @@ const WORD_EMOJI = {
   'cloud':'2601',
   'happy':'1f604',
   'funny':'1f602',
-  'carry':'1f4e6',
+  'carry':'1f3cb',
   'lunch':'1f96a',
   'beautiful':'1f338',
   'different':'1f500',
@@ -1375,17 +1375,17 @@ const WORD_EMOJI = {
   'dangerous':'26a0',
   'celebrate':'1f389',
   'disappear':'1f47b',
-  'especially':'1f48e',
+  'especially':'2b50',
   'government':'1f3db',
   'incredible':'1f929',
   'literature':'1f4da',
   'mysterious':'1f575',
   'naturally':'1f33f',
   'operation':'1f3e5',
-  'perfectly':'1f44c',
+  'perfectly':'1f4af',
   'questions':'2753',
   'recommend':'1f44d',
-  'seriously':'1f610',
+  'seriously':'1f9d0',
   'temporary':'23f3',
   'understand':'1f9e0',
   'vegetable':'1f955',
@@ -1763,7 +1763,7 @@ function resetAllData(){if(!confirm('This will delete ALL pupil data and progres
 let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false,missed:[]};
 
 function setSpellingLevel(lv){sp.level=lv;sp.maxLives=lv===1?7:lv===2?6:5;const pool=[...SPELLING[lv]];shuffle(pool);sp.words=pool.slice(0,sp.total);sp.idx=0;sp.correct=0;sp.missed=[];hide('spellingLevelSelect');show('spellingGame');loadSpellWord()}
-function loadSpellWord(){const item=sp.words[sp.idx];sp.word=item.w.toLowerCase();sp.revealed=new Array(sp.word.length).fill(false);sp.lives=sp.maxLives;sp.hintUsed=false;const pic=document.getElementById('spellPic');const eFn=WORD_EMOJI[sp.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn]}else{pic.textContent='?'};document.getElementById('spellHint').textContent='';document.getElementById('hintBtn').style.display='inline-block';updateSpellProgress();renderSpellWord();renderLives();renderKeyboard()}
+function loadSpellWord(){const item=sp.words[sp.idx];sp.word=item.w.toLowerCase();sp.revealed=new Array(sp.word.length).fill(false);sp.lives=sp.maxLives;sp.hintUsed=false;const pic=document.getElementById('spellPic');const eFn=WORD_EMOJI[sp.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('spellHint').textContent=item.h;document.getElementById('hintBtn').style.display='none';updateSpellProgress();renderSpellWord();renderLives();renderKeyboard()}
 function updateSpellProgress(){document.getElementById('spellProgress').style.width=(sp.idx/sp.total*100)+'%';document.getElementById('spellProgressText').textContent='Word '+(sp.idx+1)+' of '+sp.total}
 function renderSpellWord(){const el=document.getElementById('spellWord');el.innerHTML='';for(let i=0;i<sp.word.length;i++){const s=document.createElement('div');s.className='letter-slot'+(sp.revealed[i]?' revealed':'');s.textContent=sp.revealed[i]?sp.word[i]:'';el.appendChild(s)}}
 function renderLives(){const el=document.getElementById('spellLives');el.innerHTML='';for(let i=0;i<sp.maxLives;i++){const d=document.createElement('div');d.className='life'+(i>=sp.lives?' lost':'');d.innerHTML='<div class="life-heart"></div>';el.appendChild(d)}}
@@ -2194,7 +2194,7 @@ let ana={level:1,words:[],idx:0,total:10,correct:0,missed:[],word:'',pool:[],ans
 
 function startAnagram(lv){ana.level=lv;const p=[...SPELLING[lv]];shuffle(p);ana.words=p.slice(0,ana.total);ana.idx=0;ana.correct=0;ana.missed=[];hide('anagramLevelSelect');show('anagramGame');loadAnaQ()}
 
-function loadAnaQ(){const item=ana.words[ana.idx];ana.word=item.w.toLowerCase();const letters=ana.word.split('');ana.pool=[...letters];shuffle(ana.pool);ana.ans=[];document.getElementById('anaProgress').style.width=(ana.idx/ana.total*100)+'%';document.getElementById('anaProgressText').textContent='Word '+(ana.idx+1)+' of '+ana.total;const pic=document.getElementById('anaPic');const eFn=WORD_EMOJI[ana.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn]}else{pic.textContent='?'}document.getElementById('anaHint').textContent='';renderAna()}
+function loadAnaQ(){const item=ana.words[ana.idx];ana.word=item.w.toLowerCase();const letters=ana.word.split('');ana.pool=[...letters];shuffle(ana.pool);ana.ans=[];document.getElementById('anaProgress').style.width=(ana.idx/ana.total*100)+'%';document.getElementById('anaProgressText').textContent='Word '+(ana.idx+1)+' of '+ana.total;const pic=document.getElementById('anaPic');const eFn=WORD_EMOJI[ana.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('anaHint').textContent=item.h;renderAna()}
 
 function renderAna(){const pool=document.getElementById('anaPool');const ans=document.getElementById('anaAns');pool.innerHTML='';ans.innerHTML='';ana.ans.forEach((ch,i)=>{const t=document.createElement('div');t.className='anagram-tile ans-tile';t.textContent=ch;t.onclick=()=>{ana.pool.push(ana.ans.splice(i,1)[0]);renderAna()};ans.appendChild(t)});for(let i=ana.ans.length;i<ana.word.length;i++){const t=document.createElement('div');t.className='anagram-tile';t.style.background='transparent';t.style.border='3px dashed #f0d0e0';t.style.boxShadow='none';ans.appendChild(t)}ana.pool.forEach((ch,i)=>{const t=document.createElement('div');t.className='anagram-tile pool-tile';t.textContent=ch;t.onclick=()=>{ana.ans.push(ana.pool.splice(i,1)[0]);renderAna();if(ana.ans.length===ana.word.length)checkAnaAns()};pool.appendChild(t)})}
 
@@ -2225,7 +2225,7 @@ function removeVowels(w){return w.split('').map(c=>VOWELS.includes(c.toLowerCase
 
 function startVowels(lv){mv.level=lv;const pool=[...SPELLING[lv]];shuffle(pool);mv.words=pool.slice(0,mv.total);mv.idx=0;mv.correct=0;mv.missed=[];hide('vowelsLevelSelect');show('vowelsGame');loadMvQ()}
 
-function loadMvQ(){const item=mv.words[mv.idx];const word=item.w.toLowerCase();document.getElementById('mvProgress').style.width=(mv.idx/mv.total*100)+'%';document.getElementById('mvProgressText').textContent='Word '+(mv.idx+1)+' of '+mv.total;const pic=document.getElementById('mvPic');const eFn=WORD_EMOJI[word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn]}else{pic.textContent='?'}const stripped=removeVowels(word);document.getElementById('mvWord').innerHTML=stripped.split('').map(c=>c==='_'?'<span class="mv-gap">_</span>':c).join('');document.getElementById('mvHint').textContent='';const inp=document.getElementById('mvInput');inp.value='';inp.className='mv-input';inp.focus()}
+function loadMvQ(){const item=mv.words[mv.idx];const word=item.w.toLowerCase();document.getElementById('mvProgress').style.width=(mv.idx/mv.total*100)+'%';document.getElementById('mvProgressText').textContent='Word '+(mv.idx+1)+' of '+mv.total;const pic=document.getElementById('mvPic');const eFn=WORD_EMOJI[word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('mvHint').textContent=item.h;const stripped=removeVowels(word);document.getElementById('mvWord').innerHTML=stripped.split('').map(c=>c==='_'?'<span class="mv-gap">_</span>':c).join('');const inp=document.getElementById('mvInput');inp.value='';inp.className='mv-input';inp.focus()}
 
 function checkMvAns(){const inp=document.getElementById('mvInput');const val=inp.value.trim().toLowerCase();const word=mv.words[mv.idx].w.toLowerCase();if(!val)return;if(val===word){mv.correct++;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();inp.className='mv-input flash-correct';setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},400)}else{mv.missed.push({w:word,h:mv.words[mv.idx].h});inp.className='mv-input flash-wrong';document.getElementById('mvHint').textContent='It was: '+word;setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},1200)}}
 
