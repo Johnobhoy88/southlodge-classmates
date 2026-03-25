@@ -96,6 +96,57 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .shape-display{text-align:center;margin:16px 0}
 .shape-display svg{max-width:200px;max-height:150px;margin:0 auto;display:block}
 
+/* ===== MEMORY MATCH ===== */
+.card-memory{background:linear-gradient(135deg,#e056a0,#f78fb3)}
+.card-memory .card-icon{background:rgba(255,255,255,0.3)}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px;margin:16px auto}
+.mem-card{aspect-ratio:1;border-radius:12px;cursor:pointer;transition:transform 0.3s;position:relative;transform-style:preserve-3d}
+.mem-card.flipped{transform:rotateY(180deg)}
+.mem-card.matched{opacity:0.5;pointer-events:none}
+.mem-face{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.8rem;padding:4px;text-align:center;word-break:break-word}
+.mem-front{background:linear-gradient(135deg,#e056a0,#f78fb3);color:white;font-size:1.5rem}
+.mem-back{background:white;border:3px solid #f0f0f0;color:#2d3436;transform:rotateY(180deg)}
+
+/* ===== GRAMMAR ===== */
+.card-grammar{background:linear-gradient(135deg,#636e72,#b2bec3)}
+.card-grammar .card-icon{background:rgba(255,255,255,0.3)}
+
+/* ===== SPELLING BEE ===== */
+.card-bee{background:linear-gradient(135deg,#fdcb6e,#f7971e)}
+.card-bee .card-icon{background:rgba(255,255,255,0.3)}
+.bee-lives{text-align:center;font-size:1.5rem;margin:8px 0;letter-spacing:4px}
+
+/* ===== RHYMING ===== */
+.card-rhyme{background:linear-gradient(135deg,#a29bfe,#6c5ce7)}
+.card-rhyme .card-icon{background:rgba(255,255,255,0.3)}
+
+/* ===== MEASUREMENT ===== */
+.card-measure{background:linear-gradient(135deg,#0984e3,#74b9ff)}
+.card-measure .card-icon{background:rgba(255,255,255,0.3)}
+
+/* ===== SEQUENCES ===== */
+.card-sequence{background:linear-gradient(135deg,#00cec9,#81ecec)}
+.card-sequence .card-icon{background:rgba(255,255,255,0.3)}
+
+/* ===== SCOTTISH QUIZ ===== */
+.card-scotquiz{background:linear-gradient(135deg,#005EB8,#0084C8)}
+.card-scotquiz .card-icon{background:rgba(255,255,255,0.3)}
+
+/* ===== TYPING ===== */
+.card-typing{background:linear-gradient(135deg,#2d3436,#636e72)}
+.card-typing .card-icon{background:rgba(255,255,255,0.3)}
+.typing-word{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.5rem;text-align:center;margin:20px 0;color:#2d3436;letter-spacing:4px}
+.typing-input{width:100%;max-width:300px;margin:0 auto;display:block;padding:14px;font-size:1.3rem;border:3px solid #e0e0e0;border-radius:12px;text-align:center;font-family:'Fredoka One','Comic Sans MS',cursive;outline:none}
+.typing-input:focus{border-color:#636e72}
+.typing-stats{display:flex;justify-content:center;gap:24px;margin:12px 0}
+.typing-stat{text-align:center}
+.typing-stat .ts-val{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#2d3436}
+.typing-stat .ts-lbl{font-size:0.7rem;color:#b2bec3;font-weight:700}
+
+/* ===== QUIZ BUILDER ===== */
+.card-custom{background:linear-gradient(135deg,#e17055,#fab1a0)}
+.card-custom .card-icon{background:rgba(255,255,255,0.3)}
+
 /* ===== DATA HANDLING ===== */
 .chart-bar{display:flex;align-items:flex-end;gap:8px;justify-content:center;height:150px;margin:16px 0;padding:0 8px}
 .chart-col{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
@@ -708,6 +759,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="subject-card card-punctuation" onclick="startGame('punctuation')"><div class="card-icon">.?!</div><div class="card-title">Punctuation</div><div class="card-desc">Add the missing marks</div></div>
       <div class="subject-card card-vocab" onclick="startGame('vocab')"><div class="card-icon">A-Z</div><div class="card-title">Vocabulary</div><div class="card-desc">Words and meanings</div></div>
       <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
+      <div class="subject-card card-grammar" onclick="startGame('grammar')"><div class="card-icon">N V</div><div class="card-title">Grammar</div><div class="card-desc">Word types</div></div>
+      <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
     </div>
 
     <div class="section-header"><span>&#x1F522; Numeracy</span></div>
@@ -724,12 +777,19 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
       <div class="subject-card card-shapes" onclick="startGame('shapes')"><div class="card-icon">&#x25B3;</div><div class="card-title">Shapes</div><div class="card-desc">Geometry</div></div>
       <div class="subject-card card-data" onclick="startGame('datahandling')"><div class="card-icon">&#x1F4CA;</div><div class="card-title">Data</div><div class="card-desc">Charts</div></div>
+      <div class="subject-card card-measure" onclick="startGame('measure')"><div class="card-icon">cm</div><div class="card-title">Measurement</div><div class="card-desc">Compare</div></div>
+      <div class="subject-card card-sequence" onclick="startGame('sequence')"><div class="card-icon">1,2,?</div><div class="card-title">Sequences</div><div class="card-desc">Patterns</div></div>
     </div>
 
     <div class="section-header"><span>&#x1F3C6; Challenges</span></div>
     <div class="subject-grid">
       <div class="subject-card card-daily" onclick="startGame('daily')"><div class="card-icon">GO</div><div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">5 daily challenges — spelling, maths, reading &amp; more</div></div></div>
       <div class="subject-card card-h2h" onclick="startGame('h2h')"><div class="card-icon">VS</div><div class="card-title">Head to Head</div><div class="card-desc">Race!</div></div>
+      <div class="subject-card card-memory" onclick="startGame('memorymatch')"><div class="card-icon">&#x1F0CF;</div><div class="card-title">Memory</div><div class="card-desc">Match pairs</div></div>
+      <div class="subject-card card-bee" onclick="startGame('spellingbee')"><div class="card-icon">&#x1F41D;</div><div class="card-title">Spelling Bee</div><div class="card-desc">How far?</div></div>
+      <div class="subject-card card-scotquiz" onclick="startGame('scotquiz')"><div class="card-icon">&#x1F3F4;</div><div class="card-title">Scotland</div><div class="card-desc">Quiz</div></div>
+      <div class="subject-card card-typing" onclick="startGame('typing')"><div class="card-icon">&#x2328;</div><div class="card-title">Typing</div><div class="card-desc">Speed</div></div>
+      <div class="subject-card card-custom" onclick="startGame('customquiz')" id="customQuizCard" style="display:none"><div class="card-icon">&#x270D;</div><div class="card-title">Teacher Quiz</div><div class="card-desc">Custom</div></div>
     </div>
 
     <div class="badges-section">
@@ -849,6 +909,12 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
             <div style="font-size:0.75rem;color:#8899aa;margin-top:4px">Generate maths + spelling sheet</div>
           </div>
         </div>
+      </div>
+      <div class="teacher-section">
+        <h3>Custom Quiz Builder</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:12px">Create questions for pupils. They appear as "Teacher's Quiz" in the Challenges section.</p>
+        <div class="teacher-input-row" style="flex-wrap:wrap"><input class="teacher-input" id="cqQuestion" placeholder="Question"><input class="teacher-input" id="cqA" placeholder="Option A (correct)"><input class="teacher-input" id="cqB" placeholder="Option B"><input class="teacher-input" id="cqC" placeholder="Option C"><input class="teacher-input" id="cqD" placeholder="Option D"><button class="teacher-btn teal" onclick="addCustomQ()">Add Question</button></div>
+        <div id="cqList" style="margin-top:8px"></div>
       </div>
       <div class="teacher-section">
         <h3>Reports &amp; Export</h3>
@@ -1405,6 +1471,82 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div id="dataDisplay"></div>
       <div class="ph-options" id="dataOpts"></div>
     </div>
+  </div>
+</div>
+
+<!-- MEMORY MATCH -->
+<div id="memorymatch" class="screen game-screen">
+  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e056a0">Memory Match</h2></div>
+  <div class="game-body"><div class="progress-text" id="memStatus"></div><div class="mem-grid" id="memGrid"></div></div>
+</div>
+
+<!-- GRAMMAR -->
+<div id="grammar" class="screen game-screen">
+  <div class="game-header" style="border-color:#b2bec3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#636e72">Grammar</h2></div>
+  <div class="game-body">
+    <div id="grammarLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startGrammar(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Nouns &amp; Verbs</div></div><div class="level-card lc-2" onclick="startGrammar(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Adjectives</div></div><div class="level-card lc-3" onclick="startGrammar(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Adverbs &amp; more</div></div></div></div>
+    <div id="grammarGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="gramProgress" style="background:linear-gradient(90deg,#636e72,#b2bec3)"></div></div><div class="progress-text" id="gramProgressText"></div><div id="gramDisplay"></div><div class="ph-options" id="gramOpts"></div></div>
+  </div>
+</div>
+
+<!-- SPELLING BEE -->
+<div id="spellingbee" class="screen game-screen">
+  <div class="game-header" style="border-color:#f7971e"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fdcb6e">Spelling Bee</h2></div>
+  <div class="game-body">
+    <div id="beeGame"><div class="bee-lives" id="beeLives"></div><div class="spell-picture" id="beePic" style="border-color:#fdcb6e;background:linear-gradient(135deg,#fff9e6,#fff3cc)"></div><div class="mv-hint" id="beeHint"></div><input type="text" id="beeInput" class="mv-input" style="border-color:#fdcb6e" autocomplete="off" autocapitalize="off" placeholder="Spell the word..."><button class="mv-submit" style="background:linear-gradient(135deg,#fdcb6e,#f7971e);box-shadow:0 4px 0 #e0a800" onclick="checkBee()">Check</button><div class="progress-text" id="beeScore"></div></div>
+  </div>
+</div>
+
+<!-- RHYMING -->
+<div id="rhyme" class="screen game-screen">
+  <div class="game-header" style="border-color:#a29bfe"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Rhyming</h2></div>
+  <div class="game-body">
+    <div id="rhymeLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startRhyme(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Simple rhymes</div></div><div class="level-card lc-2" onclick="startRhyme(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Longer words</div></div><div class="level-card lc-3" onclick="startRhyme(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Tricky rhymes</div></div></div></div>
+    <div id="rhymeGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="rhymeProgress" style="background:linear-gradient(90deg,#a29bfe,#6c5ce7)"></div></div><div class="progress-text" id="rhymeProgressText"></div><div id="rhymeDisplay"></div><div class="ph-options" id="rhymeOpts"></div></div>
+  </div>
+</div>
+
+<!-- MEASUREMENT -->
+<div id="measure" class="screen game-screen">
+  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Measurement</h2></div>
+  <div class="game-body">
+    <div id="measureLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startMeasure(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Compare</div></div><div class="level-card lc-2" onclick="startMeasure(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Units</div></div><div class="level-card lc-3" onclick="startMeasure(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Convert</div></div></div></div>
+    <div id="measureGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="measureProgress" style="background:linear-gradient(90deg,#0984e3,#74b9ff)"></div></div><div class="progress-text" id="measureProgressText"></div><div id="measureDisplay"></div><div class="ph-options" id="measureOpts"></div></div>
+  </div>
+</div>
+
+<!-- SEQUENCES -->
+<div id="sequence" class="screen game-screen">
+  <div class="game-header" style="border-color:#81ecec"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00cec9">Sequences</h2></div>
+  <div class="game-body">
+    <div id="seqLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startSeq(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Count by 1s, 2s</div></div><div class="level-card lc-2" onclick="startSeq(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Count by 5s, 10s</div></div><div class="level-card lc-3" onclick="startSeq(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mixed patterns</div></div></div></div>
+    <div id="seqGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="seqProgress" style="background:linear-gradient(90deg,#00cec9,#81ecec)"></div></div><div class="progress-text" id="seqProgressText"></div><div id="seqDisplay"></div><div class="ph-options" id="seqOpts"></div></div>
+  </div>
+</div>
+
+<!-- SCOTTISH QUIZ -->
+<div id="scotquiz" class="screen game-screen">
+  <div class="game-header" style="border-color:#0084C8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#005EB8">Scotland Quiz</h2></div>
+  <div class="game-body">
+    <div id="scotGame"><div class="progress-bar"><div class="progress-fill" id="scotProgress" style="background:linear-gradient(90deg,#005EB8,#0084C8)"></div></div><div class="progress-text" id="scotProgressText"></div><div id="scotDisplay"></div><div class="ph-options" id="scotOpts"></div></div>
+  </div>
+</div>
+
+<!-- TYPING -->
+<div id="typing" class="screen game-screen">
+  <div class="game-header" style="border-color:#636e72"><button class="nav-btn" onclick="endTyping();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endTyping();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2d3436">Typing Speed</h2></div>
+  <div class="game-body">
+    <div class="typing-stats"><div class="typing-stat"><div class="ts-val" id="typingWPM">0</div><div class="ts-lbl">WPM</div></div><div class="typing-stat"><div class="ts-val" id="typingCorrect">0</div><div class="ts-lbl">Correct</div></div><div class="typing-stat"><div class="ts-val" id="typingTimer">60</div><div class="ts-lbl">Seconds</div></div></div>
+    <div class="typing-word" id="typingWord"></div>
+    <input class="typing-input" id="typingInput" autocomplete="off" autocapitalize="off" placeholder="Type the word...">
+  </div>
+</div>
+
+<!-- CUSTOM QUIZ -->
+<div id="customquiz" class="screen game-screen">
+  <div class="game-header" style="border-color:#fab1a0"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e17055">Teacher's Quiz</h2></div>
+  <div class="game-body">
+    <div id="customGame"><div class="progress-bar"><div class="progress-fill" id="customProgress" style="background:linear-gradient(90deg,#e17055,#fab1a0)"></div></div><div class="progress-text" id="customProgressText"></div><div id="customDisplay"></div><div class="ph-options" id="customOpts"></div></div>
   </div>
 </div>
 
@@ -2072,8 +2214,8 @@ function resetProgress(){if(confirm('This will delete all your stars, badges and
 let currentPupil=null;
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function goHome(){showScreen('home');updateHomeStats()}
-function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily()}
-function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard()}
+function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily();if(g==='memorymatch')startMemoryMatch();if(g==='spellingbee')startBee();if(g==='scotquiz')startScotQuiz();if(g==='typing')startTyping();if(g==='customquiz')startCustomQuiz()}
+function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard();const cqCard=document.getElementById('customQuizCard');if(cqCard)cqCard.style.display=getCustomQuiz().length>0?'':'none'}
 function renderLeaderboard(){const sec=document.getElementById('leaderboardSection');const el=document.getElementById('leaderboard');const pupils=getPupils();if(pupils.length<2){sec.style.display='none';return}const data=pupils.map(p=>{const s=loadPupilState(p);return{name:p,stars:s?s.stars||0:0}}).sort((a,b)=>b.stars-a.stars).slice(0,5);if(data[0].stars===0){sec.style.display='none';return}sec.style.display='block';const medals=['\u{1F947}','\u{1F948}','\u{1F949}','4','5'];el.innerHTML=data.map((d,i)=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:'+(d.name===currentPupil?'#e8fff5':'#f8f8f8')+';border-radius:10px;margin-bottom:4px;font-size:0.85rem"><span style="width:24px;text-align:center">'+medals[i]+'</span><span style="flex:1;font-weight:700;color:#2d3436">'+d.name+'</span><span style="color:#FFD93D;font-weight:800">'+d.stars+' &#x2B50;</span></div>').join('')}
 function renderProgressMap(){const pm=document.getElementById('progressMap');if(!pm)return;const topics=[{id:'spelling',name:'Spelling',color:'#f7971e'},{id:'maths',name:'Maths',color:'#0083b0'},{id:'times',name:'Tables',color:'#e44d26'},{id:'reading',name:'Reading',color:'#56ab2f'},{id:'bonds',name:'Bonds',color:'#11998e'},{id:'phonics',name:'Phonics',color:'#0abde3'}];let h='';topics.forEach(t=>{const lv=state.adaptive&&state.adaptive[t.id]?state.adaptive[t.id].level:1;const pct=lv/3*100;h+='<div class="pmap-row"><span class="pmap-label">'+t.name+'</span><div class="pmap-bar"><div class="pmap-fill" style="width:'+pct+'%;background:'+t.color+'"></div></div><span class="pmap-level">Lv'+lv+'</span></div>'});pm.innerHTML=h}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
@@ -2098,7 +2240,10 @@ function renderPupilList(){const el=document.getElementById('pupilList');const p
 
 // ==================== TEACHER DASHBOARD ====================
 function showTeacherTab(tabId,btn){document.querySelectorAll('.teacher-page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.teacher-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tp-'+tabId).classList.add('active');if(btn)btn.classList.add('active');if(tabId==='progress')renderProgressTable();if(tabId==='overview')renderClassSummary()}
-function renderTeacher(){renderPupilList();renderClassSummary();renderProgressTable();const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';document.getElementById('schoolName').textContent=sn;const pc=document.getElementById('pupilCount');if(pc)pc.textContent=getPupils().length+' pupils registered';showTeacherTab('overview',document.querySelector('.teacher-tab'))}
+function addCustomQ(){const q=document.getElementById('cqQuestion').value.trim();const a=document.getElementById('cqA').value.trim();const b=document.getElementById('cqB').value.trim();const c=document.getElementById('cqC').value.trim();const d=document.getElementById('cqD').value.trim();if(!q||!a||!b)return alert('Need at least question + 2 options');const quiz=getCustomQuiz();quiz.push({question:q,correct:a,options:[a,b,c,d].filter(x=>x)});saveCustomQuiz(quiz);['cqQuestion','cqA','cqB','cqC','cqD'].forEach(id=>document.getElementById(id).value='');renderCQList()}
+function renderCQList(){const el=document.getElementById('cqList');const quiz=getCustomQuiz();if(quiz.length===0){el.innerHTML='<p style="color:#8899aa;font-size:0.8rem">No questions yet.</p>';return}el.innerHTML=quiz.map((q,i)=>'<div class="pupil-row"><span class="pupil-name" style="font-size:0.8rem">'+q.question+'</span><button class="teacher-btn red" style="font-size:0.7rem" onclick="removeCustomQ('+i+')">Remove</button></div>').join('')}
+function removeCustomQ(i){const quiz=getCustomQuiz();quiz.splice(i,1);saveCustomQuiz(quiz);renderCQList()}
+function renderTeacher(){renderPupilList();renderClassSummary();renderProgressTable();renderCQList();const sn=localStorage.getItem('classmates_school')||'South Lodge Primary';document.getElementById('schoolName').textContent=sn;const pc=document.getElementById('pupilCount');if(pc)pc.textContent=getPupils().length+' pupils registered';showTeacherTab('overview',document.querySelector('.teacher-tab'))}
 function renderClassSummary(){const el=document.getElementById('classSummary');const pupils=getPupils();if(pupils.length===0){el.innerHTML='';return}let totalStars=0,totalGames=0,activeToday=0,totalAch=0;const today=new Date().toDateString();pupils.forEach(p=>{const s=loadPupilState(p);if(s){totalStars+=s.stars||0;totalGames+=s.games||0;totalAch+=(s.achievements||[]).length;if(s.lastPlayed===today)activeToday++}});el.innerHTML='<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'+'<div style="background:#e8fff5;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#11998e">'+activeToday+'/'+pupils.length+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Active Today</div></div>'+'<div style="background:#fff8e6;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#d4a520">'+totalStars+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Total Stars</div></div>'+'<div style="background:#f0ecff;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#6c5ce7">'+totalGames+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Games Played</div></div>'+'<div style="background:#fff0f5;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#e84393">'+totalAch+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Badges Earned</div></div></div>'}
 function editSchoolName(){const name=prompt('School name:',document.getElementById('schoolName').textContent);if(name){document.getElementById('schoolName').textContent=name;localStorage.setItem('classmates_school',name)}}
 function renderProgressTable(){const area=document.getElementById('progressArea');const pupils=getPupils();if(pupils.length===0){area.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet. Add pupil names above to track progress.</p>';return}let sortCol=0,sortDir=1;const headers=['Name','Stars','Games','Spelling','Maths','Tables','Stories','Badges','Streak','Last Active'];const rows=[];pupils.forEach(p=>{const s=loadPupilState(p);if(s){rows.push([p,s.stars||0,s.games||0,s.spellingCorrect||0,s.mathsCorrect||0,(s.ttCompleted||[]).length+'/11',(s.storiesRead||[]).length+'/18',(s.achievements||[]).length+'/31',s.streak||0,s.lastPlayed?new Date(s.lastPlayed).toLocaleDateString('en-GB'):'Never'])}else{rows.push([p,0,0,0,0,'0/11','0/18','0/31',0,'Never'])}});function renderTable(){let h='<div class="progress-table-wrap"><table class="progress-table"><thead><tr>';headers.forEach((hd,i)=>{h+='<th data-col="'+i+'">'+hd+(sortCol===i?(sortDir===1?' &#x25B2;':' &#x25BC;'):'')+'</th>'});h+='</tr></thead><tbody>';const sorted=[...rows].sort((a,b)=>{const va=typeof a[sortCol]==='number'?a[sortCol]:String(a[sortCol]).toLowerCase();const vb=typeof b[sortCol]==='number'?b[sortCol]:String(b[sortCol]).toLowerCase();if(va<vb)return -sortDir;if(va>vb)return sortDir;return 0});sorted.forEach(r=>{h+='<tr>';r.forEach(c=>{h+='<td>'+c+'</td>'});h+='</tr>'});h+='</tbody></table></div>';area.innerHTML=h;area.querySelectorAll('th').forEach(th=>{th.onclick=()=>{const col=parseInt(th.dataset.col);if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1}renderTable()}})}renderTable()}
@@ -2702,6 +2847,70 @@ function sfxClick(){playTone(800,0.05,'sine',0.1)}
 function sfxStar(){playTone(880,0.1,'triangle',0.2);setTimeout(()=>playTone(1108,0.15,'triangle',0.25),120)}
 function toggleMute(){soundMuted=!soundMuted;const btn=document.getElementById('muteBtn');if(soundMuted){btn.textContent='\u{1F507} Sound Off';btn.classList.add('muted')}else{btn.textContent='\u{1F50A} Sound On';btn.classList.remove('muted');sfxClick()}}
 function toggleDyslexia(){document.body.classList.toggle('dyslexia-mode');const btn=document.getElementById('dyslexiaBtn');btn.classList.toggle('active')}
+
+// ==================== MEMORY MATCH ====================
+let mem={cards:[],flipped:[],matched:0,total:0,moves:0,busy:false};
+function startMemoryMatch(){mem.matched=0;mem.moves=0;mem.flipped=[];mem.busy=false;const pairs=[{a:'3+7',b:'10'},{a:'6+4',b:'10'},{a:'8+2',b:'10'},{a:'5+5',b:'10'},{a:'9+1',b:'10'},{a:'2\u00D73',b:'6'},{a:'4\u00D75',b:'20'},{a:'7+3',b:'10'}];shuffle(pairs);const selected=pairs.slice(0,6);const cards=[];selected.forEach((p,i)=>{cards.push({id:i,text:p.a,pair:i});cards.push({id:i,text:p.b,pair:i})});shuffle(cards);mem.cards=cards;mem.total=selected.length;const grid=document.getElementById('memGrid');grid.innerHTML='';cards.forEach((c,idx)=>{const div=document.createElement('div');div.className='mem-card';div.innerHTML='<div class="mem-face mem-front">?</div><div class="mem-face mem-back">'+c.text+'</div>';div.onclick=()=>flipCard(idx,div);grid.appendChild(div)});document.getElementById('memStatus').textContent='Find all pairs! Moves: 0'}
+function flipCard(idx,el){if(mem.busy||el.classList.contains('flipped')||el.classList.contains('matched'))return;el.classList.add('flipped');sfxClick();mem.flipped.push({idx:idx,el:el,pair:mem.cards[idx].pair});if(mem.flipped.length===2){mem.moves++;mem.busy=true;const[a,b]=mem.flipped;if(a.pair===b.pair){mem.matched++;sfxCorrect();a.el.classList.add('matched');b.el.classList.add('matched');mem.flipped=[];mem.busy=false;if(mem.matched>=mem.total){document.getElementById('memStatus').textContent='You did it in '+mem.moves+' moves!';sfxLevelUp();const stars=mem.moves<=8?3:mem.moves<=12?2:1;addStars(stars);recordPlay();checkAch('first_game',true);setTimeout(()=>showResults('#e056a0','\u{1F0CF}','Memory Match!',mem.moves+' moves',stars,mem.total,mem.total,()=>{showScreen('memorymatch');startMemoryMatch()},null),1500)}else{document.getElementById('memStatus').textContent='Pairs: '+mem.matched+'/'+mem.total+' | Moves: '+mem.moves}}else{sfxWrong();setTimeout(()=>{a.el.classList.remove('flipped');b.el.classList.remove('flipped');mem.flipped=[];mem.busy=false},800);document.getElementById('memStatus').textContent='Pairs: '+mem.matched+'/'+mem.total+' | Moves: '+mem.moves}}}
+
+// ==================== GRAMMAR ====================
+const GRAMMAR_DATA={1:[{w:'dog',a:'Noun',opts:['Noun','Verb','Adjective']},{w:'run',a:'Verb',opts:['Noun','Verb','Adjective']},{w:'cat',a:'Noun',opts:['Noun','Verb','Adjective']},{w:'jump',a:'Verb',opts:['Noun','Verb','Adjective']},{w:'book',a:'Noun',opts:['Noun','Verb','Adjective']},{w:'eat',a:'Verb',opts:['Noun','Verb','Adjective']},{w:'tree',a:'Noun',opts:['Noun','Verb','Adjective']},{w:'swim',a:'Verb',opts:['Noun','Verb','Adjective']},{w:'ball',a:'Noun',opts:['Noun','Verb','Adjective']},{w:'sing',a:'Verb',opts:['Noun','Verb','Adjective']}],2:[{w:'happy',a:'Adjective',opts:['Noun','Verb','Adjective']},{w:'quickly',a:'Adverb',opts:['Adjective','Adverb','Noun']},{w:'beautiful',a:'Adjective',opts:['Noun','Verb','Adjective']},{w:'slowly',a:'Adverb',opts:['Adjective','Adverb','Verb']},{w:'enormous',a:'Adjective',opts:['Noun','Adjective','Verb']},{w:'carefully',a:'Adverb',opts:['Adjective','Adverb','Noun']},{w:'brave',a:'Adjective',opts:['Noun','Verb','Adjective']},{w:'loudly',a:'Adverb',opts:['Adjective','Adverb','Verb']},{w:'gentle',a:'Adjective',opts:['Noun','Adjective','Adverb']},{w:'silently',a:'Adverb',opts:['Adjective','Adverb','Noun']}],3:[{w:'under',a:'Preposition',opts:['Preposition','Conjunction','Adjective']},{w:'because',a:'Conjunction',opts:['Preposition','Conjunction','Adverb']},{w:'although',a:'Conjunction',opts:['Preposition','Conjunction','Adjective']},{w:'between',a:'Preposition',opts:['Preposition','Conjunction','Noun']},{w:'however',a:'Conjunction',opts:['Preposition','Conjunction','Adverb']},{w:'behind',a:'Preposition',opts:['Preposition','Verb','Adjective']},{w:'therefore',a:'Conjunction',opts:['Preposition','Conjunction','Adverb']},{w:'through',a:'Preposition',opts:['Preposition','Conjunction','Verb']},{w:'meanwhile',a:'Conjunction',opts:['Preposition','Conjunction','Adjective']},{w:'beside',a:'Preposition',opts:['Preposition','Conjunction','Noun']}]};
+let gram={level:1,questions:[],idx:0,total:10,correct:0};
+function startGrammar(lv){gram.level=lv;gram.questions=[...GRAMMAR_DATA[lv]];shuffle(gram.questions);gram.idx=0;gram.correct=0;hide('grammarLevelSelect');show('grammarGame');loadGramQ()}
+function loadGramQ(){const q=gram.questions[gram.idx];document.getElementById('gramProgress').style.width=(gram.idx/gram.total*100)+'%';document.getElementById('gramProgressText').textContent=(gram.idx+1)+'/'+gram.total;document.getElementById('gramDisplay').innerHTML='<div class="ph-sound" style="background:#f0f0f0;border-color:#b2bec3;color:#636e72">What type of word is "<strong>'+q.w+'</strong>"?</div>';const opts=document.getElementById('gramOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#gramOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.a)x.classList.add('ph-correct')});if(o===q.a){gram.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{gram.idx++;if(gram.idx>=gram.total)finishGrammar();else loadGramQ()},o===q.a?500:1000)};opts.appendChild(b)})}
+function finishGrammar(){show('grammarLevelSelect');hide('grammarGame');const pct=gram.correct/gram.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#636e72','N V','Grammar Done!','Level '+gram.level,stars,gram.correct,gram.total,()=>{showScreen('grammar')},null)}
+
+// ==================== SPELLING BEE ====================
+let bee={words:[],idx:0,lives:3,score:0};
+function startBee(){const allWords=[...SPELLING[1],...SPELLING[2],...SPELLING[3]];shuffle(allWords);bee.words=allWords;bee.idx=0;bee.lives=3;bee.score=0;showScreen('spellingbee');loadBeeWord()}
+function loadBeeWord(){const item=bee.words[bee.idx%bee.words.length];document.getElementById('beeLives').innerHTML='\u{2764}\u{FE0F}'.repeat(bee.lives)+'\u{1F5A4}'.repeat(3-bee.lives);const pic=document.getElementById('beePic');const eFn=WORD_EMOJI[item.w];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.style.display='none'};document.getElementById('beeHint').textContent=item.h;document.getElementById('beeInput').value='';document.getElementById('beeInput').focus();document.getElementById('beeScore').textContent='Score: '+bee.score}
+function checkBee(){const val=document.getElementById('beeInput').value.trim().toLowerCase();const word=bee.words[bee.idx%bee.words.length].w.toLowerCase();if(!val)return;if(val===word){bee.score++;bee.idx++;sfxCorrect();loadBeeWord()}else{bee.lives--;sfxWrong();document.getElementById('beeLives').innerHTML='\u{2764}\u{FE0F}'.repeat(Math.max(0,bee.lives))+'\u{1F5A4}'.repeat(3-Math.max(0,bee.lives));if(bee.lives<=0){const stars=bee.score>=15?3:bee.score>=8?2:bee.score>=3?1:0;addStars(stars);recordPlay();checkAch('first_game',true);showResults('#fdcb6e','\u{1F41D}','Spelling Bee!','Score: '+bee.score,stars,bee.score,bee.score+1,()=>{showScreen('spellingbee');startBee()},null)}else{document.getElementById('beeInput').value='';document.getElementById('beeInput').focus()}}}
+document.addEventListener('keydown',function(e){if(document.getElementById('spellingbee').classList.contains('active')&&e.key==='Enter'){e.preventDefault();checkBee()}});
+
+// ==================== RHYMING ====================
+const RHYME_DATA={1:[{w:'cat',r:['hat','bat','mat'],wrong:['dog','cup','run']},{w:'dog',r:['log','fog','bog'],wrong:['cat','hat','sun']},{w:'sun',r:['fun','run','bun'],wrong:['dog','hat','bed']},{w:'bed',r:['red','fed','led'],wrong:['sun','cat','big']},{w:'pig',r:['big','dig','fig'],wrong:['dog','hat','sun']},{w:'pot',r:['hot','got','dot'],wrong:['pig','cat','bed']},{w:'hen',r:['ten','pen','men'],wrong:['pig','dog','sun']},{w:'bus',r:['fuss','plus','us'],wrong:['cat','dog','hat']},{w:'ring',r:['sing','king','thing'],wrong:['cat','dog','sun']},{w:'cake',r:['lake','make','shake'],wrong:['dog','sun','bed']}],2:[{w:'light',r:['night','right','flight'],wrong:['rain','cloud','dream']},{w:'rain',r:['train','brain','pain'],wrong:['light','night','cake']},{w:'dream',r:['team','cream','stream'],wrong:['light','rain','cake']},{w:'moon',r:['soon','spoon','tune'],wrong:['rain','light','dream']},{w:'tree',r:['free','three','see'],wrong:['moon','rain','light']},{w:'play',r:['day','stay','way'],wrong:['tree','moon','rain']},{w:'book',r:['cook','look','hook'],wrong:['play','tree','moon']},{w:'sleep',r:['deep','keep','sheep'],wrong:['book','play','tree']},{w:'stone',r:['bone','phone','zone'],wrong:['sleep','book','play']},{w:'cloud',r:['loud','crowd','proud'],wrong:['stone','sleep','book']}],3:[{w:'thought',r:['bought','caught','taught'],wrong:['light','sound','round']},{w:'through',r:['blue','flew','new'],wrong:['thought','bought','sound']},{w:'measure',r:['treasure','pleasure','leisure'],wrong:['thought','through','blue']},{w:'ocean',r:['motion','potion','notion'],wrong:['measure','thought','through']},{w:'station',r:['nation','relation','creation'],wrong:['ocean','measure','through']},{w:'creature',r:['feature','teacher','preacher'],wrong:['station','ocean','measure']},{w:'ancient',r:['patient','efficient','sufficient'],wrong:['creature','station','ocean']},{w:'machine',r:['routine','marine','magazine'],wrong:['ancient','creature','station']},{w:'adventure',r:['venture','denture','furniture'],wrong:['machine','ancient','creature']},{w:'imagine',r:['cabin','famine','examine'],wrong:['adventure','machine','ancient']}]};
+let rhy={level:1,questions:[],idx:0,total:10,correct:0};
+function startRhyme(lv){rhy.level=lv;rhy.questions=[...RHYME_DATA[lv]];shuffle(rhy.questions);rhy.idx=0;rhy.correct=0;hide('rhymeLevelSelect');show('rhymeGame');loadRhymeQ()}
+function loadRhymeQ(){const q=rhy.questions[rhy.idx];document.getElementById('rhymeProgress').style.width=(rhy.idx/rhy.total*100)+'%';document.getElementById('rhymeProgressText').textContent=(rhy.idx+1)+'/'+rhy.total;const correct=q.r[rand(0,q.r.length-1)];const wrongs=shuffle([...q.wrong]).slice(0,3);document.getElementById('rhymeDisplay').innerHTML='<div class="ph-sound" style="background:#f0ecff;border-color:#a29bfe;color:#6c5ce7">Which word rhymes with "<strong>'+q.w+'</strong>"?</div>';const opts=document.getElementById('rhymeOpts');opts.innerHTML='';shuffle([correct,...wrongs]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#rhymeOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===correct)x.classList.add('ph-correct')});if(o===correct){rhy.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{rhy.idx++;if(rhy.idx>=rhy.total)finishRhyme();else loadRhymeQ()},o===correct?500:1000)};opts.appendChild(b)})}
+function finishRhyme(){show('rhymeLevelSelect');hide('rhymeGame');const pct=rhy.correct/rhy.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#6c5ce7','\u{266B}','Rhyming Done!','Level '+rhy.level,stars,rhy.correct,rhy.total,()=>{showScreen('rhyme')},null)}
+
+// ==================== MEASUREMENT ====================
+const MEASURE_DATA={1:[{q:'Which is longer: your finger or your arm?',correct:'Arm',opts:['Finger','Arm']},{q:'Which is heavier: a feather or a brick?',correct:'Brick',opts:['Feather','Brick']},{q:'Which holds more: a cup or a bath?',correct:'Bath',opts:['Cup','Bath']},{q:'Which is taller: a house or a dog?',correct:'House',opts:['Dog','House']},{q:'Which is lighter: a balloon or a book?',correct:'Balloon',opts:['Balloon','Book']},{q:'Which is shorter: a pencil or a ruler?',correct:'Pencil',opts:['Pencil','Ruler']},{q:'Which holds more: a spoon or a bucket?',correct:'Bucket',opts:['Spoon','Bucket']},{q:'Which is heavier: an apple or a car?',correct:'Car',opts:['Apple','Car']},{q:'Which is longer: a worm or a snake?',correct:'Snake',opts:['Worm','Snake']},{q:'Which is colder: ice cream or soup?',correct:'Ice cream',opts:['Ice cream','Soup']}],2:[{q:'How many centimetres in 1 metre?',correct:'100',opts:['10','100','1000','50']},{q:'How many grams in 1 kilogram?',correct:'1000',opts:['10','100','1000','500']},{q:'How many millilitres in 1 litre?',correct:'1000',opts:['10','100','1000','500']},{q:'Which is longer: 50cm or 1m?',correct:'1m',opts:['50cm','1m']},{q:'Which is heavier: 500g or 1kg?',correct:'1kg',opts:['500g','1kg']},{q:'How many cm in half a metre?',correct:'50',opts:['25','50','75','100']},{q:'Which holds more: 500ml or 1 litre?',correct:'1 litre',opts:['500ml','1 litre']},{q:'A pencil is about how long?',correct:'15cm',opts:['15cm','15m','15mm','150cm']},{q:'A bag of sugar weighs about?',correct:'1kg',opts:['1g','10g','100g','1kg']},{q:'A glass holds about?',correct:'250ml',opts:['25ml','250ml','2500ml','25 litres']}],3:[{q:'How many metres in 1 kilometre?',correct:'1000',opts:['10','100','1000','10000']},{q:'Convert 2.5kg to grams:',correct:'2500g',opts:['25g','250g','2500g','25000g']},{q:'Convert 3 litres to ml:',correct:'3000ml',opts:['30ml','300ml','3000ml','30000ml']},{q:'How many mm in 1 cm?',correct:'10',opts:['1','10','100','1000']},{q:'5km = how many metres?',correct:'5000',opts:['50','500','5000','50000']},{q:'1500ml = how many litres?',correct:'1.5',opts:['0.15','1.5','15','150']},{q:'2300g = how many kg?',correct:'2.3',opts:['0.23','2.3','23','230']},{q:'Perimeter of a 5cm square?',correct:'20cm',opts:['10cm','20cm','25cm','50cm']},{q:'Area of a 4cm x 3cm rectangle?',correct:'12cm\u00B2',opts:['7cm\u00B2','12cm\u00B2','14cm\u00B2','24cm\u00B2']},{q:'A marathon is about?',correct:'42km',opts:['4.2km','42km','420km','4200km']}]};
+let meas={level:1,questions:[],idx:0,total:10,correct:0};
+function startMeasure(lv){meas.level=lv;meas.questions=[...MEASURE_DATA[lv]];shuffle(meas.questions);meas.idx=0;meas.correct=0;hide('measureLevelSelect');show('measureGame');loadMeasQ()}
+function loadMeasQ(){const q=meas.questions[meas.idx];document.getElementById('measureProgress').style.width=(meas.idx/meas.total*100)+'%';document.getElementById('measureProgressText').textContent=(meas.idx+1)+'/'+meas.total;document.getElementById('measureDisplay').innerHTML='<div class="ph-sound" style="background:#f0f8ff;border-color:#74b9ff;color:#0984e3;font-size:1rem">'+q.q+'</div>';const opts=document.getElementById('measureOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#measureOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){meas.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{meas.idx++;if(meas.idx>=meas.total)finishMeasure();else loadMeasQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
+function finishMeasure(){show('measureLevelSelect');hide('measureGame');const pct=meas.correct/meas.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#0984e3','cm','Measurement Done!','Level '+meas.level,stars,meas.correct,meas.total,()=>{showScreen('measure')},null)}
+
+// ==================== SEQUENCES ====================
+let seq={level:1,idx:0,total:10,correct:0};
+function genSeqQ(lv){let start,step;if(lv===1){step=rand(1,2);start=rand(1,10)}else if(lv===2){step=[2,5,10][rand(0,2)];start=rand(0,3)*step}else{step=rand(3,12);start=rand(1,10)}const nums=[];for(let i=0;i<5;i++)nums.push(start+step*i);const miss=rand(1,3);const ans=nums[miss];nums[miss]='?';const wrongs=[ans+step,ans-step,ans+rand(1,5)].filter(x=>x>0&&x!==ans);return{display:nums.join(', '),correct:String(ans),opts:shuffle([String(ans),...wrongs.map(String)]).slice(0,4)}}
+function startSeq(lv){seq.level=lv;seq.idx=0;seq.correct=0;hide('seqLevelSelect');show('seqGame');loadSeqQ()}
+function loadSeqQ(){const q=genSeqQ(seq.level);seq.question=q;document.getElementById('seqProgress').style.width=(seq.idx/seq.total*100)+'%';document.getElementById('seqProgressText').textContent=(seq.idx+1)+'/'+seq.total;document.getElementById('seqDisplay').innerHTML='<div class="ph-sound" style="background:#e8fffe;border-color:#81ecec;color:#00cec9;font-size:1.3rem">'+q.display+'</div>';const opts=document.getElementById('seqOpts');opts.innerHTML='';q.opts.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#seqOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){seq.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{seq.idx++;if(seq.idx>=seq.total)finishSeq();else loadSeqQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
+function finishSeq(){show('seqLevelSelect');hide('seqGame');const pct=seq.correct/seq.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#00cec9','1,2,?','Sequences Done!','Level '+seq.level,stars,seq.correct,seq.total,()=>{showScreen('sequence')},null)}
+
+// ==================== SCOTTISH QUIZ ====================
+const SCOT_QUIZ=[{q:'What is the capital of Scotland?',correct:'Edinburgh',opts:['Glasgow','Edinburgh','Aberdeen','Dundee']},{q:'What is the tallest mountain in Scotland?',correct:'Ben Nevis',opts:['Ben Lomond','Ben Nevis','Cairn Gorm','Ben Macdui']},{q:'What is the national animal of Scotland?',correct:'Unicorn',opts:['Lion','Eagle','Unicorn','Stag']},{q:'What instrument is Scotland famous for?',correct:'Bagpipes',opts:['Guitar','Violin','Bagpipes','Drums']},{q:'What is a loch?',correct:'A lake',opts:['A mountain','A lake','A river','A forest']},{q:'What is haggis?',correct:'A traditional Scottish dish',opts:['A type of dance','A traditional Scottish dish','A castle','A musical instrument']},{q:'What river runs through Glasgow?',correct:'The Clyde',opts:['The Thames','The Clyde','The Tay','The Forth']},{q:'What is a ceilidh?',correct:'A Scottish dance',opts:['A type of food','A Scottish dance','A mountain','A boat']},{q:'What are the Highland Games famous for?',correct:'Caber toss and athletics',opts:['Football','Swimming','Caber toss and athletics','Chess']},{q:'Who is considered Scotland\'s national poet?',correct:'Robert Burns',opts:['William Shakespeare','Robert Burns','Walter Scott','Robert Louis Stevenson']},{q:'What is the longest river in Scotland?',correct:'The Tay',opts:['The Clyde','The Forth','The Tay','The Dee']},{q:'What is tartan?',correct:'A patterned fabric',opts:['A type of food','A patterned fabric','A dance','A mountain']},{q:'Which Scottish city is called the Granite City?',correct:'Aberdeen',opts:['Edinburgh','Glasgow','Aberdeen','Inverness']},{q:'What bridge crosses the Firth of Forth?',correct:'The Forth Bridge',opts:['Tower Bridge','The Forth Bridge','London Bridge','Tay Bridge']},{q:'What is Hogmanay?',correct:'New Year celebration',opts:['Christmas','New Year celebration','Easter','Halloween']}];
+let scot={questions:[],idx:0,total:15,correct:0};
+function startScotQuiz(){scot.questions=[...SCOT_QUIZ];shuffle(scot.questions);scot.idx=0;scot.correct=0;loadScotQ()}
+function loadScotQ(){const q=scot.questions[scot.idx];document.getElementById('scotProgress').style.width=(scot.idx/scot.total*100)+'%';document.getElementById('scotProgressText').textContent=(scot.idx+1)+'/'+scot.total;document.getElementById('scotDisplay').innerHTML='<div class="ph-sound" style="background:#e8f0ff;border-color:#0084C8;color:#005EB8;font-size:1rem">'+q.q+'</div>';const opts=document.getElementById('scotOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#scotOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){scot.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{scot.idx++;if(scot.idx>=scot.total)finishScot();else loadScotQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
+function finishScot(){const pct=scot.correct/scot.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#005EB8','\u{1F3F4}','Scotland Quiz Done!',scot.correct+'/'+scot.total,stars,scot.correct,scot.total,()=>{showScreen('scotquiz');startScotQuiz()},null)}
+
+// ==================== TYPING SPEED ====================
+let typ={words:[],idx:0,correct:0,timer:null,timeLeft:60,startTime:0};
+const TYPING_WORDS=['the','and','for','are','but','not','you','all','can','had','her','was','one','our','out','day','get','has','him','his','how','its','may','new','now','old','see','way','who','did','let','say','she','too','use','big','cat','dog','hat','run','fun','map','sun','top','red','bus','cup','bed','pen','box'];
+function startTyping(){typ.words=[...TYPING_WORDS];shuffle(typ.words);typ.idx=0;typ.correct=0;typ.timeLeft=60;document.getElementById('typingWPM').textContent='0';document.getElementById('typingCorrect').textContent='0';document.getElementById('typingTimer').textContent='60';showTypingWord();const inp=document.getElementById('typingInput');inp.value='';inp.focus();inp.oninput=checkTyping;typ.startTime=Date.now();typ.timer=setInterval(()=>{typ.timeLeft--;document.getElementById('typingTimer').textContent=typ.timeLeft;if(typ.timeLeft<=0)finishTyping()},1000)}
+function showTypingWord(){document.getElementById('typingWord').textContent=typ.words[typ.idx%typ.words.length]}
+function checkTyping(){const inp=document.getElementById('typingInput');const val=inp.value.trim().toLowerCase();const word=typ.words[typ.idx%typ.words.length];if(val===word){typ.correct++;typ.idx++;sfxClick();document.getElementById('typingCorrect').textContent=typ.correct;const elapsed=(Date.now()-typ.startTime)/60000;document.getElementById('typingWPM').textContent=Math.round(typ.correct/Math.max(elapsed,0.1));inp.value='';showTypingWord()}}
+function endTyping(){if(typ.timer){clearInterval(typ.timer);typ.timer=null}}
+function finishTyping(){endTyping();const stars=typ.correct>=30?3:typ.correct>=15?2:typ.correct>=5?1:0;addStars(stars);recordPlay();checkAch('first_game',true);showResults('#2d3436','\u{2328}','Typing Done!',typ.correct+' words, '+Math.round(typ.correct)+'WPM',stars,typ.correct,typ.correct+1,()=>{showScreen('typing');startTyping()},null)}
+
+// ==================== CUSTOM QUIZ (TEACHER) ====================
+function getCustomQuiz(){try{return JSON.parse(localStorage.getItem('classmates_custom_quiz')||'[]')}catch(e){return[]}}
+function saveCustomQuiz(q){localStorage.setItem('classmates_custom_quiz',JSON.stringify(q))}
+let cq={questions:[],idx:0,total:0,correct:0};
+function startCustomQuiz(){const questions=getCustomQuiz();if(questions.length===0){alert('No custom questions yet. Ask your teacher to add some!');goHome();return}cq.questions=[...questions];shuffle(cq.questions);cq.total=Math.min(cq.questions.length,10);cq.idx=0;cq.correct=0;loadCQQ()}
+function loadCQQ(){const q=cq.questions[cq.idx];document.getElementById('customProgress').style.width=(cq.idx/cq.total*100)+'%';document.getElementById('customProgressText').textContent=(cq.idx+1)+'/'+cq.total;document.getElementById('customDisplay').innerHTML='<div class="ph-sound" style="background:#fff5f2;border-color:#fab1a0;color:#e17055;font-size:1rem">'+q.question+'</div>';const opts=document.getElementById('customOpts');opts.innerHTML='';shuffle([...q.options]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#customOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){cq.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{cq.idx++;if(cq.idx>=cq.total)finishCQ();else loadCQQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
+function finishCQ(){const pct=cq.correct/cq.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#e17055','\u{270D}','Quiz Done!',cq.correct+'/'+cq.total,stars,cq.correct,cq.total,()=>{showScreen('customquiz');startCustomQuiz()},null)}
 
 // ==================== SHAPES & GEOMETRY ====================
 const SHAPES_DATA={
