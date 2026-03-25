@@ -77,6 +77,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-missnum .card-icon{background:rgba(255,255,255,0.3)}
 .card-placeval{background:linear-gradient(135deg,#f46b45,#eea849)}
 .card-placeval .card-icon{background:rgba(255,255,255,0.3)}
+.card-time{background:linear-gradient(135deg,#2c3e50,#3498db)}
+.card-time .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -127,6 +129,15 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mv-submit{display:block;width:100%;max-width:320px;margin:12px auto 0;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;background:linear-gradient(135deg,#e84393,#fd79a8);box-shadow:0 4px 0 #c0357a;transition:all 0.15s}
 .mv-submit:active{transform:translateY(2px);box-shadow:0 2px 0 #c0357a}
 .mv-hint{text-align:center;color:#636e72;font-size:0.85rem;margin-top:8px;min-height:20px;font-style:italic}
+
+/* ===== TELLING TIME ===== */
+.clock-face{width:180px;height:180px;border-radius:50%;border:6px solid #2c3e50;margin:16px auto;position:relative;background:white;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+.clock-num{position:absolute;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.9rem;color:#2c3e50;width:24px;text-align:center;margin-left:-12px;margin-top:-10px}
+.clock-hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom center;border-radius:4px}
+.clock-hour{width:6px;height:50px;background:#2c3e50;margin-left:-3px}
+.clock-minute{width:4px;height:65px;background:#3498db;margin-left:-2px}
+.clock-center{position:absolute;width:12px;height:12px;border-radius:50%;background:#e74c3c;top:50%;left:50%;margin:-6px 0 0 -6px;z-index:5}
+.clock-dot{position:absolute;width:4px;height:4px;border-radius:50%;background:#bdc3c7}
 
 /* ===== PLACE VALUE ===== */
 .pv-blocks{display:flex;justify-content:center;gap:16px;margin:16px 0;flex-wrap:wrap}
@@ -470,6 +481,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Place Value</div>
         <div class="card-desc">Hundreds, tens &amp; ones</div>
       </div>
+      <div class="subject-card card-time" onclick="startGame('telltime')">
+        <div class="card-icon">3:00</div>
+        <div class="card-title">Telling Time</div>
+        <div class="card-desc">Read the clock</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -633,6 +649,28 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TELLING TIME -->
+<div id="telltime" class="screen game-screen">
+  <div class="game-header" style="border-color:#3498db"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#2c3e50">Telling Time</h2></div>
+  <div class="game-body">
+    <div id="ttimeLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startTTime(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">O'clock &amp; half past</div></div>
+        <div class="level-card lc-2" onclick="startTTime(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Quarter past/to</div></div>
+        <div class="level-card lc-3" onclick="startTTime(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">5-min intervals</div></div>
+      </div>
+    </div>
+    <div id="ttimeGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="ttimeProgress" style="background:linear-gradient(90deg,#2c3e50,#3498db)"></div></div>
+      <div class="progress-text" id="ttimeProgressText"></div>
+      <div id="clockDisplay"></div>
+      <div class="ph-prompt" id="ttimePrompt">What time does the clock show?</div>
+      <div class="ph-options" id="ttimeOpts"></div>
     </div>
   </div>
 </div>
@@ -1482,6 +1520,20 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== TELLING TIME ====================
+let ttime={level:1,idx:0,total:10,correct:0};
+
+function drawClock(hour,minute){const r=78;let html='<div class="clock-face">';for(let i=1;i<=12;i++){const angle=(i*30-90)*Math.PI/180;const x=90+r*0.78*Math.cos(angle);const y=90+r*0.78*Math.sin(angle);html+='<div class="clock-num" style="left:'+x+'px;top:'+y+'px">'+i+'</div>'}for(let i=0;i<12;i++){const angle=(i*30)*Math.PI/180;const x=90+r*0.9*Math.cos(angle);const y=90+r*0.9*Math.sin(angle);html+='<div class="clock-dot" style="left:'+(x-2)+'px;top:'+(y-2)+'px"></div>'}const hAngle=(hour%12+minute/60)*30-90;const mAngle=minute*6-90;html+='<div class="clock-hand clock-hour" style="transform:rotate('+hAngle+'deg)"></div>';html+='<div class="clock-hand clock-minute" style="transform:rotate('+mAngle+'deg)"></div>';html+='<div class="clock-center"></div></div>';return html}
+
+function timeToWords(h,m){const hours=['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven'];if(m===0)return hours[h%12]+" o'clock";if(m===15)return'quarter past '+hours[h%12];if(m===30)return'half past '+hours[h%12];if(m===45)return'quarter to '+hours[(h+1)%12];if(m<30)return m+' past '+hours[h%12];return(60-m)+' to '+hours[(h+1)%12]}
+
+function genTTimeQ(lv){const h=rand(1,12);let m;if(lv===1){m=[0,30][rand(0,1)]}else if(lv===2){m=[0,15,30,45][rand(0,3)]}else{m=rand(0,11)*5}const correct=timeToWords(h,m);const wrongs=[];while(wrongs.length<3){let wh=rand(1,12),wm;if(lv===1)wm=[0,30][rand(0,1)];else if(lv===2)wm=[0,15,30,45][rand(0,3)];else wm=rand(0,11)*5;const w=timeToWords(wh,wm);if(w!==correct&&!wrongs.includes(w))wrongs.push(w)}return{hour:h,minute:m,correct:correct,options:shuffle([correct,...wrongs])}}
+
+function startTTime(lv){ttime.level=lv;ttime.idx=0;ttime.correct=0;hide('ttimeLevelSelect');show('ttimeGame');loadTTimeQ()}
+function loadTTimeQ(){const q=genTTimeQ(ttime.level);ttime.question=q;document.getElementById('ttimeProgress').style.width=(ttime.idx/ttime.total*100)+'%';document.getElementById('ttimeProgressText').textContent='Question '+(ttime.idx+1)+' of '+ttime.total;document.getElementById('clockDisplay').innerHTML=drawClock(q.hour,q.minute);const opts=document.getElementById('ttimeOpts');opts.innerHTML='';q.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectTTimeAns(b,o===q.correct,q.correct);opts.appendChild(b)})}
+function selectTTimeAns(btn,correct,rightAnswer){document.querySelectorAll('#ttimeOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===rightAnswer)o.classList.add('ph-correct')});if(correct){ttime.correct++;btn.classList.add('ph-correct')}else{btn.classList.add('ph-wrong')}setTimeout(()=>{ttime.idx++;if(ttime.idx>=ttime.total)finishTTime();else loadTTimeQ()},correct?500:1200)}
+function finishTTime(){show('ttimeLevelSelect');hide('ttimeGame');const pct=ttime.correct/ttime.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#2c3e50','3:00','Telling Time Done!','Level '+ttime.level,stars,ttime.correct,ttime.total,()=>{showScreen('telltime')},null)}
 
 // ==================== PLACE VALUE ====================
 let pv={level:1,idx:0,total:10,correct:0,question:null};
