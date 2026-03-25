@@ -75,6 +75,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-vocab .card-icon{background:rgba(255,255,255,0.3)}
 .card-missnum{background:linear-gradient(135deg,#134e5e,#71b280)}
 .card-missnum .card-icon{background:rgba(255,255,255,0.3)}
+.card-placeval{background:linear-gradient(135deg,#f46b45,#eea849)}
+.card-placeval .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -125,6 +127,16 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mv-submit{display:block;width:100%;max-width:320px;margin:12px auto 0;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;background:linear-gradient(135deg,#e84393,#fd79a8);box-shadow:0 4px 0 #c0357a;transition:all 0.15s}
 .mv-submit:active{transform:translateY(2px);box-shadow:0 2px 0 #c0357a}
 .mv-hint{text-align:center;color:#636e72;font-size:0.85rem;margin-top:8px;min-height:20px;font-style:italic}
+
+/* ===== PLACE VALUE ===== */
+.pv-blocks{display:flex;justify-content:center;gap:16px;margin:16px 0;flex-wrap:wrap}
+.pv-col{text-align:center}
+.pv-col-label{font-size:0.7rem;font-weight:800;color:#636e72;text-transform:uppercase;margin-bottom:4px}
+.pv-block-row{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:80px}
+.pv-block{border-radius:4px;display:inline-block}
+.pv-h{width:28px;height:28px;background:#4a90d9}
+.pv-t{width:28px;height:8px;background:#27ae60}
+.pv-o{width:10px;height:10px;background:#f39c12;border-radius:50%}
 
 /* ===== PUNCTUATION ===== */
 .punct-sentence{font-size:1.2rem;line-height:2;color:#2d3436;text-align:center;margin:16px 0;padding:16px;background:#fff8f0;border-radius:14px;border:2px solid #f0932b}
@@ -453,6 +465,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Missing Number</div>
         <div class="card-desc">Find the gap</div>
       </div>
+      <div class="subject-card card-placeval" onclick="startGame('placeval')">
+        <div class="card-icon">HTO</div>
+        <div class="card-title">Place Value</div>
+        <div class="card-desc">Hundreds, tens &amp; ones</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -616,6 +633,27 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PLACE VALUE -->
+<div id="placeval" class="screen game-screen">
+  <div class="game-header" style="border-color:#eea849"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#f46b45">Place Value</h2></div>
+  <div class="game-body">
+    <div id="pvLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startPV(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Tens &amp; ones</div></div>
+        <div class="level-card lc-2" onclick="startPV(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Hundreds</div></div>
+        <div class="level-card lc-3" onclick="startPV(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Thousands</div></div>
+      </div>
+    </div>
+    <div id="pvGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="pvProgress" style="background:linear-gradient(90deg,#f46b45,#eea849)"></div></div>
+      <div class="progress-text" id="pvProgressText"></div>
+      <div id="pvDisplay"></div>
+      <div class="ph-options" id="pvOpts"></div>
     </div>
   </div>
 </div>
@@ -1444,6 +1482,18 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== PLACE VALUE ====================
+let pv={level:1,idx:0,total:10,correct:0,question:null};
+
+function renderBlocks(h,t,o){let html='<div class="pv-blocks">';if(h>0){html+='<div class="pv-col"><div class="pv-col-label">Hundreds</div><div class="pv-block-row">';for(let i=0;i<h;i++)html+='<div class="pv-block pv-h"></div>';html+='</div></div>'}if(t>0||h>0){html+='<div class="pv-col"><div class="pv-col-label">Tens</div><div class="pv-block-row">';for(let i=0;i<t;i++)html+='<div class="pv-block pv-t"></div>';html+='</div></div>'}html+='<div class="pv-col"><div class="pv-col-label">Ones</div><div class="pv-block-row">';for(let i=0;i<o;i++)html+='<div class="pv-block pv-o"></div>';html+='</div></div></div>';return html}
+
+function genPVQ(lv){const type=rand(0,2);if(lv===1){const num=rand(11,99);const tens=Math.floor(num/10);const ones=num%10;if(type===0){return{prompt:'What is the tens digit in '+num+'?',answer:tens,options:shuffle([tens,ones,tens+1,rand(1,9)].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4),blocks:renderBlocks(0,tens,ones)}}else if(type===1){const t=rand(1,9);const o=rand(0,9);return{prompt:t+' tens and '+o+' ones = ?',answer:t*10+o,options:shuffle([t*10+o,t+o,t*10+o+10,t*10+o-10].filter(x=>x>=0)).slice(0,4),blocks:renderBlocks(0,t,o)}}else{const n=rand(11,89);const add=10;return{prompt:'What is 10 more than '+n+'?',answer:n+add,options:shuffle([n+add,n+1,n-10,n+add+10].filter(x=>x>0)).slice(0,4),blocks:''}}}else if(lv===2){const num=rand(100,999);const h=Math.floor(num/100);const t=Math.floor((num%100)/10);const o=num%10;if(type===0){return{prompt:'What is the hundreds digit in '+num+'?',answer:h,options:shuffle([h,t,o,h+1].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4),blocks:renderBlocks(h,t,o)}}else if(type===1){const hv=rand(1,9);const tv=rand(0,9);const ov=rand(0,9);const ans=hv*100+tv*10+ov;return{prompt:hv+' hundreds, '+tv+' tens, '+ov+' ones = ?',answer:ans,options:shuffle([ans,ans+100,ans-10,hv*10+tv+ov].filter(x=>x>0&&x!==ans).slice(0,3).concat([ans])),blocks:renderBlocks(hv,tv,ov)}}else{const n=rand(100,899);return{prompt:'What is 100 more than '+n+'?',answer:n+100,options:shuffle([n+100,n+10,n+1,n-100].filter(x=>x>0)).slice(0,4),blocks:''}}}else{const num=rand(1000,9999);const th=Math.floor(num/1000);const h=Math.floor((num%1000)/100);const t=Math.floor((num%100)/10);const o=num%10;if(type===0){return{prompt:'What is the value of the '+th+' in '+num+'?',answer:th*1000,options:shuffle([th*1000,th*100,th*10,th]).slice(0,4),blocks:''}}else if(type===1){return{prompt:'What is 1000 more than '+num+'?',answer:num+1000,options:shuffle([num+1000,num+100,num+10,num-1000].filter(x=>x>0)).slice(0,4),blocks:''}}else{const n=rand(10,99);const dec=rand(1,9);const val=n+dec/10;return{prompt:'What is the value of '+dec+' in '+val.toFixed(1)+'?',answer:dec,options:shuffle([dec,dec*10,n,dec/10].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4),blocks:''}}}}
+
+function startPV(lv){pv.level=lv;pv.idx=0;pv.correct=0;hide('pvLevelSelect');show('pvGame');loadPVQ()}
+function loadPVQ(){pv.question=genPVQ(pv.level);document.getElementById('pvProgress').style.width=(pv.idx/pv.total*100)+'%';document.getElementById('pvProgressText').textContent='Question '+(pv.idx+1)+' of '+pv.total;const d=document.getElementById('pvDisplay');d.innerHTML=(pv.question.blocks||'')+'<div class="ph-sound" style="background:#fff5f0;border-color:#eea849;color:#f46b45;font-size:1.1rem">'+pv.question.prompt+'</div>';const opts=document.getElementById('pvOpts');opts.innerHTML='';pv.question.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectPVAns(b,o===pv.question.answer,pv.question.answer);opts.appendChild(b)})}
+function selectPVAns(btn,correct,rightAnswer){document.querySelectorAll('#pvOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(Number(o.textContent)===rightAnswer)o.classList.add('ph-correct')});if(correct){pv.correct++;btn.classList.add('ph-correct')}else{btn.classList.add('ph-wrong')}setTimeout(()=>{pv.idx++;if(pv.idx>=pv.total)finishPV();else loadPVQ()},correct?500:1200)}
+function finishPV(){show('pvLevelSelect');hide('pvGame');const pct=pv.correct/pv.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#f46b45','HTO','Place Value Done!','Level '+pv.level,stars,pv.correct,pv.total,()=>{showScreen('placeval')},null)}
 
 // ==================== MISSING NUMBER ====================
 let mn={level:1,idx:0,total:10,correct:0,answer:'',question:null};
