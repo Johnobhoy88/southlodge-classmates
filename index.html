@@ -67,6 +67,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-phonics .card-icon{background:rgba(255,255,255,0.3)}
 .card-wordfam{background:linear-gradient(135deg,#8e44ad,#c39bd3)}
 .card-wordfam .card-icon{background:rgba(255,255,255,0.3)}
+.card-sentence{background:linear-gradient(135deg,#e55d87,#5fc3e4)}
+.card-sentence .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -117,6 +119,18 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mv-submit{display:block;width:100%;max-width:320px;margin:12px auto 0;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;background:linear-gradient(135deg,#e84393,#fd79a8);box-shadow:0 4px 0 #c0357a;transition:all 0.15s}
 .mv-submit:active{transform:translateY(2px);box-shadow:0 2px 0 #c0357a}
 .mv-hint{text-align:center;color:#636e72;font-size:0.85rem;margin-top:8px;min-height:20px;font-style:italic}
+
+/* ===== SENTENCE ORDERING ===== */
+.sent-ans{min-height:60px;padding:12px;background:#f0f8ff;border:3px dashed #5fc3e4;border-radius:14px;margin:12px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+.sent-pool{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;justify-content:center}
+.word-chip{padding:10px 16px;border-radius:10px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;transition:all 0.15s;user-select:none}
+.word-chip.pool-chip{background:white;color:#2d3436;border:2px solid #e0e0e0;box-shadow:0 2px 0 #d0d0d0}
+.word-chip.pool-chip:hover{border-color:#e55d87;transform:translateY(-2px)}
+.word-chip.ans-chip{background:linear-gradient(135deg,#e55d87,#5fc3e4);color:white;border:none;box-shadow:0 2px 0 #b84a6c}
+.word-chip.ans-chip:hover{opacity:0.85}
+.sent-check{display:block;width:100%;max-width:320px;margin:12px auto 0;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;background:linear-gradient(135deg,#e55d87,#5fc3e4);box-shadow:0 4px 0 #b84a6c}
+.sent-check:active{transform:translateY(2px);box-shadow:0 2px 0 #b84a6c}
+.sent-correct-display{text-align:center;margin:12px 0;padding:14px;background:#e8fff5;border:2px solid #00b894;border-radius:12px;font-weight:700;color:#00b894;font-size:1rem}
 
 /* ===== PHONICS ===== */
 .ph-sound{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.2rem;color:#0abde3;text-align:center;margin:12px 0;padding:12px;background:#e8f8fd;border-radius:14px;border:3px solid #48dbfb}
@@ -405,6 +419,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Word Families</div>
         <div class="card-desc">Common endings</div>
       </div>
+      <div class="subject-card card-sentence" onclick="startGame('sentence')">
+        <div class="card-icon">1 2 3</div>
+        <div class="card-title">Sentences</div>
+        <div class="card-desc">Put words in order</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -568,6 +587,30 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SENTENCE ORDERING -->
+<div id="sentence" class="screen game-screen">
+  <div class="game-header" style="border-color:#5fc3e4"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#e55d87">Sentences</h2></div>
+  <div class="game-body">
+    <div id="sentLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startSent(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Short sentences</div></div>
+        <div class="level-card lc-2" onclick="startSent(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Longer sentences</div></div>
+        <div class="level-card lc-3" onclick="startSent(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Complex sentences</div></div>
+      </div>
+    </div>
+    <div id="sentGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="sentProgress" style="background:linear-gradient(90deg,#e55d87,#5fc3e4)"></div></div>
+      <div class="progress-text" id="sentProgressText"></div>
+      <div class="anagram-label">Tap words in the correct order:</div>
+      <div class="sent-ans" id="sentAns"></div>
+      <div class="sent-pool" id="sentPool"></div>
+      <button class="sent-check" id="sentCheck" onclick="checkSentAns()">Check</button>
+      <div id="sentFeedback"></div>
     </div>
   </div>
 </div>
@@ -1307,6 +1350,25 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== SENTENCE ORDERING ====================
+const SENTENCES = {
+  1: ['The cat sat on the mat.','I can see a big dog.','Mum and dad went to the shop.','The sun is hot today.','I like to play in the park.','The fish swam in the pond.','We had fun at the beach.','The bus was red and big.','My hat is on my head.','She ran to the top of the hill.','The bird sat in the tree.','I can read my new book.','Dad got a cup of tea.','The frog can hop and jump.','We went to see the ducks.'],
+  2: ['The children played in the school playground after lunch.','Isla found a beautiful shell on the sandy beach.','The old castle stood on top of the green hill.','We took the train from Glasgow to Edinburgh.','The farmer fed the sheep on the hillside.','My gran makes the best soup in the whole village.','The lighthouse keeper watched the stormy sea all night.','A red deer ran across the field near our house.','The bagpipes could be heard from across the loch.','We had fish and chips by the harbour wall.','The snow covered the mountains like a white blanket.','Ewan and Isla walked along the shore of the loch.','The Highland Games are the best day of the year.','She wore a kilt with a velvet jacket.','The boat sailed across the calm blue water.'],
+  3: ['Although it was raining heavily, the children still enjoyed their walk through the forest.','The ancient castle, which had stood for eight hundred years, attracted visitors from around the world.','Edinburgh is the capital of Scotland and is famous for its beautiful architecture.','The fisherman carefully steered his boat through the dangerous rocks near the shore.','After climbing for four hours through thick cloud, they finally reached the summit of Ben Nevis.','The Highland dancers performed brilliantly at the competition, despite the strong wind.','Many different species of wildlife can be found on the remote islands of Scotland.','The teacher explained that Robert Burns is considered the national poet of Scotland.','Celebrations took place across the country when the new bridge was finally completed.','The mysterious sound echoed through the valley, and nobody could explain where it came from.','Scientists discovered that the ancient stone circle was over five thousand years old.','The community worked together to rebuild the village hall after the terrible storm.','Although he was nervous about performing, Finn played his fiddle beautifully at the ceilidh.','The expedition set off early in the morning before the weather conditions deteriorated.','Queen Margaret built a tiny chapel on the castle rock, which still stands today.']
+};
+
+let sent={level:1,sentences:[],idx:0,total:10,correct:0,pool:[],ans:[]};
+
+function startSent(lv){sent.level=lv;const pool=[...SENTENCES[lv]];shuffle(pool);sent.sentences=pool.slice(0,10);sent.idx=0;sent.correct=0;hide('sentLevelSelect');show('sentGame');loadSentQ()}
+
+function loadSentQ(){const s=sent.sentences[sent.idx];const words=s.split(' ');sent.pool=[...words];shuffle(sent.pool);sent.ans=[];sent.correctSentence=s;document.getElementById('sentProgress').style.width=(sent.idx/sent.total*100)+'%';document.getElementById('sentProgressText').textContent='Sentence '+(sent.idx+1)+' of '+sent.total;document.getElementById('sentFeedback').innerHTML='';document.getElementById('sentCheck').style.display='block';renderSent()}
+
+function renderSent(){const pool=document.getElementById('sentPool');const ans=document.getElementById('sentAns');pool.innerHTML='';ans.innerHTML='';sent.ans.forEach((w,i)=>{const c=document.createElement('span');c.className='word-chip ans-chip';c.textContent=w;c.onclick=()=>{sent.pool.push(sent.ans.splice(i,1)[0]);renderSent()};ans.appendChild(c)});sent.pool.forEach((w,i)=>{const c=document.createElement('span');c.className='word-chip pool-chip';c.textContent=w;c.onclick=()=>{sent.ans.push(sent.pool.splice(i,1)[0]);renderSent()};pool.appendChild(c)})}
+
+function checkSentAns(){if(sent.pool.length>0)return;const attempt=sent.ans.join(' ');const correct=attempt===sent.correctSentence;if(correct){sent.correct++;document.getElementById('sentFeedback').innerHTML='<div class="sent-correct-display">Correct!</div>'}else{document.getElementById('sentFeedback').innerHTML='<div class="sent-correct-display" style="background:#fff0ed;border-color:#e17055;color:#e17055">'+sent.correctSentence+'</div>'}document.getElementById('sentCheck').style.display='none';setTimeout(()=>{sent.idx++;if(sent.idx>=sent.total)finishSent();else loadSentQ()},correct?800:2000)}
+
+function finishSent(){show('sentLevelSelect');hide('sentGame');const pct=sent.correct/sent.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#e55d87','1 2 3','Sentences Done!','Level '+sent.level,stars,sent.correct,sent.total,()=>{showScreen('sentence')},null)}
 
 // ==================== WORD FAMILIES ====================
 const WORDFAM_DATA = {
