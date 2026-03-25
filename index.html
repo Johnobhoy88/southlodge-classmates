@@ -81,6 +81,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-time .card-icon{background:rgba(255,255,255,0.3)}
 .card-money{background:linear-gradient(135deg,#1a5276,#2ecc71)}
 .card-money .card-icon{background:rgba(255,255,255,0.3)}
+.card-fractions{background:linear-gradient(135deg,#ee9ca7,#ffdde1)}
+.card-fractions .card-icon{background:rgba(255,255,255,0.3);color:#c0392b!important}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
@@ -131,6 +133,14 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mv-submit{display:block;width:100%;max-width:320px;margin:12px auto 0;padding:14px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;cursor:pointer;background:linear-gradient(135deg,#e84393,#fd79a8);box-shadow:0 4px 0 #c0357a;transition:all 0.15s}
 .mv-submit:active{transform:translateY(2px);box-shadow:0 2px 0 #c0357a}
 .mv-hint{text-align:center;color:#636e72;font-size:0.85rem;margin-top:8px;min-height:20px;font-style:italic}
+
+/* ===== FRACTIONS ===== */
+.frac-shape{display:flex;justify-content:center;margin:16px 0}
+.frac-bar{display:flex;border:3px solid #c0392b;border-radius:10px;overflow:hidden;height:50px;width:280px;margin:0 auto}
+.frac-part{flex:1;border-right:2px solid #c0392b;display:flex;align-items:center;justify-content:center}
+.frac-part:last-child{border-right:none}
+.frac-part.shaded{background:linear-gradient(135deg,#ee9ca7,#ffdde1)}
+.frac-part.unshaded{background:white}
 
 /* ===== MONEY ===== */
 .coin-display{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:16px 0}
@@ -505,6 +515,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Money</div>
         <div class="card-desc">Coins and change</div>
       </div>
+      <div class="subject-card card-fractions" onclick="startGame('fractions')">
+        <div class="card-icon">&#xBD;</div>
+        <div class="card-title">Fractions</div>
+        <div class="card-desc">Halves, quarters &amp; more</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -668,6 +683,27 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FRACTIONS -->
+<div id="fractions" class="screen game-screen">
+  <div class="game-header" style="border-color:#ee9ca7"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
+  <div class="game-body">
+    <div id="fracLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
+        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
+        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
+      </div>
+    </div>
+    <div id="fracGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#ee9ca7,#ffdde1)"></div></div>
+      <div class="progress-text" id="fracProgressText"></div>
+      <div id="fracDisplay"></div>
+      <div class="ph-options" id="fracOpts"></div>
     </div>
   </div>
 </div>
@@ -1560,6 +1596,20 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== FRACTIONS ====================
+let frac={level:1,idx:0,total:10,correct:0};
+
+function drawFracBar(total,shaded){let h='<div class="frac-bar">';for(let i=0;i<total;i++){h+='<div class="frac-part '+(i<shaded?'shaded':'unshaded')+'"></div>'}h+='</div>';return h}
+
+function fracStr(n,d){if(n===1&&d===2)return'\u00BD';if(n===1&&d===4)return'\u00BC';if(n===3&&d===4)return'\u00BE';return n+'/'+d}
+
+function genFracQ(lv){const type=rand(0,2);if(lv===1){const denoms=[2,4];const d=denoms[rand(0,1)];const n=rand(1,d-1);if(type<=1){const correct=fracStr(n,d);const wrongs=[fracStr(d-n,d)];if(d===4){wrongs.push(fracStr(n,2));wrongs.push(fracStr(rand(1,3),4))}else{wrongs.push(fracStr(1,4));wrongs.push(fracStr(3,4))}return{prompt:'What fraction is shaded?',visual:drawFracBar(d,n),correct:correct,options:shuffle([correct,...wrongs.filter(w=>w!==correct)]).slice(0,4)}}else{const num=rand(2,10)*2;const ans=num/2;return{prompt:'What is \u00BD of '+num+'?',visual:'',correct:String(ans),options:shuffle([String(ans),String(num),String(ans+2),String(ans-1)].filter(x=>x!=='0')).slice(0,4)}}}else if(lv===2){const denoms=[2,3,4,5,8];const d=denoms[rand(0,4)];const n=rand(1,d-1);if(type===0){const correct=fracStr(n,d);const wrongs=[];for(let i=0;i<3;i++){let wn=rand(1,d-1),wd=denoms[rand(0,4)];const w=fracStr(wn,wd);if(w!==correct&&!wrongs.includes(w))wrongs.push(w)}while(wrongs.length<3)wrongs.push(fracStr(rand(1,5),rand(2,8)));return{prompt:'What fraction is shaded?',visual:drawFracBar(d,n),correct:correct,options:shuffle([correct,...wrongs]).slice(0,4)}}else if(type===1){const a={n:rand(1,3),d:4};const b={n:rand(1,3),d:4};if(a.n===b.n){b.n=a.n<3?a.n+1:a.n-1}const bigger=a.n>b.n?fracStr(a.n,a.d):fracStr(b.n,b.d);const opts=[fracStr(a.n,a.d),fracStr(b.n,b.d)];return{prompt:'Which fraction is bigger?<br>'+fracStr(a.n,a.d)+' or '+fracStr(b.n,b.d),visual:drawFracBar(4,a.n)+'<div style="height:8px"></div>'+drawFracBar(4,b.n),correct:bigger,options:shuffle(opts)}}else{const num=rand(2,8)*5;const ans=num/5;return{prompt:'What is 1/5 of '+num+'?',visual:'',correct:String(ans),options:shuffle([String(ans),String(num),String(ans*2),String(ans+3)]).slice(0,4)}}}else{const type3=rand(0,2);if(type3===0){return{prompt:'Which fractions are equivalent?<br>1/2 = ?/4',visual:drawFracBar(2,1)+'<div style="height:8px"></div>'+drawFracBar(4,2),correct:'2/4',options:shuffle(['2/4','1/4','3/4','4/4'])}}else if(type3===1){const num=rand(3,20)*4;const frac_of=num/4;return{prompt:'What is \u00BC of '+num+'?',visual:'',correct:String(frac_of),options:shuffle([String(frac_of),String(num/2),String(frac_of+2),String(frac_of-1)].filter(x=>Number(x)>0)).slice(0,4)}}else{const pairs=[{f:'1/2',d:'0.5'},{f:'1/4',d:'0.25'},{f:'3/4',d:'0.75'},{f:'1/10',d:'0.1'}];const p=pairs[rand(0,3)];return{prompt:'What is '+p.f+' as a decimal?',visual:drawFracBar(p.f==='1/2'?2:p.f==='1/10'?10:4,p.f==='3/4'?3:1),correct:p.d,options:shuffle([p.d,...pairs.filter(x=>x.d!==p.d).map(x=>x.d)]).slice(0,4)}}}}
+
+function startFrac(lv){frac.level=lv;frac.idx=0;frac.correct=0;hide('fracLevelSelect');show('fracGame');loadFracQ()}
+function loadFracQ(){const q=genFracQ(frac.level);frac.question=q;document.getElementById('fracProgress').style.width=(frac.idx/frac.total*100)+'%';document.getElementById('fracProgressText').textContent='Question '+(frac.idx+1)+' of '+frac.total;document.getElementById('fracDisplay').innerHTML=(q.visual?'<div class="frac-shape">'+q.visual+'</div>':'')+'<div class="ph-sound" style="background:#fff5f7;border-color:#ee9ca7;color:#c0392b;font-size:1rem">'+q.prompt+'</div>';const opts=document.getElementById('fracOpts');opts.innerHTML='';q.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectFracAns(b,o===q.correct,q.correct);opts.appendChild(b)})}
+function selectFracAns(btn,correct,rightAnswer){document.querySelectorAll('#fracOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===rightAnswer)o.classList.add('ph-correct')});if(correct){frac.correct++;btn.classList.add('ph-correct')}else{btn.classList.add('ph-wrong')}setTimeout(()=>{frac.idx++;if(frac.idx>=frac.total)finishFrac();else loadFracQ()},correct?500:1200)}
+function finishFrac(){show('fracLevelSelect');hide('fracGame');const pct=frac.correct/frac.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#c0392b','\u00BD','Fractions Done!','Level '+frac.level,stars,frac.correct,frac.total,()=>{showScreen('fractions')},null)}
 
 // ==================== MONEY ====================
 const COINS=[{v:1,label:'1p',cls:'coin-1p'},{v:2,label:'2p',cls:'coin-2p'},{v:5,label:'5p',cls:'coin-5p'},{v:10,label:'10p',cls:'coin-10p'},{v:20,label:'20p',cls:'coin-20p'},{v:50,label:'50p',cls:'coin-50p'},{v:100,label:'\u00A31',cls:'coin-100'},{v:200,label:'\u00A32',cls:'coin-200'}];
