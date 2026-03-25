@@ -55,9 +55,30 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .card-reading{background:linear-gradient(135deg,#56ab2f,#a8e063)}
 .card-reading .card-icon{background:rgba(255,255,255,0.3)}
 
+.card-speed{background:linear-gradient(135deg,#0984e3,#74b9ff)}
+.card-speed .card-icon{background:rgba(255,255,255,0.3)}
 .card-daily{grid-column:1/-1;background:linear-gradient(135deg,#6c5ce7,#a29bfe);min-height:100px;flex-direction:row;gap:16px;padding:20px 24px}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
+
+/* ===== SPEED MATHS ===== */
+.speed-timer{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.5rem;text-align:center;margin:8px 0;transition:color 0.3s}
+.speed-timer.normal{color:#0984e3}
+.speed-timer.amber{color:#f39c12}
+.speed-timer.red{color:#e74c3c;animation:timerPulse 0.5s ease infinite}
+@keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.speed-score{text-align:center;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.2rem;color:#636e72;margin:4px 0}
+.speed-score span{color:#0984e3;font-size:1.5rem}
+.speed-q{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.6rem;color:#2d3436;text-align:center;margin:20px 0 8px}
+.speed-ans{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3rem;text-align:center;min-height:60px;margin:8px 0;transition:color 0.15s}
+.speed-ans.flash-correct{color:#00b894}
+.speed-ans.flash-wrong{color:#e74c3c}
+.speed-ans.normal{color:#0984e3}
+.op-breakdown{text-align:left;max-width:320px;margin:16px auto 0}
+.op-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;margin-bottom:6px;font-weight:700;font-size:0.9rem}
+.op-row.good{background:#e8fff5;color:#00b894}
+.op-row.ok{background:#fff8e6;color:#f39c12}
+.op-row.bad{background:#fff0ed;color:#e17055}
 
 /* ===== STATS BAR ===== */
 .stats-bar{display:flex;justify-content:space-around;background:white;border-radius:18px;padding:14px 8px;margin:18px 0 8px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
@@ -277,6 +298,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Reading</div>
         <div class="card-desc">Stories &amp; questions</div>
       </div>
+      <div class="subject-card card-speed" onclick="startGame('speed')">
+        <div class="card-icon">60s</div>
+        <div class="card-title">Speed Maths</div>
+        <div class="card-desc">How many in 60 seconds?</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -418,6 +444,28 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
     <div id="dailyGame" style="display:none;">
       <div class="daily-steps" id="dailySteps"></div>
       <div id="dailyContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SPEED MATHS -->
+<div id="speed" class="screen game-screen">
+  <div class="game-header" style="border-color:#74b9ff"><button class="back-btn" onclick="endSpeed();goHome()">&larr;</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
+  <div class="game-body">
+    <div id="speedLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+      </div>
+    </div>
+    <div id="speedGame" style="display:none;">
+      <div class="speed-timer normal" id="speedTimer">60</div>
+      <div class="speed-score">Score: <span id="speedScore">0</span></div>
+      <div class="speed-q" id="speedQ"></div>
+      <div class="speed-ans normal" id="speedAns">_</div>
+      <div class="numpad" id="speedNumpad"></div>
     </div>
   </div>
 </div>
@@ -1002,6 +1050,26 @@ function checkDSpell(){const v=document.getElementById('dSpell').value.trim().to
 function checkDMath(){const v=parseInt(document.getElementById('dMath').value);if(v===dy.mathQ.answer){dy.correct++;state.mathsCorrect++;saveState()}dy.step++;loadDailyStep()}
 function checkDRead(btn,sel,cor){btn.parentElement.querySelectorAll('.ans-btn').forEach((o,i)=>{if(i===cor)o.classList.add('correct-ans');else if(i===sel)o.classList.add('wrong-ans');o.classList.add('disabled')});if(sel===cor)dy.correct++;setTimeout(()=>{dy.step++;finishDaily()},1000)}
 function finishDaily(){state.dailyCompleted=new Date().toDateString();checkAch('daily_1',true);checkAch('first_game',true);checkAch('streak_3',state.streak>=3);checkAch('streak_7',state.streak>=7);const pct=dy.correct/dy.totalSteps;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;addStars(stars);recordPlay();showResults('#6c5ce7','GO','Daily Challenge Done!',dy.correct+'/'+dy.totalSteps+' correct',stars,dy.correct,dy.totalSteps,()=>{showScreen('daily');initDaily()},null)}
+
+// ==================== SPEED MATHS ====================
+let spd={level:1,timer:null,timeLeft:60,score:0,attempted:0,answer:'',question:null,sessionBest:{1:0,2:0,3:0},ops:{'+':{ c:0,t:0},'-':{c:0,t:0},'\u00D7':{c:0,t:0},'\u00F7':{c:0,t:0}}};
+
+function startSpeed(lv){spd.level=lv;spd.timeLeft=60;spd.score=0;spd.attempted=0;spd.answer='';spd.ops={'+':{ c:0,t:0},'-':{c:0,t:0},'\u00D7':{c:0,t:0},'\u00F7':{c:0,t:0}};hide('speedLevelSelect');show('speedGame');renderNumpad('speedNumpad',speedPress);loadSpeedQ();document.getElementById('speedTimer').textContent='60';document.getElementById('speedTimer').className='speed-timer normal';document.getElementById('speedScore').textContent='0';spd.timer=setInterval(speedTick,1000)}
+
+function speedTick(){spd.timeLeft--;const el=document.getElementById('speedTimer');el.textContent=spd.timeLeft;if(spd.timeLeft<=5){el.className='speed-timer red'}else if(spd.timeLeft<=15){el.className='speed-timer amber'}else{el.className='speed-timer normal'}if(spd.timeLeft<=0){clearInterval(spd.timer);spd.timer=null;finishSpeed()}}
+
+function loadSpeedQ(){spd.question=genMathQ(spd.level);spd.answer='';document.getElementById('speedQ').textContent=spd.question.text;const ans=document.getElementById('speedAns');ans.textContent='_';ans.className='speed-ans normal'}
+
+function speedPress(v){if(!spd.timer)return;if(v==='C'){spd.answer=''}else if(v==='enter'){checkSpeedAns();return}else{if(spd.answer.length<4)spd.answer+=v}document.getElementById('speedAns').textContent=spd.answer||'_'}
+
+function checkSpeedAns(){if(!spd.answer)return;const ok=parseInt(spd.answer)===spd.question.answer;const op=spd.question.text.match(/[+\-\u00D7\u00F7]/);const opKey=op?op[0]:'+';if(spd.ops[opKey])spd.ops[opKey].t++;spd.attempted++;if(ok){spd.score++;if(spd.ops[opKey])spd.ops[opKey].c++;const ans=document.getElementById('speedAns');ans.className='speed-ans flash-correct';setTimeout(()=>{loadSpeedQ()},120)}else{const ans=document.getElementById('speedAns');ans.className='speed-ans flash-wrong';setTimeout(()=>{loadSpeedQ()},200)}document.getElementById('speedScore').textContent=spd.score}
+
+function endSpeed(){if(spd.timer){clearInterval(spd.timer);spd.timer=null}show('speedLevelSelect');hide('speedGame')}
+
+function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.level;const isNewBest=spd.score>spd.sessionBest[lv];if(isNewBest)spd.sessionBest[lv]=spd.score;checkAch('first_game',true);checkAch('math_10',state.mathsCorrect+spd.score>=10);state.mathsCorrect+=spd.score;saveState();const thresholds={1:15,2:10,3:7};const t=thresholds[lv];const stars=spd.score>=t*1.5?3:spd.score>=t?2:spd.score>=Math.floor(t/2)?1:0;addStars(stars);recordPlay();showResults('#0984e3','60s','Speed Maths!','Level '+lv+(isNewBest?' \u2014 NEW BEST!':''),stars,spd.score,spd.attempted,()=>{showScreen('speed')},null);const extra=document.getElementById('missedWords');let h='';if(isNewBest){h+='<div style="margin:12px auto;text-align:center;background:#e8fff5;border:2px solid #00b894;border-radius:12px;padding:10px;max-width:320px;"><strong style="color:#00b894;">Personal Best: '+spd.score+'</strong></div>'}h+='<div class="op-breakdown">';const opNames={'+':'Addition','-':'Subtraction','\u00D7':'Multiplication','\u00F7':'Division'};Object.keys(spd.ops).forEach(op=>{const o=spd.ops[op];if(o.t>0){const pct=Math.round(o.c/o.t*100);const cls=pct>=80?'good':pct>=50?'ok':'bad';h+='<div class="op-row '+cls+'"><span>'+opNames[op]+'</span><span>'+o.c+'/'+o.t+' ('+pct+'%)</span></div>'}});h+='</div>';extra.innerHTML=h}
+
+// Keyboard support for speed maths
+document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
 
 // ==================== RESULTS ====================
 function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn,missed){showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=sub;const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num">'+correct+'/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num">'+Math.round(correct/total*100)+'%</div><div class="rs-lbl">Score</div></div>';const mb=document.getElementById('missedWords');if(missed&&missed.length>0){let h='<div style="margin-top:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Words I missed:</div>';missed.forEach(m=>{h+='<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">'+m.w+'</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— '+m.h+'</span></div>'});h+='</div>';mb.innerHTML=h}else{mb.innerHTML=''}document.getElementById('resultsPlayAgain').onclick=playAgainFn}
