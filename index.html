@@ -80,6 +80,23 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .op-row.ok{background:#fff8e6;color:#f39c12}
 .op-row.bad{background:#fff0ed;color:#e17055}
 
+/* ===== NUMBER BONDS ===== */
+.card-bonds{background:linear-gradient(135deg,#11998e,#38ef7d)}
+.card-bonds .card-icon{background:rgba(255,255,255,0.3)}
+.nb-equation{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.4rem;color:#2d3436;text-align:center;margin:16px 0;line-height:1.4}
+.nb-equation .nb-blank{display:inline-block;min-width:50px;border-bottom:4px solid #11998e;color:#11998e;margin:0 4px}
+.nb-ans{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.8rem;text-align:center;min-height:56px;margin:8px 0;color:#11998e;transition:color 0.15s}
+.nb-ans.flash-correct{color:#00b894}
+.nb-ans.flash-wrong{color:#e74c3c}
+.bar-model{max-width:340px;margin:20px auto;border-radius:14px;overflow:hidden;border:3px solid #11998e;box-shadow:0 4px 15px rgba(17,153,142,0.15)}
+.bar-top{background:linear-gradient(135deg,#11998e,#38ef7d);color:white;text-align:center;padding:14px 0;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;border-bottom:3px solid #11998e}
+.bar-bottom{display:flex}
+.bar-part{flex:1;text-align:center;padding:14px 0;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.6rem;color:#2d3436;background:#e8fff5}
+.bar-part:first-child{border-right:3px solid #11998e}
+.bar-part.bar-blank{color:#11998e;background:#f0fff8;font-size:1.8rem}
+.tricky-bonds{text-align:left;max-width:320px;margin:16px auto 0}
+.tricky-row{background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;color:#e17055}
+
 /* ===== STATS BAR ===== */
 .stats-bar{display:flex;justify-content:space-around;background:white;border-radius:18px;padding:14px 8px;margin:18px 0 8px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
 .stat-item{text-align:center}
@@ -303,6 +320,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
         <div class="card-title">Speed Maths</div>
         <div class="card-desc">How many in 60 seconds?</div>
       </div>
+      <div class="subject-card card-bonds" onclick="startGame('bonds')">
+        <div class="card-icon">?+3</div>
+        <div class="card-title">Number Bonds</div>
+        <div class="card-desc">Find the missing number</div>
+      </div>
       <div class="subject-card card-daily" onclick="startGame('daily')">
         <div class="card-icon">GO</div>
         <div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">Spelling, maths &amp; reading in one go!</div></div>
@@ -466,6 +488,28 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- NUMBER BONDS -->
+<div id="bonds" class="screen game-screen">
+  <div class="game-header" style="border-color:#38ef7d"><button class="back-btn" onclick="goHome()">&larr;</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
+  <div class="game-body">
+    <div id="bondsLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">10</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
+        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">20</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
+        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">100</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
+      </div>
+    </div>
+    <div id="bondsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#11998e,#38ef7d)"></div></div>
+      <div class="progress-text" id="nbProgressText"></div>
+      <div id="nbDisplay"></div>
+      <div class="nb-ans" id="nbAns">_</div>
+      <div class="numpad" id="nbNumpad"></div>
     </div>
   </div>
 </div>
@@ -1070,6 +1114,24 @@ function finishSpeed(){show('speedLevelSelect');hide('speedGame');const lv=spd.l
 
 // Keyboard support for speed maths
 document.addEventListener('keydown',function(e){if(document.getElementById('speed').classList.contains('active')&&document.getElementById('speedGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))speedPress(e.key);else if(e.key==='Enter')speedPress('enter');else if(e.key==='Backspace'||e.key==='Delete')speedPress('C')}});
+
+// ==================== NUMBER BONDS ====================
+let nb={level:1,target:10,idx:0,total:10,correct:0,answer:'',question:null,missed:[]};
+
+function startBonds(lv){nb.level=lv;nb.target=lv===1?10:lv===2?20:100;nb.idx=0;nb.correct=0;nb.answer='';nb.missed=[];hide('bondsLevelSelect');show('bondsGame');renderNumpad('nbNumpad',nbPress);loadNbQ()}
+
+function genNbQ(target){const format=['A','B','C'][Math.floor(Math.random()*3)];let a,missing;if(target<=10){a=rand(1,target-1)}else if(target<=20){a=rand(1,target-1)}else{a=rand(5,target-5);a=Math.round(a/5)*5}missing=target-a;if(format==='B'){return{format:format,target:target,shown:missing,answer:a,display:'? + '+missing+' = '+target}}else if(format==='C'){const showFirst=Math.random()<0.5;return{format:format,target:target,left:showFirst?a:'?',right:showFirst?'?':missing,answer:showFirst?missing:a,display:'bar'}}else{return{format:format,target:target,shown:a,answer:missing,display:a+' + ? = '+target}}}
+
+function loadNbQ(){nb.question=genNbQ(nb.target);nb.answer='';document.getElementById('nbProgress').style.width=(nb.idx/nb.total*100)+'%';document.getElementById('nbProgressText').textContent='Question '+(nb.idx+1)+' of '+nb.total;const disp=document.getElementById('nbDisplay');const ans=document.getElementById('nbAns');ans.textContent='_';ans.className='nb-ans';if(nb.question.format==='C'){const q=nb.question;disp.innerHTML='<div class="bar-model"><div class="bar-top">'+q.target+'</div><div class="bar-bottom"><div class="bar-part'+(q.left==='?'?' bar-blank':'')+'">'+q.left+'</div><div class="bar-part'+(q.right==='?'?' bar-blank':'')+'">'+q.right+'</div></div></div>'}else{disp.innerHTML='<div class="nb-equation">'+nb.question.display.replace('?','<span class="nb-blank">?</span>')+'</div>'}}
+
+function nbPress(v){if(v==='C'){nb.answer=''}else if(v==='enter'){checkNbAns();return}else{if(nb.answer.length<4)nb.answer+=v}document.getElementById('nbAns').textContent=nb.answer||'_'}
+
+function checkNbAns(){if(!nb.answer)return;const ok=parseInt(nb.answer)===nb.question.answer;const ans=document.getElementById('nbAns');if(ok){nb.correct++;ans.className='nb-ans flash-correct';ans.textContent=nb.question.answer}else{nb.missed.push(nb.question);ans.className='nb-ans flash-wrong';ans.textContent=nb.question.answer}setTimeout(()=>{nb.idx++;if(nb.idx>=nb.total)finishBonds();else loadNbQ()},ok?200:500)}
+
+function finishBonds(){show('bondsLevelSelect');hide('bondsGame');checkAch('first_game',true);const stars=nb.correct>=9?3:nb.correct>=7?2:1;addStars(stars);recordPlay();const trickyHtml=nb.missed.length>0?nb.missed:null;showResults('#11998e','?+3','Number Bonds Done!','Bonds to '+nb.target,stars,nb.correct,nb.total,()=>{showScreen('bonds')},null);const extra=document.getElementById('missedWords');if(trickyHtml&&trickyHtml.length>0){let h='<div class="tricky-bonds"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">You found these tricky:</div>';trickyHtml.forEach(q=>{let txt;if(q.format==='B')txt='? + '+q.shown+' = '+q.target+' (answer: '+q.answer+')';else if(q.format==='C'){const l=q.left==='?'?q.answer:q.left;const r=q.right==='?'?q.answer:q.right;txt=l+' + '+r+' = '+q.target}else txt=q.shown+' + ? = '+q.target+' (answer: '+q.answer+')';h+='<div class="tricky-row">'+txt+'</div>'});h+='</div>';extra.innerHTML=h}}
+
+// Keyboard support for number bonds
+document.addEventListener('keydown',function(e){if(document.getElementById('bonds').classList.contains('active')&&document.getElementById('bondsGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))nbPress(e.key);else if(e.key==='Enter')nbPress('enter');else if(e.key==='Backspace'||e.key==='Delete')nbPress('C')}});
 
 // ==================== RESULTS ====================
 function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn,missed){showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=sub;const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num">'+correct+'/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num">'+Math.round(correct/total*100)+'%</div><div class="rs-lbl">Score</div></div>';const mb=document.getElementById('missedWords');if(missed&&missed.length>0){let h='<div style="margin-top:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Words I missed:</div>';missed.forEach(m=>{h+='<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">'+m.w+'</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— '+m.h+'</span></div>'});h+='</div>';mb.innerHTML=h}else{mb.innerHTML=''}document.getElementById('resultsPlayAgain').onclick=playAgainFn}
