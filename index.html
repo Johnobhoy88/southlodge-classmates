@@ -494,6 +494,21 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .stat-val{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#6c5ce7;display:block}
 .stat-lbl{font-size:0.65rem;color:#b2bec3;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
 
+/* ===== REWARD SHOP ===== */
+.shop-section{margin:16px 0}
+.shop-title{text-align:center;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.95rem;color:#F0A500;cursor:pointer;padding:8px;border-radius:12px;transition:background 0.15s}
+.shop-title:hover{background:#fff8e6}
+.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.shop-item{background:white;border:2px solid #f0f0f0;border-radius:14px;padding:14px 10px;text-align:center;transition:all 0.15s}
+.shop-item.owned{border-color:#00B894;background:#f0fdf8}
+.shop-icon{font-size:1.5rem;margin-bottom:4px}
+.shop-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.8rem;color:#2d3436}
+.shop-desc{font-size:0.65rem;color:#8899aa;margin:2px 0 6px}
+.shop-cost{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.75rem;color:#F0A500;margin-bottom:6px}
+.shop-buy{padding:6px 16px;border:none;border-radius:10px;background:linear-gradient(135deg,#F0A500,#FFD93D);color:#264653;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.75rem;cursor:pointer;transition:all 0.15s}
+.shop-buy:active{transform:scale(0.95)}
+.shop-buy.disabled{background:#e4e8ec;color:#b2bec3;cursor:not-allowed}
+
 /* ===== BADGES ===== */
 .badges-section{margin:8px 0 16px}
 .badges-title{text-align:center;font-size:0.85rem;color:#636e72;margin-bottom:8px}
@@ -836,6 +851,10 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
     <div class="badges-section">
       <div class="badges-title">Achievements</div>
       <div class="badges-grid" id="badgesRow"></div>
+    </div>
+    <div class="shop-section">
+      <div class="shop-title" onclick="document.getElementById('shopGrid').style.display=document.getElementById('shopGrid').style.display==='none'?'grid':'none'">Reward Shop <span style="font-size:0.7rem;color:#b2bec3">(tap to open)</span></div>
+      <div class="shop-grid" id="shopGrid" style="display:none"></div>
     </div>
     <div class="progress-map">
       <div class="progress-map-title">My Progress</div>
@@ -2355,9 +2374,9 @@ const ACHIEVEMENTS = [
 const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>';
 
 // ==================== STATE ====================
-let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{}};
+let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[]};
 
-const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{}};
+const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[]};
 function stateKey(){return currentPupil?'classmates_state_'+currentPupil:'classmates_state'}
 function loadState(){state=JSON.parse(JSON.stringify(DEFAULT_STATE));try{const s=localStorage.getItem(stateKey());if(s)Object.assign(state,JSON.parse(s))}catch(e){}updateStreak()}
 function saveState(){try{localStorage.setItem(stateKey(),JSON.stringify(state))}catch(e){}}
@@ -2373,7 +2392,7 @@ let currentPupil=null;
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.remove('screen-enter')});const el=document.getElementById(id);el.classList.add('active','screen-enter');el.scrollTop=0;el.addEventListener('animationend',()=>el.classList.remove('screen-enter'),{once:true})}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily();if(g==='memorymatch')startMemoryMatch();if(g==='spellingbee')startBee();if(g==='scotquiz')startScotQuiz();if(g==='typing')startTyping();if(g==='customquiz')startCustomQuiz();if(g==='compass')startCompass();if(g==='flags')startFlags()}
-function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard();const cqCard=document.getElementById('customQuizCard');if(cqCard)cqCard.style.display=getCustomQuiz().length>0?'':'none';renderAssignmentBanner()}
+function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderShop();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard();const cqCard=document.getElementById('customQuizCard');if(cqCard)cqCard.style.display=getCustomQuiz().length>0?'':'none';renderAssignmentBanner()}
 function renderLeaderboard(){const sec=document.getElementById('leaderboardSection');const el=document.getElementById('leaderboard');const pupils=getPupils();if(pupils.length<2){sec.style.display='none';return}const data=pupils.map(p=>{const s=loadPupilState(p);return{name:p,stars:s?s.stars||0:0}}).sort((a,b)=>b.stars-a.stars).slice(0,5);if(data[0].stars===0){sec.style.display='none';return}sec.style.display='block';const medals=['\u{1F947}','\u{1F948}','\u{1F949}','4','5'];el.innerHTML=data.map((d,i)=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:'+(d.name===currentPupil?'#e8fff5':'#f8f8f8')+';border-radius:10px;margin-bottom:4px;font-size:0.85rem"><span style="width:24px;text-align:center">'+medals[i]+'</span><span style="flex:1;font-weight:700;color:#2d3436">'+d.name+'</span><span style="color:#FFD93D;font-weight:800">'+d.stars+' &#x2B50;</span></div>').join('')}
 function renderProgressMap(){const pm=document.getElementById('progressMap');if(!pm)return;const topics=[{id:'spelling',name:'Spelling',color:'#f7971e'},{id:'maths',name:'Maths',color:'#0083b0'},{id:'times',name:'Tables',color:'#e44d26'},{id:'reading',name:'Reading',color:'#56ab2f'},{id:'bonds',name:'Bonds',color:'#11998e'},{id:'phonics',name:'Phonics',color:'#0abde3'}];let h='';topics.forEach(t=>{const lv=state.adaptive&&state.adaptive[t.id]?state.adaptive[t.id].level:1;const pct=lv/3*100;h+='<div class="pmap-row"><span class="pmap-label">'+t.name+'</span><div class="pmap-bar"><div class="pmap-fill" style="width:'+pct+'%;background:'+t.color+'"></div></div><span class="pmap-level">Lv'+lv+'</span></div>'});pm.innerHTML=h}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
@@ -3219,9 +3238,18 @@ function endH2H(){h2h.active=false}
 function printCert(achievement,detail){const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>Certificate</title><style>@page{size:landscape;margin:0}body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:Georgia,serif}' +'.cert{width:297mm;height:210mm;border:12px solid #ffd700;padding:40px 60px;text-align:center;position:relative;background:white;box-sizing:border-box}' +'.cert::before{content:"";position:absolute;inset:16px;border:3px solid #ffd700;border-radius:8px}' +'.cert h1{font-size:3rem;color:#c0392b;margin:20px 0 10px}' +'.cert h2{font-size:1.8rem;color:#2d3436;margin:20px 0}' +'.cert .detail{font-size:1.3rem;color:#636e72;margin:10px 0}' +'.cert .stars{font-size:3rem;margin:20px 0;color:#ffd700}' +'.cert .date{font-size:1rem;color:#b2bec3;margin-top:30px}' +'.cert .footer{font-size:0.8rem;color:#b2bec3;margin-top:20px;font-style:italic}' +'</style></head><body><div class="cert">' +'<h1>Classmates</h1>' +'<div class="detail">This certificate is awarded to</div>' +'<h2>_________________________</h2>' +'<div class="detail">for achieving</div>' +'<h2>'+achievement+'</h2>' +'<div class="detail">'+detail+' &mdash; Three Stars!</div>' +'<div class="stars">&starf; &starf; &starf;</div>' +'<div class="date">'+today+'</div>' +'<div class="footer">South Lodge Primary School</div>' +'</div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
 
 // ==================== COINS (session only) ====================
-let sessionCoins=0;
-function addCoins(n){sessionCoins+=n;document.getElementById('coinCount').textContent=sessionCoins}
-function updateCoinDisplay(){document.getElementById('coinCount').textContent=sessionCoins}
+function addCoins(n){state.coins+=n;saveState();document.getElementById('coinCount').textContent=state.coins}
+function updateCoinDisplay(){document.getElementById('coinCount').textContent=state.coins}
+const REWARDS=[
+{id:'confetti_gold',name:'Gold Confetti',desc:'Golden celebration!',cost:50,type:'theme'},
+{id:'confetti_rainbow',name:'Rainbow Burst',desc:'Extra colourful!',cost:75,type:'theme'},
+{id:'avatar_crown_gold',name:'Gold Crown',desc:'A shiny gold crown',cost:100,type:'accessory'},
+{id:'avatar_cape',name:'Super Cape',desc:'Hero cape for your avatar',cost:120,type:'accessory'},
+{id:'avatar_rainbow_hair',name:'Rainbow Hair',desc:'Magical rainbow hair',cost:80,type:'accessory'},
+{id:'celebrate_fireworks',name:'Fireworks',desc:'Fireworks on 3 stars!',cost:150,type:'theme'},
+];
+function renderShop(){const c=document.getElementById('shopGrid');if(!c)return;c.innerHTML='';REWARDS.forEach(r=>{const owned=state.unlockedRewards&&state.unlockedRewards.includes(r.id);const canBuy=state.coins>=r.cost&&!owned;c.innerHTML+='<div class="shop-item'+(owned?' owned':'')+'"><div class="shop-icon">'+(r.type==='accessory'?'\u{1F451}':'\u{2728}')+'</div><div class="shop-name">'+r.name+'</div><div class="shop-desc">'+r.desc+'</div><div class="shop-cost">'+(owned?'\u2705 Owned':'\u{1FA99} '+r.cost)+'</div>'+(owned?'':'<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyReward(\''+r.id+'\','+r.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>')+'</div>'})}
+function buyReward(id,cost){if(state.coins<cost||state.unlockedRewards.includes(id))return;state.coins-=cost;if(!state.unlockedRewards)state.unlockedRewards=[];state.unlockedRewards.push(id);saveState();updateCoinDisplay();renderShop();sfxLevelUp()}
 
 // ==================== INIT ====================
 loadState();updateHomeStats();renderPupilSelect();
