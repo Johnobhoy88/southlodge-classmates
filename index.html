@@ -17,8 +17,8 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:18px;-webkit-tap-highlight-color:transparent}
-body{font-family:'Nunito','Trebuchet MS',sans-serif;min-height:100vh;overflow-x:hidden;background:#f0f4ff}
-h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
+body{font-family:'Nunito','Trebuchet MS',sans-serif;min-height:100vh;overflow-x:hidden;background:#1a2332}
+h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:white}
 
 /* ===== FULL-SCREEN LAYOUT ===== */
 .app{width:100%;min-height:100vh;position:relative}
@@ -27,9 +27,6 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 @keyframes screenFadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ===== HOME SCREEN ===== */
-.home-bg{background:linear-gradient(180deg,#dfe6fd 0%,#f0f4ff 40%,#fff9f0 100%);position:relative}
-.home-bg::before{content:'';position:absolute;top:-40px;left:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,200,100,0.3),transparent 70%);border-radius:50%}
-.home-bg::after{content:'';position:absolute;top:20px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(108,92,231,0.15),transparent 70%);border-radius:50%}
 
 .home-header{padding:16px 20px 6px;position:relative;z-index:1}
 .home-header-bar{display:flex;align-items:center;gap:12px;width:100%}
@@ -189,7 +186,7 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .coin-display-home{display:inline-flex;align-items:center;gap:4px;background:rgba(240,165,0,0.15);border:2px solid rgba(240,165,0,0.3);border-radius:20px;padding:4px 14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#FFD93D}
 .mute-btn{background:none;border:2px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:rgba(255,255,255,0.6);font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:8px}
 .mute-btn:hover{border-color:#11998e}
-.mute-btn.muted{background:#fff0ed;border-color:#e17055;color:#e17055}
+.mute-btn.muted{background:rgba(231,76,60,0.15);border-color:rgba(231,76,60,0.4);color:#e74c3c}
 .dyslexia-btn{background:none;border:2px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:rgba(255,255,255,0.6);font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:4px}
 .dyslexia-btn:hover{border-color:#11998e}
 .progress-map{margin:16px 0}
@@ -214,6 +211,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .pupil-profile:active{transform:scale(0.95);box-shadow:0 2px 0 rgba(0,0,0,0.06)}
 .pupil-profile .pp-avatar{width:100px;height:100px;margin:0 auto 10px;border-radius:50%;overflow:hidden;border:3px solid #FFD93D;box-shadow:0 2px 8px rgba(255,217,61,0.3)}
 .pupil-profile .pp-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;color:#2d3436;margin-bottom:6px}
+.landing-bg .pupil-profile{background:rgba(255,255,255,0.9)}
 .pupil-profile .pp-edit{font-size:0.7rem;color:#11998e;font-weight:700;background:#e8fff5;border:none;border-radius:10px;padding:4px 10px;cursor:pointer}
 .pupil-profile .pp-go{display:block;margin-top:8px;padding:8px 16px;border:none;border-radius:12px;background:linear-gradient(135deg,#11998e,#38ef7d);color:white;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;cursor:pointer;width:100%;box-shadow:0 3px 0 #0e7a6e;transition:all 0.15s}
 .pupil-profile .pp-go:active{transform:translateY(2px);box-shadow:0 1px 0 #0e7a6e}
@@ -539,8 +537,29 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .game-body{flex:1;padding:20px;max-width:600px;margin:0 auto;width:100%;display:flex;flex-direction:column}
 .game-body-center{flex:1;display:flex;flex-direction:column;justify-content:center}
 .game-screen .progress-text{color:rgba(255,255,255,0.7)}
-.game-screen .q-text{color:white}
+.game-screen .q-text,.game-screen .question-text{color:white}
 .game-screen p,.game-screen label{color:rgba(255,255,255,0.85)}
+.game-screen .typing-word,.game-screen .speed-q,.game-screen .nb-equation,.game-screen .mv-word,.game-screen .punct-sentence,.game-screen .h2h-q,.game-screen .chart-val{color:white}
+.game-screen .spell-clue,.game-screen .typing-stat .ts-val,.game-screen .speed-score,.game-screen .h2h-name,.game-screen .chart-label,.game-screen .mv-hint,.game-screen .pv-col-label{color:rgba(255,255,255,0.7)}
+.game-screen .speed-score span{color:#FFD93D}
+.game-screen .bar-part{background:rgba(255,255,255,0.1);color:white}
+.game-screen .bar-top{color:white}
+.game-screen .punct-sentence{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:white}
+.game-screen .story-text{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.9)}
+.game-screen .story-card{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.1)}
+.game-screen .story-card .story-title{color:white}
+.game-screen .story-card .story-desc,.game-screen .story-card .story-icon{color:rgba(255,255,255,0.6)}
+.game-screen .ans-btn{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.12);color:white}
+.game-screen .ans-btn:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25)}
+.game-screen .typing-input,.game-screen .daily-input,.game-screen .h2h-input,.game-screen .mv-input{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:white}
+.game-screen .typing-input:focus,.game-screen .daily-input:focus,.game-screen .h2h-input:focus,.game-screen .mv-input:focus{border-color:rgba(255,255,255,0.5)}
+.game-screen .typing-input::placeholder,.game-screen .daily-input::placeholder,.game-screen .h2h-input::placeholder,.game-screen .mv-input::placeholder{color:rgba(255,255,255,0.3)}
+.game-screen .hint-btn{background:rgba(255,217,61,0.2);color:#FFD93D;border:none;box-shadow:none}
+.game-screen .tt-grid .table-btn{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.12);color:white}
+.game-screen .tt-grid .table-btn:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.3)}
+.game-screen .tt-grid .table-btn .pb-time{color:rgba(255,255,255,0.4)}
+.game-screen .tt-timer{color:#FFD93D}
+.game-screen .mixed-btn{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.2);color:white}
 .nav-btn{height:42px;border-radius:12px;border:none;background:rgba(255,255,255,0.15);font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:all 0.15s;color:rgba(255,255,255,0.85);padding:0 14px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .nav-btn:hover{background:rgba(255,255,255,0.25)}
 .nav-btn:active{transform:scale(0.95);background:rgba(255,255,255,0.1)}
@@ -768,8 +787,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 <div id="pupilselect" class="screen landing-bg branded" style="padding:20px">
   <div style="text-align:center;padding:16px 0;">
     <img src="logo.jpg" alt="South Lodge Primary" style="width:70px;border-radius:50%;border:4px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
-    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;color:#11998e;margin:10px 0 4px;">Who's playing today?</div>
-    <div style="font-size:0.85rem;color:#7f8c8d;">Tap your name to start!</div>
+    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;color:white;margin:10px 0 4px;">Who's playing today?</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);">Tap your name to start!</div>
   </div>
   <div class="pupil-grid" id="pupilGrid"></div>
   <div style="text-align:center;padding:16px;">
