@@ -19,8 +19,10 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 
 /* ===== FULL-SCREEN LAYOUT ===== */
 .app{width:100%;min-height:100vh;position:relative}
-.screen{display:none;width:100%;min-height:100vh;position:relative;overflow-y:auto}
-.screen.active{display:flex;flex-direction:column}
+.screen{position:fixed;inset:0;width:100%;min-height:100vh;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity 0.25s ease,visibility 0.25s;z-index:0;display:flex;flex-direction:column}
+.screen.active{opacity:1;visibility:visible;z-index:1}
+.screen.screen-enter{animation:screenFadeIn 0.3s ease forwards}
+@keyframes screenFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ===== HOME SCREEN ===== */
 .home-bg{background:linear-gradient(180deg,#dfe6fd 0%,#f0f4ff 40%,#fff9f0 100%);position:relative}
@@ -2368,7 +2370,7 @@ function resetProgress(){if(confirm('This will delete all your stars, badges and
 
 // ==================== NAVIGATION ====================
 let currentPupil=null;
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.remove('screen-enter')});const el=document.getElementById(id);el.classList.add('active','screen-enter');el.scrollTop=0;el.addEventListener('animationend',()=>el.classList.remove('screen-enter'),{once:true})}
 function goHome(){showScreen('home');updateHomeStats()}
 function startGame(g){showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily();if(g==='memorymatch')startMemoryMatch();if(g==='spellingbee')startBee();if(g==='scotquiz')startScotQuiz();if(g==='typing')startTyping();if(g==='customquiz')startCustomQuiz();if(g==='compass')startCompass();if(g==='flags')startFlags()}
 function updateHomeStats(){document.getElementById('statStars').textContent=state.stars;document.getElementById('statGames').textContent=state.games;document.getElementById('statStreak').textContent=state.streak;updateCoinDisplay();renderBadges();renderProgressMap();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle">'+currentPupil+'</span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard();const cqCard=document.getElementById('customQuizCard');if(cqCard)cqCard.style.display=getCustomQuiz().length>0?'':'none';renderAssignmentBanner()}
