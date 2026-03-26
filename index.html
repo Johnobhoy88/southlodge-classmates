@@ -294,9 +294,12 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .modal-cancel{margin-top:8px;padding:8px 16px;border:none;background:none;color:#b2bec3;cursor:pointer;font-size:0.85rem}
 
 /* ===== SECTION HEADERS ===== */
-.section-header{display:flex;align-items:center;gap:10px;margin:22px 0 12px;padding-bottom:8px;position:relative}
+.section-header{display:flex;align-items:center;gap:10px;margin:22px 0 12px;padding-bottom:8px;position:relative;cursor:pointer;user-select:none}
 .section-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#e4e8ec,transparent);border-radius:2px}
 .section-header span{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#264653;text-transform:uppercase;letter-spacing:2px}
+.section-header .collapse-arrow{margin-left:auto;font-size:0.7rem;color:#b2bec3;transition:transform 0.2s}
+.section-header.collapsed .collapse-arrow{transform:rotate(-90deg)}
+.subject-grid.collapsed{display:none}
 .pupil-name-bar{text-align:center;font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:4px}
 .pupil-name-bar strong{color:#11998e}
 
@@ -803,7 +806,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="stat-item"><span class="stat-val" id="statStreak">0</span><span class="stat-lbl">Day Streak</span></div>
     </div>
 
-    <div class="section-header"><span>&#x270F;&#xFE0F; Literacy</span></div>
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x270F;&#xFE0F; Literacy</span><span class="collapse-arrow">&#x25BC;</span></div>
     <div class="subject-grid">
       <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
       <div class="subject-card card-dictation" onclick="startGame('dictation')"><div class="card-icon">&#x1F50A;</div><div class="card-title">Dictation</div><div class="card-desc">Listen and spell!</div></div>
@@ -819,7 +822,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
     </div>
 
-    <div class="section-header"><span>&#x1F522; Numeracy</span></div>
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F522; Numeracy</span><span class="collapse-arrow">&#x25BC;</span></div>
     <div class="subject-grid">
       <div class="subject-card card-maths" onclick="startGame('maths')"><div class="card-icon">1+2</div><div class="card-title">Maths</div><div class="card-desc">Solve the sums</div></div>
       <div class="subject-card card-times" onclick="startGame('times')"><div class="card-icon">3x4</div><div class="card-title">Times Tables</div><div class="card-desc">Beat the clock!</div></div>
@@ -837,7 +840,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="subject-card card-sequence" onclick="startGame('sequence')"><div class="card-icon">1,2,?</div><div class="card-title">Sequences</div><div class="card-desc">Patterns</div></div>
     </div>
 
-    <div class="section-header"><span>&#x1F30D; Geography</span></div>
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F30D; Geography</span><span class="collapse-arrow">&#x25BC;</span></div>
     <div class="subject-grid">
       <div class="subject-card card-capitals" onclick="startGame('capitals')"><div class="card-icon">&#x1F3DB;</div><div class="card-title">Capitals</div><div class="card-desc">Cities</div></div>
       <div class="subject-card card-continents" onclick="startGame('continents')"><div class="card-icon">&#x1F30D;</div><div class="card-title">World</div><div class="card-desc">Continents</div></div>
@@ -846,7 +849,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="subject-card card-flags" onclick="startGame('flags')"><div class="card-icon">&#x1F3F3;</div><div class="card-title">Flags</div><div class="card-desc">Countries</div></div>
     </div>
 
-    <div class="section-header"><span>&#x1F3C6; Challenges</span></div>
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F3C6; Challenges</span><span class="collapse-arrow">&#x25BC;</span></div>
     <div class="subject-grid">
       <div class="subject-card card-daily" onclick="startGame('daily')"><div class="card-icon">GO</div><div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">5 daily challenges — spelling, maths, reading &amp; more</div></div></div>
       <div class="subject-card card-h2h" onclick="startGame('h2h')"><div class="card-icon">VS</div><div class="card-title">Head to Head</div><div class="card-desc">Race!</div></div>
@@ -2418,6 +2421,7 @@ function resetProgress(){if(confirm('This will delete all your stars, badges and
 // ==================== NAVIGATION ====================
 let currentPupil=null;
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.classList.remove('screen-enter')});const el=document.getElementById(id);el.classList.add('active','screen-enter');el.scrollTop=0;el.addEventListener('animationend',()=>el.classList.remove('screen-enter'),{once:true})}
+function toggleSection(header){header.classList.toggle('collapsed');const grid=header.nextElementSibling;if(grid&&grid.classList.contains('subject-grid'))grid.classList.toggle('collapsed')}
 function goHome(){showScreen('home');updateHomeStats()}
 const GAME_CATS={spelling:'literacy',dictation:'literacy',vowels:'literacy',anagram:'literacy',phonics:'literacy',wordfam:'literacy',sentence:'literacy',punctuation:'literacy',vocab:'literacy',reading:'literacy',grammar:'literacy',rhyme:'literacy',maths:'numeracy',times:'numeracy',speed:'numeracy',bonds:'numeracy',missnum:'numeracy',placeval:'numeracy',telltime:'numeracy',money:'numeracy',fractions:'numeracy',wordprob:'numeracy',shapes:'numeracy',datahandling:'numeracy',measure:'numeracy',sequence:'numeracy',capitals:'geography',continents:'geography',weather:'geography',compass:'geography',flags:'geography',daily:'challenge',h2h:'challenge',memorymatch:'challenge',spellingbee:'challenge',scotquiz:'challenge',typing:'challenge',customquiz:'challenge'};
 function startGame(g){const el=document.getElementById(g);if(el){el.classList.remove('cat-literacy','cat-numeracy','cat-geography','cat-challenge');const cat=GAME_CATS[g];if(cat)el.classList.add('cat-'+cat)}showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily();if(g==='memorymatch')startMemoryMatch();if(g==='spellingbee')startBee();if(g==='scotquiz')startScotQuiz();if(g==='typing')startTyping();if(g==='customquiz')startCustomQuiz();if(g==='compass')startCompass();if(g==='flags')startFlags();highlightRecommended(g,g)}
