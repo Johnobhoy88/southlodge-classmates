@@ -940,7 +940,12 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <div class="badges-grid" id="badgesRow"></div>
     </div>
     <div class="shop-section">
-      <div class="shop-title" onclick="document.getElementById('shopGrid').style.display=document.getElementById('shopGrid').style.display==='none'?'grid':'none'">Reward Shop <span style="font-size:0.7rem;color:#b2bec3">(tap to open)</span></div>
+      <div class="shop-title" onclick="var pg=document.getElementById('powerupGrid');var sg=document.getElementById('shopGrid');var isHidden=sg.style.display==='none';sg.style.display=isHidden?'grid':'none';pg.style.display=isHidden?'block':'none';">Reward Shop <span style="font-size:0.7rem;color:#b2bec3">(tap to open)</span></div>
+      <div style="display:none;padding:0 8px;" id="powerupGrid">
+        <div style="font-weight:700;font-size:1rem;color:#1a3a4a;margin:12px 0 8px;letter-spacing:1px;">Power-Ups</div>
+        <div class="shop-grid" id="powerupShopGrid"></div>
+        <div style="font-weight:700;font-size:1rem;color:#1a3a4a;margin:16px 0 8px;letter-spacing:1px;">Rewards</div>
+      </div>
       <div class="shop-grid" id="shopGrid" style="display:none"></div>
     </div>
     <div class="progress-map">
@@ -1179,9 +1184,11 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
         <div class="spell-clue" id="spellHint"></div>
         <div class="spell-slots" id="spellWord"></div>
         <div class="lives-row" id="spellLives"></div>
+        <div id="extraLifeWrap" style="text-align:center;margin-top:6px;display:none;"><button class="hint-btn" id="extraLifeBtn" onclick="useExtraLife()" style="background:#e74c3c;color:#fff;">\u2764\uFE0F Use Extra Life</button></div>
       </div>
       <div style="text-align:center;margin-bottom:10px;">
         <button class="hint-btn" id="hintBtn" onclick="showHint()">Show Hint</button>
+        <button class="hint-btn" id="revealLetterBtn" onclick="useRevealLetter()" style="background:#f39c12;color:#fff;display:none;">\uD83D\uDCA1 Reveal Letter</button>
       </div>
       <div class="keyboard" id="keyboard"></div>
     </div>
@@ -2482,7 +2489,7 @@ const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4
 // ==================== STATE ====================
 let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null};
 
-const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null};
+const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null,powerups:{}};
 function stateKey(){return currentPupil?'classmates_state_'+currentPupil:'classmates_state'}
 function loadState(){state=JSON.parse(JSON.stringify(DEFAULT_STATE));try{const s=localStorage.getItem(stateKey());if(s)Object.assign(state,JSON.parse(s))}catch(e){}updateStreak()}
 function saveState(){try{localStorage.setItem(stateKey(),JSON.stringify(state))}catch(e){}}
@@ -2563,13 +2570,15 @@ function resetAllData(){if(!confirm('This will delete ALL pupil data and progres
 let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false,missed:[]};
 
 function setSpellingLevel(lv){sp.level=lv;sp.maxLives=lv===1?7:lv===2?6:5;const weak=getWeakItems('spelling',3);const pool=[...SPELLING[lv]];shuffle(pool);const fresh=pool.filter(w=>!weak.find(wk=>wk.w===w.w)).slice(0,sp.total-weak.length);sp.words=[...weak,...fresh];shuffle(sp.words);sp.idx=0;sp.correct=0;sp.missed=[];hide('spellingLevelSelect');show('spellingGame');loadSpellWord()}
-function loadSpellWord(){const item=sp.words[sp.idx];sp.word=item.w.toLowerCase();sp.revealed=new Array(sp.word.length).fill(false);sp.lives=sp.maxLives;sp.hintUsed=false;const pic=document.getElementById('spellPic');const eFn=WORD_EMOJI[sp.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('spellHint').textContent=item.h;document.getElementById('hintBtn').style.display='none';updateSpellProgress();renderSpellWord();renderLives();renderKeyboard();animateQuestion('spellWord')}
+function loadSpellWord(){const item=sp.words[sp.idx];sp.word=item.w.toLowerCase();sp.revealed=new Array(sp.word.length).fill(false);sp.lives=sp.maxLives;sp.hintUsed=false;const pic=document.getElementById('spellPic');const eFn=WORD_EMOJI[sp.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('spellHint').textContent=item.h;document.getElementById('hintBtn').style.display='none';updateSpellProgress();renderSpellWord();renderLives();renderKeyboard();animateQuestion('spellWord');var elWrap=document.getElementById('extraLifeWrap');if(elWrap)elWrap.style.display=getPowerupCount('extra_life')>0?'':'none';var rlBtn=document.getElementById('revealLetterBtn');if(rlBtn)rlBtn.style.display=getPowerupCount('reveal_letter')>0?'inline-block':'none'}
 function updateSpellProgress(){document.getElementById('spellProgress').style.width=(sp.idx/sp.total*100)+'%';document.getElementById('spellProgressText').textContent='Word '+(sp.idx+1)+' of '+sp.total}
 function renderSpellWord(){const el=document.getElementById('spellWord');el.innerHTML='';for(let i=0;i<sp.word.length;i++){const s=document.createElement('div');s.className='letter-slot'+(sp.revealed[i]?' revealed':'');s.textContent=sp.revealed[i]?sp.word[i]:'';el.appendChild(s)}}
 function renderLives(){const el=document.getElementById('spellLives');el.innerHTML='';for(let i=0;i<sp.maxLives;i++){const d=document.createElement('div');d.className='life'+(i>=sp.lives?' lost':'');d.innerHTML='<div class="life-heart"></div>';el.appendChild(d)}}
 function renderKeyboard(){const rows=['qwertyuiop','asdfghjkl','zxcvbnm'];const kb=document.getElementById('keyboard');kb.innerHTML='';rows.forEach(row=>{const r=document.createElement('div');r.className='kb-row';for(const ch of row){const k=document.createElement('button');k.className='kb-key';k.textContent=ch;k.id='key_'+ch;k.onclick=()=>pressKey(ch);r.appendChild(k)}kb.appendChild(r)})}
 function pressKey(ch){const btn=document.getElementById('key_'+ch);if(!btn||btn.classList.contains('correct')||btn.classList.contains('wrong'))return;let found=false;for(let i=0;i<sp.word.length;i++){if(sp.word[i]===ch&&!sp.revealed[i]){sp.revealed[i]=true;found=true}}if(found){btn.classList.add('correct');sfxClick()}else{btn.classList.add('wrong');sp.lives--;renderLives();document.getElementById('spellWord').classList.add('shake');setTimeout(()=>document.getElementById('spellWord').classList.remove('shake'),300)}renderSpellWord();if(sp.revealed.every(r=>r)){sp.correct++;state.spellingCorrect++;sfxCorrect();checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();setTimeout(nextSpellWord,800)}else if(sp.lives<=0){sfxWrong();sp.missed.push({w:sp.word,h:sp.words[sp.idx].h});sp.revealed=sp.revealed.map(()=>true);renderSpellWord();document.querySelectorAll('.letter-slot').forEach(s=>{s.classList.remove('revealed');s.classList.add('wrong-reveal')});setTimeout(nextSpellWord,1200)}}
 function showHint(){if(!sp.hintUsed){sp.hintUsed=true;document.getElementById('spellHint').textContent=sp.words[sp.idx].h;document.getElementById('hintBtn').style.display='none'}}
+function useExtraLife(){if(usePowerup('extra_life')){sp.maxLives++;sp.lives++;renderLives();var elWrap=document.getElementById('extraLifeWrap');if(getPowerupCount('extra_life')<=0&&elWrap)elWrap.style.display='none';sfxClick()}}
+function useRevealLetter(){var unrevealed=[];for(var i=0;i<sp.word.length;i++){if(!sp.revealed[i])unrevealed.push(i)}if(unrevealed.length===0)return;if(usePowerup('reveal_letter')){var ri=unrevealed[Math.floor(Math.random()*unrevealed.length)];sp.revealed[ri]=true;renderSpellWord();var ch=sp.word[ri];var btn=document.getElementById('key_'+ch);if(btn&&!btn.classList.contains('correct')&&!btn.classList.contains('wrong')){var allRevealed=true;for(var j=0;j<sp.word.length;j++){if(sp.word[j]===ch&&!sp.revealed[j])allRevealed=false}if(allRevealed)btn.classList.add('correct')}if(getPowerupCount('reveal_letter')<=0){var rlBtn=document.getElementById('revealLetterBtn');if(rlBtn)rlBtn.style.display='none'}if(sp.revealed.every(function(r){return r})){sp.correct++;state.spellingCorrect++;sfxCorrect();saveState();setTimeout(nextSpellWord,800)}else{sfxClick()}}}
 function nextSpellWord(){sp.idx++;if(sp.idx>=sp.total)finishSpelling();else loadSpellWord()}
 function finishSpelling(){show('spellingLevelSelect');hide('spellingGame');const pct=sp.correct/sp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('spelling');else if(pct<0.4)adaptiveWrong('spelling');sp.missed.forEach(m=>recordWeak('spelling',m));addStars(stars);recordPlay();showResults('#f7971e','Aa','Spelling Done!','Level '+sp.level,stars,sp.correct,sp.total,()=>{showScreen('spelling')},sp.missed)}
 
@@ -3386,11 +3395,74 @@ function endH2HWin(player){h2h.active=false;const name=h2h['p'+player].name;cons
 function endH2H(){h2h.active=false}
 
 // ==================== CERTIFICATE ====================
-function printCert(achievement,detail){const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>Certificate</title><style>@page{size:landscape;margin:0}body{margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh;background:white;font-family:Georgia,serif}' +'.cert{width:297mm;height:210mm;border:12px solid #ffd700;padding:40px 60px;text-align:center;position:relative;background:white;box-sizing:border-box}' +'.cert::before{content:"";position:absolute;inset:16px;border:3px solid #ffd700;border-radius:8px}' +'.cert h1{font-size:3rem;color:#c0392b;margin:20px 0 10px}' +'.cert h2{font-size:1.8rem;color:#2d3436;margin:20px 0}' +'.cert .detail{font-size:1.3rem;color:#636e72;margin:10px 0}' +'.cert .stars{font-size:3rem;margin:20px 0;color:#ffd700}' +'.cert .date{font-size:1rem;color:#b2bec3;margin-top:30px}' +'.cert .footer{font-size:0.8rem;color:#b2bec3;margin-top:20px;font-style:italic}' +'</style></head><body><div class="cert">' +'<h1>Classmates</h1>' +'<div class="detail">This certificate is awarded to</div>' +'<h2>_________________________</h2>' +'<div class="detail">for achieving</div>' +'<h2>'+achievement+'</h2>' +'<div class="detail">'+detail+' &mdash; Three Stars!</div>' +'<div class="stars">&starf; &starf; &starf;</div>' +'<div class="date">'+today+'</div>' +'<div class="footer">South Lodge Primary School</div>' +'</div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+function printCert(title,sub){
+  const name=currentPupil||'Learner';
+  const date=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  const school=localStorage.getItem('classmates_school')||'South Lodge Primary';
+  const av=currentPupil?getAvatarData(currentPupil):{skin:0,hair:0,hairColor:0,eyes:0,mouth:0,outfit:0,accessory:0,premade:null};
+  const avatarSvg=renderAvatarSVG(av,80);
+  const w=window.open('','_blank','width=800,height=600');
+  w.document.write('<!DOCTYPE html><html><head><title>Certificate</title><style>'+
+    '*{margin:0;padding:0;box-sizing:border-box}'+
+    'body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#f0f0f0;font-family:Georgia,serif}'+
+    '.cert{width:700px;background:white;border:3px solid #1a3a4a;padding:40px;text-align:center;position:relative}'+
+    '.cert::before{content:"";position:absolute;inset:8px;border:2px solid #FFD93D;pointer-events:none}'+
+    '.cert-logo{width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 8px}'+
+    '.cert-school{font-size:14px;color:#888;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px}'+
+    '.cert-title{font-size:32px;color:#1a3a4a;margin-bottom:4px;font-style:italic}'+
+    '.cert-sub{font-size:14px;color:#888;margin-bottom:24px}'+
+    '.cert-avatar{margin:0 auto 16px}'+
+    '.cert-name{font-size:28px;color:#1a3a4a;border-bottom:2px solid #FFD93D;display:inline-block;padding-bottom:4px;margin-bottom:16px}'+
+    '.cert-detail{font-size:16px;color:#444;margin-bottom:4px}'+
+    '.cert-date{font-size:12px;color:#888;margin-top:20px}'+
+    '.cert-stars{font-size:28px;margin:12px 0;letter-spacing:8px}'+
+    '@media print{body{background:white}@page{margin:0.5in}}'+
+  '</style></head><body>'+
+    '<div class="cert">'+
+      '<img src="logo.jpg" class="cert-logo" alt="">'+
+      '<div class="cert-school">'+school+'</div>'+
+      '<div class="cert-title">Certificate of Achievement</div>'+
+      '<div class="cert-sub">This is to certify that</div>'+
+      '<div class="cert-avatar">'+avatarSvg+'</div>'+
+      '<div class="cert-name">'+name+'</div>'+
+      '<div class="cert-stars">\u2B50\u2B50\u2B50</div>'+
+      '<div class="cert-detail">'+title+'</div>'+
+      '<div class="cert-detail" style="color:#888">'+sub+'</div>'+
+      '<div class="cert-date">'+date+'</div>'+
+    '</div>'+
+  '</body></html>');
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
 
 // ==================== COINS (session only) ====================
 function addCoins(n){state.coins+=n;checkAch('coins_200',state.coins>=200);saveState();document.getElementById('coinCount').textContent=state.coins}
 function updateCoinDisplay(){document.getElementById('coinCount').textContent=state.coins}
+
+// ==================== POWER-UPS ====================
+const POWERUPS=[
+  {id:'extra_life',name:'Extra Life',desc:'+1 life in spelling',cost:15,icon:'\u2764\uFE0F',stackable:true},
+  {id:'reveal_letter',name:'Reveal Letter',desc:'Show one letter free',cost:10,icon:'\uD83D\uDCA1',stackable:true},
+  {id:'skip_question',name:'Skip Question',desc:'Skip without penalty',cost:20,icon:'\u23ED\uFE0F',stackable:true},
+  {id:'freeze_timer',name:'Freeze Timer',desc:'Pause timer for 5s',cost:25,icon:'\u2744\uFE0F',stackable:true},
+  {id:'double_coins',name:'Double Coins',desc:'2x coins next game',cost:30,icon:'\u2728',stackable:false},
+];
+function buyPowerup(id){
+  const pu=POWERUPS.find(p=>p.id===id);
+  if(!pu||state.coins<pu.cost)return;
+  state.coins-=pu.cost;
+  if(!state.powerups)state.powerups={};
+  state.powerups[id]=(state.powerups[id]||0)+1;
+  saveState();updateCoinDisplay();renderShop();sfxClick();
+}
+function usePowerup(id){
+  if(!state.powerups||!state.powerups[id]||state.powerups[id]<=0)return false;
+  state.powerups[id]--;
+  saveState();
+  return true;
+}
+function getPowerupCount(id){return(state.powerups&&state.powerups[id])||0}
+
 const REWARDS=[
 {id:'confetti_gold',name:'Gold Confetti',desc:'Golden celebration!',cost:50,type:'theme'},
 {id:'confetti_rainbow',name:'Rainbow Burst',desc:'Extra colourful!',cost:75,type:'theme'},
@@ -3399,7 +3471,7 @@ const REWARDS=[
 {id:'avatar_rainbow_hair',name:'Rainbow Hair',desc:'Magical rainbow hair',cost:80,type:'accessory'},
 {id:'celebrate_fireworks',name:'Fireworks',desc:'Fireworks on 3 stars!',cost:150,type:'theme'},
 ];
-function renderShop(){const c=document.getElementById('shopGrid');if(!c)return;c.innerHTML='';REWARDS.forEach(r=>{const owned=state.unlockedRewards&&state.unlockedRewards.includes(r.id);const canBuy=state.coins>=r.cost&&!owned;c.innerHTML+='<div class="shop-item'+(owned?' owned':'')+'"><div class="shop-icon">'+(r.type==='accessory'?'\u{1F451}':'\u{2728}')+'</div><div class="shop-name">'+r.name+'</div><div class="shop-desc">'+r.desc+'</div><div class="shop-cost">'+(owned?'\u2705 Owned':'\u{1FA99} '+r.cost)+'</div>'+(owned?'':'<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyReward(\''+r.id+'\','+r.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>')+'</div>'})}
+function renderShop(){const c=document.getElementById('shopGrid');if(!c)return;c.innerHTML='';REWARDS.forEach(r=>{const owned=state.unlockedRewards&&state.unlockedRewards.includes(r.id);const canBuy=state.coins>=r.cost&&!owned;c.innerHTML+='<div class="shop-item'+(owned?' owned':'')+'"><div class="shop-icon">'+(r.type==='accessory'?'\u{1F451}':'\u{2728}')+'</div><div class="shop-name">'+r.name+'</div><div class="shop-desc">'+r.desc+'</div><div class="shop-cost">'+(owned?'\u2705 Owned':'\u{1FA99} '+r.cost)+'</div>'+(owned?'':'<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyReward(\''+r.id+'\','+r.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>')+'</div>'});const pg=document.getElementById('powerupShopGrid');if(pg){pg.innerHTML='';POWERUPS.forEach(pu=>{const cnt=getPowerupCount(pu.id);const canBuy=state.coins>=pu.cost;pg.innerHTML+='<div class="shop-item"><div class="shop-icon">'+pu.icon+'</div><div class="shop-name">'+pu.name+'</div><div class="shop-desc">'+pu.desc+'</div><div class="shop-cost">\uD83E\uDE99 '+pu.cost+(cnt>0?' <span style="color:#27ae60;font-weight:700;">('+cnt+' owned)</span>':'')+'</div><button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyPowerup(\''+pu.id+'\')"'+(canBuy?'':' disabled')+'>Buy</button></div>'})}}
 function buyReward(id,cost){if(state.coins<cost||state.unlockedRewards.includes(id))return;state.coins-=cost;if(!state.unlockedRewards)state.unlockedRewards=[];state.unlockedRewards.push(id);saveState();updateCoinDisplay();renderShop();sfxLevelUp()}
 
 // ==================== INIT ====================
