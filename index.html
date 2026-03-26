@@ -45,80 +45,79 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .home-content{flex:1;padding:12px 20px 24px;position:relative;z-index:1}
 
 /* ===== SUBJECT CARDS ===== */
-.subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
-.subject-card{border-radius:16px;padding:16px 8px 14px;text-align:center;cursor:pointer;transition:transform 0.18s,box-shadow 0.18s;position:relative;overflow:hidden;user-select:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.subject-card:hover{box-shadow:0 8px 24px rgba(0,0,0,0.18);transform:translateY(-2px)}
-.subject-card:active{transform:scale(0.94);box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.subject-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.subject-card{border-radius:16px;padding:14px 14px;text-align:left;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;user-select:none;border:none;display:flex;flex-direction:row;align-items:center;gap:12px;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.05);border-left:4px solid #ddd}
+.subject-card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.1);transform:translateY(-2px)}
+.subject-card:active{transform:scale(0.97)}
 
-.subject-card .card-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white;background:rgba(255,255,255,0.25);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
-.subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.75rem;color:white;text-shadow:0 1px 3px rgba(0,0,0,0.12);line-height:1.2}
-.subject-card .card-desc{display:none}
-.subject-card::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.12),transparent);pointer-events:none}
-.subject-card::after{content:'';position:absolute;bottom:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.06)}
+.subject-card .card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white}
+.subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.8rem;color:#2d3436;line-height:1.2;display:block}
+.subject-card .card-desc{font-size:0.65rem;color:#8899aa;font-weight:600;margin-top:1px;display:block}
+.subject-card::before,.subject-card::after{display:none}
 
-.card-spelling{background:linear-gradient(135deg,#f7971e,#ffd200)}
-.card-spelling .card-icon{background:rgba(255,255,255,0.3)}
-.card-maths{background:linear-gradient(135deg,#00b4db,#0083b0)}
-.card-maths .card-icon{background:rgba(255,255,255,0.3)}
-.card-times{background:linear-gradient(135deg,#e44d26,#f16529)}
-.card-times .card-icon{background:rgba(255,255,255,0.3)}
-.card-reading{background:linear-gradient(135deg,#56ab2f,#a8e063)}
-.card-reading .card-icon{background:rgba(255,255,255,0.3)}
+.card-spelling{border-left-color:#f7971e}
+.card-spelling .card-icon{background:linear-gradient(135deg,#f7971e,#ffd200)}
+.card-maths{border-left-color:#00b4db}
+.card-maths .card-icon{background:linear-gradient(135deg,#00b4db,#0083b0)}
+.card-times{border-left-color:#e44d26}
+.card-times .card-icon{background:linear-gradient(135deg,#e44d26,#f16529)}
+.card-reading{border-left-color:#56ab2f}
+.card-reading .card-icon{background:linear-gradient(135deg,#56ab2f,#a8e063)}
 
-.card-speed{background:linear-gradient(135deg,#0984e3,#74b9ff)}
-.card-speed .card-icon{background:rgba(255,255,255,0.3)}
-.card-vowels{background:linear-gradient(135deg,#e84393,#fd79a8)}
-.card-vowels .card-icon{background:rgba(255,255,255,0.3)}
-.card-dictation{background:linear-gradient(135deg,#6a0572,#ab83a1)}
-.card-dictation .card-icon{background:rgba(255,255,255,0.3)}
-.card-anagram{background:linear-gradient(135deg,#c44569,#f78fb3)}
-.card-anagram .card-icon{background:rgba(255,255,255,0.3)}
-.card-phonics{background:linear-gradient(135deg,#0abde3,#48dbfb)}
-.card-phonics .card-icon{background:rgba(255,255,255,0.3)}
-.card-wordfam{background:linear-gradient(135deg,#8e44ad,#c39bd3)}
-.card-wordfam .card-icon{background:rgba(255,255,255,0.3)}
-.card-sentence{background:linear-gradient(135deg,#e55d87,#5fc3e4)}
-.card-sentence .card-icon{background:rgba(255,255,255,0.3)}
-.card-punctuation{background:linear-gradient(135deg,#ee5a24,#f0932b)}
-.card-punctuation .card-icon{background:rgba(255,255,255,0.3)}
-.card-vocab{background:linear-gradient(135deg,#4776e6,#8e54e9)}
-.card-vocab .card-icon{background:rgba(255,255,255,0.3)}
-.card-missnum{background:linear-gradient(135deg,#134e5e,#71b280)}
-.card-missnum .card-icon{background:rgba(255,255,255,0.3)}
-.card-placeval{background:linear-gradient(135deg,#f46b45,#eea849)}
-.card-placeval .card-icon{background:rgba(255,255,255,0.3)}
-.card-time{background:linear-gradient(135deg,#2c3e50,#3498db)}
-.card-time .card-icon{background:rgba(255,255,255,0.3)}
-.card-money{background:linear-gradient(135deg,#1a5276,#2ecc71)}
-.card-money .card-icon{background:rgba(255,255,255,0.3)}
-.card-fractions{background:linear-gradient(135deg,#ee9ca7,#ffdde1)}
-.card-fractions .card-icon{background:rgba(255,255,255,0.3);color:#c0392b!important}
-.card-wordprob{background:linear-gradient(135deg,#373b44,#4286f4)}
-.card-wordprob .card-icon{background:rgba(255,255,255,0.3)}
-.card-shapes{background:linear-gradient(135deg,#6c5ce7,#fd79a8)}
-.card-shapes .card-icon{background:rgba(255,255,255,0.3)}
-.card-data{background:linear-gradient(135deg,#00b894,#55efc4)}
-.card-data .card-icon{background:rgba(255,255,255,0.3)}
-.card-capitals{background:linear-gradient(135deg,#2d6a4f,#52b788)}
-.card-capitals .card-icon{background:rgba(255,255,255,0.3)}
-.card-continents{background:linear-gradient(135deg,#264653,#2a9d8f)}
-.card-continents .card-icon{background:rgba(255,255,255,0.3)}
-.card-weather{background:linear-gradient(135deg,#457b9d,#a8dadc)}
-.card-weather .card-icon{background:rgba(255,255,255,0.3)}
-.card-compass{background:linear-gradient(135deg,#9b2226,#ca6702)}
-.card-compass .card-icon{background:rgba(255,255,255,0.3)}
-.card-flags{background:linear-gradient(135deg,#003049,#669bbc)}
-.card-flags .card-icon{background:rgba(255,255,255,0.3)}
-.card-h2h{background:linear-gradient(135deg,#d63031,#e17055)}
-.card-h2h .card-icon{background:rgba(255,255,255,0.3)}
+.card-speed{border-left-color:#0984e3}
+.card-speed .card-icon{background:linear-gradient(135deg,#0984e3,#74b9ff)}
+.card-vowels{border-left-color:#e84393}
+.card-vowels .card-icon{background:linear-gradient(135deg,#e84393,#fd79a8)}
+.card-dictation{border-left-color:#6a0572}
+.card-dictation .card-icon{background:linear-gradient(135deg,#6a0572,#ab83a1)}
+.card-anagram{border-left-color:#c44569}
+.card-anagram .card-icon{background:linear-gradient(135deg,#c44569,#f78fb3)}
+.card-phonics{border-left-color:#0abde3}
+.card-phonics .card-icon{background:linear-gradient(135deg,#0abde3,#48dbfb)}
+.card-wordfam{border-left-color:#8e44ad}
+.card-wordfam .card-icon{background:linear-gradient(135deg,#8e44ad,#c39bd3)}
+.card-sentence{border-left-color:#e55d87}
+.card-sentence .card-icon{background:linear-gradient(135deg,#e55d87,#5fc3e4)}
+.card-punctuation{border-left-color:#ee5a24}
+.card-punctuation .card-icon{background:linear-gradient(135deg,#ee5a24,#f0932b)}
+.card-vocab{border-left-color:#4776e6}
+.card-vocab .card-icon{background:linear-gradient(135deg,#4776e6,#8e54e9)}
+.card-missnum{border-left-color:#134e5e}
+.card-missnum .card-icon{background:linear-gradient(135deg,#134e5e,#71b280)}
+.card-placeval{border-left-color:#f46b45}
+.card-placeval .card-icon{background:linear-gradient(135deg,#f46b45,#eea849)}
+.card-time{border-left-color:#2c3e50}
+.card-time .card-icon{background:linear-gradient(135deg,#2c3e50,#3498db)}
+.card-money{border-left-color:#1a5276}
+.card-money .card-icon{background:linear-gradient(135deg,#1a5276,#2ecc71)}
+.card-fractions{border-left-color:#ee9ca7}
+.card-fractions .card-icon{background:linear-gradient(135deg,#ee9ca7,#ffdde1);color:#c0392b!important}
+.card-wordprob{border-left-color:#373b44}
+.card-wordprob .card-icon{background:linear-gradient(135deg,#373b44,#4286f4)}
+.card-shapes{border-left-color:#6c5ce7}
+.card-shapes .card-icon{background:linear-gradient(135deg,#6c5ce7,#fd79a8)}
+.card-data{border-left-color:#00b894}
+.card-data .card-icon{background:linear-gradient(135deg,#00b894,#55efc4)}
+.card-capitals{border-left-color:#2d6a4f}
+.card-capitals .card-icon{background:linear-gradient(135deg,#2d6a4f,#52b788)}
+.card-continents{border-left-color:#264653}
+.card-continents .card-icon{background:linear-gradient(135deg,#264653,#2a9d8f)}
+.card-weather{border-left-color:#457b9d}
+.card-weather .card-icon{background:linear-gradient(135deg,#457b9d,#a8dadc)}
+.card-compass{border-left-color:#9b2226}
+.card-compass .card-icon{background:linear-gradient(135deg,#9b2226,#ca6702)}
+.card-flags{border-left-color:#003049}
+.card-flags .card-icon{background:linear-gradient(135deg,#003049,#669bbc)}
+.card-h2h{border-left-color:#d63031}
+.card-h2h .card-icon{background:linear-gradient(135deg,#d63031,#e17055)}
 
 /* ===== SHAPES ===== */
 .shape-display{text-align:center;margin:16px 0}
 .shape-display svg{max-width:200px;max-height:150px;margin:0 auto;display:block}
 
 /* ===== MEMORY MATCH ===== */
-.card-memory{background:linear-gradient(135deg,#e056a0,#f78fb3)}
-.card-memory .card-icon{background:rgba(255,255,255,0.3)}
+.card-memory{border-left-color:#e056a0}
+.card-memory .card-icon{background:linear-gradient(135deg,#e056a0,#f78fb3)}
 .mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:320px;margin:16px auto}
 .mem-card{aspect-ratio:1;border-radius:12px;cursor:pointer;transition:transform 0.3s;position:relative;transform-style:preserve-3d}
 .mem-card.flipped{transform:rotateY(180deg)}
@@ -128,33 +127,33 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .mem-back{background:white;border:3px solid #f0f0f0;color:#2d3436;transform:rotateY(180deg)}
 
 /* ===== GRAMMAR ===== */
-.card-grammar{background:linear-gradient(135deg,#636e72,#b2bec3)}
-.card-grammar .card-icon{background:rgba(255,255,255,0.3)}
+.card-grammar{border-left-color:#636e72}
+.card-grammar .card-icon{background:linear-gradient(135deg,#636e72,#b2bec3)}
 
 /* ===== SPELLING BEE ===== */
-.card-bee{background:linear-gradient(135deg,#fdcb6e,#f7971e)}
-.card-bee .card-icon{background:rgba(255,255,255,0.3)}
+.card-bee{border-left-color:#fdcb6e}
+.card-bee .card-icon{background:linear-gradient(135deg,#fdcb6e,#f7971e)}
 .bee-lives{text-align:center;font-size:1.5rem;margin:8px 0;letter-spacing:4px}
 
 /* ===== RHYMING ===== */
-.card-rhyme{background:linear-gradient(135deg,#a29bfe,#6c5ce7)}
-.card-rhyme .card-icon{background:rgba(255,255,255,0.3)}
+.card-rhyme{border-left-color:#a29bfe}
+.card-rhyme .card-icon{background:linear-gradient(135deg,#a29bfe,#6c5ce7)}
 
 /* ===== MEASUREMENT ===== */
-.card-measure{background:linear-gradient(135deg,#0984e3,#74b9ff)}
-.card-measure .card-icon{background:rgba(255,255,255,0.3)}
+.card-measure{border-left-color:#0984e3}
+.card-measure .card-icon{background:linear-gradient(135deg,#0984e3,#74b9ff)}
 
 /* ===== SEQUENCES ===== */
-.card-sequence{background:linear-gradient(135deg,#00cec9,#81ecec)}
-.card-sequence .card-icon{background:rgba(255,255,255,0.3)}
+.card-sequence{border-left-color:#00cec9}
+.card-sequence .card-icon{background:linear-gradient(135deg,#00cec9,#81ecec)}
 
 /* ===== SCOTTISH QUIZ ===== */
-.card-scotquiz{background:linear-gradient(135deg,#005EB8,#0084C8)}
-.card-scotquiz .card-icon{background:rgba(255,255,255,0.3)}
+.card-scotquiz{border-left-color:#005EB8}
+.card-scotquiz .card-icon{background:linear-gradient(135deg,#005EB8,#0084C8)}
 
 /* ===== TYPING ===== */
-.card-typing{background:linear-gradient(135deg,#2d3436,#636e72)}
-.card-typing .card-icon{background:rgba(255,255,255,0.3)}
+.card-typing{border-left-color:#2d3436}
+.card-typing .card-icon{background:linear-gradient(135deg,#2d3436,#636e72)}
 .typing-word{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.5rem;text-align:center;margin:20px 0;color:#2d3436;letter-spacing:4px}
 .typing-input{width:100%;max-width:300px;margin:0 auto;display:block;padding:14px;font-size:1.3rem;border:3px solid #e0e0e0;border-radius:12px;text-align:center;font-family:'Fredoka One','Comic Sans MS',cursive;outline:none}
 .typing-input:focus{border-color:#636e72}
@@ -164,8 +163,8 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .typing-stat .ts-lbl{font-size:0.7rem;color:#b2bec3;font-weight:700}
 
 /* ===== QUIZ BUILDER ===== */
-.card-custom{background:linear-gradient(135deg,#e17055,#fab1a0)}
-.card-custom .card-icon{background:rgba(255,255,255,0.3)}
+.card-custom{border-left-color:#e17055}
+.card-custom .card-icon{background:linear-gradient(135deg,#e17055,#fab1a0)}
 
 /* ===== DATA HANDLING ===== */
 .chart-bar{display:flex;align-items:flex-end;gap:8px;justify-content:center;height:150px;margin:16px 0;padding:0 8px}
@@ -232,8 +231,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .avatar-stage{text-align:center;padding:20px 0;position:relative}
 
 /* ===== GAME SELECTION BACKGROUND ===== */
-.home-bg{background:#fafbfe;position:relative}
-.home-bg::before{content:'';position:absolute;top:0;left:0;right:0;height:160px;background:linear-gradient(180deg,#f0f4ff 0%,#fafbfe 100%);pointer-events:none}
+.home-bg{background:#f2f3f8;position:relative}
+.home-bg::before{content:'';position:absolute;top:0;left:0;right:0;height:200px;background:linear-gradient(180deg,#e8ecf4 0%,#f2f3f8 100%);pointer-events:none}
 .home-bg::after{content:none}
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .home-bg-animated{background:#fafbfe}
@@ -349,7 +348,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .stat-card .sc-val{font-size:1.8rem;font-weight:800;color:#1a2332;display:block}
 .stat-card .sc-label{font-size:0.7rem;color:#8899aa;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
 
-.card-daily{background:linear-gradient(135deg,#6c5ce7,#a29bfe);grid-column:1/-1;flex-direction:row;gap:10px;padding:14px 16px}
+.card-daily{border-left-color:#6c5ce7;grid-column:1/-1;padding:16px}
+.card-daily .card-icon{background:linear-gradient(135deg,#6c5ce7,#a29bfe)}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
 
@@ -373,8 +373,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .op-row.bad{background:#fff0ed;color:#e17055}
 
 /* ===== NUMBER BONDS ===== */
-.card-bonds{background:linear-gradient(135deg,#11998e,#38ef7d)}
-.card-bonds .card-icon{background:rgba(255,255,255,0.3)}
+.card-bonds{border-left-color:#11998e}
+.card-bonds .card-icon{background:linear-gradient(135deg,#11998e,#38ef7d)}
 .nb-equation{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.4rem;color:#2d3436;text-align:center;margin:16px 0;line-height:1.4}
 .nb-equation .nb-blank{display:inline-block;min-width:50px;border-bottom:4px solid #11998e;color:#11998e;margin:0 4px}
 .nb-ans{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.8rem;text-align:center;min-height:56px;margin:8px 0;color:#11998e;transition:color 0.15s}
@@ -558,7 +558,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .progress-text{font-size:0.75rem;color:#b2bec3;text-align:center;font-weight:700}
 
 /* ===== LEVEL SELECT ===== */
-.level-select-wrap{display:flex!important;flex-direction:column;justify-content:center;align-items:center;min-height:calc(100vh - 120px);padding:0 4px}
+.level-select-wrap{flex-direction:column;justify-content:center;align-items:center;min-height:calc(100vh - 120px);padding:0 4px}
 .level-select-wrap p{font-size:0.95rem;color:#636e72;margin-bottom:16px;text-align:center}
 .level-cards{display:flex;gap:14px;margin:0 auto;padding:0 4px;max-width:400px;width:100%}
 .level-card{flex:1;background:white;border:3px solid #f0f0f0;border-radius:20px;padding:24px 12px 20px;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(0,0,0,0.06)}
@@ -3010,7 +3010,7 @@ function lighten(hex){return hex+'99'}
 // ==================== UTILITIES ====================
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
-function show(id){document.getElementById(id).style.display=''}
+function show(id){const el=document.getElementById(id);el.style.display=el.classList.contains('level-select-wrap')?'flex':''}
 function hide(id){document.getElementById(id).style.display='none'}
 
 // ==================== KEYBOARD ====================
