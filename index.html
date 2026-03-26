@@ -33,10 +33,10 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 
 .home-header{padding:16px 20px 6px;position:relative;z-index:1}
 .home-header-bar{display:flex;align-items:center;gap:12px;width:100%}
-.home-logo-sm{width:56px;height:56px;border-radius:14px;object-fit:cover;border:2px solid white;box-shadow:0 2px 12px rgba(0,0,0,0.08);flex-shrink:0;image-rendering:auto}
+.home-logo-sm{width:56px;height:56px;border-radius:14px;object-fit:cover;border:2px solid rgba(255,255,255,0.2);box-shadow:0 4px 16px rgba(0,0,0,0.2);flex-shrink:0;image-rendering:auto}
 .home-brand{flex:1;text-align:left}
-.home-brand-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;background:linear-gradient(135deg,#264653,#45B7D1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15}
-.home-brand-school{font-size:0.65rem;color:#8899aa;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.home-brand-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:white;line-height:1.15}
+.home-brand-school{font-size:0.65rem;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
 .logo-img{width:120px;height:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.1));animation:floatLogo 3s ease-in-out infinite}
 @keyframes floatLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .classmates-text{font-family:'Dancing Script','Georgia',cursive;font-size:2.8rem;color:#c0392b;line-height:1;margin:4px 0;display:none}
@@ -46,13 +46,13 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 
 /* ===== SUBJECT CARDS ===== */
 .subject-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
-.subject-card{border-radius:16px;padding:14px 14px;text-align:left;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;user-select:none;border:none;display:flex;flex-direction:row;align-items:center;gap:12px;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.05);border-left:4px solid #ddd}
-.subject-card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.1);transform:translateY(-2px)}
+.subject-card{border-radius:16px;padding:14px 14px;text-align:left;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;user-select:none;border:none;display:flex;flex-direction:row;align-items:center;gap:12px;background:rgba(255,255,255,0.07);box-shadow:0 2px 8px rgba(0,0,0,0.1);border-left:4px solid rgba(255,255,255,0.15);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.subject-card:hover{box-shadow:0 8px 24px rgba(0,0,0,0.2);transform:translateY(-2px);background:rgba(255,255,255,0.12)}
 .subject-card:active{transform:scale(0.97)}
 
 .subject-card .card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:white}
-.subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.8rem;color:#2d3436;line-height:1.2;display:block}
-.subject-card .card-desc{font-size:0.65rem;color:#8899aa;font-weight:600;margin-top:1px;display:block}
+.subject-card .card-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.8rem;color:white;line-height:1.2;display:block}
+.subject-card .card-desc{font-size:0.65rem;color:rgba(255,255,255,0.45);font-weight:600;margin-top:1px;display:block}
 .subject-card::before,.subject-card::after{display:none}
 
 .card-spelling{border-left-color:#f7971e}
@@ -186,11 +186,11 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 .h2h-winner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.95);z-index:5}
 .h2h-winner-text{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;text-align:center;animation:popIn 0.5s ease}
 
-.coin-display-home{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#fffbeb,#fff8e6);border:2px solid #F0A500;border-radius:20px;padding:4px 14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#c48800;box-shadow:0 1px 4px rgba(240,165,0,0.12)}
-.mute-btn{background:none;border:2px solid #e0e0e0;border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:#636e72;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:8px}
+.coin-display-home{display:inline-flex;align-items:center;gap:4px;background:rgba(240,165,0,0.15);border:2px solid rgba(240,165,0,0.3);border-radius:20px;padding:4px 14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#FFD93D}
+.mute-btn{background:none;border:2px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:rgba(255,255,255,0.6);font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:8px}
 .mute-btn:hover{border-color:#11998e}
 .mute-btn.muted{background:#fff0ed;border-color:#e17055;color:#e17055}
-.dyslexia-btn{background:none;border:2px solid #e0e0e0;border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:#636e72;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:4px}
+.dyslexia-btn{background:none;border:2px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem;cursor:pointer;color:rgba(255,255,255,0.6);font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;transition:all 0.15s;margin-left:4px}
 .dyslexia-btn:hover{border-color:#11998e}
 .progress-map{margin:16px 0}
 .progress-map-title{text-align:center;font-size:0.85rem;color:#636e72;margin-bottom:8px}
@@ -231,11 +231,11 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .avatar-stage{text-align:center;padding:20px 0;position:relative}
 
 /* ===== GAME SELECTION BACKGROUND ===== */
-.home-bg{background:#f2f3f8;position:relative}
-.home-bg::before{content:'';position:absolute;top:0;left:0;right:0;height:200px;background:linear-gradient(180deg,#e8ecf4 0%,#f2f3f8 100%);pointer-events:none}
-.home-bg::after{content:none}
+.home-bg{background:linear-gradient(170deg,#1a2332 0%,#243342 30%,#2d4050 60%,#354a5c 100%);position:relative;color:white}
+.home-bg::before{content:'';position:absolute;top:-50px;left:-30px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,217,61,0.08),transparent 70%);border-radius:50%;pointer-events:none}
+.home-bg::after{content:'';position:absolute;bottom:0;right:-30px;width:200px;height:200px;background:radial-gradient(circle,rgba(69,183,209,0.06),transparent 70%);border-radius:50%;pointer-events:none}
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.home-bg-animated{background:#fafbfe}
+.home-bg-animated{background:none}
 
 /* ===== WHITEBOARD MODE ===== */
 .wb-screen{background:#1a1a2e;color:white}
@@ -294,9 +294,9 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 /* ===== SECTION HEADERS ===== */
 .section-header{display:flex;align-items:center;gap:10px;margin:22px 0 12px;padding-bottom:8px;position:relative;cursor:pointer;user-select:none}
-.section-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#e4e8ec,transparent);border-radius:2px}
-.section-header span{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#264653;text-transform:uppercase;letter-spacing:2px}
-.section-header .collapse-arrow{margin-left:auto;font-size:0.7rem;color:#b2bec3;transition:transform 0.2s}
+.section-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.1),transparent);border-radius:2px}
+.section-header span{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:2px}
+.section-header .collapse-arrow{margin-left:auto;font-size:0.7rem;color:rgba(255,255,255,0.3);transition:transform 0.2s}
 .section-header.collapsed .collapse-arrow{transform:rotate(-90deg)}
 .subject-grid.collapsed{display:none}
 .pupil-name-bar{text-align:center;font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:4px}
@@ -495,10 +495,10 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .dict-repeat:active{transform:scale(0.97)}
 
 /* ===== STATS BAR ===== */
-.stats-bar{display:flex;justify-content:space-around;background:white;border-radius:16px;padding:12px 8px;margin:12px 0 6px;box-shadow:0 1px 4px rgba(0,0,0,0.04);border:1px solid #f0f0f0}
+.stats-bar{display:flex;justify-content:space-around;background:rgba(255,255,255,0.06);border-radius:16px;padding:12px 8px;margin:12px 0 6px;border:1px solid rgba(255,255,255,0.08)}
 .stat-item{text-align:center}
-.stat-val{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#6c5ce7;display:block}
-.stat-lbl{font-size:0.65rem;color:#b2bec3;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+.stat-val{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#FFD93D;display:block}
+.stat-lbl{font-size:0.65rem;color:rgba(255,255,255,0.4);font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
 
 /* ===== REWARD SHOP ===== */
 .shop-section{margin:16px 0}
@@ -527,21 +527,27 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 @keyframes badgePop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
 /* ===== GAME SCREENS ===== */
-.game-screen{background:#f8f9fc;position:relative}
-.game-screen::after{content:'';position:absolute;bottom:0;left:0;right:0;top:0;background:radial-gradient(ellipse at 20% 80%,rgba(108,92,231,0.03),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(240,165,0,0.03),transparent 50%);pointer-events:none;z-index:0}
+.game-screen{background:linear-gradient(170deg,#2d3436 0%,#3d4f5f 40%,#4a6572 100%);position:relative;color:#fff}
+.game-screen::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(255,217,61,0.06),transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(69,183,209,0.06),transparent 50%);pointer-events:none;z-index:0}
 .game-screen>*{position:relative;z-index:1}
-.game-screen.cat-literacy{background:linear-gradient(160deg,#fff8f0 0%,#fef5ec 30%,#fffaf5 60%,#fdf8f3 100%)}
-.game-screen.cat-numeracy{background:linear-gradient(160deg,#eef5ff 0%,#f0f6ff 30%,#f5f9ff 60%,#f3f7fd 100%)}
-.game-screen.cat-geography{background:linear-gradient(160deg,#eefbf2 0%,#f0fdf4 30%,#f5fdf8 60%,#f2fbf5 100%)}
-.game-screen.cat-challenge{background:linear-gradient(160deg,#f3eeff 0%,#f5f0ff 30%,#f8f5ff 60%,#f5f2fd 100%)}
-.game-header{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:none;background:white;position:sticky;top:0;z-index:10;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
-.nav-btn{height:42px;border-radius:12px;border:none;background:#f0f2f5;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:all 0.15s;color:#636e72;padding:0 14px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800}
-.nav-btn:hover{background:#e4e7eb}
-.nav-btn:active{transform:scale(0.95);background:#d8dbe0}
-.nav-btn.home-btn{background:linear-gradient(135deg,#e8fff5,#d0ffe8);color:#11998e}
-.nav-btn.home-btn:hover{background:#c0ffd8}
-.back-btn{height:42px;border-radius:12px;border:none;background:#f0f2f5;font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:all 0.15s;color:#636e72;padding:0 14px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800}
-.back-btn:hover{background:#e4e7eb}
+.game-screen.cat-literacy{background:linear-gradient(170deg,#3d2c1e 0%,#5c3d2e 30%,#8b5e3c 60%,#c4956a 100%)}
+.game-screen.cat-numeracy{background:linear-gradient(170deg,#1a2f4a 0%,#1e4068 30%,#2a6496 60%,#3d8bc9 100%)}
+.game-screen.cat-geography{background:linear-gradient(170deg,#1a3a2a 0%,#2d5a3e 30%,#3d8b5e 60%,#5cb87a 100%)}
+.game-screen.cat-challenge{background:linear-gradient(170deg,#2a1f4e 0%,#3d2d6b 30%,#5c4e8a 60%,#8b7ab8 100%)}
+.game-header{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:none;background:rgba(0,0,0,0.2);position:sticky;top:0;z-index:10;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.game-title{font-size:1.1rem;flex:1;color:white}
+.game-body{flex:1;padding:20px;max-width:600px;margin:0 auto;width:100%;display:flex;flex-direction:column}
+.game-body-center{flex:1;display:flex;flex-direction:column;justify-content:center}
+.game-screen .progress-text{color:rgba(255,255,255,0.7)}
+.game-screen .q-text{color:white}
+.game-screen p,.game-screen label{color:rgba(255,255,255,0.85)}
+.nav-btn{height:42px;border-radius:12px;border:none;background:rgba(255,255,255,0.15);font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:all 0.15s;color:rgba(255,255,255,0.85);padding:0 14px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.nav-btn:hover{background:rgba(255,255,255,0.25)}
+.nav-btn:active{transform:scale(0.95);background:rgba(255,255,255,0.1)}
+.nav-btn.home-btn{background:rgba(17,153,142,0.3);color:#38ef7d}
+.nav-btn.home-btn:hover{background:rgba(17,153,142,0.45)}
+.back-btn{height:42px;border-radius:12px;border:none;background:rgba(255,255,255,0.15);font-size:0.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;transition:all 0.15s;color:rgba(255,255,255,0.85);padding:0 14px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.back-btn:hover{background:rgba(255,255,255,0.25)}
 .back-btn:active{transform:scale(0.95)}
 .game-title{font-size:1.1rem;flex:1}
 .game-body{flex:1;padding:20px;max-width:600px;margin:0 auto;width:100%;display:flex;flex-direction:column}
@@ -560,24 +566,24 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 /* ===== LEVEL SELECT ===== */
 .level-select-wrap{flex-direction:column;justify-content:center;align-items:center;min-height:calc(100vh - 120px);padding:0 4px}
-.level-select-wrap p{font-size:0.95rem;color:#636e72;margin-bottom:16px;text-align:center}
+.level-select-wrap p{font-size:0.95rem;color:rgba(255,255,255,0.7);margin-bottom:16px;text-align:center}
 .level-cards{display:flex;gap:14px;margin:0 auto;padding:0 4px;max-width:400px;width:100%}
-.level-card{flex:1;background:white;border:3px solid #f0f0f0;border-radius:20px;padding:24px 12px 20px;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 16px rgba(0,0,0,0.06)}
-.level-card:hover{border-color:#6c5ce7;transform:translateY(-6px);box-shadow:0 16px 36px rgba(108,92,231,0.2)}
+.level-card{flex:1;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.15);border-radius:20px;padding:24px 12px 20px;text-align:center;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px rgba(0,0,0,0.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.level-card:hover{border-color:rgba(255,255,255,0.4);transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,0.25)}
 .level-card:active{transform:scale(0.95)}
 .level-select-tip{text-align:center;margin-top:24px;font-size:0.75rem;color:#b2bec3;font-weight:600}
 .level-card .lc-icon{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-family:'Fredoka One','Comic Sans MS',cursive;color:white}
 .lc-1 .lc-icon{background:linear-gradient(135deg,#fdcb6e,#f7971e)}
 .lc-2 .lc-icon{background:linear-gradient(135deg,#74b9ff,#0984e3)}
 .lc-3 .lc-icon{background:linear-gradient(135deg,#e17055,#d63031)}
-.level-card .lc-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;color:#2d3436}
-.level-card .lc-sub{font-size:0.7rem;color:#b2bec3;font-weight:600;margin-top:2px}
+.level-card .lc-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;color:white}
+.level-card .lc-sub{font-size:0.7rem;color:rgba(255,255,255,0.5);font-weight:600;margin-top:2px}
 .level-card .lc-recommended{display:inline-block;background:linear-gradient(135deg,#11998e,#38ef7d);color:white;font-size:0.55rem;font-weight:800;padding:2px 8px;border-radius:8px;margin-top:6px;letter-spacing:0.5px;text-transform:uppercase}
-.level-card.recommended{border-color:#11998e;box-shadow:0 0 0 2px rgba(17,153,142,0.15)}
+.level-card.recommended{border-color:#38ef7d;box-shadow:0 0 0 2px rgba(56,239,125,0.2),0 4px 20px rgba(0,0,0,0.15)}
 
 /* ===== SPELLING ===== */
 .spell-display{text-align:center;padding:16px 0}
-.spell-clue{font-size:0.9rem;color:#636e72;margin-bottom:6px;min-height:24px;font-weight:600}
+.spell-clue{font-size:0.9rem;color:rgba(255,255,255,0.7);margin-bottom:6px;min-height:24px;font-weight:600}
 .spell-picture{width:120px;height:120px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff9e6,#fff3cc);border:4px solid #ffeaa7;box-shadow:0 4px 15px rgba(253,203,110,0.3);padding:16px}
 .spell-picture svg{width:80px;height:80px}
 .daily-box svg{width:64px;height:64px;display:block;margin:0 auto}
@@ -607,8 +613,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 
 /* ===== MATHS ===== */
 .maths-display{text-align:center;padding:20px 0}
-.maths-q{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.4rem;color:#2d3436;margin:16px 0}
-.maths-ans{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3rem;color:#0984e3;min-height:60px;margin:12px 0}
+.maths-q{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2.4rem;color:white;margin:16px 0}
+.maths-ans{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3rem;color:#FFD93D;min-height:60px;margin:12px 0}
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:280px;margin:16px auto;padding:14px;background:white;border-radius:20px;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
 .num-key{height:58px;border-radius:14px;border:none;background:linear-gradient(180deg,#f5f5f5,#e8e8e8);font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#2d3436;cursor:pointer;transition:all 0.1s;box-shadow:0 3px 0 #d0d0d0}
 .num-key:active{transform:translateY(3px);box-shadow:none}
@@ -671,11 +677,11 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .ds-blue{background:linear-gradient(135deg,#0984e3,#74b9ff);box-shadow:0 4px 0 #065a9e}
 
 /* ===== RESULTS ===== */
-.results-screen{background:linear-gradient(180deg,#f5f0ff 0%,#f0f4ff 30%,#fffcf5 70%,#fff 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
-.results-screen::before{content:'';position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(108,92,231,0.06),transparent 70%);border-radius:50%;pointer-events:none}
+.results-screen{background:linear-gradient(170deg,#1a1a2e 0%,#2d2b55 40%,#3d3a6e 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden;color:white}
+.results-screen::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(108,92,231,0.15),transparent 60%);border-radius:50%;pointer-events:none}
 .results-icon{width:100px;height:100px;border-radius:28px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-family:'Fredoka One','Comic Sans MS',cursive;color:white;animation:popIn 0.5s ease;box-shadow:0 12px 36px rgba(0,0,0,0.15),inset 0 -2px 0 rgba(0,0,0,0.1)}
-.results-title{font-size:1.8rem;margin-bottom:4px}
-.results-sub{color:#636e72;font-size:0.95rem}
+.results-title{font-size:1.8rem;margin-bottom:4px;color:white}
+.results-sub{color:rgba(255,255,255,0.6);font-size:0.95rem}
 .star-row{margin:20px 0;display:flex;justify-content:center;gap:12px}
 .star{width:48px;height:48px}
 .star svg{width:100%;height:100%}
@@ -684,13 +690,13 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .star.earned{animation:starBounce 0.5s ease}
 @keyframes starBounce{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
 .results-stats{display:flex;justify-content:center;gap:32px;margin:20px 0}
-.rs-item .rs-num{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;color:#6c5ce7}
-.rs-item .rs-lbl{font-size:0.75rem;color:#b2bec3;font-weight:700}
+.rs-item .rs-num{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;color:#FFD93D}
+.rs-item .rs-lbl{font-size:0.75rem;color:rgba(255,255,255,0.5);font-weight:700}
 .results-btns{display:flex;gap:12px;justify-content:center;margin-top:24px}
 .r-btn{padding:14px 28px;border:none;border-radius:14px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;cursor:pointer;transition:all 0.15s}
 .r-btn:active{transform:scale(0.97)}
-.r-btn-primary{background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:white;box-shadow:0 4px 0 #5a4bd1}
-.r-btn-ghost{background:white;color:#6c5ce7;border:2px solid #f0f0f0}
+.r-btn-primary{background:linear-gradient(135deg,#FFD93D,#F0A500);color:#1a1a2e;box-shadow:0 4px 0 #c48800,0 6px 20px rgba(240,165,0,0.3)}
+.r-btn-ghost{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:2px solid rgba(255,255,255,0.15)}
 
 /* ===== ANIMATIONS ===== */
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
