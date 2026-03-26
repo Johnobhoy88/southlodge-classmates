@@ -33,10 +33,10 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:#2d3436}
 
 .home-header{padding:16px 20px 6px;position:relative;z-index:1}
 .home-header-bar{display:flex;align-items:center;gap:12px;width:100%}
-.home-logo-sm{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.08);flex-shrink:0}
+.home-logo-sm{width:56px;height:56px;border-radius:14px;object-fit:cover;border:2px solid white;box-shadow:0 2px 12px rgba(0,0,0,0.08);flex-shrink:0;image-rendering:auto}
 .home-brand{flex:1;text-align:left}
-.home-brand-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.3rem;background:linear-gradient(135deg,#264653,#45B7D1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
-.home-brand-school{font-size:0.6rem;color:#8899aa;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.home-brand-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;background:linear-gradient(135deg,#264653,#45B7D1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.15}
+.home-brand-school{font-size:0.65rem;color:#8899aa;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
 .logo-img{width:120px;height:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.1));animation:floatLogo 3s ease-in-out infinite}
 @keyframes floatLogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .classmates-text{font-family:'Dancing Script','Georgia',cursive;font-size:2.8rem;color:#c0392b;line-height:1;margin:4px 0;display:none}
@@ -255,26 +255,27 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 @media(max-width:500px){.wb-question{font-size:2.5rem}.wb-answer{font-size:3.5rem}}
 
 /* ===== LANDING PAGE ===== */
-.landing-bg{background:linear-gradient(165deg,#fdf8f0 0%,#f0f7ff 35%,#e8f4f8 65%,#fff9f0 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
-.landing-bg::before{content:'';position:absolute;top:-20%;left:-10%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(240,165,0,0.08),transparent 70%);border-radius:50%;pointer-events:none}
-.landing-bg::after{content:'';position:absolute;bottom:-15%;right:-10%;width:55%;height:55%;background:radial-gradient(ellipse,rgba(69,183,209,0.08),transparent 70%);border-radius:50%;pointer-events:none}
+.landing-bg{background:linear-gradient(170deg,#1a3a4a 0%,#1f5066 25%,#2a7c8e 50%,#45B7D1 80%,#78d4e6 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
+.landing-bg::before{content:'';position:absolute;top:-15%;left:-15%;width:70%;height:70%;background:radial-gradient(ellipse,rgba(255,217,61,0.12),transparent 60%);border-radius:50%;pointer-events:none;animation:glowDrift 8s ease-in-out infinite alternate}
+.landing-bg::after{content:'';position:absolute;bottom:-10%;right:-15%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(255,255,255,0.06),transparent 60%);border-radius:50%;pointer-events:none}
+@keyframes glowDrift{0%{transform:translate(0,0)}100%{transform:translate(30px,20px)}}
 .landing-brand{position:relative;z-index:1}
-.landing-logo-wrap{position:relative;display:inline-block;margin-bottom:8px}
-.landing-logo{width:240px;height:240px;border-radius:50%;object-fit:cover;border:5px solid white;box-shadow:0 12px 40px rgba(0,0,0,0.12),0 0 0 1px rgba(255,255,255,0.8);animation:floatLogo 4s ease-in-out infinite;display:block}
-.landing-logo-glow{position:absolute;inset:-30px;border-radius:50%;background:radial-gradient(circle,rgba(240,165,0,0.15) 0%,rgba(69,183,209,0.1) 50%,transparent 70%);z-index:-1;animation:glowPulse 4s ease-in-out infinite}
-@keyframes glowPulse{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.1);opacity:1}}
-.landing-divider{width:70px;height:3px;background:linear-gradient(90deg,#F0A500,#FFD93D,#45B7D1);border-radius:3px;margin:4px auto 8px}
-.landing-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.2rem;margin:0 0 4px;letter-spacing:-0.5px;background:linear-gradient(135deg,#1a4a5c 0%,#1f7a6e 35%,#45B7D1 70%,#4ECDC4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.05))}
-.landing-school{font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.78rem;font-weight:700;color:#8899aa;letter-spacing:3.5px;text-transform:uppercase;margin-bottom:32px}
-.landing-sub{font-size:0.95rem;color:#7f8c8d;margin-bottom:24px;display:none}
+.landing-logo-wrap{position:relative;display:inline-block;margin-bottom:12px}
+.landing-logo{width:220px;height:220px;border-radius:50%;object-fit:cover;border:5px solid rgba(255,255,255,0.9);box-shadow:0 16px 48px rgba(0,0,0,0.25),0 0 0 12px rgba(255,255,255,0.08);animation:floatLogo 4s ease-in-out infinite;display:block}
+.landing-logo-glow{position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(255,217,61,0.2) 0%,rgba(255,255,255,0.05) 50%,transparent 70%);z-index:-1;animation:glowPulse 4s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.12);opacity:1}}
+.landing-divider{width:60px;height:3px;background:linear-gradient(90deg,rgba(255,217,61,0.8),rgba(255,255,255,0.5));border-radius:3px;margin:4px auto 10px}
+.landing-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.4rem;margin:0 0 6px;letter-spacing:-0.5px;color:white;line-height:1.05;text-shadow:0 2px 12px rgba(0,0,0,0.15)}
+.landing-school{font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.8rem;font-weight:700;color:rgba(255,255,255,0.65);letter-spacing:4px;text-transform:uppercase;margin-bottom:36px}
+.landing-sub{display:none}
 .landing-btn-group{position:relative;z-index:1}
 .landing-btn{display:block;width:280px;margin:12px auto;padding:18px 28px;border:none;border-radius:18px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
 .landing-btn:active{transform:scale(0.96)}
-.landing-btn.btn-learn{background:linear-gradient(135deg,#F0A500,#FFBF00,#FFD93D);color:#264653;box-shadow:0 5px 0 #c48800,0 8px 24px rgba(240,165,0,0.3);font-size:1.2rem;letter-spacing:0.5px}
-.landing-btn.btn-learn:hover{box-shadow:0 5px 0 #c48800,0 10px 36px rgba(240,165,0,0.4);transform:translateY(-2px)}
-.landing-btn.btn-staff{background:white;color:#8899aa;border:2px solid #e4e8ec;box-shadow:0 2px 0 #d0d5dd;font-size:0.85rem;padding:14px 24px;border-radius:14px}
-.landing-btn.btn-staff:hover{border-color:#45B7D1;color:#45B7D1}
-.landing-footer{margin-top:auto;padding:20px 0;text-align:center;font-size:0.6rem;color:#b8c4ce;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;position:relative;z-index:1}
+.landing-btn.btn-learn{background:linear-gradient(135deg,#FFD93D,#F0A500);color:#1a3a4a;box-shadow:0 5px 0 #c48800,0 8px 28px rgba(0,0,0,0.2);font-size:1.25rem;letter-spacing:0.5px}
+.landing-btn.btn-learn:hover{box-shadow:0 5px 0 #c48800,0 12px 40px rgba(0,0,0,0.3);transform:translateY(-2px)}
+.landing-btn.btn-staff{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);border:2px solid rgba(255,255,255,0.2);box-shadow:none;font-size:0.85rem;padding:14px 24px;border-radius:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.landing-btn.btn-staff:hover{background:rgba(255,255,255,0.2);color:white;border-color:rgba(255,255,255,0.4)}
+.landing-footer{margin-top:auto;padding:20px 0;text-align:center;font-size:0.6rem;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;position:relative;z-index:1}
 .pupil-select{margin:20px auto;max-width:300px}
 .pupil-select-title{font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:8px}
 .pupil-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
@@ -716,8 +717,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
   .anagram-tile{width:36px;height:42px;font-size:1.1rem}
   .word-chip{padding:8px 10px;font-size:0.8rem}
   .clock-face{width:150px;height:150px}
-  .landing-logo{width:180px;height:180px}
-  .landing-title{font-size:2.6rem}
+  .landing-logo{width:170px;height:170px}
+  .landing-title{font-size:2.8rem}
   .nav-btn,.back-btn{height:40px;padding:0 10px;font-size:0.75rem}
   .game-header{padding:8px 10px}
   .pupil-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
