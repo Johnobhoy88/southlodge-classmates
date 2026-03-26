@@ -782,6 +782,40 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .wg-bar{height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
 .wg-fill{height:100%;background:linear-gradient(90deg,#FFD93D,#F0A500);border-radius:4px;transition:width 0.4s}
 .wg-done{text-align:center;font-size:0.75rem;color:#FFD93D;font-weight:700;margin-top:4px}
+/* ===== JOURNEY MAP ===== */
+.journey-screen{background:linear-gradient(170deg,#0a1628 0%,#122240 30%,#1a3355 60%,#1f4068 100%);position:relative;overflow:hidden}
+.journey-screen::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(69,183,209,0.08),transparent 50%);pointer-events:none}
+.journey-header{display:flex;align-items:center;gap:8px;padding:12px 16px;position:sticky;top:0;z-index:10;background:rgba(10,22,40,0.8);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.journey-stars-display{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:#FFD93D;white-space:nowrap}
+.journey-map{padding:20px 16px 40px;position:relative}
+.journey-path{position:absolute;left:50%;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#FFD93D,rgba(255,217,61,0.1));transform:translateX(-50%);border-radius:2px;z-index:0}
+.journey-stop{position:relative;display:flex;align-items:center;margin-bottom:0;padding:16px 0;z-index:1}
+.journey-stop:nth-child(odd){flex-direction:row}
+.journey-stop:nth-child(even){flex-direction:row-reverse}
+.journey-stop:nth-child(odd) .stop-card{margin-left:calc(50% + 24px);margin-right:16px}
+.journey-stop:nth-child(even) .stop-card{margin-right:calc(50% + 24px);margin-left:16px}
+.stop-node{position:absolute;left:50%;transform:translateX(-50%);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;z-index:2;transition:all 0.3s}
+.stop-node.unlocked{background:linear-gradient(135deg,#FFD93D,#F0A500);box-shadow:0 4px 16px rgba(240,165,0,0.3);border:3px solid rgba(255,255,255,0.3)}
+.stop-node.locked{background:rgba(255,255,255,0.08);border:3px solid rgba(255,255,255,0.1);filter:grayscale(0.8);opacity:0.5}
+.stop-node.current{background:linear-gradient(135deg,#FFD93D,#F0A500);box-shadow:0 4px 16px rgba(240,165,0,0.4),0 0 0 6px rgba(255,217,61,0.15);border:3px solid white;animation:currentPulse 2s ease-in-out infinite}
+@keyframes currentPulse{0%,100%{box-shadow:0 4px 16px rgba(240,165,0,0.4),0 0 0 6px rgba(255,217,61,0.15)}50%{box-shadow:0 4px 20px rgba(240,165,0,0.5),0 0 0 10px rgba(255,217,61,0.1)}}
+.stop-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:12px 16px;max-width:180px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:all 0.2s}
+.stop-card.unlocked{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15)}
+.stop-card.current{background:rgba(255,217,61,0.08);border-color:rgba(255,217,61,0.2)}
+.stop-card.locked{opacity:0.4}
+.stop-name{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.85rem;color:white;margin-bottom:2px}
+.stop-desc{font-size:0.65rem;color:rgba(255,255,255,0.5)}
+.stop-stars{font-size:0.6rem;color:rgba(255,217,61,0.7);margin-top:4px;font-weight:700}
+.stop-fact{font-size:0.6rem;color:rgba(255,255,255,0.35);margin-top:4px;font-style:italic}
+.stop-avatar{position:absolute;left:50%;transform:translateX(-50%);top:-28px;z-index:3}
+.journey-start-badge{text-align:center;padding:16px 0;color:rgba(255,255,255,0.5);font-size:0.75rem;font-weight:700}
+.journey-end-badge{text-align:center;padding:24px 0}
+.journey-end-badge .end-emoji{font-size:2.5rem;margin-bottom:8px}
+.journey-end-badge .end-text{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;color:#FFD93D}
+.journey-end-badge .end-sub{font-size:0.7rem;color:rgba(255,255,255,0.4);margin-top:4px}
+.journey-btn{padding:14px 28px;border:none;border-radius:16px;background:linear-gradient(135deg,rgba(255,217,61,0.15),rgba(240,165,0,0.15));border:2px solid rgba(255,217,61,0.25);color:#FFD93D;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.95rem;cursor:pointer;transition:all 0.2s;width:100%;max-width:320px}
+.journey-btn:hover{background:linear-gradient(135deg,rgba(255,217,61,0.25),rgba(240,165,0,0.25));transform:translateY(-1px)}
+.journey-btn:active{transform:scale(0.97)}
 </style>
 </head>
 <body>
@@ -881,6 +915,10 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
     </div>
     <div class="weekly-goal" id="weeklyGoal"></div>
 
+    <div style="text-align:center;margin:12px 0">
+      <button class="journey-btn" onclick="showScreen('journey');renderJourney()">&#x1F5FA;&#xFE0F; My Scottish Journey</button>
+    </div>
+
     <div class="section-header" onclick="toggleSection(this)"><span>&#x270F;&#xFE0F; Literacy</span><span class="collapse-arrow">&#x25BC;</span></div>
     <div class="subject-grid">
       <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
@@ -960,6 +998,16 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
       <button onclick="showScreen('landing')" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:0.75rem;font-family:'Nunito','Trebuchet MS',sans-serif;cursor:pointer;padding:8px 16px;">&#x2190; Back to start</button>
     </div>
   </div>
+</div>
+
+<!-- JOURNEY MAP -->
+<div id="journey" class="screen journey-screen">
+  <div class="journey-header">
+    <button class="nav-btn" onclick="goHome()" style="color:rgba(255,255,255,0.8)">&larr; Back</button>
+    <h2 style="flex:1;text-align:center;color:white;font-size:1rem">My Scottish Journey</h2>
+    <div class="journey-stars-display" id="journeyStars"></div>
+  </div>
+  <div class="journey-map" id="journeyMap"></div>
 </div>
 
 <!-- WHITEBOARD MODE -->
@@ -2487,9 +2535,9 @@ const ACHIEVEMENTS = [
 const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>';
 
 // ==================== STATE ====================
-let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null};
+let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null,journeyStop:0};
 
-const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null,powerups:{}};
+const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null,powerups:{},journeyStop:0};
 function stateKey(){return currentPupil?'classmates_state_'+currentPupil:'classmates_state'}
 function loadState(){state=JSON.parse(JSON.stringify(DEFAULT_STATE));try{const s=localStorage.getItem(stateKey());if(s)Object.assign(state,JSON.parse(s))}catch(e){}updateStreak()}
 function saveState(){try{localStorage.setItem(stateKey(),JSON.stringify(state))}catch(e){}}
@@ -3473,6 +3521,92 @@ const REWARDS=[
 ];
 function renderShop(){const c=document.getElementById('shopGrid');if(!c)return;c.innerHTML='';REWARDS.forEach(r=>{const owned=state.unlockedRewards&&state.unlockedRewards.includes(r.id);const canBuy=state.coins>=r.cost&&!owned;c.innerHTML+='<div class="shop-item'+(owned?' owned':'')+'"><div class="shop-icon">'+(r.type==='accessory'?'\u{1F451}':'\u{2728}')+'</div><div class="shop-name">'+r.name+'</div><div class="shop-desc">'+r.desc+'</div><div class="shop-cost">'+(owned?'\u2705 Owned':'\u{1FA99} '+r.cost)+'</div>'+(owned?'':'<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyReward(\''+r.id+'\','+r.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>')+'</div>'});const pg=document.getElementById('powerupShopGrid');if(pg){pg.innerHTML='';POWERUPS.forEach(pu=>{const cnt=getPowerupCount(pu.id);const canBuy=state.coins>=pu.cost;pg.innerHTML+='<div class="shop-item"><div class="shop-icon">'+pu.icon+'</div><div class="shop-name">'+pu.name+'</div><div class="shop-desc">'+pu.desc+'</div><div class="shop-cost">\uD83E\uDE99 '+pu.cost+(cnt>0?' <span style="color:#27ae60;font-weight:700;">('+cnt+' owned)</span>':'')+'</div><button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyPowerup(\''+pu.id+'\')"'+(canBuy?'':' disabled')+'>Buy</button></div>'})}}
 function buyReward(id,cost){if(state.coins<cost||state.unlockedRewards.includes(id))return;state.coins-=cost;if(!state.unlockedRewards)state.unlockedRewards=[];state.unlockedRewards.push(id);saveState();updateCoinDisplay();renderShop();sfxLevelUp()}
+
+// ==================== JOURNEY MAP ====================
+const JOURNEY_STOPS=[
+  {id:'invergordon',name:'Invergordon',desc:'Home! Where your journey begins.',stars:0,emoji:'\u{1F3E0}',fact:'Your school town on the Cromarty Firth'},
+  {id:'inverness',name:'Inverness',desc:'Capital of the Highlands',stars:10,emoji:'\u{1F3F0}',fact:'Known as the gateway to the Highlands'},
+  {id:'lochness',name:'Loch Ness',desc:'Home of the legendary Nessie!',stars:25,emoji:'\u{1F995}',fact:'The loch holds more water than all English & Welsh lakes combined'},
+  {id:'cairngorms',name:'Cairngorms',desc:'Snow-capped mountains and wildlife',stars:45,emoji:'\u26F0\uFE0F',fact:'Home to reindeer, wildcats and golden eagles'},
+  {id:'perth',name:'Perth',desc:'The Fair City on the River Tay',stars:70,emoji:'\u{1F309}',fact:'Once the capital of Scotland'},
+  {id:'stirling',name:'Stirling',desc:'Where William Wallace fought for freedom',stars:100,emoji:'\u2694\uFE0F',fact:'Stirling Castle sits on a volcanic rock'},
+  {id:'edinburgh',name:'Edinburgh',desc:'Scotland\'s capital city',stars:135,emoji:'\u{1F3DB}\uFE0F',fact:'Edinburgh Castle has stood for over 900 years'},
+  {id:'glasgow',name:'Glasgow',desc:'Scotland\'s biggest city',stars:175,emoji:'\u{1F3AD}',fact:'Known as the dear green place'},
+  {id:'standrews',name:'St Andrews',desc:'Home of golf!',stars:220,emoji:'\u26F3',fact:'The Old Course is the oldest golf course in the world'},
+  {id:'aberdeen',name:'Aberdeen',desc:'The Granite City by the sea',stars:270,emoji:'\u{1F48E}',fact:'Built from sparkling silver granite'},
+  {id:'bennevis',name:'Ben Nevis',desc:'The highest mountain in Britain',stars:325,emoji:'\u{1F5FB}',fact:'1,345 metres tall \u2014 can you climb it?'},
+  {id:'skye',name:'Isle of Skye',desc:'Magical island of fairy pools',stars:385,emoji:'\u{1F9DA}',fact:'The Fairy Pools have crystal clear blue water'},
+  {id:'orkney',name:'Orkney',desc:'Ancient islands at the top of the world',stars:450,emoji:'\u{1F3C6}',fact:'Skara Brae is older than the Egyptian pyramids'}
+];
+
+function renderJourney(){
+  const map=document.getElementById('journeyMap');
+  const starsEl=document.getElementById('journeyStars');
+  if(!map)return;
+  starsEl.textContent='\u2B50 '+state.stars+' stars';
+
+  // Find current position (highest unlocked stop)
+  let currentIdx=0;
+  JOURNEY_STOPS.forEach(function(stop,i){
+    if(state.stars>=stop.stars)currentIdx=i;
+  });
+
+  // Check if new stop was unlocked (for celebration)
+  const lastJourneyStop=state.journeyStop||0;
+  if(currentIdx>lastJourneyStop){
+    state.journeyStop=currentIdx;
+    saveState();
+    // Celebrate after render
+    setTimeout(function(){
+      var stop=JOURNEY_STOPS[currentIdx];
+      launchConfetti(2000);
+      sfxLevelUp();
+      var popup=document.createElement('div');
+      popup.className='ach-popup';
+      popup.onclick=function(){popup.remove()};
+      popup.innerHTML='<div class="ach-popup-card"><div class="ach-popup-label">New Location Unlocked!</div><div class="ach-popup-icon">'+stop.emoji+'</div><div class="ach-popup-title">'+stop.name+'</div><div class="ach-popup-desc">'+stop.fact+'</div></div>';
+      document.body.appendChild(popup);
+      setTimeout(function(){if(popup.parentNode)popup.remove()},4000);
+    },500);
+  }
+
+  var av=currentPupil?getAvatarData(currentPupil):{premade:null,skin:0,hair:0,hairColor:0,eyes:0,mouth:0,outfit:0,accessory:0};
+
+  var h='<div class="journey-path"></div>';
+  h+='<div class="journey-start-badge">\u{1F4CD} Your journey starts here</div>';
+
+  JOURNEY_STOPS.forEach(function(stop,i){
+    var unlocked=state.stars>=stop.stars;
+    var isCurrent=i===currentIdx;
+    var statusClass=isCurrent?'current':(unlocked?'unlocked':'locked');
+
+    h+='<div class="journey-stop">';
+    h+='<div class="stop-node '+statusClass+'">'+stop.emoji+'</div>';
+    if(isCurrent){
+      h+='<div class="stop-avatar">'+renderAvatarSVG(av,28)+'</div>';
+    }
+    h+='<div class="stop-card '+statusClass+'">';
+    h+='<div class="stop-name">'+stop.name+'</div>';
+    h+='<div class="stop-desc">'+stop.desc+'</div>';
+    if(unlocked){
+      h+='<div class="stop-fact">'+stop.fact+'</div>';
+    } else {
+      h+='<div class="stop-stars">\u{1F512} '+stop.stars+' stars to unlock</div>';
+    }
+    h+='</div>';
+    h+='</div>';
+  });
+
+  h+='<div class="journey-end-badge"><div class="end-emoji">\u{1F3C6}</div><div class="end-text">Journey Complete!</div><div class="end-sub">Earn '+JOURNEY_STOPS[JOURNEY_STOPS.length-1].stars+' stars to finish</div></div>';
+
+  map.innerHTML=h;
+
+  // Scroll to current position
+  setTimeout(function(){
+    var currentNode=map.querySelector('.stop-node.current');
+    if(currentNode)currentNode.scrollIntoView({behavior:'smooth',block:'center'});
+  },300);
+}
 
 // ==================== INIT ====================
 document.querySelectorAll('[id$="LevelSelect"]').forEach(el=>{el.classList.add('level-select-wrap')});
