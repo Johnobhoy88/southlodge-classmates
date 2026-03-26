@@ -3806,12 +3806,58 @@ function buildRoadMesh(curve,tStart,tEnd,samples){
 }
 
 function buildGround(){
-  var geo=new THREE.PlaneGeometry(2000,2000,20,20);
-  var mat=new THREE.MeshLambertMaterial({color:C.grass,flatShading:true});
+  // Flat ground far below for the distant floor
+  var geo=new THREE.PlaneGeometry(2000,2000,1,1);
+  var mat=new THREE.MeshLambertMaterial({color:C.grassDark,flatShading:true});
   var mesh=new THREE.Mesh(geo,mat);
   mesh.rotation.x=-Math.PI/2;
-  mesh.position.y=-0.5;
+  mesh.position.y=-2;
   return mesh;
+}
+
+function buildTerrainStrips(curve,samples){
+  // Build grass strips either side of the road that follow the road elevation
+  var group=new THREE.Group();
+  var hw=HD.roadWidth/2;
+  var stripWidth=80; // how far the terrain extends from road edge
+  var mat=new THREE.MeshLambertMaterial({color:C.grass,flatShading:true});
+  var matFar=new THREE.MeshLambertMaterial({color:C.hillFar,flatShading:true});
+
+  [-1,1].forEach(function(side){
+    var pts=[];
+    var uvs=[];
+    var indices=[];
+    for(var i=0;i<=samples;i++){
+      var t=i/samples;
+      var p=curve.getPointAt(Math.min(t,0.999));
+      var tan=curve.getTangentAt(Math.min(t,0.999)).normalize();
+      var up=new THREE.Vector3(0,1,0);
+      var right=new THREE.Vector3().crossVectors(tan,up).normalize();
+      // Inner edge (road edge)
+      var innerX=p.x+right.x*side*hw;
+      var innerZ=p.z+right.z*side*hw;
+      var innerY=p.y-0.02;
+      // Outer edge (far from road)
+      var outerX=p.x+right.x*side*(hw+stripWidth);
+      var outerZ=p.z+right.z*side*(hw+stripWidth);
+      var outerY=p.y-0.5+Math.sin(i*0.05)*2; // gentle rolling hills
+      pts.push(innerX,innerY,innerZ);
+      pts.push(outerX,outerY,outerZ);
+      uvs.push(0,t); uvs.push(1,t);
+      if(i<samples){
+        var a=i*2,b=i*2+1,c=(i+1)*2,d=(i+1)*2+1;
+        if(side===1){indices.push(a,c,b);indices.push(b,c,d)}
+        else{indices.push(a,b,c);indices.push(b,d,c)}
+      }
+    }
+    var geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+    geo.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));
+    geo.setIndex(indices);
+    geo.computeVertexNormals();
+    group.add(new THREE.Mesh(geo,mat));
+  });
+  return group;
 }
 
 function buildSky(){
@@ -3980,6 +4026,11 @@ window.hdashInit=function(){
   var road=buildRoadMesh(HD.splineCurve,0,1,800);
   HD.scene.add(road);
   HD.roadMeshes.push(road);
+
+  // Terrain strips (grass either side of road following elevation)
+  var terrain=buildTerrainStrips(HD.splineCurve,800);
+  HD.scene.add(terrain);
+  HD.envObjs.push(terrain);
 
   // Trees
   var trees=buildTrees(HD.splineCurve);
@@ -4161,6 +4212,7 @@ function animate(){
   // Move ground with player
   HD.ground.position.x=pos.x;
   HD.ground.position.z=pos.z;
+  HD.ground.position.y=pos.y-3;
 
   // Move fog with player
   HD.scene.fog.near=150;
