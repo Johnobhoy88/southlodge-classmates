@@ -115,6 +115,65 @@ async function storageImportBackupFile(file){
   return payload;
 }
 
+function getStorageUsage() {
+  if (!storageEnabled) return { used: 0, available: false };
+  var total = 0;
+  storageListAppKeys().forEach(function(key) {
+    var val = storageGetItem(key);
+    if (val !== null) total += key.length + val.length;
+  });
+  return {
+    used: total,
+    usedKB: Math.round(total / 1024),
+    available: true,
+    warning: total > 4 * 1024 * 1024
+  };
+}
+
+function migrateStorage() {
+  var version = storageGetJson(STORAGE_PREFIX + 'schema_version', 0);
+  if (version < 1) {
+    storageListAppKeys().forEach(function(key) {
+      if (key.startsWith(STORAGE_PREFIX + 'state_')) {
+        var state = storageGetJson(key, null);
+        if (state && typeof state === 'object') {
+          if (!state.hasOwnProperty('coins')) state.coins = 0;
+          if (!state.hasOwnProperty('unlockedRewards')) state.unlockedRewards = [];
+          if (!state.hasOwnProperty('powerups')) state.powerups = {};
+          if (!state.hasOwnProperty('adaptive')) state.adaptive = {};
+          if (!state.hasOwnProperty('weakItems')) state.weakItems = {};
+          storageSetJson(key, state);
+        }
+      }
+    });
+    storageSetJson(STORAGE_PREFIX + 'schema_version', 1);
+  }
+}
+
+function getLastBackupDate() {
+  return storageGetJson(STORAGE_PREFIX + 'last_backup', null);
+}
+
+function recordBackupDate() {
+  storageSetJson(STORAGE_PREFIX + 'last_backup', new Date().toISOString());
+}
+
+function needsBackupReminder() {
+  var last = getLastBackupDate();
+  if (!last) return storageListAppKeys().length > 2;
+  var daysSince = Math.floor((Date.now() - new Date(last).getTime()) / 864e5);
+  return daysSince >= 7;
+}
+
+var originalDownloadBackup = storageDownloadBackup;
+storageDownloadBackup = function() {
+  var result = originalDownloadBackup();
+  recordBackupDate();
+  return result;
+};
+
+migrateStorage();
+
 global.storageIsAvailable=function(){return storageEnabled};
 global.storageGetItem=storageGetItem;
 global.storageSetItem=storageSetItem;
@@ -125,6 +184,9 @@ global.storageListAppKeys=storageListAppKeys;
 global.storageClearAppData=storageClearAppData;
 global.storageDownloadBackup=storageDownloadBackup;
 global.storageImportBackupFile=storageImportBackupFile;
+global.storageGetUsage=getStorageUsage;
+global.storageNeedsBackupReminder=needsBackupReminder;
+global.storageGetLastBackupDate=getLastBackupDate;
 
 const storageApi = {
   storageClearAppData: storageClearAppData,
