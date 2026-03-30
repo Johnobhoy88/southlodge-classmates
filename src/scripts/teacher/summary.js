@@ -209,7 +209,7 @@
     };
   }
 
-  window.ClassmatesTeacherSummary = {
+  const teacherSummaryApi = Object.freeze({
     getClassSummary: getClassSummary,
     getPupilDetail: buildPupilDetail,
     getProgressHeaders: function(){
@@ -220,5 +220,16 @@
     getInterventionSignals: getInterventionSignals,
     getRecentActivity: getRecentActivity,
     getTeacherHomeModel: getTeacherHomeModel
-  };
+  });
+
+  window.ClassmatesTeacherSummary = teacherSummaryApi;
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
+    window.ClassmatesPlatform.registerModule('teacher', 'summary', {
+      owner: 'teacher',
+      exports: ['ClassmatesTeacherSummary', 'getClassSummary', 'getPupilDetail', 'getTeacherHomeModel']
+    });
+  }
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
+    window.ClassmatesPlatform.registerService('teacherSummary', teacherSummaryApi);
+  }
 })();

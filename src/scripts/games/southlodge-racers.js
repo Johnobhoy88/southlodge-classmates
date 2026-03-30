@@ -671,4 +671,18 @@
       } : null;
     }
   };
+
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
+    window.ClassmatesPlatform.registerModule('flagship', 'southlodge-racers', {
+      owner: 'flagship',
+      exports: ['hdashInit', 'hdashStop', '__southlodgeRacersDebug']
+    });
+  }
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
+    window.ClassmatesPlatform.registerService('southlodgeRacers', {
+      debug: window.__southlodgeRacersDebug,
+      init: window.hdashInit,
+      stop: window.hdashStop
+    });
+  }
 })();

@@ -9,6 +9,8 @@ const sourceFiles = {
   styles: path.join(root, "src", "styles", "app.css"),
   body: path.join(root, "src", "body.html"),
   scripts: [
+    path.join(root, "src", "scripts", "platform", "runtime.js"),
+    path.join(root, "src", "scripts", "platform", "module-manifest.js"),
     path.join(root, "src", "scripts", "storage.js"),
     path.join(root, "src", "scripts", "domain", "settings.js"),
     path.join(root, "src", "scripts", "domain", "pupils.js"),
@@ -28,6 +30,7 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "app.js"),
     path.join(root, "src", "scripts", "flagship", "southlodge-racers-admin.js"),
     path.join(root, "src", "scripts", "games", "southlodge-racers.js"),
+    path.join(root, "src", "scripts", "platform", "bootstrap.js"),
   ],
   logo: path.join(root, "src", "assets", "logo.jpg"),
   legacyLogo: path.join(root, "logo.jpg"),

@@ -170,7 +170,7 @@
     return session;
   }
 
-  window.ClassmatesTeacherTools = {
+  const teacherToolsApi = Object.freeze({
     getBackupPanelModel: getBackupPanelModel,
     downloadBackup: downloadBackup,
     importBackupFile: importBackupFile,
@@ -179,5 +179,16 @@
     getWhiteboardCard: getWhiteboardCard,
     revealWhiteboardAnswer: revealWhiteboardAnswer,
     nextWhiteboardQuestion: nextWhiteboardQuestion
-  };
+  });
+
+  window.ClassmatesTeacherTools = teacherToolsApi;
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
+    window.ClassmatesPlatform.registerModule('teacher', 'tools', {
+      owner: 'teacher',
+      exports: ['ClassmatesTeacherTools', 'buildWorksheetHtml', 'createWhiteboardSession', 'downloadBackup', 'importBackupFile']
+    });
+  }
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
+    window.ClassmatesPlatform.registerService('teacherTools', teacherToolsApi);
+  }
 })();
