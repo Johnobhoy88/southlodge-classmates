@@ -258,6 +258,29 @@
     return missionWords;
   }
 
+  function validatePack(pack) {
+    const errors = [];
+    if (!pack.id) errors.push('Missing pack id');
+    if (!pack.title) errors.push('Missing pack title');
+    if (!pack.stageBand) errors.push('Missing stage band');
+    if (!STAGE_BANDS.find(b => b.id === pack.stageBand)) errors.push('Invalid stage band: ' + pack.stageBand);
+    if (!Array.isArray(pack.words) || pack.words.length === 0) {
+      errors.push('Pack must have at least one word');
+    } else {
+      pack.words.forEach((item, index) => {
+        if (!item.word) errors.push(`Word at index ${index} missing text`);
+        if (!item.sentence) errors.push(`Word "${item.word || index}" missing sentence`);
+        if (item.errorPatternTag && !ERROR_LABELS[item.errorPatternTag]) {
+          console.warn(`Unrecognized error pattern tag: ${item.errorPatternTag} in pack ${pack.id}`);
+        }
+      });
+    }
+    return {
+      valid: errors.length === 0,
+      errors: errors
+    };
+  }
+
   window.ClassmatesSouthlodgeRacersPacks = {
     activity: clone(ACTIVITY),
     buildMissionWords: buildMissionWords,
@@ -265,6 +288,7 @@
     getErrorLabel: getErrorLabel,
     getPack: getPack,
     listPacks: listPacks,
-    listStageBands: listStageBands
+    listStageBands: listStageBands,
+    validatePack: validatePack
   };
 })();
