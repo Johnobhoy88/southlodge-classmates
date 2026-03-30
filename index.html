@@ -2293,6 +2293,94 @@ global.storageImportBackupFile=storageImportBackupFile;
 
 
 (function(){
+  const CUSTOM_QUIZ_KEY = 'classmates_custom_quiz';
+
+  function normalizeText(value) {
+    return String(value || '').trim();
+  }
+
+  function uniqueOptions(options) {
+    const seen = new Set();
+    const result = [];
+    options.forEach(function(option){
+      const normalized = normalizeText(option);
+      if (!normalized || seen.has(normalized)) return;
+      seen.add(normalized);
+      result.push(normalized);
+    });
+    return result;
+  }
+
+  function normalizeQuestion(input) {
+    const source = input && typeof input === 'object' ? input : {};
+    const question = normalizeText(source.question);
+    const correct = normalizeText(source.correct);
+    const options = uniqueOptions([correct].concat(Array.isArray(source.options) ? source.options : []));
+
+    if (!question || !correct || options.length < 2) {
+      return null;
+    }
+
+    if (!options.includes(correct)) {
+      options.unshift(correct);
+    }
+
+    return {
+      question: question,
+      correct: correct,
+      options: options
+    };
+  }
+
+  function listQuestions() {
+    const stored = storageGetJson(CUSTOM_QUIZ_KEY, []);
+    if (!Array.isArray(stored)) return [];
+    return stored.map(normalizeQuestion).filter(Boolean);
+  }
+
+  function saveQuestions(questions) {
+    const next = Array.isArray(questions) ? questions.map(normalizeQuestion).filter(Boolean) : [];
+    storageSetJson(CUSTOM_QUIZ_KEY, next);
+    return next;
+  }
+
+  function addQuestion(input) {
+    const question = normalizeQuestion(input);
+    if (!question) {
+      return { ok: false, error: 'Need at least question + 2 options' };
+    }
+
+    const questions = listQuestions();
+    questions.push(question);
+
+    return {
+      ok: true,
+      question: question,
+      questions: saveQuestions(questions)
+    };
+  }
+
+  function removeQuestion(index) {
+    const questions = listQuestions();
+    const nextIndex = Number(index);
+    if (!Number.isInteger(nextIndex) || nextIndex < 0 || nextIndex >= questions.length) {
+      return questions;
+    }
+
+    questions.splice(nextIndex, 1);
+    return saveQuestions(questions);
+  }
+
+  window.ClassmatesCustomQuiz = {
+    listQuestions: listQuestions,
+    saveQuestions: saveQuestions,
+    addQuestion: addQuestion,
+    removeQuestion: removeQuestion
+  };
+})();
+
+
+(function(){
   const ATTEMPTS_KEY = 'classmates_attempts';
   const MAX_ATTEMPTS = 500;
 
@@ -2788,6 +2876,97 @@ global.storageImportBackupFile=storageImportBackupFile;
     buildClassReportHtml: buildClassReportHtml,
     buildProgressCsv: buildProgressCsv,
     createCsvFileName: createCsvFileName
+  };
+})();
+
+
+(function(){
+  function getAssignmentFormState() {
+    const assignment = ClassmatesAssignments.getAssignment();
+    return {
+      activity: assignment && assignment.activity ? assignment.activity : 'maths',
+      level: assignment && assignment.level ? assignment.level : '2',
+      message: assignment && assignment.message ? assignment.message : ''
+    };
+  }
+
+  function saveAssignment(input) {
+    const assignment = ClassmatesAssignments.saveAssignment(input);
+    if (!assignment) {
+      return { ok: false, error: 'Choose an activity first.' };
+    }
+
+    return {
+      ok: true,
+      assignment: assignment,
+      message: 'Assignment set!'
+    };
+  }
+
+  function clearAssignment() {
+    ClassmatesAssignments.clearAssignment();
+    return {
+      ok: true,
+      state: getAssignmentFormState(),
+      message: 'Assignment cleared.'
+    };
+  }
+
+  function getAssignmentBanner() {
+    const assignment = ClassmatesAssignments.getAssignment();
+    if (!assignment || !assignment.activity) {
+      return {
+        visible: false,
+        activity: '',
+        text: ''
+      };
+    }
+
+    return {
+      visible: true,
+      activity: assignment.activity,
+      text: assignment.message || ('Your teacher has set: ' + assignment.activity + ' — Tap to start!')
+    };
+  }
+
+  function listCustomQuizQuestions() {
+    return ClassmatesCustomQuiz.listQuestions().map(function(question, index){
+      return {
+        index: index,
+        question: question.question
+      };
+    });
+  }
+
+  function addCustomQuizQuestion(input) {
+    return ClassmatesCustomQuiz.addQuestion(input);
+  }
+
+  function removeCustomQuizQuestion(index) {
+    return {
+      ok: true,
+      questions: ClassmatesCustomQuiz.removeQuestion(index)
+    };
+  }
+
+  function hasCustomQuiz() {
+    return ClassmatesCustomQuiz.listQuestions().length > 0;
+  }
+
+  function getPlayableCustomQuiz() {
+    return ClassmatesCustomQuiz.listQuestions();
+  }
+
+  window.ClassmatesTeacherAuthoring = {
+    getAssignmentFormState: getAssignmentFormState,
+    saveAssignment: saveAssignment,
+    clearAssignment: clearAssignment,
+    getAssignmentBanner: getAssignmentBanner,
+    listCustomQuizQuestions: listCustomQuizQuestions,
+    addCustomQuizQuestion: addCustomQuizQuestion,
+    removeCustomQuizQuestion: removeCustomQuizQuestion,
+    hasCustomQuiz: hasCustomQuiz,
+    getPlayableCustomQuiz: getPlayableCustomQuiz
   };
 })();
 
@@ -3444,7 +3623,7 @@ function toggleSection(header){header.classList.toggle('collapsed');const grid=h
 function goHome(){showScreen('home');updateHomeStats()}
 const GAME_CATS={spelling:'literacy',dictation:'literacy',vowels:'literacy',anagram:'literacy',phonics:'literacy',wordfam:'literacy',sentence:'literacy',punctuation:'literacy',vocab:'literacy',reading:'literacy',grammar:'literacy',rhyme:'literacy',maths:'numeracy',times:'numeracy',speed:'numeracy',bonds:'numeracy',missnum:'numeracy',placeval:'numeracy',telltime:'numeracy',money:'numeracy',fractions:'numeracy',wordprob:'numeracy',shapes:'numeracy',datahandling:'numeracy',measure:'numeracy',sequence:'numeracy',capitals:'geography',continents:'geography',weather:'geography',compass:'geography',flags:'geography',daily:'challenge',h2h:'challenge',memorymatch:'challenge',spellingbee:'challenge',scotquiz:'challenge',typing:'challenge',customquiz:'challenge',hdash:'challenge'};
 function startGame(g){const el=document.getElementById(g);if(el){el.classList.remove('cat-literacy','cat-numeracy','cat-geography','cat-challenge');const cat=GAME_CATS[g];if(cat)el.classList.add('cat-'+cat)}showScreen(g);if(g==='times')renderTTSelect();if(g==='daily')initDaily();if(g==='memorymatch')startMemoryMatch();if(g==='spellingbee')startBee();if(g==='scotquiz')startScotQuiz();if(g==='typing')startTyping();if(g==='customquiz')startCustomQuiz();if(g==='compass')startCompass();if(g==='flags')startFlags();if(g==='hdash')hdashInit();highlightRecommended(g,g);if(currentPupil){const gh=document.querySelector('#'+g+' .game-header');if(gh){let avEl=gh.querySelector('.game-avatar');if(!avEl){avEl=document.createElement('span');avEl.className='game-avatar';gh.appendChild(avEl)}avEl.innerHTML=renderAvatarSVG(getAvatarData(currentPupil),32)}}}
-function updateHomeStats(){animateCounter(document.getElementById('statStars'),state.stars,600);animateCounter(document.getElementById('statGames'),state.games,600);const streakEl=document.getElementById('statStreak');if(state.streak>=3){streakEl.innerHTML=state.streak+' <span class="streak-flame">\u{1F525}</span>'}else{streakEl.textContent=state.streak}updateCoinDisplay();renderBadges();renderShop();renderProgressMap();renderWeeklyGoal();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle"><strong>'+getGreeting()+', '+currentPupil+'!</strong><br><span style="font-size:0.7rem;color:rgba(255,255,255,0.4)">'+getDayMessage()+'</span></span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard();const cqCard=document.getElementById('customQuizCard');if(cqCard)cqCard.style.display=getCustomQuiz().length>0?'':'none';renderAssignmentBanner()}
+function updateHomeStats(){animateCounter(document.getElementById('statStars'),state.stars,600);animateCounter(document.getElementById('statGames'),state.games,600);const streakEl=document.getElementById('statStreak');if(state.streak>=3){streakEl.innerHTML=state.streak+' <span class="streak-flame">\u{1F525}</span>'}else{streakEl.textContent=state.streak}updateCoinDisplay();renderBadges();renderShop();renderProgressMap();renderWeeklyGoal();const nb=document.getElementById('pupilNameBar');if(currentPupil){const av=getAvatarData(currentPupil);nb.innerHTML=renderAvatarSVG(av,36)+' <span style="vertical-align:middle"><strong>'+getGreeting()+', '+currentPupil+'!</strong><br><span style="font-size:0.7rem;color:rgba(255,255,255,0.4)">'+getDayMessage()+'</span></span> <button onclick="openAvatarBuilder()" style="background:none;border:none;color:#11998e;cursor:pointer;font-size:0.7rem;vertical-align:middle">Edit</button>'}else{nb.textContent=''}renderLeaderboard();const cqCard=document.getElementById('customQuizCard');if(cqCard)cqCard.style.display=ClassmatesTeacherAuthoring.hasCustomQuiz()?'':'none';renderAssignmentBanner()}
 function renderLeaderboard(){const sec=document.getElementById('leaderboardSection');const el=document.getElementById('leaderboard');const pupils=getPupils();if(pupils.length<2){sec.style.display='none';return}const data=pupils.map(p=>{const s=loadPupilState(p);return{name:p,stars:s?s.stars||0:0}}).sort((a,b)=>b.stars-a.stars).slice(0,5);if(data[0].stars===0){sec.style.display='none';return}sec.style.display='block';const medals=['\u{1F947}','\u{1F948}','\u{1F949}','4','5'];el.innerHTML=data.map((d,i)=>'<div style="display:flex;align-items:center;gap:8px;padding:6px 12px;background:'+(d.name===currentPupil?'#e8fff5':'#f8f8f8')+';border-radius:10px;margin-bottom:4px;font-size:0.85rem"><span style="width:24px;text-align:center">'+medals[i]+'</span><span style="flex:1;font-weight:700;color:#2d3436">'+d.name+'</span><span style="color:#FFD93D;font-weight:800">'+d.stars+' &#x2B50;</span></div>').join('')}
 function renderProgressMap(){const pm=document.getElementById('progressMap');if(!pm)return;const topics=[{id:'spelling',name:'Spelling',color:'#f7971e'},{id:'maths',name:'Maths',color:'#0083b0'},{id:'times',name:'Tables',color:'#e44d26'},{id:'reading',name:'Reading',color:'#56ab2f'},{id:'bonds',name:'Bonds',color:'#11998e'},{id:'phonics',name:'Phonics',color:'#0abde3'}];let h='';topics.forEach(t=>{const lv=state.adaptive&&state.adaptive[t.id]?state.adaptive[t.id].level:1;const pct=lv/3*100;h+='<div class="pmap-row"><span class="pmap-label">'+t.name+'</span><div class="pmap-bar"><div class="pmap-fill" style="width:'+pct+'%;background:'+t.color+'"></div></div><span class="pmap-level">Lv'+lv+'</span></div>'});pm.innerHTML=h}
 function renderBadges(){const r=document.getElementById('badgesRow');r.innerHTML='';ACHIEVEMENTS.forEach(a=>{const e=state.achievements.includes(a.id);const d=document.createElement('div');d.className='badge'+(e?' earned':' locked');d.style.background=e?a.bg:'';d.innerHTML=a.icon+'<span class="badge-tip">'+a.name+(e?'':' (locked)')+'</span>';r.appendChild(d)})}
@@ -3467,7 +3646,7 @@ function resetPupilProgress(name){if(!confirm('Reset all progress for '+name+'?'
 function renderPupilList(){const el=document.getElementById('pupilList');const pupils=getPupils();if(pupils.length===0){el.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet.</p>';return}el.innerHTML='';pupils.forEach(p=>{const esc=p.replace(/'/g,"\\'");const row=document.createElement('div');row.className='pupil-row';row.innerHTML='<span class="pupil-name">'+p+'</span><div style="display:flex;gap:6px;"><button class="teacher-btn grey" style="font-size:0.75rem" onclick="resetPupilProgress(\''+esc+'\')">Reset</button><button class="teacher-btn red" style="font-size:0.75rem" onclick="removePupil(\''+esc+'\')">Remove</button></div>';el.appendChild(row)})}
 
 // ==================== TEACHER DASHBOARD ====================
-function showTeacherTab(tabId,btn){document.querySelectorAll('.teacher-page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.teacher-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tp-'+tabId).classList.add('active');if(btn)btn.classList.add('active');if(tabId==='progress')renderProgressTable();if(tabId==='overview')renderClassSummary();if(tabId==='settings'){document.getElementById('schoolNameInput').value=getSchoolName();renderBackupPanel()}if(tabId==='assign'){const a=getAssignment();if(a){document.getElementById('assignActivity').value=a.activity||'';document.getElementById('assignLevel').value=a.level||'2';document.getElementById('assignMessage').value=a.message||''}}}
+function showTeacherTab(tabId,btn){document.querySelectorAll('.teacher-page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.teacher-tab').forEach(t=>t.classList.remove('active'));document.getElementById('tp-'+tabId).classList.add('active');if(btn)btn.classList.add('active');if(tabId==='progress')renderProgressTable();if(tabId==='overview')renderClassSummary();if(tabId==='settings'){document.getElementById('schoolNameInput').value=getSchoolName();renderBackupPanel()}if(tabId==='assign'){const assignment=ClassmatesTeacherAuthoring.getAssignmentFormState();document.getElementById('assignActivity').value=assignment.activity;document.getElementById('assignLevel').value=assignment.level;document.getElementById('assignMessage').value=assignment.message}}
 // ==================== PUPIL DETAIL ====================
 let detailPupil=null;
 function escapeHtml(value){return String(value==null?'':value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
@@ -3476,11 +3655,11 @@ function showPupilDetail(name){detailPupil=name;const detail=ClassmatesTeacherSu
 function printPupilReport(){if(!detailPupil)return;const w=window.open('','_blank');if(!w)return;w.document.write(ClassmatesTeacherReports.buildPupilReportHtml(detailPupil));w.document.close();setTimeout(()=>w.print(),300)}
 
 // ==================== ASSIGNMENTS ====================
-function saveAssignment(){const activity=document.getElementById('assignActivity').value;const level=document.getElementById('assignLevel').value;const msg=document.getElementById('assignMessage').value;ClassmatesAssignments.saveAssignment({activity:activity,level:level,message:msg});document.getElementById('assignStatus').innerHTML='<span style="color:#11998e">Assignment set!</span>';renderBackupPanel()}
-function clearAssignment(){ClassmatesAssignments.clearAssignment();document.getElementById('assignActivity').value='';document.getElementById('assignMessage').value='';document.getElementById('assignStatus').innerHTML='<span style="color:#8899aa">Assignment cleared.</span>';renderBackupPanel()}
+function saveAssignment(){const result=ClassmatesTeacherAuthoring.saveAssignment({activity:document.getElementById('assignActivity').value,level:document.getElementById('assignLevel').value,message:document.getElementById('assignMessage').value});document.getElementById('assignStatus').innerHTML='<span style="color:'+(result.ok?'#11998e':'#e74c3c')+'">'+escapeHtml(result.ok?result.message:result.error)+'</span>';renderBackupPanel()}
+function clearAssignment(){const result=ClassmatesTeacherAuthoring.clearAssignment();document.getElementById('assignActivity').value=result.state.activity;document.getElementById('assignLevel').value=result.state.level;document.getElementById('assignMessage').value=result.state.message;document.getElementById('assignStatus').innerHTML='<span style="color:#8899aa">'+escapeHtml(result.message)+'</span>';renderBackupPanel()}
 function getAssignment(){return ClassmatesAssignments.getAssignment()}
-function renderAssignmentBanner(){const a=getAssignment();const banner=document.getElementById('assignBanner');if(!a||!a.activity){banner.style.display='none';return}banner.style.display='block';document.getElementById('assignBannerText').textContent=(a.message||'Your teacher has set: '+a.activity)+' — Tap to start!'}
-function launchAssignment(){const a=getAssignment();if(a&&a.activity)startGame(a.activity)}
+function renderAssignmentBanner(){const assignment=ClassmatesTeacherAuthoring.getAssignmentBanner();const banner=document.getElementById('assignBanner');if(!assignment.visible){banner.style.display='none';return}banner.style.display='block';document.getElementById('assignBannerText').textContent=assignment.text}
+function launchAssignment(){const assignment=ClassmatesTeacherAuthoring.getAssignmentBanner();if(assignment.visible&&assignment.activity)startGame(assignment.activity)}
 
 // ==================== PASSWORD ====================
 function getSchoolName(){return ClassmatesSettings.getSchoolName()}
@@ -3498,9 +3677,9 @@ let sessionTimerInterval=null;
 function setSessionTimer(mins){clearSessionTimer();const end=Date.now()+mins*60000;document.getElementById('timerStatus').textContent='Timer set: '+mins+' minutes';sessionTimerInterval=setInterval(()=>{const left=Math.max(0,end-Date.now());if(left<=0){clearSessionTimer();alert('Time is up! '+mins+' minute practice session complete.');document.getElementById('timerStatus').textContent='Timer finished!'}},1000)}
 function clearSessionTimer(){if(sessionTimerInterval){clearInterval(sessionTimerInterval);sessionTimerInterval=null}document.getElementById('timerStatus').textContent=''}
 
-function addCustomQ(){const q=document.getElementById('cqQuestion').value.trim();const a=document.getElementById('cqA').value.trim();const b=document.getElementById('cqB').value.trim();const c=document.getElementById('cqC').value.trim();const d=document.getElementById('cqD').value.trim();if(!q||!a||!b)return alert('Need at least question + 2 options');const quiz=getCustomQuiz();quiz.push({question:q,correct:a,options:[a,b,c,d].filter(x=>x)});saveCustomQuiz(quiz);['cqQuestion','cqA','cqB','cqC','cqD'].forEach(id=>document.getElementById(id).value='');renderCQList()}
-function renderCQList(){const el=document.getElementById('cqList');const quiz=getCustomQuiz();if(quiz.length===0){el.innerHTML='<p style="color:#8899aa;font-size:0.8rem">No questions yet.</p>';return}el.innerHTML=quiz.map((q,i)=>'<div class="pupil-row"><span class="pupil-name" style="font-size:0.8rem">'+q.question+'</span><button class="teacher-btn red" style="font-size:0.7rem" onclick="removeCustomQ('+i+')">Remove</button></div>').join('')}
-function removeCustomQ(i){const quiz=getCustomQuiz();quiz.splice(i,1);saveCustomQuiz(quiz);renderCQList()}
+function addCustomQ(){const result=ClassmatesTeacherAuthoring.addCustomQuizQuestion({question:document.getElementById('cqQuestion').value,correct:document.getElementById('cqA').value,options:[document.getElementById('cqA').value,document.getElementById('cqB').value,document.getElementById('cqC').value,document.getElementById('cqD').value]});if(!result.ok)return alert(result.error);['cqQuestion','cqA','cqB','cqC','cqD'].forEach(id=>document.getElementById(id).value='');renderCQList();updateHomeStats();renderBackupPanel()}
+function renderCQList(){const el=document.getElementById('cqList');const quiz=ClassmatesTeacherAuthoring.listCustomQuizQuestions();if(quiz.length===0){el.innerHTML='<p style="color:#8899aa;font-size:0.8rem">No questions yet.</p>';return}el.innerHTML=quiz.map(item=>'<div class="pupil-row"><span class="pupil-name" style="font-size:0.8rem">'+escapeHtml(item.question)+'</span><button class="teacher-btn red" style="font-size:0.7rem" onclick="removeCustomQ('+item.index+')">Remove</button></div>').join('')}
+function removeCustomQ(i){ClassmatesTeacherAuthoring.removeCustomQuizQuestion(i);renderCQList();updateHomeStats();renderBackupPanel()}
 function renderTeacher(){renderPupilList();renderClassSummary();renderProgressTable();renderCQList();const sn=getSchoolName();document.getElementById('schoolName').textContent=sn;const pc=document.getElementById('pupilCount');if(pc)pc.textContent=getPupils().length+' pupils registered';renderBackupPanel();showTeacherTab('overview',document.querySelector('.teacher-tab'))}
 function renderClassSummary(){const el=document.getElementById('classSummary');const summary=ClassmatesTeacherSummary.getClassSummary();if(summary.pupilCount===0){el.innerHTML='';return}let h='<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">';summary.cards.forEach(card=>{h+='<div style="background:'+card.background+';border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:'+card.color+'">'+escapeHtml(card.value)+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">'+escapeHtml(card.label)+'</div></div>'});h+='</div>';el.innerHTML=h}
 function editSchoolName(){const name=prompt('School name:',document.getElementById('schoolName').textContent);if(name){const savedName=ClassmatesSettings.setSchoolName(name);document.getElementById('schoolName').textContent=savedName;renderBackupPanel()}}
@@ -4259,11 +4438,9 @@ function endTyping(){if(typ.timer){clearInterval(typ.timer);typ.timer=null}}
 function finishTyping(){endTyping();const stars=typ.correct>=30?3:typ.correct>=15?2:typ.correct>=5?1:0;addStars(stars);recordPlay();checkAch('first_game',true);checkAch('first_typing',true);showResults('#2d3436','\u{2328}','Typing Done!',typ.correct+' words, '+Math.round(typ.correct)+'WPM',stars,typ.correct,typ.correct+1,()=>{showScreen('typing');startTyping()},null)}
 
 // ==================== CUSTOM QUIZ (TEACHER) ====================
-function getCustomQuiz(){return storageGetJson('classmates_custom_quiz',[])}
-function saveCustomQuiz(q){storageSetJson('classmates_custom_quiz',q);renderBackupPanel()}
 let cq={questions:[],idx:0,total:0,correct:0};
-function startCustomQuiz(){const questions=getCustomQuiz();if(questions.length===0){alert('No custom questions yet. Ask your teacher to add some!');goHome();return}cq.questions=[...questions];shuffle(cq.questions);cq.total=Math.min(cq.questions.length,10);cq.idx=0;cq.correct=0;loadCQQ()}
-function loadCQQ(){const q=cq.questions[cq.idx];document.getElementById('customProgress').style.width=(cq.idx/cq.total*100)+'%';document.getElementById('customProgressText').textContent=(cq.idx+1)+'/'+cq.total;document.getElementById('customDisplay').innerHTML='<div class="ph-sound" style="background:#fff5f2;border-color:#fab1a0;color:#e17055;font-size:1rem">'+q.question+'</div>';const opts=document.getElementById('customOpts');opts.innerHTML='';shuffle([...q.options]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#customOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){cq.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{cq.idx++;if(cq.idx>=cq.total)finishCQ();else loadCQQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
+function startCustomQuiz(){const questions=ClassmatesTeacherAuthoring.getPlayableCustomQuiz();if(questions.length===0){alert('No custom questions yet. Ask your teacher to add some!');goHome();return}cq.questions=[...questions];shuffle(cq.questions);cq.total=Math.min(cq.questions.length,10);cq.idx=0;cq.correct=0;loadCQQ()}
+function loadCQQ(){const q=cq.questions[cq.idx];document.getElementById('customProgress').style.width=(cq.idx/cq.total*100)+'%';document.getElementById('customProgressText').textContent=(cq.idx+1)+'/'+cq.total;document.getElementById('customDisplay').innerHTML='<div class="ph-sound" style="background:#fff5f2;border-color:#fab1a0;color:#e17055;font-size:1rem">'+escapeHtml(q.question)+'</div>';const opts=document.getElementById('customOpts');opts.innerHTML='';shuffle([...q.options]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#customOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){cq.correct++;sfxCorrect();b.classList.add('ph-correct')}else{sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{cq.idx++;if(cq.idx>=cq.total)finishCQ();else loadCQQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
 function finishCQ(){const pct=cq.correct/cq.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);addStars(stars);recordPlay();showResults('#e17055','\u{270D}','Quiz Done!',cq.correct+'/'+cq.total,stars,cq.correct,cq.total,()=>{showScreen('customquiz');startCustomQuiz()},null)}
 
 // ==================== SHAPES & GEOMETRY ====================
