@@ -1,0 +1,14 @@
+{
+  "name": "classmates",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-first offline classroom learning platform that ships as a single HTML file.",
+  "scripts": {
+    "extract:legacy": "node scripts/extract-legacy.mjs",
+    "build": "node scripts/build-single-file.mjs && node scripts/verify-single-file.mjs",
+    "verify": "node scripts/verify-single-file.mjs"
+  },
+  "dependencies": {
+    "three": "0.128.0"
+  }
+}

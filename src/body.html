@@ -1,0 +1,1122 @@
+<div class="app">
+
+<!-- LANDING PAGE -->
+<div id="landing" class="screen landing-bg branded active">
+  <div class="landing-brand">
+    <div class="landing-logo-wrap">
+      <div class="landing-logo-glow"></div>
+      <img src="logo.jpg" alt="South Lodge Primary" class="landing-logo">
+    </div>
+    <div class="landing-divider"></div>
+    <div class="landing-title">Classmates</div>
+    <div class="landing-school">South Lodge Primary</div>
+    <div class="landing-btn-group">
+      <button class="landing-btn btn-learn" onclick="enterPupilHome()">Let's Learn!</button>
+      <button class="landing-btn btn-staff" onclick="showStaffLogin()">Staff Access</button>
+    </div>
+  </div>
+  <div class="landing-footer">Aligned to the Scottish Curriculum for Excellence</div>
+</div>
+
+<!-- STAFF PASSWORD MODAL -->
+<div class="modal-overlay" id="staffModal">
+  <div class="modal-box">
+    <h3>Staff Access</h3>
+    <form onsubmit="checkStaffPwd();return false">
+      <input type="text" value="staff" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+      <input type="password" class="modal-input" id="staffPwd" placeholder="Enter staff password" autocomplete="current-password">
+      <div class="modal-error" id="staffError"></div>
+      <button type="submit" class="modal-submit">Enter</button><br>
+      <button type="button" class="modal-cancel" onclick="hideStaffLogin()">Cancel</button>
+    </form>
+    <div style="margin-top:12px;font-size:0.7rem;color:#b2bec3;cursor:help" title="Contact your school administrator to change the staff password">?</div>
+  </div>
+</div>
+
+<!-- PUPIL SELECT -->
+<div id="pupilselect" class="screen landing-bg branded" style="padding:20px">
+  <div style="text-align:center;padding:16px 0;">
+    <img src="logo.jpg" alt="South Lodge Primary" style="width:70px;border-radius:50%;border:4px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
+    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;color:white;margin:10px 0 4px;">Who's playing today?</div>
+    <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);">Tap your name to start!</div>
+  </div>
+  <div class="pupil-grid" id="pupilGrid"></div>
+  <div style="text-align:center;padding:16px;">
+    <button class="nav-btn" onclick="showScreen('landing')" style="margin:0 auto">&larr; Back</button>
+  </div>
+</div>
+
+<!-- AVATAR BUILDER -->
+<div id="avatarbuilder" class="screen game-screen">
+  <div class="game-header" style="border-color:#11998e">
+    <button class="nav-btn" onclick="finishAvatar()" title="Done">&larr; Done</button>
+    <h2 class="game-title" style="color:#11998e">Create Your Avatar</h2>
+  </div>
+  <div class="game-body">
+    <div class="avatar-preview-lg" id="avatarPreviewLg"></div>
+    <div class="av-tabs">
+      <button class="av-tab active" onclick="showAvTab('premade',this)">Characters</button>
+      <button class="av-tab" onclick="showAvTab('custom',this)">Build Your Own</button>
+    </div>
+    <div id="avPremade" class="av-tab-content"></div>
+    <div id="avCustom" class="av-tab-content" style="display:none">
+      <div class="av-section"><div class="av-section-label">Skin Colour</div><div class="avatar-builder-grid" id="avSkin"></div></div>
+      <div class="av-section"><div class="av-section-label">Hair Style</div><div class="avatar-builder-grid" id="avHair"></div></div>
+      <div class="av-section"><div class="av-section-label">Hair Colour</div><div class="avatar-builder-grid" id="avHairColor"></div></div>
+      <div class="av-section"><div class="av-section-label">Eyes</div><div class="avatar-builder-grid" id="avEyes"></div></div>
+      <div class="av-section"><div class="av-section-label">Mouth</div><div class="avatar-builder-grid" id="avMouth"></div></div>
+      <div class="av-section"><div class="av-section-label">Outfit Colour</div><div class="avatar-builder-grid" id="avOutfit"></div></div>
+      <div class="av-section"><div class="av-section-label">Accessories</div><div class="avatar-builder-grid" id="avAccessory"></div></div>
+    </div>
+    <div style="text-align:center;margin:16px 0;">
+      <button class="r-btn r-btn-primary" onclick="finishAvatar()">Done!</button>
+    </div>
+  </div>
+</div>
+
+<!-- PUPIL HOME -->
+<div id="home" class="screen home-bg home-bg-animated branded">
+  <div class="home-header">
+    <div class="home-header-bar">
+      <img src="logo.jpg" alt="South Lodge Primary" class="home-logo-sm">
+      <div class="home-brand">
+        <div class="home-brand-name">Classmates</div>
+        <div class="home-brand-school">South Lodge Primary</div>
+      </div>
+      <button class="nav-btn home-btn" onclick="showScreen('landing')" style="font-size:0.75rem;flex-shrink:0">&#x2190; Exit</button>
+    </div>
+    <div class="pupil-name-bar" id="pupilNameBar" style="margin-top:6px"></div>
+  </div>
+  <div class="home-content">
+    <div id="assignBanner" style="display:none;background:linear-gradient(135deg,#11998e,#38ef7d);color:white;border-radius:12px;padding:12px 16px;margin:8px 0;text-align:center;cursor:pointer" onclick="launchAssignment()"><div style="font-weight:800;font-size:0.85rem" id="assignBannerText"></div></div>
+    <div style="text-align:center;margin:8px 0 4px;"><span class="coin-display-home" id="coinDisplay">&#x1FA99; <span id="coinCount">0</span> coins</span><button class="mute-btn" id="muteBtn" onclick="toggleMute()">&#x1F50A; Sound On</button><button class="dyslexia-btn" id="dyslexiaBtn" onclick="toggleDyslexia()">Aa Dyslexia</button></div>
+    <div class="stats-bar">
+      <div class="stat-item"><span class="stat-val" id="statStars">0</span><span class="stat-lbl">Stars</span></div>
+      <div class="stat-item"><span class="stat-val" id="statGames">0</span><span class="stat-lbl">Games</span></div>
+      <div class="stat-item"><span class="stat-val" id="statStreak">0</span><span class="stat-lbl">Day Streak</span></div>
+    </div>
+    <div class="weekly-goal" id="weeklyGoal"></div>
+
+    <div style="text-align:center;margin:12px 0">
+      <button class="journey-btn" onclick="showScreen('journey');renderJourney()">&#x1F5FA;&#xFE0F; My Scottish Journey</button>
+    </div>
+
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x270F;&#xFE0F; Literacy</span><span class="collapse-arrow">&#x25BC;</span></div>
+    <div class="subject-grid">
+      <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
+      <div class="subject-card card-dictation" onclick="startGame('dictation')"><div class="card-icon">&#x1F50A;</div><div class="card-title">Dictation</div><div class="card-desc">Listen and spell!</div></div>
+      <div class="subject-card card-vowels" onclick="startGame('vowels')"><div class="card-icon">_e_</div><div class="card-title">Missing Vowels</div><div class="card-desc">Fill in the gaps!</div></div>
+      <div class="subject-card card-anagram" onclick="startGame('anagram')"><div class="card-icon">ABC</div><div class="card-title">Anagrams</div><div class="card-desc">Unjumble the letters!</div></div>
+      <div class="subject-card card-phonics" onclick="startGame('phonics')"><div class="card-icon">ai</div><div class="card-title">Phonics</div><div class="card-desc">Sound patterns</div></div>
+      <div class="subject-card card-wordfam" onclick="startGame('wordfam')"><div class="card-icon">-ing</div><div class="card-title">Word Families</div><div class="card-desc">Common endings</div></div>
+      <div class="subject-card card-sentence" onclick="startGame('sentence')"><div class="card-icon">1 2 3</div><div class="card-title">Sentences</div><div class="card-desc">Put words in order</div></div>
+      <div class="subject-card card-punctuation" onclick="startGame('punctuation')"><div class="card-icon">.?!</div><div class="card-title">Punctuation</div><div class="card-desc">Add the missing marks</div></div>
+      <div class="subject-card card-vocab" onclick="startGame('vocab')"><div class="card-icon">A-Z</div><div class="card-title">Vocabulary</div><div class="card-desc">Words and meanings</div></div>
+      <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
+      <div class="subject-card card-grammar" onclick="startGame('grammar')"><div class="card-icon">N V</div><div class="card-title">Grammar</div><div class="card-desc">Word types</div></div>
+      <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
+    </div>
+
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F522; Numeracy</span><span class="collapse-arrow">&#x25BC;</span></div>
+    <div class="subject-grid">
+      <div class="subject-card card-maths" onclick="startGame('maths')"><div class="card-icon">1+2</div><div class="card-title">Maths</div><div class="card-desc">Solve the sums</div></div>
+      <div class="subject-card card-times" onclick="startGame('times')"><div class="card-icon">3x4</div><div class="card-title">Times Tables</div><div class="card-desc">Beat the clock!</div></div>
+      <div class="subject-card card-speed" onclick="startGame('speed')"><div class="card-icon">60s</div><div class="card-title">Speed Maths</div><div class="card-desc">60 second challenge</div></div>
+      <div class="subject-card card-bonds" onclick="startGame('bonds')"><div class="card-icon">?+3</div><div class="card-title">Number Bonds</div><div class="card-desc">Find the missing number</div></div>
+      <div class="subject-card card-missnum" onclick="startGame('missnum')"><div class="card-icon">?=</div><div class="card-title">Missing Number</div><div class="card-desc">Find the gap</div></div>
+      <div class="subject-card card-placeval" onclick="startGame('placeval')"><div class="card-icon">HTO</div><div class="card-title">Place Value</div><div class="card-desc">Hundreds, tens &amp; ones</div></div>
+      <div class="subject-card card-time" onclick="startGame('telltime')"><div class="card-icon">3:00</div><div class="card-title">Telling Time</div><div class="card-desc">Read the clock</div></div>
+      <div class="subject-card card-money" onclick="startGame('money')"><div class="card-icon">&#xA3;p</div><div class="card-title">Money</div><div class="card-desc">Coins and change</div></div>
+      <div class="subject-card card-fractions" onclick="startGame('fractions')"><div class="card-icon">&#xBD;</div><div class="card-title">Fractions</div><div class="card-desc">Halves, quarters &amp; more</div></div>
+      <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
+      <div class="subject-card card-shapes" onclick="startGame('shapes')"><div class="card-icon">&#x25B3;</div><div class="card-title">Shapes</div><div class="card-desc">Geometry</div></div>
+      <div class="subject-card card-data" onclick="startGame('datahandling')"><div class="card-icon">&#x1F4CA;</div><div class="card-title">Data</div><div class="card-desc">Charts</div></div>
+      <div class="subject-card card-measure" onclick="startGame('measure')"><div class="card-icon">cm</div><div class="card-title">Measurement</div><div class="card-desc">Compare</div></div>
+      <div class="subject-card card-sequence" onclick="startGame('sequence')"><div class="card-icon">1,2,?</div><div class="card-title">Sequences</div><div class="card-desc">Patterns</div></div>
+    </div>
+
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F30D; Geography</span><span class="collapse-arrow">&#x25BC;</span></div>
+    <div class="subject-grid">
+      <div class="subject-card card-capitals" onclick="startGame('capitals')"><div class="card-icon">&#x1F3DB;</div><div class="card-title">Capitals</div><div class="card-desc">Cities</div></div>
+      <div class="subject-card card-continents" onclick="startGame('continents')"><div class="card-icon">&#x1F30D;</div><div class="card-title">World</div><div class="card-desc">Continents</div></div>
+      <div class="subject-card card-weather" onclick="startGame('weather')"><div class="card-icon">&#x2600;</div><div class="card-title">Weather</div><div class="card-desc">Climate</div></div>
+      <div class="subject-card card-compass" onclick="startGame('compass')"><div class="card-icon">&#x1F9ED;</div><div class="card-title">Compass</div><div class="card-desc">Directions</div></div>
+      <div class="subject-card card-flags" onclick="startGame('flags')"><div class="card-icon">&#x1F3F3;</div><div class="card-title">Flags</div><div class="card-desc">Countries</div></div>
+    </div>
+
+    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F3C6; Challenges</span><span class="collapse-arrow">&#x25BC;</span></div>
+    <div class="subject-grid">
+      <div class="subject-card card-daily" onclick="startGame('daily')"><div class="card-icon">GO</div><div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">5 daily challenges — spelling, maths, reading &amp; more</div></div></div>
+      <div class="subject-card card-h2h" onclick="startGame('h2h')"><div class="card-icon">VS</div><div class="card-title">Head to Head</div><div class="card-desc">Race!</div></div>
+      <div class="subject-card card-memory" onclick="startGame('memorymatch')"><div class="card-icon">&#x1F0CF;</div><div class="card-title">Memory</div><div class="card-desc">Match pairs</div></div>
+      <div class="subject-card card-bee" onclick="startGame('spellingbee')"><div class="card-icon">&#x1F41D;</div><div class="card-title">Spelling Bee</div><div class="card-desc">How far?</div></div>
+      <div class="subject-card card-scotquiz" onclick="startGame('scotquiz')"><div class="card-icon">&#x1F3F4;</div><div class="card-title">Scotland</div><div class="card-desc">Quiz</div></div>
+      <div class="subject-card card-typing" onclick="startGame('typing')"><div class="card-icon">&#x2328;</div><div class="card-title">Typing</div><div class="card-desc">Speed</div></div>
+      <div class="subject-card card-hdash" onclick="startGame('hdash')"><div class="card-icon">&#x1F3CE;</div><div class="card-title">Highland Dash</div><div class="card-desc">3D Racing!</div></div>
+      <div class="subject-card card-custom" onclick="startGame('customquiz')" id="customQuizCard" style="display:none"><div class="card-icon">&#x270D;</div><div class="card-title">Teacher Quiz</div><div class="card-desc">Custom</div></div>
+    </div>
+
+    <div class="badges-section">
+      <div class="badges-title">Achievements</div>
+      <div class="badges-grid" id="badgesRow"></div>
+    </div>
+    <div class="shop-section">
+      <div class="shop-title" onclick="var pg=document.getElementById('powerupGrid');var sg=document.getElementById('shopGrid');var isHidden=sg.style.display==='none';sg.style.display=isHidden?'grid':'none';pg.style.display=isHidden?'block':'none';">Reward Shop <span style="font-size:0.7rem;color:#b2bec3">(tap to open)</span></div>
+      <div style="display:none;padding:0 8px;" id="powerupGrid">
+        <div style="font-weight:700;font-size:1rem;color:#1a3a4a;margin:12px 0 8px;letter-spacing:1px;">Power-Ups</div>
+        <div class="shop-grid" id="powerupShopGrid"></div>
+        <div style="font-weight:700;font-size:1rem;color:#1a3a4a;margin:16px 0 8px;letter-spacing:1px;">Rewards</div>
+      </div>
+      <div class="shop-grid" id="shopGrid" style="display:none"></div>
+    </div>
+    <div class="progress-map">
+      <div class="progress-map-title">My Progress</div>
+      <div id="progressMap"></div>
+    </div>
+    <div id="leaderboardSection" style="margin:16px 0;display:none">
+      <div style="text-align:center;font-size:0.85rem;color:rgba(255,255,255,0.5);font-weight:700;margin-bottom:8px">&#x1F3C6; Top Stars</div>
+      <div id="leaderboard"></div>
+    </div>
+    <div style="text-align:center;padding:12px 0;">
+      <button onclick="showScreen('landing')" style="background:none;border:none;color:rgba(255,255,255,0.3);font-size:0.75rem;font-family:'Nunito','Trebuchet MS',sans-serif;cursor:pointer;padding:8px 16px;">&#x2190; Back to start</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNEY MAP -->
+<div id="journey" class="screen journey-screen">
+  <div class="journey-header">
+    <button class="nav-btn" onclick="goHome()" style="color:rgba(255,255,255,0.8)">&larr; Back</button>
+    <h2 style="flex:1;text-align:center;color:white;font-size:1rem">My Scottish Journey</h2>
+    <div class="journey-stars-display" id="journeyStars"></div>
+  </div>
+  <div class="journey-map" id="journeyMap"></div>
+</div>
+
+<!-- WHITEBOARD MODE -->
+<div id="whiteboard" class="screen wb-screen">
+  <div class="wb-header">
+    <h2>Whole-Class Mode</h2>
+    <button class="wb-exit" onclick="showScreen('teacher')">Exit</button>
+  </div>
+  <div class="wb-body">
+    <div class="wb-question" id="wbQuestion"></div>
+    <div class="wb-answer hidden" id="wbAnswer"></div>
+    <div class="wb-controls">
+      <button class="wb-btn wb-show" id="wbShowBtn" onclick="wbShowAnswer()">Show Answer</button>
+      <button class="wb-btn wb-next" onclick="wbNext()">Next &rarr;</button>
+    </div>
+    <div class="wb-counter" id="wbCounter"></div>
+  </div>
+</div>
+
+<!-- TEACHER DASHBOARD -->
+<div id="teacher" class="screen teacher-screen">
+  <div class="teacher-topbar">
+    <h2>Classmates</h2>
+    <span class="school-name" id="schoolName" onclick="editSchoolName()">South Lodge Primary</span>
+    <button class="teacher-exit" onclick="showScreen('landing')">&#x2190; Sign Out</button>
+  </div>
+  <div class="teacher-tabs">
+    <button class="teacher-tab active" onclick="showTeacherTab('overview',this)">Overview</button>
+    <button class="teacher-tab" onclick="showTeacherTab('pupils',this)">Pupils</button>
+    <button class="teacher-tab" onclick="showTeacherTab('progress',this)">Progress</button>
+    <button class="teacher-tab" onclick="showTeacherTab('assign',this)">Assign</button>
+    <button class="teacher-tab" onclick="showTeacherTab('tools',this)">Tools</button>
+    <button class="teacher-tab" onclick="showTeacherTab('settings',this)">Settings</button>
+  </div>
+  <div class="teacher-body">
+
+    <!-- OVERVIEW TAB -->
+    <div class="teacher-page active" id="tp-overview">
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" id="classSummary"></div>
+      <div class="teacher-section">
+        <h3>Quick Actions</h3>
+        <div class="actions-row">
+          <button class="teacher-btn teal" onclick="launchWhiteboard()">&#x1F4FA; Whole-Class Mode</button>
+          <button class="teacher-btn teal" onclick="generateWorksheet()">&#x1F4C4; Generate Worksheet</button>
+          <button class="teacher-btn outline" onclick="showTeacherTab('progress',document.querySelectorAll('.teacher-tab')[2])">&#x1F4CA; View Progress</button>
+        </div>
+      </div>
+      <div class="teacher-section">
+        <h3>Curriculum Alignment</h3>
+        <div style="font-size:0.85rem;color:#4a5568;line-height:1.8">
+          <div style="display:grid;grid-template-columns:1fr;gap:12px">
+            <div style="background:#f8fafa;border-left:4px solid #ffd200;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 1 — Early (P1, Ages 5-6)</strong><br>Short words, counting to 20, simple addition/subtraction, basic reading</div>
+            <div style="background:#f8fafa;border-left:4px solid #0984e3;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 2 — First (P2-P4, Ages 6-8)</strong><br>Longer words, place value, multiplication introduction, paragraph comprehension</div>
+            <div style="background:#f8fafa;border-left:4px solid #e17055;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 3 — Second (P5-P7, Ages 8-10)</strong><br>Complex spelling, all four operations, fractions, rich comprehension texts</div>
+          </div>
+          <p style="margin-top:12px;font-size:0.8rem;color:#8899aa">Aligned to Scottish Curriculum for Excellence — Literacy &amp; English and Numeracy &amp; Mathematics.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PUPILS TAB -->
+    <div class="teacher-page" id="tp-pupils">
+      <div class="teacher-section">
+        <h3>Add Pupils</h3>
+        <div class="teacher-input-row">
+          <input class="teacher-input" id="newPupilInput" placeholder="Enter pupil name..." onkeydown="if(event.key==='Enter')addPupil()">
+          <button class="teacher-btn teal" onclick="addPupil()">Add</button>
+        </div>
+        <button class="teacher-btn grey" style="font-size:0.75rem;margin-bottom:12px" onclick="bulkAddPupils()">&#x1F4CB; Bulk Add (paste list)</button>
+        <div style="font-size:0.75rem;color:#8899aa;margin-bottom:8px" id="pupilCount"></div>
+      </div>
+      <div class="teacher-section">
+        <h3>Class List</h3>
+        <div id="pupilList"></div>
+      </div>
+    </div>
+
+    <!-- PROGRESS TAB -->
+    <div class="teacher-page" id="tp-progress">
+      <div class="teacher-section">
+        <h3>Class Progress Table</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:8px">Click any column header to sort. Click a pupil name to see detail. Scroll horizontally on mobile.</p>
+        <div id="progressArea"></div>
+      </div>
+      <div class="teacher-section" id="pupilDetailSection" style="display:none">
+        <h3 id="pupilDetailTitle">Pupil Detail</h3>
+        <div id="pupilDetailContent"></div>
+        <div style="margin-top:12px">
+          <button class="teacher-btn teal" onclick="printPupilReport()">Print Report for Parents</button>
+          <button class="teacher-btn grey" onclick="document.getElementById('pupilDetailSection').style.display='none'">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSIGN TAB -->
+    <div class="teacher-page" id="tp-assign">
+      <div class="teacher-section">
+        <h3>Assign Activity</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:12px">Set a recommended activity for the class. This shows as a highlighted suggestion on each pupil's home screen.</p>
+        <div style="margin-bottom:12px">
+          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Activity:</label>
+          <select class="teacher-input" id="assignActivity" style="width:100%">
+            <option value="">-- No assignment --</option>
+            <optgroup label="Literacy"><option value="spelling">Spelling</option><option value="dictation">Dictation</option><option value="vowels">Missing Vowels</option><option value="anagram">Anagrams</option><option value="phonics">Phonics</option><option value="wordfam">Word Families</option><option value="sentence">Sentences</option><option value="punctuation">Punctuation</option><option value="vocab">Vocabulary</option><option value="reading">Reading</option><option value="grammar">Grammar</option><option value="rhyme">Rhyming</option></optgroup>
+            <optgroup label="Numeracy"><option value="maths">Maths</option><option value="times">Times Tables</option><option value="speed">Speed Maths</option><option value="bonds">Number Bonds</option><option value="missnum">Missing Number</option><option value="placeval">Place Value</option><option value="telltime">Telling Time</option><option value="money">Money</option><option value="fractions">Fractions</option><option value="wordprob">Word Problems</option><option value="shapes">Shapes</option><option value="datahandling">Data Handling</option><option value="measure">Measurement</option><option value="sequence">Sequences</option></optgroup>
+            <optgroup label="Geography"><option value="capitals">Capital Cities</option><option value="continents">World Geography</option><option value="weather">Weather</option><option value="compass">Compass</option><option value="flags">Flags</option></optgroup>
+          </select>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Level:</label>
+          <select class="teacher-input" id="assignLevel" style="width:100%"><option value="1">Level 1 (Easy)</option><option value="2">Level 2 (Medium)</option><option value="3">Level 3 (Hard)</option></select>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Message to pupils (optional):</label>
+          <input class="teacher-input" id="assignMessage" placeholder="e.g. Focus on your times tables today!">
+        </div>
+        <button class="teacher-btn teal" onclick="saveAssignment()">Set Assignment</button>
+        <button class="teacher-btn grey" onclick="clearAssignment()">Clear Assignment</button>
+        <div id="assignStatus" style="margin-top:8px;font-size:0.8rem;color:#8899aa"></div>
+      </div>
+    </div>
+
+    <!-- TOOLS TAB -->
+    <div class="teacher-page" id="tp-tools">
+      <div class="teacher-section">
+        <h3>Classroom Tools</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:#f8fafa;border-radius:12px;padding:20px;text-align:center;cursor:pointer;border:1px solid #e4e8ec;transition:all 0.15s" onclick="launchWhiteboard()" onmouseover="this.style.borderColor='#11998e'" onmouseout="this.style.borderColor='#e4e8ec'">
+            <div style="font-size:2rem;margin-bottom:8px">&#x1F4FA;</div>
+            <div style="font-weight:800;color:#1a2332;font-size:0.9rem">Whole-Class Mode</div>
+            <div style="font-size:0.75rem;color:#8899aa;margin-top:4px">Project questions on the board</div>
+          </div>
+          <div style="background:#f8fafa;border-radius:12px;padding:20px;text-align:center;cursor:pointer;border:1px solid #e4e8ec;transition:all 0.15s" onclick="generateWorksheet()" onmouseover="this.style.borderColor='#11998e'" onmouseout="this.style.borderColor='#e4e8ec'">
+            <div style="font-size:2rem;margin-bottom:8px">&#x1F4C4;</div>
+            <div style="font-weight:800;color:#1a2332;font-size:0.9rem">Print Worksheet</div>
+            <div style="font-size:0.75rem;color:#8899aa;margin-top:4px">Generate maths + spelling sheet</div>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-section">
+        <h3>Custom Quiz Builder</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:12px">Create questions for pupils. They appear as "Teacher's Quiz" in the Challenges section.</p>
+        <div class="teacher-input-row" style="flex-wrap:wrap"><input class="teacher-input" id="cqQuestion" placeholder="Question"><input class="teacher-input" id="cqA" placeholder="Option A (correct)"><input class="teacher-input" id="cqB" placeholder="Option B"><input class="teacher-input" id="cqC" placeholder="Option C"><input class="teacher-input" id="cqD" placeholder="Option D"><button class="teacher-btn teal" onclick="addCustomQ()">Add Question</button></div>
+        <div id="cqList" style="margin-top:8px"></div>
+      </div>
+      <div class="teacher-section">
+        <h3>Reports &amp; Export</h3>
+        <div class="actions-row">
+          <button class="teacher-btn teal" onclick="printReport()">&#x1F5A8; Print Progress Report</button>
+          <button class="teacher-btn outline" onclick="exportCSV()">&#x1F4E5; Export as CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="teacher-page" id="tp-settings">
+      <div class="teacher-section">
+        <h3>School Details</h3>
+        <div class="teacher-input-row"><input class="teacher-input" id="schoolNameInput" placeholder="School name"><button class="teacher-btn teal" onclick="saveSchoolName()">Save</button></div>
+      </div>
+      <div class="teacher-section">
+        <h3>Change Staff Password</h3>
+        <form onsubmit="changePassword();return false">
+          <input type="text" value="staff" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+          <div class="teacher-input-row" style="flex-wrap:wrap">
+            <input class="teacher-input" id="oldPwd" type="password" placeholder="Current password" autocomplete="current-password">
+            <input class="teacher-input" id="newPwd" type="password" placeholder="New password" autocomplete="new-password">
+            <button type="submit" class="teacher-btn teal">Change</button>
+          </div>
+        </form>
+        <div id="pwdStatus" style="font-size:0.8rem;margin-top:4px;min-height:20px"></div>
+      </div>
+      <div class="teacher-section">
+        <h3>Session Timer</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:8px">Set a practice timer. A notification shows when time is up.</p>
+        <div class="actions-row">
+          <button class="teacher-btn teal" onclick="setSessionTimer(5)">5 min</button>
+          <button class="teacher-btn teal" onclick="setSessionTimer(10)">10 min</button>
+          <button class="teacher-btn teal" onclick="setSessionTimer(15)">15 min</button>
+          <button class="teacher-btn grey" onclick="clearSessionTimer()">Clear</button>
+        </div>
+        <div id="timerStatus" style="font-size:0.8rem;margin-top:8px;color:#8899aa"></div>
+      </div>
+      <div class="teacher-section">
+        <h3>Backup &amp; Restore</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:8px">Download one backup file for this device. Importing a backup replaces the current device data on this browser.</p>
+        <div class="actions-row">
+          <button class="teacher-btn teal" onclick="exportAppBackup()">&#x1F4E6; Download Backup</button>
+          <button class="teacher-btn outline" onclick="triggerBackupImport()">&#x1F4E4; Import Backup</button>
+        </div>
+        <input id="backupFileInput" type="file" accept=".json,application/json" style="display:none" onchange="handleBackupImport(event)">
+        <div id="backupSummary" style="font-size:0.8rem;color:#4a5568;margin-top:10px"></div>
+        <div id="backupStatus" style="font-size:0.8rem;min-height:20px;margin-top:6px"></div>
+      </div>
+      <div class="teacher-section">
+        <h3>Data Management</h3>
+        <p style="font-size:0.85rem;color:#4a5568;margin-bottom:12px">Caution: these actions cannot be undone.</p>
+        <div class="actions-row">
+          <button class="teacher-btn red" onclick="resetAllData()">&#x26A0; Reset All Data</button>
+        </div>
+      </div>
+      <div class="teacher-section">
+        <h3>About Classmates</h3>
+        <div style="font-size:0.85rem;color:#4a5568;line-height:1.7">
+          <p><strong>Version:</strong> 1.1</p>
+          <p><strong>Content:</strong> 34 learning modes, 18 stories, 230+ spelling words, 31 achievements</p>
+          <p><strong>Subjects:</strong> Literacy, Numeracy, Geography, Challenges</p>
+          <p><strong>Curriculum:</strong> Scottish Curriculum for Excellence (Early, First, Second Level)</p>
+          <p><strong>Features:</strong> Adaptive difficulty, sound effects, per-pupil tracking, avatar builder, certificates, worksheets, whole-class mode, custom quiz builder, class leaderboard</p>
+          <p><strong>Data:</strong> All data stored locally on this device. No internet required.</p>
+          <p style="margin-top:8px;color:#8899aa">Built for South Lodge Primary School.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SPELLING -->
+<div id="spelling" class="screen game-screen">
+  <div class="game-header" style="border-color:#ffd200"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#f7971e">Spelling</h2></div>
+  <div class="game-body">
+    <div id="spellingLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="setSpellingLevel(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="setSpellingLevel(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="setSpellingLevel(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="spellingGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill orange" id="spellProgress"></div></div>
+      <div class="progress-text" id="spellProgressText"></div>
+      <div class="spell-display">
+        <div class="spell-picture" id="spellPic"></div>
+        <div class="spell-clue" id="spellHint"></div>
+        <div class="spell-slots" id="spellWord"></div>
+        <div class="lives-row" id="spellLives"></div>
+        <div id="extraLifeWrap" style="text-align:center;margin-top:6px;display:none;"><button class="hint-btn" id="extraLifeBtn" onclick="useExtraLife()" style="background:#e74c3c;color:#fff;">\u2764\uFE0F Use Extra Life</button></div>
+      </div>
+      <div style="text-align:center;margin-bottom:10px;">
+        <button class="hint-btn" id="hintBtn" onclick="showHint()">Show Hint</button>
+        <button class="hint-btn" id="revealLetterBtn" onclick="useRevealLetter()" style="background:#f39c12;color:#fff;display:none;">\uD83D\uDCA1 Reveal Letter</button>
+      </div>
+      <div class="keyboard" id="keyboard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MATHS -->
+<div id="maths" class="screen game-screen">
+  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Maths</h2></div>
+  <div class="game-body">
+    <div id="mathsLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="setMathsLevel(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="setMathsLevel(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="setMathsLevel(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+      </div>
+    </div>
+    <div id="mathsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill blue" id="mathProgress"></div></div>
+      <div class="progress-text" id="mathProgressText"></div>
+      <div class="maths-display">
+        <div class="maths-q" id="mathQuestion"></div>
+        <div class="maths-ans" id="mathAnswer">_</div>
+      </div>
+      <div class="numpad" id="numpad"></div>
+    </div>
+  </div>
+  <div class="feedback-overlay" id="mathFeedback"><div class="fb-content" id="mathFeedbackContent"></div></div>
+</div>
+
+<!-- TIMES TABLES -->
+<div id="times" class="screen game-screen">
+  <div class="game-header" style="border-color:#f16529"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e44d26">Times Tables</h2></div>
+  <div class="game-body">
+    <div id="timesTableSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Pick a table to practise:</p>
+      <div class="tt-grid" id="tableGrid"></div>
+    </div>
+    <div id="timesGame" style="display:none;">
+      <div class="tt-timer" id="ttTimer">0.0s</div>
+      <div class="progress-bar"><div class="progress-fill red" id="ttProgress"></div></div>
+      <div class="progress-text" id="ttProgressText"></div>
+      <div class="maths-display">
+        <div class="maths-q" id="ttQuestion" style="font-size:2.4rem"></div>
+        <div class="maths-ans" id="ttAnswer" style="color:#e44d26">_</div>
+      </div>
+      <div class="numpad" id="ttNumpad"></div>
+    </div>
+  </div>
+  <div class="feedback-overlay" id="ttFeedback"><div class="fb-content" id="ttFeedbackContent"></div></div>
+</div>
+
+<!-- READING -->
+<div id="reading" class="screen game-screen">
+  <div class="game-header" style="border-color:#a8e063"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#56ab2f">Reading</h2></div>
+  <div class="game-body">
+    <div id="readingLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="setReadingLevel(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="setReadingLevel(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="setReadingLevel(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="readingStorySelect" style="display:none;">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose a story:</p>
+      <div id="storyList"></div>
+      <button class="hint-btn" onclick="showReadingLevels()" style="margin-top:12px">&larr; Change level</button>
+    </div>
+    <div id="readingGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill green" id="readProgress"></div></div>
+      <div class="progress-text" id="readProgressText"></div>
+      <h3 id="readingStoryTitle" style="margin-bottom:10px"></h3>
+      <div id="readingPassage" class="story-text"></div>
+      <div id="readingReadBtn" style="text-align:center;margin-top:14px;">
+        <button class="r-btn r-btn-primary" onclick="readingShowQuestion()">I've read it!</button>
+      </div>
+      <div id="readingQuestion" style="display:none;"><div id="readingQA"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY -->
+<div id="daily" class="screen game-screen">
+  <div class="game-header" style="border-color:#a29bfe"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Daily Challenge</h2></div>
+  <div class="game-body">
+    <div id="dailyLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startDaily(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startDaily(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startDaily(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="dailyGame" style="display:none;">
+      <div class="daily-steps" id="dailySteps"></div>
+      <div id="dailyContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SPEED MATHS -->
+<div id="speed" class="screen game-screen">
+  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
+  <div class="game-body">
+    <div id="speedLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+      </div>
+    </div>
+    <div id="speedGame" style="display:none;">
+      <div class="speed-timer normal" id="speedTimer">60</div>
+      <div class="speed-score">Score: <span id="speedScore">0</span></div>
+      <div class="speed-q" id="speedQ"></div>
+      <div class="speed-ans normal" id="speedAns">_</div>
+      <div class="numpad" id="speedNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- WORD PROBLEMS -->
+<div id="wordprob" class="screen game-screen">
+  <div class="game-header" style="border-color:#4286f4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#373b44">Word Problems</h2></div>
+  <div class="game-body">
+    <div id="wpLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startWP(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">One step</div></div>
+        <div class="level-card lc-2" onclick="startWP(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Two step</div></div>
+        <div class="level-card lc-3" onclick="startWP(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Multi-step</div></div>
+      </div>
+    </div>
+    <div id="wpGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="wpProgress" style="background:linear-gradient(90deg,#373b44,#4286f4)"></div></div>
+      <div class="progress-text" id="wpProgressText"></div>
+      <div class="story-text" id="wpProblem" style="max-height:none;border-color:#4286f4"></div>
+      <div class="maths-ans" id="wpAnswer" style="color:#4286f4">_</div>
+      <div class="numpad" id="wpNumpad"></div>
+    </div>
+  </div>
+  <div class="feedback-overlay" id="wpFeedback"><div class="fb-content" id="wpFeedbackContent"></div></div>
+</div>
+
+<!-- FRACTIONS -->
+<div id="fractions" class="screen game-screen">
+  <div class="game-header" style="border-color:#ee9ca7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
+  <div class="game-body">
+    <div id="fracLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
+        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
+        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
+      </div>
+    </div>
+    <div id="fracGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#ee9ca7,#ffdde1)"></div></div>
+      <div class="progress-text" id="fracProgressText"></div>
+      <div id="fracDisplay"></div>
+      <div class="ph-options" id="fracOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MONEY -->
+<div id="money" class="screen game-screen">
+  <div class="game-header" style="border-color:#2ecc71"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#1a5276">Money</h2></div>
+  <div class="game-body">
+    <div id="moneyLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startMoney(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 20p</div></div>
+        <div class="level-card lc-2" onclick="startMoney(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to &#xA3;1</div></div>
+        <div class="level-card lc-3" onclick="startMoney(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">&#xA3; and change</div></div>
+      </div>
+    </div>
+    <div id="moneyGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="moneyProgress" style="background:linear-gradient(90deg,#1a5276,#2ecc71)"></div></div>
+      <div class="progress-text" id="moneyProgressText"></div>
+      <div id="moneyDisplay"></div>
+      <div class="ph-options" id="moneyOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TELLING TIME -->
+<div id="telltime" class="screen game-screen">
+  <div class="game-header" style="border-color:#3498db"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2c3e50">Telling Time</h2></div>
+  <div class="game-body">
+    <div id="ttimeLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startTTime(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">O'clock &amp; half past</div></div>
+        <div class="level-card lc-2" onclick="startTTime(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Quarter past/to</div></div>
+        <div class="level-card lc-3" onclick="startTTime(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">5-min intervals</div></div>
+      </div>
+    </div>
+    <div id="ttimeGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="ttimeProgress" style="background:linear-gradient(90deg,#2c3e50,#3498db)"></div></div>
+      <div class="progress-text" id="ttimeProgressText"></div>
+      <div id="clockDisplay"></div>
+      <div class="ph-prompt" id="ttimePrompt">What time does the clock show?</div>
+      <div class="ph-options" id="ttimeOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PLACE VALUE -->
+<div id="placeval" class="screen game-screen">
+  <div class="game-header" style="border-color:#eea849"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#f46b45">Place Value</h2></div>
+  <div class="game-body">
+    <div id="pvLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startPV(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Tens &amp; ones</div></div>
+        <div class="level-card lc-2" onclick="startPV(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Hundreds</div></div>
+        <div class="level-card lc-3" onclick="startPV(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Thousands</div></div>
+      </div>
+    </div>
+    <div id="pvGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="pvProgress" style="background:linear-gradient(90deg,#f46b45,#eea849)"></div></div>
+      <div class="progress-text" id="pvProgressText"></div>
+      <div id="pvDisplay"></div>
+      <div class="ph-options" id="pvOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MISSING NUMBER -->
+<div id="missnum" class="screen game-screen">
+  <div class="game-header" style="border-color:#71b280"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
+  <div class="game-body">
+    <div id="mnLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+      </div>
+    </div>
+    <div id="mnGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#134e5e,#71b280)"></div></div>
+      <div class="progress-text" id="mnProgressText"></div>
+      <div class="maths-display"><div class="maths-q" id="mnQuestion" style="color:#134e5e"></div><div class="maths-ans" id="mnAnswer" style="color:#134e5e">_</div></div>
+      <div class="numpad" id="mnNumpad"></div>
+    </div>
+  </div>
+  <div class="feedback-overlay" id="mnFeedback"><div class="fb-content" id="mnFeedbackContent"></div></div>
+</div>
+
+<!-- VOCABULARY -->
+<div id="vocab" class="screen game-screen">
+  <div class="game-header" style="border-color:#8e54e9"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#4776e6">Vocabulary</h2></div>
+  <div class="game-body">
+    <div id="vocabLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startVocab(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startVocab(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startVocab(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="vocabGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="vocProgress" style="background:linear-gradient(90deg,#4776e6,#8e54e9)"></div></div>
+      <div class="progress-text" id="vocProgressText"></div>
+      <div class="ph-sound" style="background:#f0ecff;border-color:#8e54e9;color:#4776e6" id="vocPrompt"></div>
+      <div class="ph-options" id="vocOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PUNCTUATION -->
+<div id="punctuation" class="screen game-screen">
+  <div class="game-header" style="border-color:#f0932b"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ee5a24">Punctuation</h2></div>
+  <div class="game-body">
+    <div id="punctLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startPunct(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">. and ABC</div></div>
+        <div class="level-card lc-2" onclick="startPunct(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">, ? !</div></div>
+        <div class="level-card lc-3" onclick="startPunct(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">' " : ;</div></div>
+      </div>
+    </div>
+    <div id="punctGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="punctProgress" style="background:linear-gradient(90deg,#ee5a24,#f0932b)"></div></div>
+      <div class="progress-text" id="punctProgressText"></div>
+      <div class="ph-prompt" id="punctPrompt"></div>
+      <div class="punct-sentence" id="punctSentence"></div>
+      <div class="ph-options" id="punctOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SENTENCE ORDERING -->
+<div id="sentence" class="screen game-screen">
+  <div class="game-header" style="border-color:#5fc3e4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e55d87">Sentences</h2></div>
+  <div class="game-body">
+    <div id="sentLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startSent(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Short sentences</div></div>
+        <div class="level-card lc-2" onclick="startSent(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Longer sentences</div></div>
+        <div class="level-card lc-3" onclick="startSent(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Complex sentences</div></div>
+      </div>
+    </div>
+    <div id="sentGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="sentProgress" style="background:linear-gradient(90deg,#e55d87,#5fc3e4)"></div></div>
+      <div class="progress-text" id="sentProgressText"></div>
+      <div class="anagram-label">Tap words in the correct order:</div>
+      <div class="sent-ans" id="sentAns"></div>
+      <div class="sent-pool" id="sentPool"></div>
+      <button class="sent-check" id="sentCheck" onclick="checkSentAns()">Check</button>
+      <div id="sentFeedback"></div>
+    </div>
+  </div>
+</div>
+
+<!-- WORD FAMILIES -->
+<div id="wordfam" class="screen game-screen">
+  <div class="game-header" style="border-color:#c39bd3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#8e44ad">Word Families</h2></div>
+  <div class="game-body">
+    <div id="wfLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startWF(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">-at, -an, -ig</div></div>
+        <div class="level-card lc-2" onclick="startWF(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">-ight, -tion</div></div>
+        <div class="level-card lc-3" onclick="startWF(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Suffixes</div></div>
+      </div>
+    </div>
+    <div id="wfGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="wfProgress" style="background:linear-gradient(90deg,#8e44ad,#c39bd3)"></div></div>
+      <div class="progress-text" id="wfProgressText"></div>
+      <div id="wfDisplay"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHONICS -->
+<div id="phonics" class="screen game-screen">
+  <div class="game-header" style="border-color:#48dbfb"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0abde3">Phonics</h2></div>
+  <div class="game-body">
+    <div id="phonicsLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startPhonics(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">CVC + digraphs</div></div>
+        <div class="level-card lc-2" onclick="startPhonics(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Vowel digraphs</div></div>
+        <div class="level-card lc-3" onclick="startPhonics(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Complex patterns</div></div>
+      </div>
+    </div>
+    <div id="phonicsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="phProgress" style="background:linear-gradient(90deg,#0abde3,#48dbfb)"></div></div>
+      <div class="progress-text" id="phProgressText"></div>
+      <div id="phDisplay"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ANAGRAM -->
+<div id="anagram" class="screen game-screen">
+  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c44569">Anagrams</h2></div>
+  <div class="game-body">
+    <div id="anagramLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startAnagram(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startAnagram(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startAnagram(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="anagramGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="anaProgress" style="background:linear-gradient(90deg,#c44569,#f78fb3)"></div></div>
+      <div class="progress-text" id="anaProgressText"></div>
+      <div class="spell-picture" id="anaPic" style="border-color:#f78fb3;background:linear-gradient(135deg,#fff5f8,#ffe8f0)"></div>
+      <div class="anagram-label">Tap letters to spell the word:</div>
+      <div class="anagram-ans" id="anaAns"></div>
+      <div class="anagram-label">Available letters:</div>
+      <div class="anagram-pool" id="anaPool"></div>
+      <div class="mv-hint" id="anaHint"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DICTATION -->
+<div id="dictation" class="screen game-screen">
+  <div class="game-header" style="border-color:#ab83a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6a0572">Dictation</h2></div>
+  <div class="game-body">
+    <div id="dictLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startDict(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startDict(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startDict(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="dictGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="dictProgress" style="background:linear-gradient(90deg,#6a0572,#ab83a1)"></div></div>
+      <div class="progress-text" id="dictProgressText"></div>
+      <div class="dict-speaker" id="dictSpeaker" onclick="speakWord()">&#x1F50A;</div>
+      <button class="dict-repeat" onclick="speakWord()">Hear it again</button>
+      <input type="text" id="dictInput" class="mv-input" style="border-color:#ab83a1" autocomplete="off" autocapitalize="off" placeholder="Type what you hear...">
+      <button class="mv-submit" style="background:linear-gradient(135deg,#6a0572,#ab83a1);box-shadow:0 4px 0 #4a0350" onclick="checkDictAns()">Check</button>
+      <div class="mv-hint" id="dictHint"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MISSING VOWELS -->
+<div id="vowels" class="screen game-screen">
+  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e84393">Missing Vowels</h2></div>
+  <div class="game-body">
+    <div id="vowelsLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startVowels(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startVowels(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startVowels(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+      </div>
+    </div>
+    <div id="vowelsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="mvProgress" style="background:linear-gradient(90deg,#e84393,#fd79a8)"></div></div>
+      <div class="progress-text" id="mvProgressText"></div>
+      <div class="spell-picture" id="mvPic" style="border-color:#fd79a8;background:linear-gradient(135deg,#fff0f6,#ffe0ec)"></div>
+      <div class="mv-word" id="mvWord"></div>
+      <div class="mv-hint" id="mvHint"></div>
+      <input type="text" id="mvInput" class="mv-input" autocomplete="off" autocapitalize="off" placeholder="Type the full word...">
+      <button class="mv-submit" onclick="checkMvAns()">Check</button>
+    </div>
+  </div>
+</div>
+
+<!-- NUMBER BONDS -->
+<div id="bonds" class="screen game-screen">
+  <div class="game-header" style="border-color:#38ef7d"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
+  <div class="game-body">
+    <div id="bondsLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">10</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
+        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">20</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
+        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">100</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
+      </div>
+    </div>
+    <div id="bondsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#11998e,#38ef7d)"></div></div>
+      <div class="progress-text" id="nbProgressText"></div>
+      <div id="nbDisplay"></div>
+      <div class="nb-ans" id="nbAns">_</div>
+      <div class="numpad" id="nbNumpad"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SHAPES -->
+<div id="shapes" class="screen game-screen">
+  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Shapes</h2></div>
+  <div class="game-body">
+    <div id="shapesLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startShapes(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">2D shapes</div></div>
+        <div class="level-card lc-2" onclick="startShapes(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Properties</div></div>
+        <div class="level-card lc-3" onclick="startShapes(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">3D &amp; angles</div></div>
+      </div>
+    </div>
+    <div id="shapesGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="shapeProgress" style="background:linear-gradient(90deg,#6c5ce7,#fd79a8)"></div></div>
+      <div class="progress-text" id="shapeProgressText"></div>
+      <div class="shape-display" id="shapeDisplay"></div>
+      <div class="ph-options" id="shapeOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DATA HANDLING -->
+<div id="datahandling" class="screen game-screen">
+  <div class="game-header" style="border-color:#55efc4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00b894">Data Handling</h2></div>
+  <div class="game-body">
+    <div id="dataLevelSelect">
+      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startData(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Read charts</div></div>
+        <div class="level-card lc-2" onclick="startData(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Compare data</div></div>
+        <div class="level-card lc-3" onclick="startData(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mean &amp; totals</div></div>
+      </div>
+    </div>
+    <div id="dataGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="dataProgress" style="background:linear-gradient(90deg,#00b894,#55efc4)"></div></div>
+      <div class="progress-text" id="dataProgressText"></div>
+      <div id="dataDisplay"></div>
+      <div class="ph-options" id="dataOpts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CAPITALS -->
+<div id="capitals" class="screen game-screen">
+  <div class="game-header" style="border-color:#52b788"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2d6a4f">Capital Cities</h2></div>
+  <div class="game-body">
+    <div id="capsLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div><div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div><div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div></div></div>
+    <div id="capsGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="capsProgress" style="background:linear-gradient(90deg,#2d6a4f,#52b788)"></div></div><div class="progress-text" id="capsProgressText"></div><div id="capsDisplay"></div><div class="ph-options" id="capsOpts"></div></div>
+  </div>
+</div>
+
+<!-- CONTINENTS -->
+<div id="continents" class="screen game-screen">
+  <div class="game-header" style="border-color:#2a9d8f"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#264653">World Geography</h2></div>
+  <div class="game-body">
+    <div id="contLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div><div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div><div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div></div></div>
+    <div id="contGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="contProgress" style="background:linear-gradient(90deg,#264653,#2a9d8f)"></div></div><div class="progress-text" id="contProgressText"></div><div id="contDisplay"></div><div class="ph-options" id="contOpts"></div></div>
+  </div>
+</div>
+
+<!-- WEATHER -->
+<div id="weather" class="screen game-screen">
+  <div class="game-header" style="border-color:#a8dadc"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#457b9d">Weather &amp; Climate</h2></div>
+  <div class="game-body">
+    <div id="weatherLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startWeather(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Seasons &amp; weather</div></div><div class="level-card lc-2" onclick="startWeather(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Weather patterns</div></div><div class="level-card lc-3" onclick="startWeather(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate zones</div></div></div></div>
+    <div id="weatherGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="weatherProgress" style="background:linear-gradient(90deg,#457b9d,#a8dadc)"></div></div><div class="progress-text" id="weatherProgressText"></div><div id="weatherDisplay"></div><div class="ph-options" id="weatherOpts"></div></div>
+  </div>
+</div>
+
+<!-- COMPASS -->
+<div id="compass" class="screen game-screen">
+  <div class="game-header" style="border-color:#ca6702"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#9b2226">Compass Directions</h2></div>
+  <div class="game-body">
+    <div id="compassGame"><div class="progress-bar"><div class="progress-fill" id="compassProgress" style="background:linear-gradient(90deg,#9b2226,#ca6702)"></div></div><div class="progress-text" id="compassProgressText"></div><div id="compassDisplay"></div><div class="ph-options" id="compassOpts"></div></div>
+  </div>
+</div>
+
+<!-- FLAGS -->
+<div id="flags" class="screen game-screen">
+  <div class="game-header" style="border-color:#669bbc"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#003049">Flags</h2></div>
+  <div class="game-body">
+    <div id="flagsGame"><div class="progress-bar"><div class="progress-fill" id="flagsProgress" style="background:linear-gradient(90deg,#003049,#669bbc)"></div></div><div class="progress-text" id="flagsProgressText"></div><div id="flagsDisplay" style="text-align:center;margin:16px 0"></div><div class="ph-options" id="flagsOpts"></div></div>
+  </div>
+</div>
+
+<!-- MEMORY MATCH -->
+<div id="memorymatch" class="screen game-screen">
+  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e056a0">Memory Match</h2></div>
+  <div class="game-body"><div class="progress-text" id="memStatus"></div><div class="mem-grid" id="memGrid"></div></div>
+</div>
+
+<!-- GRAMMAR -->
+<div id="grammar" class="screen game-screen">
+  <div class="game-header" style="border-color:#b2bec3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#636e72">Grammar</h2></div>
+  <div class="game-body">
+    <div id="grammarLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startGrammar(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Nouns &amp; Verbs</div></div><div class="level-card lc-2" onclick="startGrammar(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Adjectives</div></div><div class="level-card lc-3" onclick="startGrammar(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Adverbs &amp; more</div></div></div></div>
+    <div id="grammarGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="gramProgress" style="background:linear-gradient(90deg,#636e72,#b2bec3)"></div></div><div class="progress-text" id="gramProgressText"></div><div id="gramDisplay"></div><div class="ph-options" id="gramOpts"></div></div>
+  </div>
+</div>
+
+<!-- SPELLING BEE -->
+<div id="spellingbee" class="screen game-screen">
+  <div class="game-header" style="border-color:#f7971e"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fdcb6e">Spelling Bee</h2></div>
+  <div class="game-body">
+    <div id="beeGame"><div class="bee-lives" id="beeLives"></div><div class="spell-picture" id="beePic" style="border-color:#fdcb6e;background:linear-gradient(135deg,#fff9e6,#fff3cc)"></div><div class="mv-hint" id="beeHint"></div><input type="text" id="beeInput" class="mv-input" style="border-color:#fdcb6e" autocomplete="off" autocapitalize="off" placeholder="Spell the word..."><button class="mv-submit" style="background:linear-gradient(135deg,#fdcb6e,#f7971e);box-shadow:0 4px 0 #e0a800" onclick="checkBee()">Check</button><div class="progress-text" id="beeScore"></div></div>
+  </div>
+</div>
+
+<!-- RHYMING -->
+<div id="rhyme" class="screen game-screen">
+  <div class="game-header" style="border-color:#a29bfe"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Rhyming</h2></div>
+  <div class="game-body">
+    <div id="rhymeLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startRhyme(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Simple rhymes</div></div><div class="level-card lc-2" onclick="startRhyme(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Longer words</div></div><div class="level-card lc-3" onclick="startRhyme(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Tricky rhymes</div></div></div></div>
+    <div id="rhymeGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="rhymeProgress" style="background:linear-gradient(90deg,#a29bfe,#6c5ce7)"></div></div><div class="progress-text" id="rhymeProgressText"></div><div id="rhymeDisplay"></div><div class="ph-options" id="rhymeOpts"></div></div>
+  </div>
+</div>
+
+<!-- MEASUREMENT -->
+<div id="measure" class="screen game-screen">
+  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Measurement</h2></div>
+  <div class="game-body">
+    <div id="measureLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startMeasure(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Compare</div></div><div class="level-card lc-2" onclick="startMeasure(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Units</div></div><div class="level-card lc-3" onclick="startMeasure(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Convert</div></div></div></div>
+    <div id="measureGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="measureProgress" style="background:linear-gradient(90deg,#0984e3,#74b9ff)"></div></div><div class="progress-text" id="measureProgressText"></div><div id="measureDisplay"></div><div class="ph-options" id="measureOpts"></div></div>
+  </div>
+</div>
+
+<!-- SEQUENCES -->
+<div id="sequence" class="screen game-screen">
+  <div class="game-header" style="border-color:#81ecec"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00cec9">Sequences</h2></div>
+  <div class="game-body">
+    <div id="seqLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startSeq(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Count by 1s, 2s</div></div><div class="level-card lc-2" onclick="startSeq(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Count by 5s, 10s</div></div><div class="level-card lc-3" onclick="startSeq(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mixed patterns</div></div></div></div>
+    <div id="seqGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="seqProgress" style="background:linear-gradient(90deg,#00cec9,#81ecec)"></div></div><div class="progress-text" id="seqProgressText"></div><div id="seqDisplay"></div><div class="ph-options" id="seqOpts"></div></div>
+  </div>
+</div>
+
+<!-- SCOTTISH QUIZ -->
+<div id="scotquiz" class="screen game-screen">
+  <div class="game-header" style="border-color:#0084C8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#005EB8">Scotland Quiz</h2></div>
+  <div class="game-body">
+    <div id="scotGame"><div class="progress-bar"><div class="progress-fill" id="scotProgress" style="background:linear-gradient(90deg,#005EB8,#0084C8)"></div></div><div class="progress-text" id="scotProgressText"></div><div id="scotDisplay"></div><div class="ph-options" id="scotOpts"></div></div>
+  </div>
+</div>
+
+<!-- TYPING -->
+<div id="typing" class="screen game-screen">
+  <div class="game-header" style="border-color:#636e72"><button class="nav-btn" onclick="endTyping();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endTyping();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2d3436">Typing Speed</h2></div>
+  <div class="game-body">
+    <div class="typing-stats"><div class="typing-stat"><div class="ts-val" id="typingWPM">0</div><div class="ts-lbl">WPM</div></div><div class="typing-stat"><div class="ts-val" id="typingCorrect">0</div><div class="ts-lbl">Correct</div></div><div class="typing-stat"><div class="ts-val" id="typingTimer">60</div><div class="ts-lbl">Seconds</div></div></div>
+    <div class="typing-word" id="typingWord"></div>
+    <input class="typing-input" id="typingInput" autocomplete="off" autocapitalize="off" placeholder="Type the word...">
+  </div>
+</div>
+
+<!-- CUSTOM QUIZ -->
+<div id="customquiz" class="screen game-screen">
+  <div class="game-header" style="border-color:#fab1a0"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e17055">Teacher's Quiz</h2></div>
+  <div class="game-body">
+    <div id="customGame"><div class="progress-bar"><div class="progress-fill" id="customProgress" style="background:linear-gradient(90deg,#e17055,#fab1a0)"></div></div><div class="progress-text" id="customProgressText"></div><div id="customDisplay"></div><div class="ph-options" id="customOpts"></div></div>
+  </div>
+</div>
+
+<!-- HEAD TO HEAD -->
+<div id="h2h" class="screen game-screen">
+  <div class="game-header" style="border-color:#e17055"><button class="nav-btn" onclick="endH2H();goHome()" title="Back">&larr; Back</button><h2 class="game-title" style="color:#d63031">Head to Head</h2></div>
+  <div id="h2hSetup" class="game-body" style="text-align:center;">
+    <h3 style="margin-bottom:16px">Enter player names:</h3>
+    <input class="mv-input" id="h2hName1" placeholder="Player 1" style="margin-bottom:8px;max-width:250px"><br>
+    <input class="mv-input" id="h2hName2" placeholder="Player 2" style="margin-bottom:16px;max-width:250px"><br>
+    <button class="r-btn r-btn-primary" style="background:linear-gradient(135deg,#d63031,#e17055)" onclick="startH2H()">Start Race!</button>
+  </div>
+  <div id="h2hGame" style="display:none;">
+    <div class="h2h-split">
+      <div class="h2h-side left">
+        <div class="h2h-name" id="h2hP1Name">Player 1</div>
+        <div class="h2h-score" id="h2hP1Score" style="color:#0984e3">0</div>
+        <div class="h2h-q" id="h2hP1Q"></div>
+        <input class="h2h-input" id="h2hP1Input" autocomplete="off" onkeydown="if(event.key==='Enter')checkH2H(1)">
+      </div>
+      <div class="h2h-side right">
+        <div class="h2h-name" id="h2hP2Name">Player 2</div>
+        <div class="h2h-score" id="h2hP2Score" style="color:#d63031">0</div>
+        <div class="h2h-q" id="h2hP2Q"></div>
+        <input class="h2h-input" id="h2hP2Input" autocomplete="off" onkeydown="if(event.key==='Enter')checkH2H(2)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HIGHLAND DASH -->
+<div id="hdash" class="screen game-screen">
+  <div class="game-header" style="border-color:#2d5a3d">
+    <button class="nav-btn" onclick="hdashStop();goHome()" title="Back">&larr; Back</button>
+    <button class="nav-btn home-btn" onclick="hdashStop();showScreen('landing')" title="Home">&#x1F3E0; Home</button>
+    <h2 class="game-title" style="color:#5cb87a">&#x1F3CE; Highland Dash</h2>
+  </div>
+  <canvas id="hdash-canvas"></canvas>
+  <div class="hdash-hud" id="hdashHud" style="display:none">
+    <div class="hdash-boost-bar"><div class="hdash-boost-fill" id="hdashBoostFill"></div></div>
+    <div class="hdash-hud-tl">
+      <div class="hdash-lives" id="hdashLives">&#x1F404;&#x1F404;&#x1F404;</div>
+      <div class="hdash-streak" id="hdashStreak"></div>
+    </div>
+    <div class="hdash-hud-tr">
+      <div class="hdash-speed"><span id="hdashSpeed">0</span></div>
+      <div class="hdash-speed-unit">mph</div>
+      <div class="hdash-dist"><span id="hdashDist">0</span>m</div>
+    </div>
+    <div class="hdash-msg" id="hdashMsg"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" class="screen results-screen">
+  <div>
+    <div class="results-icon" id="resultsIcon"></div>
+    <h1 class="results-title" id="resultsTitle"></h1>
+    <div class="results-sub" id="resultsSub"></div>
+    <div class="star-row" id="starRow"></div>
+    <div class="results-stats" id="resultsStats"></div>
+    <div id="missedWords"></div>
+    <div class="results-btns">
+      <button class="r-btn r-btn-primary" id="resultsPlayAgain">Play Again</button>
+      <button class="r-btn r-btn-ghost" onclick="goHome()">&#x2190; Menu</button>
+      <button class="r-btn r-btn-ghost" onclick="showScreen('landing')" style="color:#11998e">&#x1F3E0; Home</button>
+      <button class="r-btn r-btn-ghost" id="certBtn" style="display:none;color:#ffd700">Print Certificate</button>
+    </div>
+  </div>
+</div>
+
+</div>
