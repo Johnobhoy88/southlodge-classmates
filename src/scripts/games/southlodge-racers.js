@@ -111,7 +111,7 @@
       + '<div class="ach-popup-label">Mission reward</div>'
       + '<div class="ach-popup-icon">🏁</div>'
       + '<div class="ach-popup-title">Southlodge Racers</div>'
-      + '<div class="ach-popup-desc">' + lines.map(function(line){ return String(line); }).join('<br>') + '</div>'
+      + '<div class="ach-popup-desc">' + lines.map(function(line){ return escapeHtml(String(line)); }).join('<br>') + '</div>'
       + '</div>';
     document.body.appendChild(popup);
     setTimeout(function(){ if (popup.parentNode) popup.remove(); }, 3200);
@@ -222,9 +222,11 @@
       if (unlocked.indexOf(reward.id) !== -1) return;
       if (unlockedRewards.length > 0) return;
       state = ClassmatesAppState.unlockRacerCosmetic(state, {
+        unlockId: reward.id,
         id: reward.cosmeticId,
         type: reward.type,
-        name: reward.name
+        name: reward.name,
+        cosmeticId: reward.cosmeticId
       });
       unlockedRewards.push(reward);
       if (typeof saveState === 'function') saveState();
@@ -240,6 +242,26 @@
     utterance.pitch = 1.02;
     window.speechSynthesis.speak(utterance);
     return true;
+  }
+
+  function getPackOutcomes(pack) {
+    if (!pack || !Array.isArray(pack.cfeOutcomeLabels)) return [];
+    if (window.ClassmatesCurriculum && typeof ClassmatesCurriculum.getOutcomesForPack === 'function') {
+      return ClassmatesCurriculum.getOutcomesForPack(pack);
+    }
+    return pack.cfeOutcomeLabels.map(function(code){
+      return { code: code, title: code, description: '' };
+    });
+  }
+
+  function getIntroOutcomeCopy(pack) {
+    const outcomes = getPackOutcomes(pack);
+    if (!outcomes.length) return '';
+    const primary = outcomes[0];
+    const extraCodes = outcomes.slice(1).map(function(outcome){
+      return outcome.code;
+    }).join(', ');
+    return primary.code + ' · ' + primary.title + (primary.description ? (' - ' + primary.description) : '') + (extraCodes ? (' Additional outcomes: ' + extraCodes + '.') : '');
   }
 
   function recommendStageBand(snapshot) {
@@ -271,6 +293,107 @@
         ? ClassmatesSouthlodgeRacersPacks.buildMissionWords(pack ? pack.id : '', missionLength)
         : []
     };
+  }
+
+  function renderMissionIntro() {
+    if (!RACER.session) return;
+    const introTitle = document.getElementById('racerIntroTitle');
+    const introBody = document.getElementById('racerIntroBody');
+    const introNote = document.getElementById('racerIntroNote');
+    const introCfe = document.getElementById('racerCfeBrief');
+    const introLoadout = document.getElementById('racerIntroLoadout');
+    const introStart = document.getElementById('racerIntroStart');
+    const cfeCopy = getIntroOutcomeCopy(RACER.session.pack);
+
+    if (introTitle) introTitle.textContent = RACER.session.pack.title;
+    if (introBody) {
+      introBody.textContent = RACER.session.assignment
+        ? 'Your teacher launched this class route. Listen for the word, steer into the matching gate, and get set for the 3-2-1 countdown.'
+        : 'Listen for the word, steer into the matching gate, and build a clean streak through the route.';
+    }
+    if (introNote) {
+      introNote.textContent = RACER.session.stageBand + ' Level · ' + RACER.session.words.length + ' gates · Pack ' + RACER.session.pack.shortTitle;
+    }
+    if (introCfe) {
+      introCfe.textContent = cfeCopy ? ('CfE focus: ' + cfeCopy) : '';
+      introCfe.style.display = cfeCopy ? 'block' : 'none';
+    }
+    if (introLoadout) {
+      introLoadout.textContent = 'Car: ' + RACER.session.loadoutLabels.colorLabel + ' · Trail: ' + RACER.session.loadoutLabels.trailLabel + ' · Title: ' + RACER.session.loadoutLabels.titleLabel;
+      introLoadout.style.display = 'block';
+    }
+    if (introStart) {
+      introStart.disabled = false;
+      introStart.textContent = RACER.session.assignment ? 'Start class race' : 'Start race';
+    }
+  }
+
+  function setIntroCountdown(text, stateName) {
+    const countdown = document.getElementById('racerIntroCountdown');
+    if (!countdown) return;
+    countdown.classList.remove('visible', 'pulse');
+    countdown.textContent = text || '';
+    countdown.dataset.state = stateName || '';
+    if (!text) return;
+    void countdown.offsetWidth;
+    countdown.classList.add('visible', 'pulse');
+  }
+
+  function clearMissionCountdown() {
+    clearTimeout(RACER.countdownTimer);
+    RACER.countdownTimer = null;
+    if (RACER.session) RACER.session.countdownActive = false;
+    setIntroCountdown('', '');
+    const introStart = document.getElementById('racerIntroStart');
+    if (introStart) {
+      introStart.disabled = false;
+      introStart.textContent = RACER.session && RACER.session.assignment ? 'Start class race' : 'Start race';
+    }
+  }
+
+  function getMissionProgress() {
+    if (!RACER.session || !RACER.session.words.length) return 0;
+    const total = RACER.session.words.length;
+    const currentGateProgress = RACER.currentGate
+      ? clamp(
+          (RACER.currentGate.position.z - (RACER.currentGate.userData.startZ || -180))
+            / (44 - (RACER.currentGate.userData.startZ || -180)),
+          0,
+          1
+        )
+      : 0;
+    return clamp((RACER.session.completed + currentGateProgress) / total, 0, 1);
+  }
+
+  function getPacingProfile(progress) {
+    const missionProgress = clamp(typeof progress === 'number' ? progress : getMissionProgress(), 0, 1);
+    const midRacePressure = clamp(1 - (Math.abs(missionProgress - 0.58) / 0.34), 0, 1);
+    const finishEase = clamp((missionProgress - 0.82) / 0.18, 0, 1);
+    return {
+      cruiseSpeed: 18 + (missionProgress * 4.4) + (midRacePressure * 3.1) - (finishEase * 5.3),
+      gateDelay: 0.94 - (midRacePressure * 0.28) + (finishEase * 0.18)
+    };
+  }
+
+  function animateRacerFeedback(kind) {
+    const brief = document.querySelector('#hdashHud .racer-brief');
+    if (!brief) {
+      if (typeof flashScreen === 'function') flashScreen(kind !== 'bad');
+      return;
+    }
+    brief.classList.remove('racer-brief-good', 'racer-brief-bad', 'racer-brief-shake');
+    void brief.offsetWidth;
+    if (kind === 'good') {
+      brief.classList.add('racer-brief-good');
+      if (typeof flashScreen === 'function') flashScreen(true);
+      return;
+    }
+    brief.classList.add('racer-brief-bad', 'racer-brief-shake');
+    if (typeof flashScreen === 'function') flashScreen(false);
+  }
+
+  function getNextGateDelay() {
+    return getPacingProfile(getMissionProgress()).gateDelay;
   }
 
   function disposeObject(object) {
@@ -467,7 +590,7 @@
     setText('racerPromptWord', RACER.session.currentWord ? RACER.session.currentWord.word : 'Get ready');
     setText('racerPromptSentence', RACER.session.currentWord ? RACER.session.currentWord.sentence : 'Press start to open the first spelling gate.');
     setText('racerProgress', progress);
-    setText('racerStreak', RACER.session.maxStreak ? 'Best streak ' + RACER.session.maxStreak : 'Best streak 0');
+    setText('racerStreak', 'Streak ' + RACER.session.streak + ' · Best ' + RACER.session.maxStreak);
     setText('racerSpeed', Math.round(speed * 4) + ' mph');
     setText('racerShield', 'Shield ' + RACER.session.shields);
   }
@@ -615,9 +738,11 @@
     removeGate();
     if (RACER.session.wordIndex >= RACER.session.words.length) return;
     const entry = RACER.session.words[RACER.session.wordIndex];
+    const startZ = initial ? -110 : -180;
     RACER.session.currentWord = entry;
     RACER.currentGate = buildGate(entry, RACER.session.pack.accent);
-    RACER.currentGate.position.z = initial ? -110 : -180;
+    RACER.currentGate.position.z = startZ;
+    RACER.currentGate.userData.startZ = startZ;
     RACER.scene.add(RACER.currentGate);
     speakPrompt(entry.audioText);
     updateHud();
@@ -643,7 +768,9 @@
       RACER.session.speedBoost = 7.5;
       RACER.session.cameraKick = 0.55;
       RACER.session.laneLean = 0;
-      setMessage('Boost!', 'good', 850);
+      animateRacerFeedback('good');
+      if (typeof sfxCorrect === 'function') sfxCorrect();
+      setMessage(RACER.session.streak >= 2 ? 'Clean line!' : 'Boost!', 'good', 850);
       triggerStreakReward();
     } else {
       RACER.session.streak = 0;
@@ -655,11 +782,13 @@
       RACER.session.missed.push({ w: entry.word, h: entry.sentence });
       RACER.session.errorPatternCounts[entry.errorPatternTag] = (RACER.session.errorPatternCounts[entry.errorPatternTag] || 0) + 1;
       applyWeakItem(entry);
-      setMessage('Shield hit', 'bad', 1100);
+      animateRacerFeedback('bad');
+      if (typeof sfxWrong === 'function') sfxWrong();
+      setMessage('Shield hit. Correct word: ' + entry.word, 'bad', 1500);
     }
     removeGate();
     RACER.session.wordIndex++;
-    RACER.session.nextSpawnDelay = 0.78;
+    RACER.session.nextSpawnDelay = getNextGateDelay();
     updateHud();
   }
 
@@ -731,9 +860,10 @@
     const now = (window.performance && performance.now) ? performance.now() : Date.now();
     refreshHoldSteer(now);
 
+    const pacing = getPacingProfile();
+    RACER.session.speed += (pacing.cruiseSpeed - RACER.session.speed) * Math.min(1, delta * 1.8);
     const targetSpeed = clamp(RACER.session.speed + RACER.session.speedBoost - RACER.session.penalty, 14, 32);
     RACER.session.currentSpeed = targetSpeed;
-    RACER.session.speed = Math.max(14, Math.min(28, RACER.session.speed + (RACER.session.running ? delta * 0.25 : 0)));
     RACER.session.speedBoost = Math.max(0, RACER.session.speedBoost - delta * 4.2);
     RACER.session.penalty = Math.max(0, RACER.session.penalty - delta * 3.6);
     RACER.session.cameraKick = (RACER.session.cameraKick || 0) * Math.max(0, 1 - delta * 4.5);
@@ -795,16 +925,49 @@
     RACER.renderer.render(RACER.scene, RACER.camera);
   }
 
-  function startMission() {
+  function launchMissionRun() {
+    clearMissionCountdown();
     RACER.session.running = true;
     RACER.session.nextSpawnDelay = 0.18;
     RACER.session.heldDirection = 0;
     RACER.session.currentSpeed = RACER.session.speed;
+    RACER.session.streakTier = 0;
+    RACER.session.trailSpawnTimer = 0;
+    setHudStateClass(null);
     document.getElementById('racerIntro').style.display = 'none';
     setMessage('Go!', 'good', 700);
     spawnGate(true);
     setTouchControlsEnabled(true);
     updateHud();
+  }
+
+  function runMissionCountdown(stepIndex) {
+    const steps = [
+      { text: '3', state: 'countdown', delay: 700 },
+      { text: '2', state: 'countdown', delay: 700 },
+      { text: '1', state: 'countdown', delay: 700 },
+      { text: 'Go!', state: 'go', delay: 380 }
+    ];
+    if (stepIndex >= steps.length) {
+      launchMissionRun();
+      return;
+    }
+    setIntroCountdown(steps[stepIndex].text, steps[stepIndex].state);
+    RACER.countdownTimer = setTimeout(function(){
+      runMissionCountdown(stepIndex + 1);
+    }, steps[stepIndex].delay);
+  }
+
+  function startMission() {
+    if (!RACER.session || RACER.session.running || RACER.session.countdownActive) return;
+    RACER.session.countdownActive = true;
+    const introStart = document.getElementById('racerIntroStart');
+    if (introStart) {
+      introStart.disabled = true;
+      introStart.textContent = 'Countdown...';
+    }
+    setTouchControlsEnabled(false);
+    runMissionCountdown(0);
   }
 
   function completeDebug(mode) {
@@ -850,14 +1013,30 @@
       laneLean: 0,
       cameraKick: 0,
       currentWord: null,
+      streakTier: 0,
+      trailSpawnTimer: 0,
+      loadout: getRacerLoadout(),
+      loadoutLabels: null,
+      trailEffect: null,
+      rewardUnlocks: [],
+      rewardPreview: config.rewardPreview || null,
+      countdownActive: false,
       running: false,
       nextSpawnDelay: 0
     };
     RACER.active = true;
     bindInput();
-    document.getElementById('racerIntroTitle').textContent = RACER.session.assignment ? 'Assigned Southlodge Racers Mission' : 'Southlodge Racers';
-    document.getElementById('racerIntroBody').textContent = 'Steer into the correct spelling gate. Correct choices keep your speed and chain your streak.';
-    document.getElementById('racerIntroNote').textContent = RACER.session.pack.title + ' · ' + RACER.session.stageBand + ' · ' + RACER.session.words.length + ' gates';
+    RACER.session.loadoutLabels = getLoadoutLabels(RACER.session.loadout);
+    RACER.session.trailEffect = RACER.session.loadout.trailId === 'none' ? { enabled: false } : {
+      enabled: true,
+      color: RACER.session.loadoutLabels.trail.color,
+      density: RACER.session.loadoutLabels.trail.density,
+      rise: RACER.session.loadoutLabels.trail.rise,
+      size: RACER.session.loadoutLabels.trail.size
+    };
+    applyCarLoadout(RACER.session.loadout);
+    clearMissionCountdown();
+    renderMissionIntro();
     document.getElementById('racerIntro').style.display = 'grid';
     document.getElementById('racerIntroStart').onclick = startMission;
     setTouchControlsEnabled(false);
@@ -889,6 +1068,10 @@
     if (RACER.resizeHandler) window.removeEventListener('resize', RACER.resizeHandler);
     RACER.keyHandlers = null;
     RACER.resizeHandler = null;
+    clearMissionCountdown();
+    clearTrailParticles();
+    clearTimeout(RACER.streakHudTimer);
+    RACER.streakHudTimer = null;
     setTouchControlsEnabled(false);
     const hud = document.getElementById('hdashHud');
     if (hud) hud.style.display = 'none';
@@ -906,7 +1089,10 @@
         total: RACER.session.words.length,
         correct: RACER.session.correct,
         packId: RACER.session.pack.id,
-        stageBand: RACER.session.stageBand
+        stageBand: RACER.session.stageBand,
+        loadout: RACER.session.loadout,
+        rewardUnlocks: RACER.session.rewardUnlocks ? RACER.session.rewardUnlocks.map(function(reward){ return reward.name; }) : [],
+        rewardPreview: RACER.session.rewardPreview ? RACER.session.rewardPreview.name : null
       } : null;
     }
   };

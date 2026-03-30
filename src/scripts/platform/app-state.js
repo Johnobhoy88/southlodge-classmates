@@ -15,6 +15,11 @@
     weakItems: {},
     coins: 0,
     unlockedRewards: [],
+    racerProgression: {
+      unlocked: [],
+      equipped: { color: 'ember', trail: 'none', title: 'rookie' },
+      latestUnlock: null
+    },
     weeklyGames: 0,
     weeklyGoalReset: null,
     powerups: {},
@@ -33,6 +38,7 @@
     if (!next.powerups || typeof next.powerups !== 'object') next.powerups = {};
     if (!next.adaptive || typeof next.adaptive !== 'object') next.adaptive = {};
     if (!next.weakItems || typeof next.weakItems !== 'object') next.weakItems = {};
+    next.racerProgression = normalizeRacerProgression(next.racerProgression);
     return next;
   }
 
@@ -74,6 +80,21 @@
 
   function createDefaultState() {
     return cloneState(DEFAULT_STATE);
+  }
+
+  function normalizeRacerProgression(value) {
+    const progression = value && typeof value === 'object' ? value : {};
+    const unlocked = Array.isArray(progression.unlocked) ? progression.unlocked.slice() : [];
+    const equipped = progression.equipped && typeof progression.equipped === 'object' ? progression.equipped : {};
+    return {
+      unlocked: unlocked,
+      equipped: {
+        color: equipped.color || 'ember',
+        trail: equipped.trail || 'none',
+        title: equipped.title || 'rookie'
+      },
+      latestUnlock: progression.latestUnlock || null
+    };
   }
 
   function resetState(pupilName) {
@@ -168,6 +189,24 @@
     return next;
   }
 
+  function getRacerProgression(state) {
+    const next = ensureMutableState(state);
+    next.racerProgression = normalizeRacerProgression(next.racerProgression);
+    return next.racerProgression;
+  }
+
+  function unlockRacerCosmetic(state, cosmetic) {
+    const next = ensureMutableState(state);
+    const progression = getRacerProgression(next);
+    const unlockId = cosmetic && (cosmetic.unlockId || cosmetic.id || cosmetic.name);
+    if (!unlockId) return next;
+    if (progression.unlocked.indexOf(unlockId) === -1) progression.unlocked.push(unlockId);
+    if (cosmetic && cosmetic.type && cosmetic.cosmeticId) progression.equipped[cosmetic.type] = cosmetic.cosmeticId;
+    progression.latestUnlock = unlockId;
+    next.racerProgression = progression;
+    return next;
+  }
+
   const appStateApi = Object.freeze({
     createDefaultState: createDefaultState,
     getStateKey: getStateKey,
@@ -181,14 +220,16 @@
     adaptiveWrong: adaptiveWrong,
     addWeakItem: addWeakItem,
     getWeakItems: getWeakItems,
-    clearWeakItem: clearWeakItem
+    clearWeakItem: clearWeakItem,
+    getRacerProgression: getRacerProgression,
+    unlockRacerCosmetic: unlockRacerCosmetic
   });
 
   window.ClassmatesAppState = appStateApi;
   if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
     window.ClassmatesPlatform.registerModule('platform', 'app-state', {
       owner: 'platform',
-      exports: ['ClassmatesAppState', 'loadState', 'saveState', 'resetState', 'applyPlayProgress', 'applyStars']
+      exports: ['ClassmatesAppState', 'loadState', 'saveState', 'resetState', 'applyPlayProgress', 'applyStars', 'getRacerProgression', 'unlockRacerCosmetic']
     });
   }
   if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
