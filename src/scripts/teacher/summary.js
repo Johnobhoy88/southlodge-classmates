@@ -149,12 +149,76 @@
     };
   }
 
+  function getInactivityDays(lastPlayed) {
+    if (!lastPlayed) return Infinity;
+    var diff = Math.floor((new Date() - new Date(lastPlayed)) / 864e5);
+    return diff >= 0 ? diff : Infinity;
+  }
+
+  function getNeedsAttention() {
+    var pupils = ClassmatesPupils.listPupils();
+    var alerts = [];
+
+    pupils.forEach(function(name) {
+      var state = loadPupilState(name);
+      var daysInactive = getInactivityDays(state.lastPlayed);
+      var reason = null;
+
+      if (daysInactive === Infinity) {
+        reason = 'Never played';
+      } else if (daysInactive >= 7) {
+        reason = 'Inactive ' + daysInactive + ' days';
+      } else if ((state.games || 0) > 5 && (state.streak || 0) === 0) {
+        reason = 'Lost streak';
+      }
+
+      if (reason) {
+        alerts.push({ name: name, reason: reason, daysInactive: daysInactive });
+      }
+    });
+
+    alerts.sort(function(a, b) { return b.daysInactive - a.daysInactive; });
+    return alerts.slice(0, 6);
+  }
+
+  function getInterventionSignals() {
+    if (!window.ClassmatesMastery) return [];
+    return ClassmatesMastery.listInterventionSignals(6);
+  }
+
+  function getRecentActivity() {
+    if (!window.ClassmatesMastery) return [];
+    return ClassmatesMastery.listRecentFlagshipAttempts(5).map(function(attempt) {
+      return {
+        pupilName: attempt.pupilName || 'Unknown',
+        packTitle: attempt.packTitle || attempt.packId || 'Unknown',
+        accuracy: attempt.accuracy != null ? attempt.accuracy : '—',
+        correct: attempt.correct || 0,
+        total: attempt.total || 0,
+        recordedAt: attempt.recordedAt || null
+      };
+    });
+  }
+
+  function getTeacherHomeModel() {
+    return {
+      classSummary: getClassSummary(),
+      needsAttention: getNeedsAttention(),
+      interventions: getInterventionSignals(),
+      recentActivity: getRecentActivity()
+    };
+  }
+
   window.ClassmatesTeacherSummary = {
     getClassSummary: getClassSummary,
     getPupilDetail: buildPupilDetail,
     getProgressHeaders: function(){
       return PROGRESS_HEADERS.slice();
     },
-    listProgressRows: listProgressRows
+    listProgressRows: listProgressRows,
+    getNeedsAttention: getNeedsAttention,
+    getInterventionSignals: getInterventionSignals,
+    getRecentActivity: getRecentActivity,
+    getTeacherHomeModel: getTeacherHomeModel
   };
 })();
