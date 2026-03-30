@@ -28,6 +28,10 @@
     if (element) element.textContent = value;
   }
 
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
   function speakPrompt(text) {
     if (!window.speechSynthesis || !text) return false;
     window.speechSynthesis.cancel();
@@ -243,18 +247,20 @@
 
   function updateHud() {
     const progress = RACER.session.completed + '/' + RACER.session.words.length;
+    const speed = RACER.session.currentSpeed || RACER.session.speed || 0;
+    const gateLabel = RACER.session.currentWord ? (RACER.session.completed + 1) : RACER.session.words.length;
     setText('racerStage', RACER.session.stageBand + ' Level');
     setText('racerPack', RACER.session.pack.shortTitle);
-    setText('racerObjective', 'Gate ' + (RACER.session.completed + 1) + ' of ' + RACER.session.words.length);
+    setText('racerObjective', RACER.session.currentWord ? 'Gate ' + gateLabel + ' of ' + RACER.session.words.length : 'Finish line ahead');
     setText('racerPromptWord', RACER.session.currentWord ? RACER.session.currentWord.word : 'Get ready');
     setText('racerPromptSentence', RACER.session.currentWord ? RACER.session.currentWord.sentence : 'Press start to open the first spelling gate.');
     setText('racerProgress', progress);
     setText('racerStreak', RACER.session.maxStreak ? 'Best streak ' + RACER.session.maxStreak : 'Best streak 0');
-    setText('racerSpeed', Math.round(RACER.session.speed * 4) + ' mph');
+    setText('racerSpeed', Math.round(speed * 4) + ' mph');
     setText('racerShield', 'Shield ' + RACER.session.shields);
   }
 
-  function setMessage(text, tone) {
+  function setMessage(text, tone, duration) {
     const element = document.getElementById('racerMessage');
     if (!element) return;
     element.textContent = text || '';
@@ -263,7 +269,7 @@
     clearTimeout(RACER.messageTimer);
     RACER.messageTimer = setTimeout(function(){
       element.classList.remove('visible');
-    }, 1200);
+    }, typeof duration === 'number' ? duration : 1000);
   }
 
   function setTouchControlsEnabled(enabled) {
@@ -272,13 +278,64 @@
     touch.style.display = RACER.touchMode && enabled ? 'flex' : 'none';
   }
 
+  function canSteer() {
+    return !!(RACER.active && RACER.session && RACER.session.running);
+  }
+
+  function getSteerDirection(key) {
+    if (key === 'ArrowLeft' || key === 'a' || key === 'A') return -1;
+    if (key === 'ArrowRight' || key === 'd' || key === 'D') return 1;
+    return 0;
+  }
+
+  function setHeldDirection(direction) {
+    if (!RACER.session) return;
+    RACER.session.heldDirection = direction;
+  }
+
+  function steerLane(direction, source) {
+    if (!canSteer() || !direction) return false;
+    const now = (window.performance && performance.now) ? performance.now() : Date.now();
+    const nextLane = clamp(RACER.session.targetLane + direction, 0, 2);
+    if (nextLane === RACER.session.targetLane) return false;
+
+    RACER.session.targetLane = nextLane;
+    RACER.session.lastSteerAt = now;
+    RACER.session.nextSteerAt = now + (source === 'touch' ? 105 : 130);
+    RACER.session.laneLean = direction * 0.22;
+    RACER.session.cameraKick = direction * 0.45;
+    return true;
+  }
+
+  function refreshHoldSteer(now) {
+    if (!canSteer()) return;
+    const direction = RACER.session.heldDirection || 0;
+    if (!direction) return;
+    if (now < (RACER.session.nextSteerAt || 0)) return;
+    steerLane(direction, 'hold');
+  }
+
   function bindInput() {
     RACER.keyHandlers = {
       down: function(event){
-        if (!RACER.active || !RACER.session.running) return;
-        if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') RACER.session.targetLane = Math.max(0, RACER.session.targetLane - 1);
-        if (event.key === 'ArrowRight' || event.key === 'd' || event.key === 'D') RACER.session.targetLane = Math.min(2, RACER.session.targetLane + 1);
+        if (!canSteer()) return;
+        const direction = getSteerDirection(event.key);
+        if (direction) {
+          if (event.repeat && RACER.session.heldDirection === direction) return;
+          setHeldDirection(direction);
+          steerLane(direction, 'keyboard');
+          return;
+        }
         if (event.key === 'r' || event.key === 'R') speakPrompt(RACER.session.currentWord ? RACER.session.currentWord.audioText : '');
+      },
+      up: function(event){
+        const direction = getSteerDirection(event.key);
+        if (direction && RACER.session && RACER.session.heldDirection === direction) {
+          setHeldDirection(0);
+        }
+      },
+      blur: function(){
+        setHeldDirection(0);
       }
     };
     RACER.resizeHandler = function(){
@@ -290,12 +347,48 @@
     };
 
     window.addEventListener('keydown', RACER.keyHandlers.down);
+    window.addEventListener('keyup', RACER.keyHandlers.up);
+    window.addEventListener('blur', RACER.keyHandlers.blur);
     window.addEventListener('resize', RACER.resizeHandler);
 
     const left = document.getElementById('racerTouchLeft');
     const right = document.getElementById('racerTouchRight');
-    if (left) left.onclick = function(){ if (RACER.session.running) RACER.session.targetLane = Math.max(0, RACER.session.targetLane - 1); };
-    if (right) right.onclick = function(){ if (RACER.session.running) RACER.session.targetLane = Math.min(2, RACER.session.targetLane + 1); };
+    if (left) {
+      left.style.touchAction = 'manipulation';
+      left.onpointerdown = function(event){
+        event.preventDefault();
+        if (!canSteer()) return;
+        setHeldDirection(-1);
+        steerLane(-1, 'touch');
+      };
+      left.onpointerup = function(){
+        if (RACER.session && RACER.session.heldDirection === -1) setHeldDirection(0);
+      };
+      left.onpointercancel = function(){
+        if (RACER.session && RACER.session.heldDirection === -1) setHeldDirection(0);
+      };
+      left.onpointerleave = function(){
+        if (RACER.session && RACER.session.heldDirection === -1) setHeldDirection(0);
+      };
+    }
+    if (right) {
+      right.style.touchAction = 'manipulation';
+      right.onpointerdown = function(event){
+        event.preventDefault();
+        if (!canSteer()) return;
+        setHeldDirection(1);
+        steerLane(1, 'touch');
+      };
+      right.onpointerup = function(){
+        if (RACER.session && RACER.session.heldDirection === 1) setHeldDirection(0);
+      };
+      right.onpointercancel = function(){
+        if (RACER.session && RACER.session.heldDirection === 1) setHeldDirection(0);
+      };
+      right.onpointerleave = function(){
+        if (RACER.session && RACER.session.heldDirection === 1) setHeldDirection(0);
+      };
+    }
     const replay = document.getElementById('racerReplayPrompt');
     if (replay) replay.onclick = function(){ speakPrompt(RACER.session.currentWord ? RACER.session.currentWord.audioText : ''); };
   }
@@ -335,20 +428,24 @@
       RACER.session.correct++;
       RACER.session.streak++;
       RACER.session.maxStreak = Math.max(RACER.session.maxStreak, RACER.session.streak);
-      RACER.session.speedBoost = 7;
-      setMessage('Boost!', 'good');
+      RACER.session.speedBoost = 7.5;
+      RACER.session.cameraKick = 0.55;
+      RACER.session.laneLean = 0;
+      setMessage('Boost!', 'good', 850);
     } else {
       RACER.session.streak = 0;
       RACER.session.shields = Math.max(0, RACER.session.shields - 1);
-      RACER.session.penalty = 5;
+      RACER.session.penalty = 5.5;
+      RACER.session.cameraKick = -0.75;
+      RACER.session.laneLean = 0;
       RACER.session.missed.push({ w: entry.word, h: entry.sentence });
       RACER.session.errorPatternCounts[entry.errorPatternTag] = (RACER.session.errorPatternCounts[entry.errorPatternTag] || 0) + 1;
       applyWeakItem(entry);
-      setMessage('Shield hit', 'bad');
+      setMessage('Shield hit', 'bad', 1100);
     }
     removeGate();
     RACER.session.wordIndex++;
-    RACER.session.nextSpawnDelay = 0.9;
+    RACER.session.nextSpawnDelay = 0.78;
     updateHud();
   }
 
@@ -392,29 +489,47 @@
   }
 
   function stepWorld(delta) {
-    const moveSpeed = RACER.session.speed + RACER.session.speedBoost - RACER.session.penalty;
+    if (!RACER.session) return;
+
+    const now = (window.performance && performance.now) ? performance.now() : Date.now();
+    refreshHoldSteer(now);
+
+    const targetSpeed = clamp(RACER.session.speed + RACER.session.speedBoost - RACER.session.penalty, 14, 32);
+    RACER.session.currentSpeed = targetSpeed;
     RACER.session.speed = Math.max(14, Math.min(28, RACER.session.speed + (RACER.session.running ? delta * 0.25 : 0)));
     RACER.session.speedBoost = Math.max(0, RACER.session.speedBoost - delta * 4.2);
     RACER.session.penalty = Math.max(0, RACER.session.penalty - delta * 3.6);
+    RACER.session.cameraKick = (RACER.session.cameraKick || 0) * Math.max(0, 1 - delta * 4.5);
+    RACER.session.laneLean = (RACER.session.laneLean || 0) * Math.max(0, 1 - delta * 6);
 
     RACER.roadSegments.forEach(function(segment){
+      const moveSpeed = targetSpeed;
       segment.position.z += moveSpeed * delta;
       if (segment.position.z > 80) segment.position.z -= RACER.roadSegments.length * 40;
     });
     RACER.props.forEach(function(prop){
-      prop.position.z += moveSpeed * delta * 1.08;
+      prop.position.z += targetSpeed * delta * 1.08;
       if (prop.position.z > 70) {
         prop.position.z -= 420;
         prop.position.x = (Math.random() > 0.5 ? 1 : -1) * (12 + Math.random() * 8);
       }
     });
 
-    RACER.session.playerX += (LANE_X[RACER.session.targetLane] - RACER.session.playerX) * Math.min(1, delta * 7);
+    RACER.session.playerX += (LANE_X[RACER.session.targetLane] - RACER.session.playerX) * Math.min(1, delta * 9);
     RACER.car.position.x = RACER.session.playerX;
-    RACER.car.rotation.z = -((LANE_X[RACER.session.targetLane] - RACER.session.playerX) * 0.06);
+    RACER.car.position.y = 0.2 + Math.min(0.18, Math.abs(LANE_X[RACER.session.targetLane] - RACER.session.playerX) * 0.04);
+    RACER.car.rotation.z = clamp(-((LANE_X[RACER.session.targetLane] - RACER.session.playerX) * 0.06) + (RACER.session.laneLean || 0), -0.28, 0.28);
+    RACER.car.rotation.y = clamp((LANE_X[RACER.session.targetLane] - RACER.session.playerX) * 0.03, -0.16, 0.16);
+    if (RACER.camera) {
+      RACER.camera.position.x += ((RACER.session.playerX * 0.14) - RACER.camera.position.x) * Math.min(1, delta * 4.5);
+      RACER.camera.position.y = 6.4 + Math.sin((RACER.session.currentSpeed || targetSpeed) * 0.12) * 0.08;
+      RACER.camera.position.z = 68 + (RACER.session.cameraKick || 0) * 0.7;
+      RACER.camera.lookAt(RACER.session.playerX * 0.35, 4, -30);
+    }
 
     if (RACER.currentGate) {
-      RACER.currentGate.position.z += moveSpeed * delta;
+      RACER.currentGate.position.z += targetSpeed * delta;
+      RACER.currentGate.rotation.y = (RACER.session.playerX - LANE_X[RACER.currentGate.userData.correctLane]) * 0.01;
       if (RACER.currentGate.position.z >= 44) {
         const laneDistances = LANE_X.map(function(x){ return Math.abs(x - RACER.session.playerX); });
         let chosenLane = 0;
@@ -443,8 +558,11 @@
 
   function startMission() {
     RACER.session.running = true;
-    RACER.session.nextSpawnDelay = 0;
+    RACER.session.nextSpawnDelay = 0.18;
+    RACER.session.heldDirection = 0;
+    RACER.session.currentSpeed = RACER.session.speed;
     document.getElementById('racerIntro').style.display = 'none';
+    setMessage('Go!', 'good', 700);
     spawnGate(true);
     setTouchControlsEnabled(true);
     updateHud();
@@ -486,6 +604,12 @@
       maxStreak: 0,
       playerX: 0,
       targetLane: 1,
+      holdDirection: 0,
+      currentSpeed: 18,
+      nextSteerAt: 0,
+      lastSteerAt: 0,
+      laneLean: 0,
+      cameraKick: 0,
       currentWord: null,
       running: false,
       nextSpawnDelay: 0
@@ -518,7 +642,11 @@
     RACER.scene = null;
     RACER.camera = null;
     RACER.clock = null;
-    if (RACER.keyHandlers) window.removeEventListener('keydown', RACER.keyHandlers.down);
+    if (RACER.keyHandlers) {
+      window.removeEventListener('keydown', RACER.keyHandlers.down);
+      window.removeEventListener('keyup', RACER.keyHandlers.up);
+      window.removeEventListener('blur', RACER.keyHandlers.blur);
+    }
     if (RACER.resizeHandler) window.removeEventListener('resize', RACER.resizeHandler);
     RACER.keyHandlers = null;
     RACER.resizeHandler = null;
