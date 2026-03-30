@@ -6,7 +6,8 @@
   "scripts": {
     "extract:legacy": "node scripts/extract-legacy.mjs",
     "build": "node scripts/build-single-file.mjs && node scripts/verify-single-file.mjs",
-    "verify": "node scripts/verify-single-file.mjs"
+    "verify": "node scripts/verify-single-file.mjs",
+    "test": "node scripts/smoke-test.mjs"
   },
   "dependencies": {
     "three": "0.128.0"
