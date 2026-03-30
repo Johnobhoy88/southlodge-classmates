@@ -9,7 +9,7 @@ const targets = [
 
 const checks = [
   { label: "external script tag", pattern: /<script\b[^>]*\bsrc\s*=/i },
-  { label: "external stylesheet tag", pattern: /<link\b[^>]*\bhref\s*=/i },
+  { label: "external stylesheet tag", pattern: /<link\b[^>]*\brel\s*=\s*['"][^'"]*stylesheet[^'"]*['"][^>]*\bhref\s*=/i },
   { label: "remote CSS url()", pattern: /url\(\s*['"]?https?:\/\//i },
   { label: "remote image source", pattern: /<img\b[^>]*\bsrc\s*=\s*['"]https?:\/\//i },
   { label: "Google Fonts", pattern: /fonts\.googleapis\.com/i },

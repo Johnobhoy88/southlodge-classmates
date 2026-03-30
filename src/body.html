@@ -88,7 +88,11 @@
     <div class="pupil-name-bar" id="pupilNameBar" style="margin-top:6px"></div>
   </div>
   <div class="home-content">
-    <div id="assignBanner" style="display:none;background:linear-gradient(135deg,#11998e,#38ef7d);color:white;border-radius:12px;padding:12px 16px;margin:8px 0;text-align:center;cursor:pointer" onclick="launchAssignment()"><div style="font-weight:800;font-size:0.85rem" id="assignBannerText"></div></div>
+    <div id="assignBanner" class="assign-banner" style="display:none" onclick="launchAssignment()">
+      <div class="assign-banner-title" id="assignBannerTitle"></div>
+      <div class="assign-banner-text" id="assignBannerText"></div>
+      <div class="assign-banner-meta" id="assignBannerMeta"></div>
+    </div>
     <div style="text-align:center;margin:8px 0 4px;"><span class="coin-display-home" id="coinDisplay">&#x1FA99; <span id="coinCount">0</span> coins</span><button class="mute-btn" id="muteBtn" onclick="toggleMute()">&#x1F50A; Sound On</button><button class="dyslexia-btn" id="dyslexiaBtn" onclick="toggleDyslexia()">Aa Dyslexia</button></div>
     <div class="stats-bar">
       <div class="stat-item"><span class="stat-val" id="statStars">0</span><span class="stat-lbl">Stars</span></div>
@@ -152,7 +156,7 @@
       <div class="subject-card card-bee" onclick="startGame('spellingbee')"><div class="card-icon">&#x1F41D;</div><div class="card-title">Spelling Bee</div><div class="card-desc">How far?</div></div>
       <div class="subject-card card-scotquiz" onclick="startGame('scotquiz')"><div class="card-icon">&#x1F3F4;</div><div class="card-title">Scotland</div><div class="card-desc">Quiz</div></div>
       <div class="subject-card card-typing" onclick="startGame('typing')"><div class="card-icon">&#x2328;</div><div class="card-title">Typing</div><div class="card-desc">Speed</div></div>
-      <div class="subject-card card-hdash" onclick="startGame('hdash')"><div class="card-icon">&#x1F3CE;</div><div class="card-title">Highland Dash</div><div class="card-desc">3D Racing!</div></div>
+      <div class="subject-card card-hdash" onclick="startGame('hdash')"><div class="card-icon">&#x1F3CE;</div><div class="card-title">Southlodge Racers</div><div class="card-desc">Scottish spelling sprint</div></div>
       <div class="subject-card card-custom" onclick="startGame('customquiz')" id="customQuizCard" style="display:none"><div class="card-icon">&#x270D;</div><div class="card-title">Teacher Quiz</div><div class="card-desc">Custom</div></div>
     </div>
 
@@ -288,24 +292,38 @@
     <!-- ASSIGN TAB -->
     <div class="teacher-page" id="tp-assign">
       <div class="teacher-section">
-        <h3>Assign Activity</h3>
-        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:12px">Set a recommended activity for the class. This shows as a highlighted suggestion on each pupil's home screen.</p>
+        <h3>Assign Southlodge Racers</h3>
+        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:12px">Set the flagship spelling mission for the class. It appears on each pupil home screen and drives Southlodge Racers mastery reporting.</p>
         <div style="margin-bottom:12px">
           <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Activity:</label>
-          <select class="teacher-input" id="assignActivity" style="width:100%">
-            <option value="">-- No assignment --</option>
-            <optgroup label="Literacy"><option value="spelling">Spelling</option><option value="dictation">Dictation</option><option value="vowels">Missing Vowels</option><option value="anagram">Anagrams</option><option value="phonics">Phonics</option><option value="wordfam">Word Families</option><option value="sentence">Sentences</option><option value="punctuation">Punctuation</option><option value="vocab">Vocabulary</option><option value="reading">Reading</option><option value="grammar">Grammar</option><option value="rhyme">Rhyming</option></optgroup>
-            <optgroup label="Numeracy"><option value="maths">Maths</option><option value="times">Times Tables</option><option value="speed">Speed Maths</option><option value="bonds">Number Bonds</option><option value="missnum">Missing Number</option><option value="placeval">Place Value</option><option value="telltime">Telling Time</option><option value="money">Money</option><option value="fractions">Fractions</option><option value="wordprob">Word Problems</option><option value="shapes">Shapes</option><option value="datahandling">Data Handling</option><option value="measure">Measurement</option><option value="sequence">Sequences</option></optgroup>
-            <optgroup label="Geography"><option value="capitals">Capital Cities</option><option value="continents">World Geography</option><option value="weather">Weather</option><option value="compass">Compass</option><option value="flags">Flags</option></optgroup>
+          <select class="teacher-input" id="assignActivity" style="width:100%" disabled>
+            <option value="southlodgeracers">Southlodge Racers</option>
           </select>
         </div>
         <div style="margin-bottom:12px">
-          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Level:</label>
-          <select class="teacher-input" id="assignLevel" style="width:100%"><option value="1">Level 1 (Easy)</option><option value="2">Level 2 (Medium)</option><option value="3">Level 3 (Hard)</option></select>
+          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Stage Band:</label>
+          <select class="teacher-input" id="assignLevel" style="width:100%" onchange="syncSouthlodgeAssignmentForm(this.value)">
+            <option value="Early">Early</option>
+            <option value="First">First</option>
+            <option value="Second">Second</option>
+          </select>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Spelling Pack:</label>
+          <select class="teacher-input" id="assignPackId" style="width:100%"></select>
+          <div id="assignPackMeta" style="margin-top:6px;font-size:0.78rem;color:#667788"></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Mission Length:</label>
+          <select class="teacher-input" id="assignMissionLength" style="width:100%">
+            <option value="5">5 gates</option>
+            <option value="7">7 gates</option>
+            <option value="9">9 gates</option>
+          </select>
         </div>
         <div style="margin-bottom:12px">
           <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Message to pupils (optional):</label>
-          <input class="teacher-input" id="assignMessage" placeholder="e.g. Focus on your times tables today!">
+          <input class="teacher-input" id="assignMessage" placeholder="e.g. Race the vowel teams route today.">
         </div>
         <button class="teacher-btn teal" onclick="saveAssignment()">Set Assignment</button>
         <button class="teacher-btn grey" onclick="clearAssignment()">Clear Assignment</button>
@@ -1078,26 +1096,58 @@
   </div>
 </div>
 
-<!-- HIGHLAND DASH -->
+<!-- SOUTHLODGE RACERS -->
 <div id="hdash" class="screen game-screen">
   <div class="game-header" style="border-color:#2d5a3d">
     <button class="nav-btn" onclick="hdashStop();goHome()" title="Back">&larr; Back</button>
     <button class="nav-btn home-btn" onclick="hdashStop();showScreen('landing')" title="Home">&#x1F3E0; Home</button>
-    <h2 class="game-title" style="color:#5cb87a">&#x1F3CE; Highland Dash</h2>
+    <h2 class="game-title" style="color:#5cb87a">&#x1F3CE; Southlodge Racers</h2>
   </div>
   <canvas id="hdash-canvas"></canvas>
   <div class="hdash-hud" id="hdashHud" style="display:none">
-    <div class="hdash-boost-bar"><div class="hdash-boost-fill" id="hdashBoostFill"></div></div>
-    <div class="hdash-hud-tl">
-      <div class="hdash-lives" id="hdashLives">&#x1F404;&#x1F404;&#x1F404;</div>
-      <div class="hdash-streak" id="hdashStreak"></div>
+    <div class="racer-topbar">
+      <div class="racer-chip" id="racerStage"></div>
+      <div class="racer-chip" id="racerPack"></div>
+      <div class="racer-chip racer-chip-strong" id="racerObjective"></div>
     </div>
-    <div class="hdash-hud-tr">
-      <div class="hdash-speed"><span id="hdashSpeed">0</span></div>
-      <div class="hdash-speed-unit">mph</div>
-      <div class="hdash-dist"><span id="hdashDist">0</span>m</div>
+    <div class="racer-brief">
+      <div class="racer-label">Prompt word</div>
+      <div class="racer-word" id="racerPromptWord">Get ready</div>
+      <div class="racer-sentence" id="racerPromptSentence">Press start to open the first spelling gate.</div>
+      <button class="racer-replay" id="racerReplayPrompt" type="button">Replay prompt</button>
     </div>
-    <div class="hdash-msg" id="hdashMsg"></div>
+    <div class="racer-statusbar">
+      <div class="racer-stat">
+        <span class="racer-stat-value" id="racerProgress">0/0</span>
+        <span class="racer-stat-label">Progress</span>
+      </div>
+      <div class="racer-stat">
+        <span class="racer-stat-value" id="racerStreak">Best streak 0</span>
+        <span class="racer-stat-label">Streak</span>
+      </div>
+      <div class="racer-stat">
+        <span class="racer-stat-value" id="racerSpeed">0 mph</span>
+        <span class="racer-stat-label">Speed</span>
+      </div>
+      <div class="racer-stat">
+        <span class="racer-stat-value" id="racerShield">Shield 3</span>
+        <span class="racer-stat-label">Defence</span>
+      </div>
+    </div>
+    <div class="racer-message" id="racerMessage"></div>
+    <div class="racer-touch" id="racerTouchControls" style="display:none">
+      <button class="racer-touch-btn" id="racerTouchLeft" type="button">&#x2190;</button>
+      <button class="racer-touch-btn" id="racerTouchRight" type="button">&#x2192;</button>
+    </div>
+  </div>
+  <div class="racer-intro" id="racerIntro" style="display:none">
+    <div class="racer-intro-card">
+      <div class="racer-intro-kicker">South Lodge Primary flagship</div>
+      <h3 id="racerIntroTitle">Southlodge Racers</h3>
+      <p id="racerIntroBody">Steer into the correct spelling gate. Correct choices keep your speed and chain your streak.</p>
+      <div class="racer-intro-note" id="racerIntroNote"></div>
+      <button class="teacher-btn teal" id="racerIntroStart" type="button">Start mission</button>
+    </div>
   </div>
 </div>
 
