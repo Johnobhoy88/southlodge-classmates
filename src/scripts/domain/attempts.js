@@ -17,6 +17,23 @@
     return next;
   }
 
+  function sanitizeRewardUnlocks(value) {
+    const source = Array.isArray(value) ? value : [];
+    return source.map(function(item){
+      const reward = item && typeof item === 'object' ? item : {};
+      return {
+        id: String(reward.id || '').trim(),
+        name: String(reward.name || '').trim(),
+        kind: String(reward.kind || '').trim(),
+        description: String(reward.description || '').trim(),
+        threshold: String(reward.threshold || '').trim(),
+        packId: String(reward.packId || '').trim() || null
+      };
+    }).filter(function(reward){
+      return !!reward.id;
+    });
+  }
+
   function normalizeAssignment(value) {
     if (!window.ClassmatesAssignments) return value || null;
     return ClassmatesAssignments.normalizeAssignment(value);
@@ -67,6 +84,7 @@
       stars: stars,
       scorePercent: total && total > 0 && correct !== null ? Math.round(correct / total * 100) : null,
       errorPatternCounts: sanitizeErrorPatternCounts(source.errorPatternCounts),
+      rewardUnlocks: sanitizeRewardUnlocks(source.rewardUnlocks),
       assignment: assignment
     };
 

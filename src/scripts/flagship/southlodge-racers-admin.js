@@ -215,6 +215,7 @@
         { label: 'Stars', value: stateSnapshot.stars || 0 },
         { label: 'Games', value: stateSnapshot.games || 0 },
         { label: 'Words Spelled', value: stateSnapshot.spellingCorrect || 0 },
+        { label: 'Rewards Unlocked', value: safeArray(stateSnapshot.unlockedRewards).length },
         { label: 'Racer Accuracy', value: racerAccuracy },
         { label: 'Current Pack', value: currentPack },
         { label: 'Racer Status', value: status }
@@ -223,6 +224,7 @@
         { label: 'Stars', value: stateSnapshot.stars || 0 },
         { label: 'Games', value: stateSnapshot.games || 0 },
         { label: 'Words', value: stateSnapshot.spellingCorrect || 0 },
+        { label: 'Rewards', value: safeArray(stateSnapshot.unlockedRewards).length },
         { label: 'Maths', value: stateSnapshot.mathsCorrect || 0 },
         { label: 'Stories', value: storiesRead.length + '/18' },
         { label: 'Tables', value: tablesDone.length + '/11' }
@@ -699,13 +701,27 @@
       packProgressHtml = '<div class="detail-section" style="max-width:420px;margin:16px auto 0;text-align:left"><h4>Pack Progress</h4><div class="mastery-card"><div class="mastery-top"><div><div class="mastery-title">' + escapeHtmlSafe(packSummary.packTitle) + '</div><div class="overview-stage">' + escapeHtmlSafe(packSummary.stageBand) + ' · ' + escapeHtmlSafe(assignmentLabel) + '</div></div><span class="status-pill ' + getStatusClass(packSummary.status) + '">' + escapeHtmlSafe(packSummary.status) + '</span></div><div class="detail-copy">' + escapeHtmlSafe(packSummary.accuracy) + '% accuracy across ' + escapeHtmlSafe(packSummary.attemptCount) + ' runs · ' + escapeHtmlSafe(packSummary.recentTrend) + '</div>' + errorSummary + '</div></div>';
     }
 
+    const rewardUnlocks = safeArray(meta.rewardUnlocks);
+    const rewardPreview = meta.rewardPreview && typeof meta.rewardPreview === 'object' ? meta.rewardPreview : null;
+    let rewardHtml = '';
+    if (rewardUnlocks.length) {
+      rewardHtml += '<div class="detail-section" style="max-width:420px;margin:16px auto 0;text-align:left"><h4>Rewards unlocked</h4>';
+      rewardUnlocks.forEach(function(reward){
+        rewardHtml += '<div class="mastery-card"><div class="mastery-top"><div><div class="mastery-title">' + escapeHtmlSafe(reward.name) + '</div><div class="overview-stage">' + escapeHtmlSafe(reward.kind === 'pack' ? 'Content pack' : 'Cosmetic') + (reward.threshold ? ' · ' + escapeHtmlSafe(reward.threshold) : '') + '</div></div><span class="status-pill status-secure">Unlocked</span></div><div class="detail-copy">' + escapeHtmlSafe(reward.description || 'Reward earned through the race.') + '</div></div>';
+      });
+      rewardHtml += '</div>';
+    }
+    if (rewardPreview && rewardPreview.name) {
+      rewardHtml += '<div class="detail-section" style="max-width:420px;margin:16px auto 0;text-align:left"><h4>Next reward</h4><div class="mastery-card"><div class="mastery-top"><div><div class="mastery-title">' + escapeHtmlSafe(rewardPreview.name) + '</div><div class="overview-stage">' + escapeHtmlSafe(rewardPreview.kind === 'pack' ? 'Content pack' : 'Cosmetic') + (rewardPreview.threshold ? ' · ' + escapeHtmlSafe(rewardPreview.threshold) : '') + '</div></div><span class="status-pill status-watch">Coming up</span></div><div class="detail-copy">' + escapeHtmlSafe(rewardPreview.description || 'Keep racing to unlock this next.') + '</div></div></div>';
+    }
+
     let missedHtml = '';
     if (missed && missed.length) {
       missedHtml = '<div style="margin-top:16px;text-align:left;max-width:420px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Spelling choices to revisit</div>' + missed.map(function(item){
         return '<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">' + escapeHtmlSafe(item.w || item.word) + '</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— ' + escapeHtmlSafe(item.h || item.hint || item.sentence || '') + '</span></div>';
       }).join('') + '</div>';
     }
-    document.getElementById('missedWords').innerHTML = packProgressHtml + missedHtml;
+    document.getElementById('missedWords').innerHTML = rewardHtml + packProgressHtml + missedHtml;
 
     if (typeof addCoins === 'function') addCoins(correct + (correct === total ? 10 : 0));
     const certBtn = document.getElementById('certBtn');
