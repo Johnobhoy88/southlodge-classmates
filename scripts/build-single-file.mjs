@@ -15,6 +15,8 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "domain", "assignments.js"),
     path.join(root, "src", "scripts", "domain", "attempts.js"),
     path.join(root, "src", "scripts", "platform", "app-state.js"),
+    path.join(root, "src", "scripts", "teacher", "summary.js"),
+    path.join(root, "src", "scripts", "teacher", "reports.js"),
     path.join(root, "src", "scripts", "app.js"),
   ],
   logo: path.join(root, "src", "assets", "logo.jpg"),

@@ -1,0 +1,160 @@
+(function(){
+  const PROGRESS_HEADERS = [
+    'Name',
+    'Stars',
+    'Games',
+    'Spelling',
+    'Maths',
+    'Tables',
+    'Stories',
+    'Badges',
+    'Streak',
+    'Last Active'
+  ];
+
+  function safeArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function loadPupilState(name) {
+    return ClassmatesAppState.loadState(name);
+  }
+
+  function formatDisplayDate(value) {
+    return value ? new Date(value).toLocaleDateString('en-GB') : 'Never';
+  }
+
+  function buildPupilDetail(name) {
+    const pupilName = String(name || '');
+    const state = loadPupilState(pupilName);
+    const achievements = safeArray(state.achievements);
+    const storiesRead = safeArray(state.storiesRead);
+    const tablesDone = safeArray(state.ttCompleted);
+    const adaptiveTopics = Object.keys(state.adaptive || {}).sort().map(function(topic){
+      const adaptiveState = state.adaptive[topic] || {};
+      return {
+        topic: topic,
+        level: adaptiveState.level || 1
+      };
+    });
+
+    return {
+      name: pupilName,
+      title: pupilName + ' — Detail',
+      lastActiveLabel: formatDisplayDate(state.lastPlayed),
+      achievements: achievements,
+      adaptiveTopics: adaptiveTopics,
+      stats: [
+        { label: 'Stars', value: state.stars || 0 },
+        { label: 'Games', value: state.games || 0 },
+        { label: 'Day Streak', value: state.streak || 0 },
+        { label: 'Words Spelled', value: state.spellingCorrect || 0 },
+        { label: 'Maths Solved', value: state.mathsCorrect || 0 },
+        { label: 'Tables Done', value: tablesDone.length + '/11' },
+        { label: 'Stories Read', value: storiesRead.length + '/18' },
+        { label: 'Badges', value: achievements.length + '/31' }
+      ],
+      reportStats: [
+        { label: 'Stars', value: state.stars || 0 },
+        { label: 'Games', value: state.games || 0 },
+        { label: 'Streak', value: state.streak || 0 },
+        { label: 'Words', value: state.spellingCorrect || 0 },
+        { label: 'Maths', value: state.mathsCorrect || 0 },
+        { label: 'Stories', value: storiesRead.length + '/18' },
+        { label: 'Tables', value: tablesDone.length + '/11' },
+        { label: 'Badges', value: achievements.length + '/31' }
+      ],
+      progressCells: [
+        pupilName,
+        state.stars || 0,
+        state.games || 0,
+        state.spellingCorrect || 0,
+        state.mathsCorrect || 0,
+        tablesDone.length + '/11',
+        storiesRead.length + '/18',
+        achievements.length + '/31',
+        state.streak || 0,
+        formatDisplayDate(state.lastPlayed)
+      ],
+      csvCells: [
+        pupilName,
+        state.stars || 0,
+        state.games || 0,
+        state.streak || 0,
+        state.spellingCorrect || 0,
+        state.mathsCorrect || 0,
+        tablesDone.length,
+        storiesRead.length,
+        achievements.length,
+        state.lastPlayed || 'Never'
+      ]
+    };
+  }
+
+  function listProgressRows() {
+    return ClassmatesPupils.listPupils().map(function(name){
+      const detail = buildPupilDetail(name);
+      return {
+        name: detail.name,
+        cells: detail.progressCells.slice(),
+        csvCells: detail.csvCells.slice()
+      };
+    });
+  }
+
+  function getClassSummary() {
+    const pupils = ClassmatesPupils.listPupils();
+    const today = new Date().toDateString();
+    let totalStars = 0;
+    let totalGames = 0;
+    let activeToday = 0;
+    let totalBadges = 0;
+
+    pupils.forEach(function(name){
+      const state = loadPupilState(name);
+      totalStars += state.stars || 0;
+      totalGames += state.games || 0;
+      totalBadges += safeArray(state.achievements).length;
+      if (state.lastPlayed === today) activeToday++;
+    });
+
+    return {
+      pupilCount: pupils.length,
+      cards: [
+        {
+          label: 'Active Today',
+          value: activeToday + '/' + pupils.length,
+          background: '#e8fff5',
+          color: '#11998e'
+        },
+        {
+          label: 'Total Stars',
+          value: totalStars,
+          background: '#fff8e6',
+          color: '#d4a520'
+        },
+        {
+          label: 'Games Played',
+          value: totalGames,
+          background: '#f0ecff',
+          color: '#6c5ce7'
+        },
+        {
+          label: 'Badges Earned',
+          value: totalBadges,
+          background: '#fff0f5',
+          color: '#e84393'
+        }
+      ]
+    };
+  }
+
+  window.ClassmatesTeacherSummary = {
+    getClassSummary: getClassSummary,
+    getPupilDetail: buildPupilDetail,
+    getProgressHeaders: function(){
+      return PROGRESS_HEADERS.slice();
+    },
+    listProgressRows: listProgressRows
+  };
+})();
