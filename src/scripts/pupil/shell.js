@@ -163,10 +163,21 @@
     return true;
   }
 
-  window.ClassmatesPupilShell = {
+  const pupilShellApi = Object.freeze({
     renderHomeHeader: renderHomeHeader,
     renderLeaderboard: renderLeaderboard,
     renderPupilGrid: renderPupilGrid,
     renderPupilSelect: renderPupilSelect
-  };
+  });
+
+  window.ClassmatesPupilShell = pupilShellApi;
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
+    window.ClassmatesPlatform.registerModule('pupil', 'shell', {
+      owner: 'pupil',
+      exports: ['ClassmatesPupilShell', 'renderHomeHeader', 'renderLeaderboard', 'renderPupilGrid', 'renderPupilSelect']
+    });
+  }
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
+    window.ClassmatesPlatform.registerService('pupilShell', pupilShellApi);
+  }
 })();

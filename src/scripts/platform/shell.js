@@ -38,11 +38,22 @@
     return activeScreenId;
   }
 
-  window.ClassmatesShell = {
+  const shellApi = Object.freeze({
     clearCurrentPupil: clearCurrentPupil,
     getActiveScreenId: getActiveScreenId,
     getCurrentPupil: getCurrentPupil,
     setCurrentPupil: setCurrentPupil,
     showScreen: showScreen
-  };
+  });
+
+  window.ClassmatesShell = shellApi;
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
+    window.ClassmatesPlatform.registerModule('platform', 'shell', {
+      owner: 'platform',
+      exports: ['ClassmatesShell', 'showScreen', 'getActiveScreenId', 'getCurrentPupil', 'setCurrentPupil', 'clearCurrentPupil']
+    });
+  }
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
+    window.ClassmatesPlatform.registerService('shell', shellApi);
+  }
 })();

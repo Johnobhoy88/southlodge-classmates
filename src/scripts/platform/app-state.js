@@ -168,7 +168,7 @@
     return next;
   }
 
-  window.ClassmatesAppState = {
+  const appStateApi = Object.freeze({
     createDefaultState: createDefaultState,
     getStateKey: getStateKey,
     loadState: loadState,
@@ -182,5 +182,16 @@
     addWeakItem: addWeakItem,
     getWeakItems: getWeakItems,
     clearWeakItem: clearWeakItem
-  };
+  });
+
+  window.ClassmatesAppState = appStateApi;
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
+    window.ClassmatesPlatform.registerModule('platform', 'app-state', {
+      owner: 'platform',
+      exports: ['ClassmatesAppState', 'loadState', 'saveState', 'resetState', 'applyPlayProgress', 'applyStars']
+    });
+  }
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
+    window.ClassmatesPlatform.registerService('appState', appStateApi);
+  }
 })();

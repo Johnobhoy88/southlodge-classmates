@@ -2309,5 +2309,11 @@ window.hdashStop=function(){
 })();
 
 // ==================== INIT ====================
+window.ClassmatesAppBootstrap=function(runtime){
 document.querySelectorAll('[id$="LevelSelect"]').forEach(el=>{el.classList.add('level-select-wrap')});
 loadState();checkWeeklyGoal();updateHomeStats();renderPupilSelect();
+return runtime||null;
+};
+if(window.ClassmatesPlatform&&typeof window.ClassmatesPlatform.registerModule==='function'){
+  window.ClassmatesPlatform.registerModule('platform','app-shell',{owner:'platform',exports:['ClassmatesAppBootstrap','loadState','saveState','showScreen','goHome','startGame','updateHomeStats','renderPupilSelect']});
+}

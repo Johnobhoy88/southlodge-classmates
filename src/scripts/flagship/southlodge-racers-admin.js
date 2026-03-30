@@ -728,4 +728,42 @@
     window.__classmatesAttemptMeta = null;
     if (typeof renderAssignmentBanner === 'function') renderAssignmentBanner();
   };
+
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
+    window.ClassmatesPlatform.registerModule('flagship', 'southlodge-racers-admin', {
+      owner: 'flagship',
+      exports: [
+        'ClassmatesTeacherAuthoring',
+        'ClassmatesTeacherSummary',
+        'ClassmatesTeacherReports',
+        'showTeacherTab',
+        'renderTeacher',
+        'renderClassSummary',
+        'renderProgressTable',
+        'showPupilDetail',
+        'renderAssignmentBanner',
+        'launchAssignment',
+        'showResults'
+      ]
+    });
+    window.ClassmatesPlatform.registerModule('flagship', 'teacher-dashboard', {
+      owner: 'flagship',
+      exports: ['teacherDashboard', 'showTeacherTab', 'renderTeacher', 'renderClassSummary', 'renderProgressTable', 'showPupilDetail']
+    });
+  }
+  if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
+    window.ClassmatesPlatform.registerService('teacherDashboard', {
+      clearAssignment: window.clearAssignment,
+      launchAssignment: window.launchAssignment,
+      renderAssignmentBanner: window.renderAssignmentBanner,
+      renderClassSummary: window.renderClassSummary,
+      renderProgressTable: window.renderProgressTable,
+      renderTeacher: window.renderTeacher,
+      saveAssignment: window.saveAssignment,
+      showPupilDetail: window.showPupilDetail,
+      showResults: window.showResults,
+      showTeacherTab: window.showTeacherTab,
+      syncSouthlodgeAssignmentForm: window.syncSouthlodgeAssignmentForm
+    });
+  }
 })();

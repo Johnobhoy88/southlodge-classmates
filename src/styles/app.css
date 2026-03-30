@@ -158,9 +158,9 @@ h1,h2,h3{font-family:'Fredoka One','Comic Sans MS',cursive;color:white}
 #hdash-canvas{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
 .hdash-hud{position:absolute;inset:72px 0 0;display:grid;grid-template-rows:auto auto 1fr auto;gap:14px;pointer-events:none;z-index:50;padding:18px;font-family:'Nunito','Trebuchet MS',sans-serif;color:white;text-shadow:0 2px 10px rgba(11,35,46,0.25)}
 .racer-topbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.racer-chip{background:rgba(11,35,46,0.62);border:1px solid rgba(255,255,255,0.2);border-radius:999px;padding:8px 14px;font-size:0.78rem;font-weight:800;letter-spacing:0.4px}
-.racer-chip-strong{background:rgba(244,182,63,0.95);color:#163545;border-color:rgba(255,255,255,0.55)}
-.racer-brief{max-width:440px;background:rgba(11,35,46,0.62);border:1px solid rgba(255,255,255,0.18);border-radius:22px;padding:18px 20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.racer-chip{background:rgba(11,35,46,0.62);border:1px solid rgba(255,255,255,0.2);border-radius:var(--radius-round);padding:8px 14px;font-size:var(--fs-xs);font-weight:800;letter-spacing:0.4px}
+.racer-chip-strong{background:var(--color-secondary);color:var(--color-bg);border-color:rgba(255,255,255,0.55)}
+.racer-brief{max-width:440px;background:rgba(11,35,46,0.62);border:1px solid rgba(255,255,255,0.18);border-radius:var(--radius-xl);padding:18px 20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .racer-label{font-size:0.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.7)}
 .racer-word{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:2rem;line-height:1.05;margin-top:6px}
 .racer-sentence{font-size:0.9rem;line-height:1.45;margin-top:8px;color:rgba(255,255,255,0.88)}
@@ -729,10 +729,10 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .story-text{background:#fffdf8;border:2px solid #f0ede8;border-radius:16px;padding:20px;font-size:1rem;line-height:1.8;color:#2d3436;margin:16px 0;max-height:50vh;overflow-y:auto}
 .story-text p{margin-bottom:10px}
 .q-text{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.05rem;color:#2d3436;margin-bottom:12px}
-.ans-btn{display:block;width:100%;padding:14px 18px;border:2px solid #e8eaed;border-radius:14px;background:white;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.95rem;font-weight:700;color:#2d3436;cursor:pointer;text-align:left;transition:all 0.15s;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.03)}
-.ans-btn:hover{border-color:#45B7D1;background:#f0f9ff;transform:translateX(4px)}
-.ans-btn.correct-ans{border-color:#2ecc71;background:linear-gradient(135deg,#e8fff5,#d5f5e3);color:#1e8449;box-shadow:0 2px 8px rgba(46,204,113,0.15)}
-.ans-btn.wrong-ans{border-color:#e74c3c;background:linear-gradient(135deg,#fff0ed,#fadbd8);color:#c0392b;box-shadow:0 2px 8px rgba(231,76,60,0.15)}
+.ans-btn{display:block;width:100%;padding:14px 18px;border:2px solid #e8eaed;border-radius:var(--radius-md);background:var(--color-white);font-family:var(--font-body);font-size:var(--fs-sm);font-weight:700;color:var(--color-text-dark);cursor:pointer;text-align:left;transition:all 0.15s;margin-bottom:var(--space-sm);box-shadow:var(--shadow-sm)}
+.ans-btn:hover{border-color:var(--color-accent);background:#f0f9ff;transform:translateX(4px)}
+.ans-btn.correct-ans{border-color:var(--color-success);background:linear-gradient(135deg,#e8fff5,#d5f5e3);color:#1e8449;box-shadow:0 2px 8px rgba(46,204,113,0.15)}
+.ans-btn.wrong-ans{border-color:var(--color-error);background:linear-gradient(135deg,#fff0ed,#fadbd8);color:var(--color-error-dark);box-shadow:0 2px 8px rgba(231,76,60,0.15)}
 .ans-btn.disabled{pointer-events:none;opacity:0.7}
 
 /* ===== DAILY ===== */
@@ -776,6 +776,17 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .shake{animation:shake 0.3s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp 0.35s ease}
+
+/* Motion Helpers */
+.animate-pop{animation:popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
+.animate-fade-up{animation:fadeUp 0.4s ease-out}
+.animate-slide-in{animation:slideInRight 0.3s ease-out}
+.animate-bounce{animation:starBounce 0.5s ease-out}
+
+/* Accessibility & Focus */
+:focus{outline:none}
+:focus-visible{outline:3px solid var(--color-secondary);outline-offset:2px;border-radius:inherit}
+button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var(--color-secondary);outline-offset:2px}
 
 /* ===== RESPONSIVE ===== */
 @media(min-width:700px){

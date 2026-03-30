@@ -125,4 +125,28 @@ global.storageListAppKeys=storageListAppKeys;
 global.storageClearAppData=storageClearAppData;
 global.storageDownloadBackup=storageDownloadBackup;
 global.storageImportBackupFile=storageImportBackupFile;
+
+const storageApi = {
+  storageClearAppData: storageClearAppData,
+  storageDownloadBackup: storageDownloadBackup,
+  storageGetItem: storageGetItem,
+  storageGetJson: storageGetJson,
+  storageImportBackupFile: storageImportBackupFile,
+  storageIsAvailable: function(){ return storageEnabled; },
+  storageListAppKeys: storageListAppKeys,
+  storageRemoveItem: storageRemoveItem,
+  storageSetItem: storageSetItem,
+  storageSetJson: storageSetJson
+};
+
+global.ClassmatesStorage = Object.freeze(storageApi);
+if (global.ClassmatesPlatform && typeof global.ClassmatesPlatform.registerModule === 'function') {
+  global.ClassmatesPlatform.registerModule('platform', 'storage', {
+    owner: 'platform',
+    exports: ['ClassmatesStorage', 'storageGetItem', 'storageSetItem', 'storageRemoveItem', 'storageGetJson', 'storageSetJson', 'storageListAppKeys', 'storageClearAppData', 'storageDownloadBackup', 'storageImportBackupFile']
+  });
+}
+if (global.ClassmatesPlatform && typeof global.ClassmatesPlatform.registerService === 'function') {
+  global.ClassmatesPlatform.registerService('storage', storageApi);
+}
 })(window);
