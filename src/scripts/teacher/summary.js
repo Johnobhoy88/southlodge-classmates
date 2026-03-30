@@ -37,6 +37,7 @@
         level: adaptiveState.level || 1
       };
     });
+    const recommendedNextStep = getRecommendedNextStep(pupilName);
 
     return {
       name: pupilName,
@@ -87,8 +88,59 @@
         storiesRead.length,
         achievements.length,
         state.lastPlayed || 'Never'
-      ]
+      ],
+      recommendedNextStep: recommendedNextStep
     };
+  }
+
+  function getRecommendationRank(status) {
+    if (status === 'Needs support') return 0;
+    if (status === 'Watch') return 1;
+    if (status === 'Secure') return 2;
+    return 3;
+  }
+
+  function getRecommendedNextStep(pupilName) {
+    if (!window.ClassmatesMastery || typeof ClassmatesMastery.getPupilOverview !== 'function') return null;
+
+    const overview = ClassmatesMastery.getPupilOverview(pupilName);
+    const weakestPack = overview && overview.weakestPack;
+    if (!weakestPack) return null;
+
+    const commonErrors = safeArray(weakestPack.commonErrors);
+    const topError = commonErrors[0] || null;
+    const actionVerb = weakestPack.status === 'Needs support' ? 'Revisit' : 'Practise';
+    const focusLabel = topError ? topError.label : (weakestPack.skillFocus || weakestPack.shortTitle || weakestPack.packTitle);
+
+    return {
+      pupilName: pupilName,
+      packId: weakestPack.packId,
+      packTitle: weakestPack.packTitle,
+      shortTitle: weakestPack.shortTitle,
+      stageBand: weakestPack.stageBand,
+      status: weakestPack.status,
+      accuracy: weakestPack.accuracy,
+      recentTrend: weakestPack.recentTrend,
+      focusLabel: focusLabel,
+      focusCount: topError ? topError.count : 0,
+      actionLabel: actionVerb + ' ' + (weakestPack.shortTitle || weakestPack.packTitle),
+      summaryText: actionVerb + ' ' + (weakestPack.shortTitle || weakestPack.packTitle) + ' and focus on ' + focusLabel + '.',
+      supportText: topError
+        ? topError.label + ' appears ' + topError.count + ' times.'
+        : 'Keep building confidence in this pack.',
+      sortRank: getRecommendationRank(weakestPack.status)
+    };
+  }
+
+  function listRecommendedNextSteps(limit) {
+    const max = typeof limit === 'number' && limit > 0 ? limit : 4;
+    return ClassmatesPupils.listPupils().map(function(name){
+      return getRecommendedNextStep(name);
+    }).filter(Boolean).sort(function(left, right){
+      if (left.sortRank !== right.sortRank) return left.sortRank - right.sortRank;
+      if (left.accuracy !== right.accuracy) return left.accuracy - right.accuracy;
+      return left.pupilName.localeCompare(right.pupilName);
+    }).slice(0, max);
   }
 
   function listProgressRows() {
@@ -205,7 +257,8 @@
       classSummary: getClassSummary(),
       needsAttention: getNeedsAttention(),
       interventions: getInterventionSignals(),
-      recentActivity: getRecentActivity()
+      recentActivity: getRecentActivity(),
+      nextActions: listRecommendedNextSteps(4)
     };
   }
 
@@ -215,7 +268,9 @@
     getProgressHeaders: function(){
       return PROGRESS_HEADERS.slice();
     },
+    getRecommendedNextStep: getRecommendedNextStep,
     listProgressRows: listProgressRows,
+    listRecommendedNextSteps: listRecommendedNextSteps,
     getNeedsAttention: getNeedsAttention,
     getInterventionSignals: getInterventionSignals,
     getRecentActivity: getRecentActivity,
@@ -226,7 +281,7 @@
   if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerModule === 'function') {
     window.ClassmatesPlatform.registerModule('teacher', 'summary', {
       owner: 'teacher',
-      exports: ['ClassmatesTeacherSummary', 'getClassSummary', 'getPupilDetail', 'getTeacherHomeModel']
+      exports: ['ClassmatesTeacherSummary', 'getClassSummary', 'getPupilDetail', 'getTeacherHomeModel', 'getRecommendedNextStep', 'listRecommendedNextSteps']
     });
   }
   if (window.ClassmatesPlatform && typeof window.ClassmatesPlatform.registerService === 'function') {
