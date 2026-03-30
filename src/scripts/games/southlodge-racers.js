@@ -32,6 +32,206 @@
     return Math.max(min, Math.min(max, value));
   }
 
+  const RACER_COSMETICS = {
+    colors: {
+      ember: { label: 'Ember Orange', body: 0xed6a2c, cab: 0xfff2d9, bumper: 0x163545 },
+      aurora: { label: 'Aurora Green', body: 0x11998e, cab: 0xe9fff8, bumper: 0x0f4b52 }
+    },
+    trails: {
+      none: { label: 'None', color: 0xffffff, density: 0, rise: 0, size: 0.14 },
+      spark: { label: 'Spark Trail', color: 0xffd93d, density: 1, rise: 2.0, size: 0.16 }
+    },
+    titles: {
+      rookie: { label: 'Racing Rookie' },
+      track_star: { label: 'Track Star' }
+    }
+  };
+  const RACER_COSMETIC_UNLOCKS = [
+    { id: 'sr_spark_trail', type: 'trail', cosmeticId: 'spark', name: 'Spark Trail', description: 'Unlocks a sparkling trail effect.', threshold: 0.8 },
+    { id: 'sr_aurora_paint', type: 'color', cosmeticId: 'aurora', name: 'Aurora Green', description: 'Unlocks a brighter car colour.', threshold: 0.84 },
+    { id: 'sr_track_star_title', type: 'title', cosmeticId: 'track_star', name: 'Track Star', description: 'Unlocks a new racer title.', threshold: 0.88 }
+  ];
+
+  function normalizeRacerProgression() {
+    if (!window.ClassmatesAppState || typeof state === 'undefined') {
+      return { unlocked: [], equipped: { color: 'ember', trail: 'none', title: 'rookie' } };
+    }
+    return ClassmatesAppState.getRacerProgression(state);
+  }
+
+  function getRacerLoadout() {
+    const progression = normalizeRacerProgression();
+    const equipped = progression.equipped || {};
+    return {
+      colorId: equipped.color || 'ember',
+      trailId: equipped.trail || 'none',
+      titleId: equipped.title || 'rookie'
+    };
+  }
+
+  function getLoadoutLabels(loadout) {
+    const color = RACER_COSMETICS.colors[loadout.colorId] || RACER_COSMETICS.colors.ember;
+    const trail = RACER_COSMETICS.trails[loadout.trailId] || RACER_COSMETICS.trails.none;
+    const title = RACER_COSMETICS.titles[loadout.titleId] || RACER_COSMETICS.titles.rookie;
+    return {
+      colorLabel: color.label,
+      trailLabel: trail.label,
+      titleLabel: title.label,
+      trail: trail,
+      color: color
+    };
+  }
+
+  function applyCarLoadout(loadout) {
+    if (!RACER.car || !RACER.car.userData || !RACER.car.userData.materials) return;
+    const materials = RACER.car.userData.materials;
+    const color = RACER_COSMETICS.colors[(loadout && loadout.colorId) || 'ember'] || RACER_COSMETICS.colors.ember;
+    materials.body.color.setHex(color.body);
+    materials.cab.color.setHex(color.cab);
+    materials.bumper.color.setHex(color.bumper);
+  }
+
+  function setHudStateClass(stateName) {
+    const hud = document.getElementById('hdashHud');
+    if (!hud) return;
+    hud.classList.remove('streak-spark', 'streak-boost', 'streak-champion');
+    if (!stateName) return;
+    hud.classList.add('streak-' + stateName);
+    clearTimeout(RACER.streakHudTimer);
+    RACER.streakHudTimer = setTimeout(function(){
+      hud.classList.remove('streak-' + stateName);
+    }, 900);
+  }
+
+  function showRacerRewardPopup(lines, accent) {
+    const popup = document.createElement('div');
+    popup.className = 'ach-popup';
+    popup.onclick = function(){ popup.remove(); };
+    popup.innerHTML = '<div class="ach-popup-card racer-reward-card" style="border-color:' + (accent || '#FFD93D') + '">'
+      + '<div class="ach-popup-label">Mission reward</div>'
+      + '<div class="ach-popup-icon">🏁</div>'
+      + '<div class="ach-popup-title">Southlodge Racers</div>'
+      + '<div class="ach-popup-desc">' + lines.map(function(line){ return String(line); }).join('<br>') + '</div>'
+      + '</div>';
+    document.body.appendChild(popup);
+    setTimeout(function(){ if (popup.parentNode) popup.remove(); }, 3200);
+  }
+
+  function spawnTrailParticle() {
+    if (!RACER.session || !RACER.session.trailEffect || !RACER.session.trailEffect.enabled || !RACER.car || !RACER.scene) return;
+    const trail = RACER.session.trailEffect;
+    const geometry = new THREE.SphereGeometry(trail.size || 0.14, 8, 8);
+    const material = new THREE.MeshBasicMaterial({ color: trail.color || 0xffd93d, transparent: true, opacity: 0.92 });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(
+      RACER.car.position.x + (Math.random() - 0.5) * 1.2,
+      RACER.car.position.y + 0.35 + Math.random() * 0.4,
+      RACER.car.position.z + 2.2 + Math.random() * 0.8
+    );
+    RACER.scene.add(mesh);
+    RACER.trailParticles.push({
+      mesh: mesh,
+      life: 0.7 + Math.random() * 0.35,
+      maxLife: 0.7 + Math.random() * 0.35,
+      rise: trail.rise || 0,
+      drift: (Math.random() - 0.5) * 0.75
+    });
+  }
+
+  function updateTrailParticles(delta) {
+    if (!RACER.session || !RACER.session.trailEffect || !RACER.session.trailEffect.enabled) {
+      if (RACER.trailParticles.length) {
+        RACER.trailParticles.forEach(function(particle){
+          if (particle.mesh && particle.mesh.parent) particle.mesh.parent.remove(particle.mesh);
+          if (particle.mesh && particle.mesh.geometry) particle.mesh.geometry.dispose();
+          if (particle.mesh && particle.mesh.material) particle.mesh.material.dispose();
+        });
+        RACER.trailParticles = [];
+      }
+      return;
+    }
+    const trail = RACER.session.trailEffect;
+    RACER.session.trailSpawnTimer = (RACER.session.trailSpawnTimer || 0) - delta;
+    const streakScale = RACER.session.streak >= 8 ? 0.42 : RACER.session.streak >= 5 ? 0.58 : RACER.session.streak >= 3 ? 0.76 : 1;
+    const spawnDelay = Math.max(0.05, 0.12 * streakScale / Math.max(1, trail.density || 1));
+    if (RACER.session.trailSpawnTimer <= 0) {
+      RACER.session.trailSpawnTimer = spawnDelay;
+      spawnTrailParticle();
+    }
+    for (let index = RACER.trailParticles.length - 1; index >= 0; index--) {
+      const particle = RACER.trailParticles[index];
+      particle.life -= delta;
+      particle.mesh.position.y += delta * (particle.rise + 0.8);
+      particle.mesh.position.z += delta * (1.5 + particle.drift);
+      particle.mesh.scale.multiplyScalar(Math.max(0.84, 1 - delta * 0.75));
+      particle.mesh.material.opacity = Math.max(0, particle.life / particle.maxLife);
+      if (particle.life <= 0) {
+        if (particle.mesh.parent) particle.mesh.parent.remove(particle.mesh);
+        particle.mesh.geometry.dispose();
+        particle.mesh.material.dispose();
+        RACER.trailParticles.splice(index, 1);
+      }
+    }
+  }
+
+  function clearTrailParticles() {
+    if (!RACER.trailParticles.length) return;
+    RACER.trailParticles.forEach(function(particle){
+      if (particle.mesh && particle.mesh.parent) particle.mesh.parent.remove(particle.mesh);
+      if (particle.mesh && particle.mesh.geometry) particle.mesh.geometry.dispose();
+      if (particle.mesh && particle.mesh.material) particle.mesh.material.dispose();
+    });
+    RACER.trailParticles = [];
+  }
+
+  function triggerStreakReward() {
+    if (!RACER.session) return;
+    const streak = RACER.session.streak || 0;
+    let tier = RACER.session.streakTier || 0;
+    const milestones = [
+      { streak: 3, tone: 'spark', text: 'Spark streak x3', boost: 0.6 },
+      { streak: 5, tone: 'boost', text: 'Boost streak x5', boost: 1.1 },
+      { streak: 8, tone: 'champion', text: 'Champion streak x8', boost: 1.8, confetti: true }
+    ];
+    let milestone = null;
+    for (let index = milestones.length - 1; index >= 0; index--) {
+      if (streak >= milestones[index].streak && tier < index + 1) {
+        milestone = milestones[index];
+        tier = index + 1;
+        break;
+      }
+    }
+    RACER.session.streakTier = tier;
+    if (!milestone) return;
+    setHudStateClass(milestone.tone);
+    setMessage(milestone.text, milestone.tone, milestone.streak >= 8 ? 1200 : 900);
+    RACER.session.speedBoost += milestone.boost;
+    RACER.session.cameraKick += milestone.boost * 0.12;
+    if (milestone.confetti && typeof launchConfetti === 'function') launchConfetti(900);
+    if (typeof sfxLevelUp === 'function' && milestone.streak >= 5) sfxLevelUp();
+    else if (typeof sfxStreak === 'function') sfxStreak();
+    else if (typeof sfxCorrect === 'function') sfxCorrect();
+  }
+
+  function awardRacerCosmetics(accuracy) {
+    if (!window.ClassmatesAppState || typeof state === 'undefined' || accuracy < 0.8) return [];
+    const progression = ClassmatesAppState.getRacerProgression(state);
+    const unlocked = progression.unlocked || [];
+    const unlockedRewards = [];
+    RACER_COSMETIC_UNLOCKS.forEach(function(reward){
+      if (unlocked.indexOf(reward.id) !== -1) return;
+      if (unlockedRewards.length > 0) return;
+      state = ClassmatesAppState.unlockRacerCosmetic(state, {
+        id: reward.cosmeticId,
+        type: reward.type,
+        name: reward.name
+      });
+      unlockedRewards.push(reward);
+      if (typeof saveState === 'function') saveState();
+    });
+    return unlockedRewards;
+  }
+
   function speakPrompt(text) {
     if (!window.speechSynthesis || !text) return false;
     window.speechSynthesis.cancel();
@@ -150,16 +350,19 @@
 
   function buildCar() {
     const group = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.1, 6.2), new THREE.MeshStandardMaterial({ color: 0xed6a2c, roughness: 0.55 }));
+    const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0xed6a2c, roughness: 0.55 });
+    const cabMaterial = new THREE.MeshStandardMaterial({ color: 0xfff2d9, roughness: 0.45 });
+    const bumperMaterial = new THREE.MeshStandardMaterial({ color: 0x163545, roughness: 0.65 });
+    const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x1d2228, roughness: 0.8 });
+    const body = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.1, 6.2), bodyMaterial);
     body.position.y = 1;
-    const cab = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.9, 2.4), new THREE.MeshStandardMaterial({ color: 0xfff2d9, roughness: 0.45 }));
+    const cab = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.9, 2.4), cabMaterial);
     cab.position.set(0, 1.7, -0.3);
-    const bumper = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.35, 0.6), new THREE.MeshStandardMaterial({ color: 0x163545, roughness: 0.65 }));
+    const bumper = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.35, 0.6), bumperMaterial);
     bumper.position.set(0, 0.55, -3.15);
     group.add(body, cab, bumper);
 
     const wheelGeometry = new THREE.CylinderGeometry(0.65, 0.65, 0.8, 20);
-    const wheelMaterial = new THREE.MeshStandardMaterial({ color: 0x1d2228, roughness: 0.8 });
     [[-1.4, 0.6, -2], [1.4, 0.6, -2], [-1.4, 0.6, 2], [1.4, 0.6, 2]].forEach(function(position){
       const wheel = new THREE.Mesh(wheelGeometry, wheelMaterial);
       wheel.rotation.z = Math.PI / 2;
@@ -167,6 +370,12 @@
       group.add(wheel);
     });
 
+    group.userData.materials = {
+      body: bodyMaterial,
+      cab: cabMaterial,
+      bumper: bumperMaterial,
+      wheel: wheelMaterial
+    };
     group.position.set(0, 0.2, 48);
     return group;
   }
@@ -249,9 +458,12 @@
     const progress = RACER.session.completed + '/' + RACER.session.words.length;
     const speed = RACER.session.currentSpeed || RACER.session.speed || 0;
     const gateLabel = RACER.session.currentWord ? (RACER.session.completed + 1) : RACER.session.words.length;
+    const loadoutLabels = RACER.session.loadoutLabels || getLoadoutLabels(RACER.session.loadout || getRacerLoadout());
     setText('racerStage', RACER.session.stageBand + ' Level');
     setText('racerPack', RACER.session.pack.shortTitle);
     setText('racerObjective', RACER.session.currentWord ? 'Gate ' + gateLabel + ' of ' + RACER.session.words.length : 'Finish line ahead');
+    setText('racerTitle', loadoutLabels.titleLabel);
+    setText('racerLoadout', 'Car: ' + loadoutLabels.colorLabel + ' · Trail: ' + loadoutLabels.trailLabel);
     setText('racerPromptWord', RACER.session.currentWord ? RACER.session.currentWord.word : 'Get ready');
     setText('racerPromptSentence', RACER.session.currentWord ? RACER.session.currentWord.sentence : 'Press start to open the first spelling gate.');
     setText('racerProgress', progress);
@@ -432,8 +644,10 @@
       RACER.session.cameraKick = 0.55;
       RACER.session.laneLean = 0;
       setMessage('Boost!', 'good', 850);
+      triggerStreakReward();
     } else {
       RACER.session.streak = 0;
+      RACER.session.streakTier = 0;
       RACER.session.shields = Math.max(0, RACER.session.shields - 1);
       RACER.session.penalty = 5.5;
       RACER.session.cameraKick = -0.75;
@@ -454,6 +668,8 @@
     const total = RACER.session.words.length || 1;
     const accuracy = RACER.session.correct / total;
     const stars = accuracy >= 0.9 ? 3 : accuracy >= 0.65 ? 2 : accuracy >= 0.35 ? 1 : 0;
+    const unlockedCosmetics = awardRacerCosmetics(accuracy);
+    const coinBonus = Math.max(8, Math.round(accuracy * 20) + (stars * 4) + (unlockedCosmetics.length * 6));
 
     if (typeof state !== 'undefined' && window.ClassmatesAppState) {
       state.spellingCorrect = (state.spellingCorrect || 0) + RACER.session.correct;
@@ -469,23 +685,44 @@
       if (typeof saveState === 'function') saveState();
     }
 
+    RACER.session.rewardUnlocks = unlockedCosmetics;
+    RACER.session.loadout = getRacerLoadout();
+    RACER.session.loadoutLabels = getLoadoutLabels(RACER.session.loadout);
+    RACER.session.trailEffect = RACER.session.loadout.trailId === 'none' ? { enabled: false } : {
+      enabled: true,
+      color: RACER.session.loadoutLabels.trail.color,
+      density: RACER.session.loadoutLabels.trail.density,
+      rise: RACER.session.loadoutLabels.trail.rise,
+      size: RACER.session.loadoutLabels.trail.size
+    };
+    applyCarLoadout(RACER.session.loadout);
+
     window.__classmatesAttemptMeta = {
       activityId: 'southlodgeracers',
       gameId: 'hdash',
       category: 'literacy',
       title: 'Southlodge Racers',
       subtitle: RACER.session.pack.title + ' · ' + RACER.session.stageBand,
-      resultsSubtitle: RACER.session.assignment ? 'Assigned spelling mission complete.' : 'Free-play spelling mission complete.',
+      resultsSubtitle: unlockedCosmetics.length > 0 ? ('Unlocked ' + unlockedCosmetics.map(function(reward){ return reward.name; }).join(' and ') + '.') : (RACER.session.assignment ? 'Assigned spelling mission complete.' : 'Free-play spelling mission complete.'),
       stageBand: RACER.session.stageBand,
       packId: RACER.session.pack.id,
       missionId: RACER.session.config.missionId,
       errorPatternCounts: RACER.session.errorPatternCounts,
       assignment: RACER.session.assignment,
-      maxStreak: RACER.session.maxStreak
+      maxStreak: RACER.session.maxStreak,
+      coinBonus: coinBonus,
+      loadout: RACER.session.loadout
     };
 
     window.hdashStop();
-    showResults(RACER.session.pack.accent || '#11998e', 'Aa', 'Southlodge Racers Complete!', RACER.session.pack.title, stars, RACER.session.correct, total, function(){ startGame('hdash'); }, RACER.session.missed);
+    showResults(RACER.session.pack.accent || '#11998e', 'Aa', 'Southlodge Racers Complete!', RACER.session.pack.title, stars, RACER.session.correct, total, function(){ startGame('hdash'); }, RACER.session.missed, coinBonus);
+    const rewardLines = [];
+    if (unlockedCosmetics.length > 0) rewardLines.push('Unlocked: ' + unlockedCosmetics.map(function(reward){ return reward.name; }).join(' and '));
+    rewardLines.push('Coins earned: ' + coinBonus);
+    rewardLines.push('Stars earned: ' + stars);
+    setTimeout(function(){
+      showRacerRewardPopup(rewardLines, RACER.session.pack.accent || '#ffd93d');
+    }, 350);
   }
 
   function stepWorld(delta) {
@@ -526,6 +763,8 @@
       RACER.camera.position.z = 68 + (RACER.session.cameraKick || 0) * 0.7;
       RACER.camera.lookAt(RACER.session.playerX * 0.35, 4, -30);
     }
+
+    updateTrailParticles(delta);
 
     if (RACER.currentGate) {
       RACER.currentGate.position.z += targetSpeed * delta;
