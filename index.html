@@ -2971,6 +2971,191 @@ global.storageImportBackupFile=storageImportBackupFile;
 })();
 
 
+(function(){
+  function escapeHtml(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function clampLevel(level) {
+    const next = Number(level);
+    if (next === 1 || next === 2 || next === 3) return next;
+    return 2;
+  }
+
+  function formatReportDate() {
+    return new Date().toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+
+  function getBackupPanelModel(input) {
+    const source = input && typeof input === 'object' ? input : {};
+    if (!source.storageAvailable) {
+      return {
+        summaryHtml: 'Local browser storage is unavailable in this environment.',
+        statusMessage: 'This browser is blocking local storage for the app.',
+        statusColor: '#e74c3c'
+      };
+    }
+
+    const schoolName = escapeHtml(source.schoolName || 'Classmates');
+    const pupilCount = Number(source.pupilCount) || 0;
+    const profileCount = Number(source.profileCount) || 0;
+    const attemptCount = Number(source.attemptCount) || 0;
+    const appRecordCount = Number(source.appRecordCount) || 0;
+
+    return {
+      summaryHtml: '<strong>' + schoolName + '</strong><br>' + pupilCount + ' pupils, ' + profileCount + ' saved pupil profiles, ' + attemptCount + ' logged attempts, ' + appRecordCount + ' app records on this device.',
+      statusMessage: '',
+      statusColor: ''
+    };
+  }
+
+  function downloadBackup(input) {
+    const source = input && typeof input === 'object' ? input : {};
+    if (!source.storageAvailable) {
+      return {
+        ok: false,
+        message: 'Backup failed because browser storage is unavailable.',
+        color: '#e74c3c'
+      };
+    }
+
+    const fileName = source.downloadBackup();
+    return {
+      ok: true,
+      fileName: fileName,
+      message: 'Backup downloaded: ' + fileName,
+      color: '#11998e'
+    };
+  }
+
+  async function importBackupFile(file, input) {
+    const source = input && typeof input === 'object' ? input : {};
+    try {
+      const payload = await source.importBackupFile(file);
+      const when = payload && payload.exportedAt
+        ? new Date(payload.exportedAt).toLocaleString('en-GB')
+        : 'backup file';
+
+      return {
+        ok: true,
+        payload: payload,
+        message: 'Backup imported from ' + when + '.',
+        color: '#11998e'
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: error && error.message ? error.message : 'Backup import failed.',
+        color: '#e74c3c'
+      };
+    }
+  }
+
+  function buildWorksheetHtml(level, input) {
+    const source = input && typeof input === 'object' ? input : {};
+    const resolvedLevel = clampLevel(level);
+    const questions = [];
+    const answers = [];
+    const getSchoolName = typeof source.getSchoolName === 'function' ? source.getSchoolName : function(){ return 'Classmates'; };
+    const genMathQuestion = typeof source.genMathQuestion === 'function' ? source.genMathQuestion : function(){ return { text: '0 + 0 = ?', answer: 0 }; };
+    const shuffle = typeof source.shuffle === 'function' ? source.shuffle : function(list){ return list; };
+    const spellingData = source.spellingData && typeof source.spellingData === 'object' ? source.spellingData : {};
+    const spellingWords = Array.isArray(spellingData[resolvedLevel]) ? spellingData[resolvedLevel].slice() : [];
+
+    for (let index = 0; index < 20; index++) {
+      const question = genMathQuestion(resolvedLevel);
+      questions.push((index + 1) + '. ' + escapeHtml(question.text));
+      answers.push((index + 1) + '. ' + escapeHtml(question.answer));
+    }
+
+    shuffle(spellingWords);
+
+    const spellingSection = spellingWords.slice(0, 10).map(function(word, index){
+      return (index + 1) + '. ' + escapeHtml(word.h) + ' (____________________)';
+    }).join('<br>');
+
+    return '<!DOCTYPE html><html><head><title>Worksheet</title><style>@page{margin:15mm}body{font-family:Arial,sans-serif;font-size:14px;line-height:2}h1{font-size:1.3rem;color:#11998e;margin-bottom:4px}h2{font-size:1rem;margin-top:20px;color:#333;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#888;font-size:0.85rem}.answers{page-break-before:always;color:#888;font-size:0.85rem}ol{padding-left:20px}</style></head><body><h1>' + escapeHtml(getSchoolName()) + ' — Classmates Worksheet</h1><p class="meta">' + escapeHtml(formatReportDate()) + ' | Level ' + resolvedLevel + '</p><p><strong>Name:</strong> _______________________________</p><h2>Maths</h2><p>' + questions.join('<br>') + '</p><h2>Spelling</h2><p>Write the word that matches each clue:</p><p>' + spellingSection + '</p><div class="answers"><h2>Answer Key (Maths)</h2><p>' + answers.join(' &nbsp; ') + '</p></div></body></html>';
+  }
+
+  function createWhiteboardQuestions(input) {
+    const source = input && typeof input === 'object' ? input : {};
+    const randomInt = typeof source.randomInt === 'function' ? source.randomInt : function(){ return 2; };
+    const genMathQuestion = typeof source.genMathQuestion === 'function' ? source.genMathQuestion : function(){ return { text: '0 + 0 = ?', answer: 0 }; };
+    const questions = [];
+
+    for (let index = 0; index < 20; index++) {
+      questions.push(genMathQuestion(randomInt(1, 3)));
+    }
+
+    return questions;
+  }
+
+  function createWhiteboardSession(input) {
+    return {
+      questions: createWhiteboardQuestions(input),
+      idx: 0,
+      answerShown: false
+    };
+  }
+
+  function getWhiteboardCard(session) {
+    const activeSession = session && Array.isArray(session.questions) && session.questions.length > 0
+      ? session
+      : createWhiteboardSession({});
+    const question = activeSession.questions[activeSession.idx] || { text: '', answer: '' };
+
+    return {
+      questionText: question.text,
+      answerText: String(question.answer),
+      counterText: 'Question ' + (activeSession.idx + 1) + ' of ' + activeSession.questions.length
+    };
+  }
+
+  function revealWhiteboardAnswer(session) {
+    if (!session || session.answerShown) {
+      return { changed: false };
+    }
+
+    session.answerShown = true;
+    return { changed: true };
+  }
+
+  function nextWhiteboardQuestion(session, input) {
+    if (!session || !Array.isArray(session.questions) || session.questions.length === 0) {
+      return createWhiteboardSession(input);
+    }
+
+    session.idx++;
+    if (session.idx >= session.questions.length) {
+      return createWhiteboardSession(input);
+    }
+
+    session.answerShown = false;
+    return session;
+  }
+
+  window.ClassmatesTeacherTools = {
+    getBackupPanelModel: getBackupPanelModel,
+    downloadBackup: downloadBackup,
+    importBackupFile: importBackupFile,
+    buildWorksheetHtml: buildWorksheetHtml,
+    createWhiteboardSession: createWhiteboardSession,
+    getWhiteboardCard: getWhiteboardCard,
+    revealWhiteboardAnswer: revealWhiteboardAnswer,
+    nextWhiteboardQuestion: nextWhiteboardQuestion
+  };
+})();
+
+
 // ==================== EMOJI SVG DATA ====================
 const EMOJI_SVG = {
   '1f431':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path fill="#FFCC4D" d="M32.348 13.999s3.445-8.812 1.651-11.998c-.604-1.073-8 1.998-10.723 5.442 0 0-2.586-.86-5.276-.86s-5.276.86-5.276.86C10.001 3.999 2.605.928 2.001 2.001.207 5.187 3.652 13.999 3.652 13.999c-.897 1.722-1.233 4.345-1.555 7.16-.354 3.086.35 5.546.658 6.089.35.617 2.123 2.605 4.484 4.306 3.587 2.583 8.967 3.445 10.761 3.445s7.174-.861 10.761-3.445c2.361-1.701 4.134-3.689 4.484-4.306.308-.543 1.012-3.003.659-6.089-.324-2.814-.659-5.438-1.556-7.16z"/><path fill="#F18F26" d="M2.359 2.971c.2-.599 5.348 2.173 6.518 5.404 0 0-3.808 2.624-4.528 4.624 0 0-2.99-7.028-1.99-10.028z"/><path fill="#FFCC4D" d="M5.98 7.261c0-1.414 5.457 2.733 4.457 3.733s-1.255.72-2.255 1.72S5.98 8.261 5.98 7.261z"/><path fill="#F18F26" d="M33.641 2.971c-.2-.599-5.348 2.173-6.518 5.404 0 0 3.808 2.624 4.528 4.624 0 0 2.99-7.028 1.99-10.028z"/><path fill="#FFCC4D" d="M30.02 7.261c0-1.414-5.457 2.733-4.457 3.733s1.255.72 2.255 1.72 2.202-4.453 2.202-5.453z"/><path fill="#292F33" d="M14.001 20.001c0 1.105-.896 1.999-2 1.999s-2-.894-2-1.999c0-1.104.896-1.999 2-1.999s2 .896 2 1.999zm11.998 0c0 1.105-.896 1.999-2 1.999-1.105 0-2-.894-2-1.999 0-1.104.895-1.999 2-1.999s2 .896 2 1.999z"/><path fill="#FEE7B8" d="M2.201 30.458c-.148 0-.294-.065-.393-.19-.171-.217-.134-.531.083-.702.162-.127 4.02-3.12 10.648-2.605.275.021.481.261.46.536-.021.275-.257.501-.537.46-6.233-.474-9.915 2.366-9.951 2.395-.093.07-.202.106-.31.106zm8.868-4.663c-.049 0-.1-.007-.149-.022-4.79-1.497-8.737-.347-8.777-.336-.265.081-.543-.07-.623-.335-.079-.265.071-.543.335-.622.173-.052 4.286-1.247 9.362.338.264.083.411.363.328.627-.066.213-.263.35-.476.35zm22.73 4.663c.148 0 .294-.065.393-.19.171-.217.134-.531-.083-.702-.162-.127-4.02-3.12-10.648-2.605-.275.021-.481.261-.46.536.022.275.257.501.537.46 6.233-.474 9.915 2.366 9.951 2.395.093.07.202.106.31.106zm-8.868-4.663c.049 0 .1-.007.149-.022 4.79-1.497 8.737-.347 8.777-.336.265.081.543-.07.623-.335.079-.265-.071-.543-.335-.622-.173-.052-4.286-1.247-9.362.338-.264.083-.411.363-.328.627.066.213.263.35.476.35z"/><path fill="#67757F" d="M24.736 30.898c-.097-.258-.384-.392-.643-.294-.552.206-1.076.311-1.559.311-1.152 0-1.561-.306-2.033-.659-.451-.338-.956-.715-1.99-.803v-2.339c0-.276-.224-.5-.5-.5s-.5.224-.5.5v2.373c-.81.115-1.346.439-1.816.743-.568.367-1.059.685-2.083.685-.482 0-1.006-.104-1.558-.311-.258-.095-.547.035-.643.294-.097.259.035.547.293.644.664.247 1.306.373 1.907.373 1.319 0 2.014-.449 2.627-.845.524-.339.98-.631 1.848-.635.992.008 1.358.278 1.815.621.538.403 1.147.859 2.633.859.601 0 1.244-.126 1.908-.373.259-.097.391-.385.294-.644z"/><path fill="#E75A70" d="M19.4 24.807h-2.8c-.64 0-1.163.523-1.163 1.163 0 .639.523 1.163 1.163 1.163h.237v.345c0 .639.523 1.163 1.163 1.163s1.163-.523 1.163-1.163v-.345h.237c.639 0 1.163-.523 1.163-1.163s-.524-1.163-1.163-1.163z"/><path fill="#F18F26" d="M18.022 17.154c-.276 0-.5-.224-.5-.5V8.37c0-.276.224-.5.5-.5s.5.224.5.5v8.284c0 .277-.223.5-.5.5zM21 15.572c-.276 0-.5-.224-.5-.5 0-2.882 1.232-5.21 1.285-5.308.13-.244.435-.334.677-.204.243.13.334.433.204.677-.012.021-1.166 2.213-1.166 4.835 0 .276-.224.5-.5.5zm-6 0c-.276 0-.5-.224-.5-.5 0-2.623-1.155-4.814-1.167-4.835-.13-.244-.038-.546.205-.677.242-.131.545-.039.676.204.053.098 1.285 2.426 1.285 5.308.001.276-.223.5-.499.5z"/></svg>',
@@ -3667,10 +3852,10 @@ function getStaffPwd(){return ClassmatesSettings.getStaffPassword()}
 function changePassword(){const old=document.getElementById('oldPwd').value;const nw=document.getElementById('newPwd').value;const result=ClassmatesSettings.updateStaffPassword(old,nw);if(!result.ok){document.getElementById('pwdStatus').innerHTML='<span style="color:#e74c3c">'+result.error+'</span>';return}document.getElementById('pwdStatus').innerHTML='<span style="color:#11998e">Password changed!</span>';document.getElementById('oldPwd').value='';document.getElementById('newPwd').value='';renderBackupPanel()}
 function saveSchoolName(){const name=document.getElementById('schoolNameInput').value.trim();if(name){const savedName=ClassmatesSettings.setSchoolName(name);document.getElementById('schoolName').textContent=savedName;renderBackupPanel()}}
 function setBackupStatus(message,color){const status=document.getElementById('backupStatus');if(!status)return;status.innerHTML=message?'<span style="color:'+color+'">'+message+'</span>':''}
-function renderBackupPanel(){const summary=document.getElementById('backupSummary');if(!summary)return;if(!storageIsAvailable()){summary.innerHTML='Local browser storage is unavailable in this environment.';setBackupStatus('This browser is blocking local storage for the app.','#e74c3c');return}const school=getSchoolName();const pupils=getPupils();const keys=storageListAppKeys();const profileCount=keys.filter(k=>k.startsWith('classmates_state_')).length;const attempts=ClassmatesAttempts.listAttempts().length;summary.innerHTML='<strong>'+school+'</strong><br>'+pupils.length+' pupils, '+profileCount+' saved pupil profiles, '+attempts+' logged attempts, '+keys.length+' app records on this device.'}
-function exportAppBackup(){if(!storageIsAvailable()){setBackupStatus('Backup failed because browser storage is unavailable.','#e74c3c');return}const fileName=storageDownloadBackup();setBackupStatus('Backup downloaded: '+fileName,'#11998e');renderBackupPanel()}
+function renderBackupPanel(){const summary=document.getElementById('backupSummary');if(!summary)return;const pupils=getPupils();const keys=storageListAppKeys();const model=ClassmatesTeacherTools.getBackupPanelModel({storageAvailable:storageIsAvailable(),schoolName:getSchoolName(),pupilCount:pupils.length,profileCount:keys.filter(k=>k.startsWith('classmates_state_')).length,attemptCount:ClassmatesAttempts.listAttempts().length,appRecordCount:keys.length});summary.innerHTML=model.summaryHtml;if(model.statusMessage)setBackupStatus(model.statusMessage,model.statusColor)}
+function exportAppBackup(){const result=ClassmatesTeacherTools.downloadBackup({storageAvailable:storageIsAvailable(),downloadBackup:storageDownloadBackup});setBackupStatus(result.message,result.color);renderBackupPanel()}
 function triggerBackupImport(){const input=document.getElementById('backupFileInput');if(input)input.click()}
-async function handleBackupImport(event){const file=event.target&&event.target.files?event.target.files[0]:null;if(!file)return;try{const payload=await storageImportBackupFile(file);currentPupil=null;state=ClassmatesAppState.createDefaultState();loadState();renderPupilGrid();renderPupilSelect();renderTeacher();updateHomeStats();const when=payload.exportedAt?new Date(payload.exportedAt).toLocaleString('en-GB'):'backup file';setBackupStatus('Backup imported from '+when+'.','#11998e')}catch(error){setBackupStatus(error&&error.message?error.message:'Backup import failed.','#e74c3c')}finally{if(event.target)event.target.value='';renderBackupPanel()}}
+async function handleBackupImport(event){const file=event.target&&event.target.files?event.target.files[0]:null;if(!file)return;const result=await ClassmatesTeacherTools.importBackupFile(file,{importBackupFile:storageImportBackupFile});try{if(result.ok){currentPupil=null;state=ClassmatesAppState.createDefaultState();loadState();renderPupilGrid();renderPupilSelect();renderTeacher();updateHomeStats()}setBackupStatus(result.message,result.color)}finally{if(event.target)event.target.value='';renderBackupPanel()}}
 
 // ==================== SESSION TIMER ====================
 let sessionTimerInterval=null;
@@ -4290,7 +4475,7 @@ function selectPremade(i){currentAvatar.premade=i;document.getElementById('avata
 function finishAvatar(){if(currentPupil)saveAvatarData(currentPupil,currentAvatar);sfxLevelUp();const pupils=getPupils();if(pupils.length>0){renderPupilGrid();showScreen('pupilselect')}else{goHome()}}
 
 // ==================== WORKSHEET GENERATOR ====================
-function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))||2;const w=window.open('','_blank');const sn=getSchoolName();const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const questions=[];const answers=[];for(let i=0;i<20;i++){const q=genMathQ(lv);questions.push((i+1)+'. '+q.text);answers.push((i+1)+'. '+q.answer)}const spellWords=[...SPELLING[lv]];shuffle(spellWords);const spellingSection=spellWords.slice(0,10).map((s,i)=>(i+1)+'. '+s.h+' (____________________)').join('<br>');w.document.write('<!DOCTYPE html><html><head><title>Worksheet</title><style>@page{margin:15mm}body{font-family:Arial,sans-serif;font-size:14px;line-height:2}h1{font-size:1.3rem;color:#11998e;margin-bottom:4px}h2{font-size:1rem;margin-top:20px;color:#333;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#888;font-size:0.85rem}.answers{page-break-before:always;color:#888;font-size:0.85rem}ol{padding-left:20px}</style></head><body><h1>'+sn+' — Classmates Worksheet</h1><p class="meta">'+today+' | Level '+lv+'</p><p><strong>Name:</strong> _______________________________</p><h2>Maths</h2><p>'+questions.join('<br>')+'</p><h2>Spelling</h2><p>Write the word that matches each clue:</p><p>'+spellingSection+'</p><div class="answers"><h2>Answer Key (Maths)</h2><p>'+answers.join(' &nbsp; ')+'</p></div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))||2;const w=window.open('','_blank');if(!w)return;w.document.write(ClassmatesTeacherTools.buildWorksheetHtml(lv,{getSchoolName:getSchoolName,genMathQuestion:genMathQ,shuffle:shuffle,spellingData:SPELLING}));w.document.close();setTimeout(()=>w.print(),300)}
 
 // ==================== SPACED REPETITION ====================
 // Track wrong answers per topic. Mix 20-30% of weak-area questions into future sessions.
@@ -4299,17 +4484,17 @@ function getWeakItems(topic,count){return ClassmatesAppState.getWeakItems(state,
 function clearWeakItem(topic,item){state=ClassmatesAppState.clearWeakItem(state,topic,item);saveState()}
 
 // ==================== WHITEBOARD MODE ====================
-let wb={questions:[],idx:0,answerShown:false};
+let wb=null;
 
-function launchWhiteboard(){wb.questions=[];for(let i=0;i<20;i++){const q=genMathQ(rand(1,3));wb.questions.push(q)}wb.idx=0;wb.answerShown=false;showScreen('whiteboard');loadWbQ()}
+function launchWhiteboard(){wb=ClassmatesTeacherTools.createWhiteboardSession({randomInt:rand,genMathQuestion:genMathQ});showScreen('whiteboard');loadWbQ()}
 
-function loadWbQ(){const q=wb.questions[wb.idx];document.getElementById('wbQuestion').textContent=q.text;const ans=document.getElementById('wbAnswer');ans.textContent=q.answer;ans.classList.add('hidden');wb.answerShown=false;document.getElementById('wbShowBtn').textContent='Show Answer';document.getElementById('wbCounter').textContent='Question '+(wb.idx+1)+' of '+wb.questions.length}
+function loadWbQ(){const card=ClassmatesTeacherTools.getWhiteboardCard(wb);document.getElementById('wbQuestion').textContent=card.questionText;const ans=document.getElementById('wbAnswer');ans.textContent=card.answerText;ans.classList.add('hidden');if(wb)wb.answerShown=false;document.getElementById('wbShowBtn').textContent='Show Answer';document.getElementById('wbCounter').textContent=card.counterText}
 
-function wbShowAnswer(){if(wb.answerShown)return;document.getElementById('wbAnswer').classList.remove('hidden');wb.answerShown=true;document.getElementById('wbShowBtn').textContent='Shown!';sfxCorrect()}
+function wbShowAnswer(){const result=ClassmatesTeacherTools.revealWhiteboardAnswer(wb);if(!result.changed)return;document.getElementById('wbAnswer').classList.remove('hidden');document.getElementById('wbShowBtn').textContent='Shown!';sfxCorrect()}
 
-function wbNext(){wb.idx++;if(wb.idx>=wb.questions.length){wb.idx=0;wb.questions=[];for(let i=0;i<20;i++)wb.questions.push(genMathQ(rand(1,3)))}loadWbQ()}
+function wbNext(){wb=ClassmatesTeacherTools.nextWhiteboardQuestion(wb,{randomInt:rand,genMathQuestion:genMathQ});loadWbQ()}
 
-document.addEventListener('keydown',function(e){if(document.getElementById('whiteboard').classList.contains('active')){if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!wb.answerShown)wbShowAnswer();else wbNext()}else if(e.key==='ArrowRight')wbNext()}});
+document.addEventListener('keydown',function(e){if(document.getElementById('whiteboard').classList.contains('active')){if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!wb||!wb.answerShown)wbShowAnswer();else wbNext()}else if(e.key==='ArrowRight')wbNext()}});
 
 // ==================== ADAPTIVE DIFFICULTY ====================
 // Track per-topic streaks. After 3 correct in a row, suggest harder level. After 2 wrong, suggest easier.

@@ -694,10 +694,10 @@ function getStaffPwd(){return ClassmatesSettings.getStaffPassword()}
 function changePassword(){const old=document.getElementById('oldPwd').value;const nw=document.getElementById('newPwd').value;const result=ClassmatesSettings.updateStaffPassword(old,nw);if(!result.ok){document.getElementById('pwdStatus').innerHTML='<span style="color:#e74c3c">'+result.error+'</span>';return}document.getElementById('pwdStatus').innerHTML='<span style="color:#11998e">Password changed!</span>';document.getElementById('oldPwd').value='';document.getElementById('newPwd').value='';renderBackupPanel()}
 function saveSchoolName(){const name=document.getElementById('schoolNameInput').value.trim();if(name){const savedName=ClassmatesSettings.setSchoolName(name);document.getElementById('schoolName').textContent=savedName;renderBackupPanel()}}
 function setBackupStatus(message,color){const status=document.getElementById('backupStatus');if(!status)return;status.innerHTML=message?'<span style="color:'+color+'">'+message+'</span>':''}
-function renderBackupPanel(){const summary=document.getElementById('backupSummary');if(!summary)return;if(!storageIsAvailable()){summary.innerHTML='Local browser storage is unavailable in this environment.';setBackupStatus('This browser is blocking local storage for the app.','#e74c3c');return}const school=getSchoolName();const pupils=getPupils();const keys=storageListAppKeys();const profileCount=keys.filter(k=>k.startsWith('classmates_state_')).length;const attempts=ClassmatesAttempts.listAttempts().length;summary.innerHTML='<strong>'+school+'</strong><br>'+pupils.length+' pupils, '+profileCount+' saved pupil profiles, '+attempts+' logged attempts, '+keys.length+' app records on this device.'}
-function exportAppBackup(){if(!storageIsAvailable()){setBackupStatus('Backup failed because browser storage is unavailable.','#e74c3c');return}const fileName=storageDownloadBackup();setBackupStatus('Backup downloaded: '+fileName,'#11998e');renderBackupPanel()}
+function renderBackupPanel(){const summary=document.getElementById('backupSummary');if(!summary)return;const pupils=getPupils();const keys=storageListAppKeys();const model=ClassmatesTeacherTools.getBackupPanelModel({storageAvailable:storageIsAvailable(),schoolName:getSchoolName(),pupilCount:pupils.length,profileCount:keys.filter(k=>k.startsWith('classmates_state_')).length,attemptCount:ClassmatesAttempts.listAttempts().length,appRecordCount:keys.length});summary.innerHTML=model.summaryHtml;if(model.statusMessage)setBackupStatus(model.statusMessage,model.statusColor)}
+function exportAppBackup(){const result=ClassmatesTeacherTools.downloadBackup({storageAvailable:storageIsAvailable(),downloadBackup:storageDownloadBackup});setBackupStatus(result.message,result.color);renderBackupPanel()}
 function triggerBackupImport(){const input=document.getElementById('backupFileInput');if(input)input.click()}
-async function handleBackupImport(event){const file=event.target&&event.target.files?event.target.files[0]:null;if(!file)return;try{const payload=await storageImportBackupFile(file);currentPupil=null;state=ClassmatesAppState.createDefaultState();loadState();renderPupilGrid();renderPupilSelect();renderTeacher();updateHomeStats();const when=payload.exportedAt?new Date(payload.exportedAt).toLocaleString('en-GB'):'backup file';setBackupStatus('Backup imported from '+when+'.','#11998e')}catch(error){setBackupStatus(error&&error.message?error.message:'Backup import failed.','#e74c3c')}finally{if(event.target)event.target.value='';renderBackupPanel()}}
+async function handleBackupImport(event){const file=event.target&&event.target.files?event.target.files[0]:null;if(!file)return;const result=await ClassmatesTeacherTools.importBackupFile(file,{importBackupFile:storageImportBackupFile});try{if(result.ok){currentPupil=null;state=ClassmatesAppState.createDefaultState();loadState();renderPupilGrid();renderPupilSelect();renderTeacher();updateHomeStats()}setBackupStatus(result.message,result.color)}finally{if(event.target)event.target.value='';renderBackupPanel()}}
 
 // ==================== SESSION TIMER ====================
 let sessionTimerInterval=null;
@@ -1317,7 +1317,7 @@ function selectPremade(i){currentAvatar.premade=i;document.getElementById('avata
 function finishAvatar(){if(currentPupil)saveAvatarData(currentPupil,currentAvatar);sfxLevelUp();const pupils=getPupils();if(pupils.length>0){renderPupilGrid();showScreen('pupilselect')}else{goHome()}}
 
 // ==================== WORKSHEET GENERATOR ====================
-function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))||2;const w=window.open('','_blank');const sn=getSchoolName();const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const questions=[];const answers=[];for(let i=0;i<20;i++){const q=genMathQ(lv);questions.push((i+1)+'. '+q.text);answers.push((i+1)+'. '+q.answer)}const spellWords=[...SPELLING[lv]];shuffle(spellWords);const spellingSection=spellWords.slice(0,10).map((s,i)=>(i+1)+'. '+s.h+' (____________________)').join('<br>');w.document.write('<!DOCTYPE html><html><head><title>Worksheet</title><style>@page{margin:15mm}body{font-family:Arial,sans-serif;font-size:14px;line-height:2}h1{font-size:1.3rem;color:#11998e;margin-bottom:4px}h2{font-size:1rem;margin-top:20px;color:#333;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#888;font-size:0.85rem}.answers{page-break-before:always;color:#888;font-size:0.85rem}ol{padding-left:20px}</style></head><body><h1>'+sn+' — Classmates Worksheet</h1><p class="meta">'+today+' | Level '+lv+'</p><p><strong>Name:</strong> _______________________________</p><h2>Maths</h2><p>'+questions.join('<br>')+'</p><h2>Spelling</h2><p>Write the word that matches each clue:</p><p>'+spellingSection+'</p><div class="answers"><h2>Answer Key (Maths)</h2><p>'+answers.join(' &nbsp; ')+'</p></div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
+function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))||2;const w=window.open('','_blank');if(!w)return;w.document.write(ClassmatesTeacherTools.buildWorksheetHtml(lv,{getSchoolName:getSchoolName,genMathQuestion:genMathQ,shuffle:shuffle,spellingData:SPELLING}));w.document.close();setTimeout(()=>w.print(),300)}
 
 // ==================== SPACED REPETITION ====================
 // Track wrong answers per topic. Mix 20-30% of weak-area questions into future sessions.
@@ -1326,17 +1326,17 @@ function getWeakItems(topic,count){return ClassmatesAppState.getWeakItems(state,
 function clearWeakItem(topic,item){state=ClassmatesAppState.clearWeakItem(state,topic,item);saveState()}
 
 // ==================== WHITEBOARD MODE ====================
-let wb={questions:[],idx:0,answerShown:false};
+let wb=null;
 
-function launchWhiteboard(){wb.questions=[];for(let i=0;i<20;i++){const q=genMathQ(rand(1,3));wb.questions.push(q)}wb.idx=0;wb.answerShown=false;showScreen('whiteboard');loadWbQ()}
+function launchWhiteboard(){wb=ClassmatesTeacherTools.createWhiteboardSession({randomInt:rand,genMathQuestion:genMathQ});showScreen('whiteboard');loadWbQ()}
 
-function loadWbQ(){const q=wb.questions[wb.idx];document.getElementById('wbQuestion').textContent=q.text;const ans=document.getElementById('wbAnswer');ans.textContent=q.answer;ans.classList.add('hidden');wb.answerShown=false;document.getElementById('wbShowBtn').textContent='Show Answer';document.getElementById('wbCounter').textContent='Question '+(wb.idx+1)+' of '+wb.questions.length}
+function loadWbQ(){const card=ClassmatesTeacherTools.getWhiteboardCard(wb);document.getElementById('wbQuestion').textContent=card.questionText;const ans=document.getElementById('wbAnswer');ans.textContent=card.answerText;ans.classList.add('hidden');if(wb)wb.answerShown=false;document.getElementById('wbShowBtn').textContent='Show Answer';document.getElementById('wbCounter').textContent=card.counterText}
 
-function wbShowAnswer(){if(wb.answerShown)return;document.getElementById('wbAnswer').classList.remove('hidden');wb.answerShown=true;document.getElementById('wbShowBtn').textContent='Shown!';sfxCorrect()}
+function wbShowAnswer(){const result=ClassmatesTeacherTools.revealWhiteboardAnswer(wb);if(!result.changed)return;document.getElementById('wbAnswer').classList.remove('hidden');document.getElementById('wbShowBtn').textContent='Shown!';sfxCorrect()}
 
-function wbNext(){wb.idx++;if(wb.idx>=wb.questions.length){wb.idx=0;wb.questions=[];for(let i=0;i<20;i++)wb.questions.push(genMathQ(rand(1,3)))}loadWbQ()}
+function wbNext(){wb=ClassmatesTeacherTools.nextWhiteboardQuestion(wb,{randomInt:rand,genMathQuestion:genMathQ});loadWbQ()}
 
-document.addEventListener('keydown',function(e){if(document.getElementById('whiteboard').classList.contains('active')){if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!wb.answerShown)wbShowAnswer();else wbNext()}else if(e.key==='ArrowRight')wbNext()}});
+document.addEventListener('keydown',function(e){if(document.getElementById('whiteboard').classList.contains('active')){if(e.key===' '||e.key==='Enter'){e.preventDefault();if(!wb||!wb.answerShown)wbShowAnswer();else wbNext()}else if(e.key==='ArrowRight')wbNext()}});
 
 // ==================== ADAPTIVE DIFFICULTY ====================
 // Track per-topic streaks. After 3 correct in a row, suggest harder level. After 2 wrong, suggest easier.
