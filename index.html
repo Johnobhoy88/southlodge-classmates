@@ -2098,6 +2098,449 @@ global.storageImportBackupFile=storageImportBackupFile;
 })(window);
 
 
+(function(){
+  const SCHOOL_KEY = 'classmates_school';
+  const STAFF_PASSWORD_KEY = 'classmates_staff_pwd';
+  const DEFAULT_SCHOOL_NAME = 'South Lodge Primary';
+  const DEFAULT_STAFF_PASSWORD = 'classmates2026';
+
+  function normalizeName(name) {
+    return String(name || '').trim();
+  }
+
+  function getSchoolName() {
+    return storageGetItem(SCHOOL_KEY) || DEFAULT_SCHOOL_NAME;
+  }
+
+  function setSchoolName(name) {
+    const normalized = normalizeName(name);
+    if (!normalized) return getSchoolName();
+    storageSetItem(SCHOOL_KEY, normalized);
+    return normalized;
+  }
+
+  function getStaffPassword() {
+    return storageGetItem(STAFF_PASSWORD_KEY) || DEFAULT_STAFF_PASSWORD;
+  }
+
+  function updateStaffPassword(currentPassword, nextPassword) {
+    if (currentPassword !== getStaffPassword()) {
+      return { ok: false, error: 'Current password incorrect' };
+    }
+
+    if (String(nextPassword || '').length < 4) {
+      return { ok: false, error: 'New password too short' };
+    }
+
+    storageSetItem(STAFF_PASSWORD_KEY, String(nextPassword));
+    return { ok: true, password: String(nextPassword) };
+  }
+
+  window.ClassmatesSettings = {
+    DEFAULT_SCHOOL_NAME: DEFAULT_SCHOOL_NAME,
+    DEFAULT_STAFF_PASSWORD: DEFAULT_STAFF_PASSWORD,
+    getSchoolName: getSchoolName,
+    setSchoolName: setSchoolName,
+    getStaffPassword: getStaffPassword,
+    updateStaffPassword: updateStaffPassword
+  };
+})();
+
+
+(function(){
+  const PUPILS_KEY = 'classmates_pupils';
+
+  function normalizeName(name) {
+    return String(name || '').trim();
+  }
+
+  function stateKey(name) {
+    return 'classmates_state_' + name;
+  }
+
+  function avatarKey(name) {
+    return 'classmates_avatar_' + name;
+  }
+
+  function uniqueNames(names) {
+    const seen = new Set();
+    const result = [];
+    names.forEach(function(name){
+      const normalized = normalizeName(name);
+      if (!normalized || seen.has(normalized)) return;
+      seen.add(normalized);
+      result.push(normalized);
+    });
+    return result;
+  }
+
+  function listPupils() {
+    return uniqueNames(storageGetJson(PUPILS_KEY, []));
+  }
+
+  function savePupils(pupils) {
+    const next = uniqueNames(Array.isArray(pupils) ? pupils : []);
+    storageSetJson(PUPILS_KEY, next);
+    return next;
+  }
+
+  function addPupil(name) {
+    const normalized = normalizeName(name);
+    if (!normalized) {
+      return { added: false, pupils: listPupils(), name: '' };
+    }
+    const pupils = listPupils();
+    if (pupils.includes(normalized)) {
+      return { added: false, pupils: pupils, name: normalized };
+    }
+    pupils.push(normalized);
+    return { added: true, pupils: savePupils(pupils), name: normalized };
+  }
+
+  function addPupils(names) {
+    const pupils = listPupils();
+    let added = 0;
+    uniqueNames(Array.isArray(names) ? names : []).forEach(function(name){
+      if (pupils.includes(name)) return;
+      pupils.push(name);
+      added++;
+    });
+    return { added: added, pupils: savePupils(pupils) };
+  }
+
+  function removePupil(name) {
+    const normalized = normalizeName(name);
+    if (!normalized) return listPupils();
+    const pupils = savePupils(listPupils().filter(function(pupil){
+      return pupil !== normalized;
+    }));
+    storageRemoveItem(stateKey(normalized));
+    storageRemoveItem(avatarKey(normalized));
+    return pupils;
+  }
+
+  function resetPupilProgress(name) {
+    const normalized = normalizeName(name);
+    if (!normalized) return false;
+    storageRemoveItem(stateKey(normalized));
+    return true;
+  }
+
+  function getPupilState(name) {
+    const normalized = normalizeName(name);
+    if (!normalized) return null;
+    return storageGetJson(stateKey(normalized), null);
+  }
+
+  function savePupilState(name, pupilState) {
+    const normalized = normalizeName(name);
+    if (!normalized) return null;
+    storageSetJson(stateKey(normalized), pupilState);
+    return pupilState;
+  }
+
+  window.ClassmatesPupils = {
+    listPupils: listPupils,
+    savePupils: savePupils,
+    addPupil: addPupil,
+    addPupils: addPupils,
+    removePupil: removePupil,
+    resetPupilProgress: resetPupilProgress,
+    getPupilState: getPupilState,
+    savePupilState: savePupilState,
+    getStateKey: stateKey
+  };
+})();
+
+
+(function(){
+  const ASSIGNMENT_KEY = 'classmates_assignment';
+
+  function normalizeAssignment(input) {
+    const source = input && typeof input === 'object' ? input : {};
+    const activity = String(source.activity || '').trim();
+    if (!activity) return null;
+
+    return {
+      activity: activity,
+      level: String(source.level || '2'),
+      message: String(source.message || '').trim(),
+      date: source.date || new Date().toDateString()
+    };
+  }
+
+  function getAssignment() {
+    return storageGetJson(ASSIGNMENT_KEY, null);
+  }
+
+  function saveAssignment(assignment) {
+    const next = normalizeAssignment(assignment);
+    if (!next) return null;
+    storageSetJson(ASSIGNMENT_KEY, next);
+    return next;
+  }
+
+  function clearAssignment() {
+    storageRemoveItem(ASSIGNMENT_KEY);
+  }
+
+  window.ClassmatesAssignments = {
+    getAssignment: getAssignment,
+    saveAssignment: saveAssignment,
+    clearAssignment: clearAssignment
+  };
+})();
+
+
+(function(){
+  const ATTEMPTS_KEY = 'classmates_attempts';
+  const MAX_ATTEMPTS = 500;
+
+  function listAttempts() {
+    const attempts = storageGetJson(ATTEMPTS_KEY, []);
+    return Array.isArray(attempts) ? attempts : [];
+  }
+
+  function saveAttempts(attempts) {
+    const next = Array.isArray(attempts) ? attempts.slice(-MAX_ATTEMPTS) : [];
+    storageSetJson(ATTEMPTS_KEY, next);
+    return next;
+  }
+
+  function createAttemptId() {
+    return 'att_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function recordAttempt(input) {
+    const source = input && typeof input === 'object' ? input : {};
+    if (!source.gameId) return null;
+
+    const correct = typeof source.correct === 'number' && Number.isFinite(source.correct) ? source.correct : null;
+    const total = typeof source.total === 'number' && Number.isFinite(source.total) ? source.total : null;
+    const stars = typeof source.stars === 'number' && Number.isFinite(source.stars) ? source.stars : 0;
+
+    const attempt = {
+      id: createAttemptId(),
+      recordedAt: new Date().toISOString(),
+      pupilName: source.pupilName || null,
+      gameId: source.gameId,
+      category: source.category || null,
+      title: source.title || source.gameId,
+      subtitle: source.subtitle || '',
+      correct: correct,
+      total: total,
+      stars: stars,
+      scorePercent: total && total > 0 && correct !== null ? Math.round(correct / total * 100) : null,
+      assignment: source.assignment || null
+    };
+
+    const attempts = listAttempts();
+    attempts.push(attempt);
+    saveAttempts(attempts);
+    return attempt;
+  }
+
+  function getRecentAttempts(limit) {
+    const max = typeof limit === 'number' && limit > 0 ? limit : 20;
+    return listAttempts().slice(-max).reverse();
+  }
+
+  window.ClassmatesAttempts = {
+    listAttempts: listAttempts,
+    getRecentAttempts: getRecentAttempts,
+    recordAttempt: recordAttempt
+  };
+})();
+
+
+(function(){
+  const DEFAULT_STATE = {
+    stars: 0,
+    games: 0,
+    streak: 0,
+    lastPlayed: null,
+    spellingCorrect: 0,
+    mathsCorrect: 0,
+    storiesRead: [],
+    ttCompleted: [],
+    dailyCompleted: null,
+    achievements: [],
+    ttPersonalBests: {},
+    adaptive: {},
+    weakItems: {},
+    coins: 0,
+    unlockedRewards: [],
+    weeklyGames: 0,
+    weeklyGoalReset: null,
+    powerups: {},
+    journeyStop: 0
+  };
+
+  function cloneState(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function ensureStateShape(savedState) {
+    const next = cloneState(DEFAULT_STATE);
+    if (savedState && typeof savedState === 'object') {
+      Object.assign(next, savedState);
+    }
+    if (!next.powerups || typeof next.powerups !== 'object') next.powerups = {};
+    if (!next.adaptive || typeof next.adaptive !== 'object') next.adaptive = {};
+    if (!next.weakItems || typeof next.weakItems !== 'object') next.weakItems = {};
+    return next;
+  }
+
+  function ensureMutableState(state) {
+    if (!state || typeof state !== 'object') {
+      return ensureStateShape(state);
+    }
+    const normalized = ensureStateShape(state);
+    Object.keys(normalized).forEach(function(key){
+      state[key] = normalized[key];
+    });
+    return state;
+  }
+
+  function getStateKey(pupilName) {
+    return pupilName ? 'classmates_state_' + pupilName : 'classmates_state';
+  }
+
+  function updateStreak(state) {
+    const next = ensureMutableState(state);
+    const today = new Date().toDateString();
+    if (next.lastPlayed) {
+      const diff = Math.floor((new Date(today) - new Date(new Date(next.lastPlayed).toDateString())) / 864e5);
+      if (diff > 1) next.streak = 0;
+    }
+    return next;
+  }
+
+  function loadState(pupilName) {
+    const savedState = storageGetJson(getStateKey(pupilName), null);
+    return updateStreak(savedState);
+  }
+
+  function saveState(pupilName, state) {
+    const next = ensureStateShape(state);
+    storageSetJson(getStateKey(pupilName), next);
+    return next;
+  }
+
+  function createDefaultState() {
+    return cloneState(DEFAULT_STATE);
+  }
+
+  function resetState(pupilName) {
+    const next = createDefaultState();
+    saveState(pupilName, next);
+    return next;
+  }
+
+  function applyPlayProgress(state) {
+    const next = ensureMutableState(state);
+    const today = new Date().toDateString();
+    if (next.lastPlayed !== today) {
+      const last = next.lastPlayed ? new Date(next.lastPlayed) : null;
+      if (last) {
+        const diff = Math.floor((new Date(today) - new Date(last.toDateString())) / 864e5);
+        next.streak = diff === 1 ? next.streak + 1 : 1;
+      } else {
+        next.streak = 1;
+      }
+      next.lastPlayed = today;
+    }
+    next.games++;
+    next.weeklyGames = (next.weeklyGames || 0) + 1;
+    return next;
+  }
+
+  function applyStars(state, amount) {
+    const next = ensureMutableState(state);
+    next.stars += amount;
+    return next;
+  }
+
+  function adaptiveCorrect(state, topic) {
+    const next = ensureMutableState(state);
+    if (!next.adaptive[topic]) next.adaptive[topic] = { streak: 0, level: 1 };
+    const adaptiveState = next.adaptive[topic];
+    adaptiveState.streak = Math.max(adaptiveState.streak, 0) + 1;
+    if (adaptiveState.streak >= 3 && adaptiveState.level < 3) {
+      adaptiveState.level++;
+      adaptiveState.streak = 0;
+      return 'up';
+    }
+    return null;
+  }
+
+  function adaptiveWrong(state, topic) {
+    const next = ensureMutableState(state);
+    if (!next.adaptive[topic]) next.adaptive[topic] = { streak: 0, level: 1 };
+    const adaptiveState = next.adaptive[topic];
+    adaptiveState.streak = Math.min(adaptiveState.streak, 0) - 1;
+    if (adaptiveState.streak <= -2 && adaptiveState.level > 1) {
+      adaptiveState.level--;
+      adaptiveState.streak = 0;
+      return 'down';
+    }
+    return null;
+  }
+
+  function addWeakItem(state, topic, item) {
+    const next = ensureMutableState(state);
+    if (!next.weakItems[topic]) next.weakItems[topic] = [];
+    const items = next.weakItems[topic];
+    if (items.find(function(existing){
+      return JSON.stringify(existing) === JSON.stringify(item);
+    })) {
+      return next;
+    }
+    items.push(item);
+    if (items.length > 20) items.shift();
+    return next;
+  }
+
+  function getWeakItems(state, topic, count) {
+    const next = ensureMutableState(state);
+    if (!next.weakItems[topic]) return [];
+    const items = next.weakItems[topic].slice();
+    for (let index = items.length - 1; index > 0; index--) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      const current = items[index];
+      items[index] = items[swapIndex];
+      items[swapIndex] = current;
+    }
+    return items.slice(0, count);
+  }
+
+  function clearWeakItem(state, topic, item) {
+    const next = ensureMutableState(state);
+    if (!next.weakItems[topic]) return next;
+    next.weakItems[topic] = next.weakItems[topic].filter(function(existing){
+      return JSON.stringify(existing) !== JSON.stringify(item);
+    });
+    return next;
+  }
+
+  window.ClassmatesAppState = {
+    createDefaultState: createDefaultState,
+    getStateKey: getStateKey,
+    loadState: loadState,
+    saveState: saveState,
+    resetState: resetState,
+    updateStreak: updateStreak,
+    applyPlayProgress: applyPlayProgress,
+    applyStars: applyStars,
+    adaptiveCorrect: adaptiveCorrect,
+    adaptiveWrong: adaptiveWrong,
+    addWeakItem: addWeakItem,
+    getWeakItems: getWeakItems,
+    clearWeakItem: clearWeakItem
+  };
+})();
+
+
 // ==================== EMOJI SVG DATA ====================
 const EMOJI_SVG = {
   '1f431':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path fill="#FFCC4D" d="M32.348 13.999s3.445-8.812 1.651-11.998c-.604-1.073-8 1.998-10.723 5.442 0 0-2.586-.86-5.276-.86s-5.276.86-5.276.86C10.001 3.999 2.605.928 2.001 2.001.207 5.187 3.652 13.999 3.652 13.999c-.897 1.722-1.233 4.345-1.555 7.16-.354 3.086.35 5.546.658 6.089.35.617 2.123 2.605 4.484 4.306 3.587 2.583 8.967 3.445 10.761 3.445s7.174-.861 10.761-3.445c2.361-1.701 4.134-3.689 4.484-4.306.308-.543 1.012-3.003.659-6.089-.324-2.814-.659-5.438-1.556-7.16z"/><path fill="#F18F26" d="M2.359 2.971c.2-.599 5.348 2.173 6.518 5.404 0 0-3.808 2.624-4.528 4.624 0 0-2.99-7.028-1.99-10.028z"/><path fill="#FFCC4D" d="M5.98 7.261c0-1.414 5.457 2.733 4.457 3.733s-1.255.72-2.255 1.72S5.98 8.261 5.98 7.261z"/><path fill="#F18F26" d="M33.641 2.971c-.2-.599-5.348 2.173-6.518 5.404 0 0 3.808 2.624 4.528 4.624 0 0 2.99-7.028 1.99-10.028z"/><path fill="#FFCC4D" d="M30.02 7.261c0-1.414-5.457 2.733-4.457 3.733s1.255.72 2.255 1.72 2.202-4.453 2.202-5.453z"/><path fill="#292F33" d="M14.001 20.001c0 1.105-.896 1.999-2 1.999s-2-.894-2-1.999c0-1.104.896-1.999 2-1.999s2 .896 2 1.999zm11.998 0c0 1.105-.896 1.999-2 1.999-1.105 0-2-.894-2-1.999 0-1.104.895-1.999 2-1.999s2 .896 2 1.999z"/><path fill="#FEE7B8" d="M2.201 30.458c-.148 0-.294-.065-.393-.19-.171-.217-.134-.531.083-.702.162-.127 4.02-3.12 10.648-2.605.275.021.481.261.46.536-.021.275-.257.501-.537.46-6.233-.474-9.915 2.366-9.951 2.395-.093.07-.202.106-.31.106zm8.868-4.663c-.049 0-.1-.007-.149-.022-4.79-1.497-8.737-.347-8.777-.336-.265.081-.543-.07-.623-.335-.079-.265.071-.543.335-.622.173-.052 4.286-1.247 9.362.338.264.083.411.363.328.627-.066.213-.263.35-.476.35zm22.73 4.663c.148 0 .294-.065.393-.19.171-.217.134-.531-.083-.702-.162-.127-4.02-3.12-10.648-2.605-.275.021-.481.261-.46.536.022.275.257.501.537.46 6.233-.474 9.915 2.366 9.951 2.395.093.07.202.106.31.106zm-8.868-4.663c.049 0 .1-.007.149-.022 4.79-1.497 8.737-.347 8.777-.336.265.081.543-.07.623-.335.079-.265-.071-.543-.335-.622-.173-.052-4.286-1.247-9.362.338-.264.083-.411.363-.328.627.066.213.263.35.476.35z"/><path fill="#67757F" d="M24.736 30.898c-.097-.258-.384-.392-.643-.294-.552.206-1.076.311-1.559.311-1.152 0-1.561-.306-2.033-.659-.451-.338-.956-.715-1.99-.803v-2.339c0-.276-.224-.5-.5-.5s-.5.224-.5.5v2.373c-.81.115-1.346.439-1.816.743-.568.367-1.059.685-2.083.685-.482 0-1.006-.104-1.558-.311-.258-.095-.547.035-.643.294-.097.259.035.547.293.644.664.247 1.306.373 1.907.373 1.319 0 2.014-.449 2.627-.845.524-.339.98-.631 1.848-.635.992.008 1.358.278 1.815.621.538.403 1.147.859 2.633.859.601 0 1.244-.126 1.908-.373.259-.097.391-.385.294-.644z"/><path fill="#E75A70" d="M19.4 24.807h-2.8c-.64 0-1.163.523-1.163 1.163 0 .639.523 1.163 1.163 1.163h.237v.345c0 .639.523 1.163 1.163 1.163s1.163-.523 1.163-1.163v-.345h.237c.639 0 1.163-.523 1.163-1.163s-.524-1.163-1.163-1.163z"/><path fill="#F18F26" d="M18.022 17.154c-.276 0-.5-.224-.5-.5V8.37c0-.276.224-.5.5-.5s.5.224.5.5v8.284c0 .277-.223.5-.5.5zM21 15.572c-.276 0-.5-.224-.5-.5 0-2.882 1.232-5.21 1.285-5.308.13-.244.435-.334.677-.204.243.13.334.433.204.677-.012.021-1.166 2.213-1.166 4.835 0 .276-.224.5-.5.5zm-6 0c-.276 0-.5-.224-.5-.5 0-2.623-1.155-4.814-1.167-4.835-.13-.244-.038-.546.205-.677.242-.131.545-.039.676.204.053.098 1.285 2.426 1.285 5.308.001.276-.223.5-.499.5z"/></svg>',
@@ -2731,18 +3174,17 @@ const ACHIEVEMENTS = [
 const STAR_SVG = '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>';
 
 // ==================== STATE ====================
-let state = {stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null,journeyStop:0};
+let state = ClassmatesAppState.createDefaultState();
 
-const DEFAULT_STATE={stars:0,games:0,streak:0,lastPlayed:null,spellingCorrect:0,mathsCorrect:0,storiesRead:[],ttCompleted:[],dailyCompleted:null,achievements:[],ttPersonalBests:{},adaptive:{},weakItems:{},coins:0,unlockedRewards:[],weeklyGames:0,weeklyGoalReset:null,powerups:{},journeyStop:0};
-function stateKey(){return currentPupil?'classmates_state_'+currentPupil:'classmates_state'}
-function loadState(){state=JSON.parse(JSON.stringify(DEFAULT_STATE));const savedState=storageGetJson(stateKey(),null);if(savedState)Object.assign(state,savedState);updateStreak()}
-function saveState(){storageSetJson(stateKey(),state)}
-function loadPupilState(name){return storageGetJson('classmates_state_'+name,null)}
-function updateStreak(){const today=new Date().toDateString();if(state.lastPlayed){const diff=Math.floor((new Date(today)-new Date(new Date(state.lastPlayed).toDateString()))/864e5);if(diff>1)state.streak=0}}
-function recordPlay(){const today=new Date().toDateString();if(state.lastPlayed!==today){const last=state.lastPlayed?new Date(state.lastPlayed):null;if(last){const diff=Math.floor((new Date(today)-new Date(last.toDateString()))/864e5);state.streak=diff===1?state.streak+1:1}else state.streak=1;state.lastPlayed=today}state.games++;state.weeklyGames=(state.weeklyGames||0)+1;checkAch('games_25',state.games>=25);checkAch('games_100',state.games>=100);saveState()}
-function addStars(n){state.stars+=n;checkAch('stars_50',state.stars>=50);checkAch('stars_100',state.stars>=100);saveState()}
+function stateKey(){return ClassmatesAppState.getStateKey(currentPupil)}
+function loadState(){state=ClassmatesAppState.loadState(currentPupil)}
+function saveState(){state=ClassmatesAppState.saveState(currentPupil,state)}
+function loadPupilState(name){return ClassmatesAppState.loadState(name)}
+function updateStreak(){state=ClassmatesAppState.updateStreak(state)}
+function recordPlay(){state=ClassmatesAppState.applyPlayProgress(state);checkAch('games_25',state.games>=25);checkAch('games_100',state.games>=100);saveState()}
+function addStars(n){state=ClassmatesAppState.applyStars(state,n);checkAch('stars_50',state.stars>=50);checkAch('stars_100',state.stars>=100);saveState()}
 function checkAch(id,cond){if(cond&&!state.achievements.includes(id)){state.achievements.push(id);saveState();showAchPopup(id);return true}return false}
-function resetProgress(){if(confirm('This will delete all your stars, badges and progress. Are you sure?')){state=JSON.parse(JSON.stringify(DEFAULT_STATE));saveState();updateHomeStats()}}
+function resetProgress(){if(confirm('This will delete all your stars, badges and progress. Are you sure?')){state=ClassmatesAppState.resetState(currentPupil);updateHomeStats()}}
 
 // ==================== NAVIGATION ====================
 let currentPupil=null;
@@ -2765,12 +3207,12 @@ function renderPupilSelect(){const grid=document.getElementById('pupilGrid');if(
 function selectPupil(name){currentPupil=name;loadState();renderPupilGrid();updateHomeStats()}
 
 // ==================== PUPIL MANAGER ====================
-function getPupils(){return storageGetJson('classmates_pupils',[])}
-function savePupils(list){storageSetJson('classmates_pupils',list)}
-function addPupil(){const inp=document.getElementById('newPupilInput');const name=inp.value.trim();if(!name)return;const pupils=getPupils();if(!pupils.includes(name)){pupils.push(name);savePupils(pupils)}inp.value='';renderPupilList();renderPupilSelect()}
-function bulkAddPupils(){const input=prompt('Paste pupil names (one per line or comma-separated):');if(!input)return;const names=input.split(/[\n,]+/).map(n=>n.trim()).filter(n=>n.length>0);const pupils=getPupils();let added=0;names.forEach(n=>{if(!pupils.includes(n)){pupils.push(n);added++}});savePupils(pupils);renderPupilList();renderPupilSelect();alert(added+' pupils added.')}
-function removePupil(name){if(!confirm('Remove '+name+' and their progress?')){return}const pupils=getPupils().filter(p=>p!==name);savePupils(pupils);storageRemoveItem('classmates_state_'+name);storageRemoveItem('classmates_avatar_'+name);renderPupilList();renderPupilSelect();renderBackupPanel()}
-function resetPupilProgress(name){if(!confirm('Reset all progress for '+name+'?'))return;storageRemoveItem('classmates_state_'+name);renderTeacher();renderBackupPanel()}
+function getPupils(){return ClassmatesPupils.listPupils()}
+function savePupils(list){return ClassmatesPupils.savePupils(list)}
+function addPupil(){const inp=document.getElementById('newPupilInput');const result=ClassmatesPupils.addPupil(inp.value);if(!result.name)return;inp.value='';renderPupilList();renderPupilSelect()}
+function bulkAddPupils(){const input=prompt('Paste pupil names (one per line or comma-separated):');if(!input)return;const names=input.split(/[\n,]+/).map(n=>n.trim()).filter(n=>n.length>0);const result=ClassmatesPupils.addPupils(names);renderPupilList();renderPupilSelect();alert(result.added+' pupils added.')}
+function removePupil(name){if(!confirm('Remove '+name+' and their progress?')){return}ClassmatesPupils.removePupil(name);renderPupilList();renderPupilSelect();renderBackupPanel()}
+function resetPupilProgress(name){if(!confirm('Reset all progress for '+name+'?'))return;ClassmatesPupils.resetPupilProgress(name);renderTeacher();renderBackupPanel()}
 function renderPupilList(){const el=document.getElementById('pupilList');const pupils=getPupils();if(pupils.length===0){el.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet.</p>';return}el.innerHTML='';pupils.forEach(p=>{const esc=p.replace(/'/g,"\\'");const row=document.createElement('div');row.className='pupil-row';row.innerHTML='<span class="pupil-name">'+p+'</span><div style="display:flex;gap:6px;"><button class="teacher-btn grey" style="font-size:0.75rem" onclick="resetPupilProgress(\''+esc+'\')">Reset</button><button class="teacher-btn red" style="font-size:0.75rem" onclick="removePupil(\''+esc+'\')">Remove</button></div>';el.appendChild(row)})}
 
 // ==================== TEACHER DASHBOARD ====================
@@ -2782,22 +3224,22 @@ function showPupilDetail(name){detailPupil=name;const s=loadPupilState(name)||{}
 function printPupilReport(){if(!detailPupil)return;const s=loadPupilState(detailPupil)||{};const sn=getSchoolName();const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>Pupil Report</title><style>@page{margin:20mm}body{font-family:Arial,sans-serif}h1{color:#11998e;font-size:1.3rem}h2{font-size:1rem;color:#2d3436;border-bottom:1px solid #ddd;padding-bottom:4px}.meta{color:#636e72;font-size:0.9rem}.stat{display:inline-block;background:#f0f0f0;padding:8px 16px;border-radius:8px;margin:4px;text-align:center}.stat-v{font-size:1.5rem;font-weight:800;color:#11998e;display:block}.stat-l{font-size:0.7rem;color:#888}</style></head><body><h1>'+sn+'</h1><p class="meta">Progress Report — '+today+'</p><h2>'+detailPupil+'</h2><div><div class="stat"><span class="stat-v">'+(s.stars||0)+'</span><span class="stat-l">Stars</span></div><div class="stat"><span class="stat-v">'+(s.games||0)+'</span><span class="stat-l">Games</span></div><div class="stat"><span class="stat-v">'+(s.streak||0)+'</span><span class="stat-l">Streak</span></div><div class="stat"><span class="stat-v">'+(s.spellingCorrect||0)+'</span><span class="stat-l">Words</span></div><div class="stat"><span class="stat-v">'+(s.mathsCorrect||0)+'</span><span class="stat-l">Maths</span></div><div class="stat"><span class="stat-v">'+((s.storiesRead||[]).length)+'/18</span><span class="stat-l">Stories</span></div><div class="stat"><span class="stat-v">'+((s.ttCompleted||[]).length)+'/11</span><span class="stat-l">Tables</span></div><div class="stat"><span class="stat-v">'+((s.achievements||[]).length)+'/31</span><span class="stat-l">Badges</span></div></div></body></html>');w.document.close();setTimeout(()=>w.print(),300)}
 
 // ==================== ASSIGNMENTS ====================
-function saveAssignment(){const activity=document.getElementById('assignActivity').value;const level=document.getElementById('assignLevel').value;const msg=document.getElementById('assignMessage').value;storageSetJson('classmates_assignment',{activity:activity,level:level,message:msg,date:new Date().toDateString()});document.getElementById('assignStatus').innerHTML='<span style="color:#11998e">Assignment set!</span>';renderBackupPanel()}
-function clearAssignment(){storageRemoveItem('classmates_assignment');document.getElementById('assignActivity').value='';document.getElementById('assignMessage').value='';document.getElementById('assignStatus').innerHTML='<span style="color:#8899aa">Assignment cleared.</span>';renderBackupPanel()}
-function getAssignment(){return storageGetJson('classmates_assignment',null)}
+function saveAssignment(){const activity=document.getElementById('assignActivity').value;const level=document.getElementById('assignLevel').value;const msg=document.getElementById('assignMessage').value;ClassmatesAssignments.saveAssignment({activity:activity,level:level,message:msg});document.getElementById('assignStatus').innerHTML='<span style="color:#11998e">Assignment set!</span>';renderBackupPanel()}
+function clearAssignment(){ClassmatesAssignments.clearAssignment();document.getElementById('assignActivity').value='';document.getElementById('assignMessage').value='';document.getElementById('assignStatus').innerHTML='<span style="color:#8899aa">Assignment cleared.</span>';renderBackupPanel()}
+function getAssignment(){return ClassmatesAssignments.getAssignment()}
 function renderAssignmentBanner(){const a=getAssignment();const banner=document.getElementById('assignBanner');if(!a||!a.activity){banner.style.display='none';return}banner.style.display='block';document.getElementById('assignBannerText').textContent=(a.message||'Your teacher has set: '+a.activity)+' — Tap to start!'}
 function launchAssignment(){const a=getAssignment();if(a&&a.activity)startGame(a.activity)}
 
 // ==================== PASSWORD ====================
-function getSchoolName(){return storageGetItem('classmates_school')||'South Lodge Primary'}
-function getStaffPwd(){return storageGetItem('classmates_staff_pwd')||'classmates2026'}
-function changePassword(){const old=document.getElementById('oldPwd').value;const nw=document.getElementById('newPwd').value;if(old!==getStaffPwd()){document.getElementById('pwdStatus').innerHTML='<span style="color:#e74c3c">Current password incorrect</span>';return}if(nw.length<4){document.getElementById('pwdStatus').innerHTML='<span style="color:#e74c3c">New password too short</span>';return}storageSetItem('classmates_staff_pwd',nw);document.getElementById('pwdStatus').innerHTML='<span style="color:#11998e">Password changed!</span>';document.getElementById('oldPwd').value='';document.getElementById('newPwd').value='';renderBackupPanel()}
-function saveSchoolName(){const name=document.getElementById('schoolNameInput').value.trim();if(name){storageSetItem('classmates_school',name);document.getElementById('schoolName').textContent=name;renderBackupPanel()}}
+function getSchoolName(){return ClassmatesSettings.getSchoolName()}
+function getStaffPwd(){return ClassmatesSettings.getStaffPassword()}
+function changePassword(){const old=document.getElementById('oldPwd').value;const nw=document.getElementById('newPwd').value;const result=ClassmatesSettings.updateStaffPassword(old,nw);if(!result.ok){document.getElementById('pwdStatus').innerHTML='<span style="color:#e74c3c">'+result.error+'</span>';return}document.getElementById('pwdStatus').innerHTML='<span style="color:#11998e">Password changed!</span>';document.getElementById('oldPwd').value='';document.getElementById('newPwd').value='';renderBackupPanel()}
+function saveSchoolName(){const name=document.getElementById('schoolNameInput').value.trim();if(name){const savedName=ClassmatesSettings.setSchoolName(name);document.getElementById('schoolName').textContent=savedName;renderBackupPanel()}}
 function setBackupStatus(message,color){const status=document.getElementById('backupStatus');if(!status)return;status.innerHTML=message?'<span style="color:'+color+'">'+message+'</span>':''}
-function renderBackupPanel(){const summary=document.getElementById('backupSummary');if(!summary)return;if(!storageIsAvailable()){summary.innerHTML='Local browser storage is unavailable in this environment.';setBackupStatus('This browser is blocking local storage for the app.','#e74c3c');return}const school=getSchoolName();const pupils=getPupils();const keys=storageListAppKeys();const profileCount=keys.filter(k=>k.startsWith('classmates_state_')).length;summary.innerHTML='<strong>'+school+'</strong><br>'+pupils.length+' pupils, '+profileCount+' saved pupil profiles, '+keys.length+' app records on this device.'}
+function renderBackupPanel(){const summary=document.getElementById('backupSummary');if(!summary)return;if(!storageIsAvailable()){summary.innerHTML='Local browser storage is unavailable in this environment.';setBackupStatus('This browser is blocking local storage for the app.','#e74c3c');return}const school=getSchoolName();const pupils=getPupils();const keys=storageListAppKeys();const profileCount=keys.filter(k=>k.startsWith('classmates_state_')).length;const attempts=ClassmatesAttempts.listAttempts().length;summary.innerHTML='<strong>'+school+'</strong><br>'+pupils.length+' pupils, '+profileCount+' saved pupil profiles, '+attempts+' logged attempts, '+keys.length+' app records on this device.'}
 function exportAppBackup(){if(!storageIsAvailable()){setBackupStatus('Backup failed because browser storage is unavailable.','#e74c3c');return}const fileName=storageDownloadBackup();setBackupStatus('Backup downloaded: '+fileName,'#11998e');renderBackupPanel()}
 function triggerBackupImport(){const input=document.getElementById('backupFileInput');if(input)input.click()}
-async function handleBackupImport(event){const file=event.target&&event.target.files?event.target.files[0]:null;if(!file)return;try{const payload=await storageImportBackupFile(file);currentPupil=null;state=JSON.parse(JSON.stringify(DEFAULT_STATE));loadState();renderPupilGrid();renderPupilSelect();renderTeacher();updateHomeStats();const when=payload.exportedAt?new Date(payload.exportedAt).toLocaleString('en-GB'):'backup file';setBackupStatus('Backup imported from '+when+'.','#11998e')}catch(error){setBackupStatus(error&&error.message?error.message:'Backup import failed.','#e74c3c')}finally{if(event.target)event.target.value='';renderBackupPanel()}}
+async function handleBackupImport(event){const file=event.target&&event.target.files?event.target.files[0]:null;if(!file)return;try{const payload=await storageImportBackupFile(file);currentPupil=null;state=ClassmatesAppState.createDefaultState();loadState();renderPupilGrid();renderPupilSelect();renderTeacher();updateHomeStats();const when=payload.exportedAt?new Date(payload.exportedAt).toLocaleString('en-GB'):'backup file';setBackupStatus('Backup imported from '+when+'.','#11998e')}catch(error){setBackupStatus(error&&error.message?error.message:'Backup import failed.','#e74c3c')}finally{if(event.target)event.target.value='';renderBackupPanel()}}
 
 // ==================== SESSION TIMER ====================
 let sessionTimerInterval=null;
@@ -2809,11 +3251,11 @@ function renderCQList(){const el=document.getElementById('cqList');const quiz=ge
 function removeCustomQ(i){const quiz=getCustomQuiz();quiz.splice(i,1);saveCustomQuiz(quiz);renderCQList()}
 function renderTeacher(){renderPupilList();renderClassSummary();renderProgressTable();renderCQList();const sn=getSchoolName();document.getElementById('schoolName').textContent=sn;const pc=document.getElementById('pupilCount');if(pc)pc.textContent=getPupils().length+' pupils registered';renderBackupPanel();showTeacherTab('overview',document.querySelector('.teacher-tab'))}
 function renderClassSummary(){const el=document.getElementById('classSummary');const pupils=getPupils();if(pupils.length===0){el.innerHTML='';return}let totalStars=0,totalGames=0,activeToday=0,totalAch=0;const today=new Date().toDateString();pupils.forEach(p=>{const s=loadPupilState(p);if(s){totalStars+=s.stars||0;totalGames+=s.games||0;totalAch+=(s.achievements||[]).length;if(s.lastPlayed===today)activeToday++}});el.innerHTML='<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'+'<div style="background:#e8fff5;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#11998e">'+activeToday+'/'+pupils.length+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Active Today</div></div>'+'<div style="background:#fff8e6;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#d4a520">'+totalStars+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Total Stars</div></div>'+'<div style="background:#f0ecff;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#6c5ce7">'+totalGames+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Games Played</div></div>'+'<div style="background:#fff0f5;border-radius:12px;padding:10px 16px;flex:1;min-width:100px;text-align:center"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.3rem;color:#e84393">'+totalAch+'</div><div style="font-size:0.7rem;color:#636e72;font-weight:700">Badges Earned</div></div></div>'}
-function editSchoolName(){const name=prompt('School name:',document.getElementById('schoolName').textContent);if(name){document.getElementById('schoolName').textContent=name;storageSetItem('classmates_school',name);renderBackupPanel()}}
+function editSchoolName(){const name=prompt('School name:',document.getElementById('schoolName').textContent);if(name){const savedName=ClassmatesSettings.setSchoolName(name);document.getElementById('schoolName').textContent=savedName;renderBackupPanel()}}
 function renderProgressTable(){const area=document.getElementById('progressArea');const pupils=getPupils();if(pupils.length===0){area.innerHTML='<p style="color:#b2bec3;font-size:0.85rem;">No pupils added yet. Add pupil names above to track progress.</p>';return}let sortCol=0,sortDir=1;const headers=['Name','Stars','Games','Spelling','Maths','Tables','Stories','Badges','Streak','Last Active'];const rows=[];pupils.forEach(p=>{const s=loadPupilState(p);if(s){rows.push([p,s.stars||0,s.games||0,s.spellingCorrect||0,s.mathsCorrect||0,(s.ttCompleted||[]).length+'/11',(s.storiesRead||[]).length+'/18',(s.achievements||[]).length+'/31',s.streak||0,s.lastPlayed?new Date(s.lastPlayed).toLocaleDateString('en-GB'):'Never'])}else{rows.push([p,0,0,0,0,'0/11','0/18','0/31',0,'Never'])}});function renderTable(){let h='<div class="progress-table-wrap"><table class="progress-table"><thead><tr>';headers.forEach((hd,i)=>{h+='<th data-col="'+i+'">'+hd+(sortCol===i?(sortDir===1?' &#x25B2;':' &#x25BC;'):'')+'</th>'});h+='</tr></thead><tbody>';const sorted=[...rows].sort((a,b)=>{const va=typeof a[sortCol]==='number'?a[sortCol]:String(a[sortCol]).toLowerCase();const vb=typeof b[sortCol]==='number'?b[sortCol]:String(b[sortCol]).toLowerCase();if(va<vb)return -sortDir;if(va>vb)return sortDir;return 0});sorted.forEach(r=>{h+='<tr>';r.forEach((c,ci)=>{if(ci===0){h+='<td style="cursor:pointer;color:#11998e;font-weight:700" onclick="showPupilDetail(\''+String(c).replace(/'/g,"\\'")+'\')">'+c+'</td>'}else{h+='<td>'+c+'</td>'}});h+='</tr>'});h+='</tbody></table></div>';area.innerHTML=h;area.querySelectorAll('th').forEach(th=>{th.onclick=()=>{const col=parseInt(th.dataset.col);if(sortCol===col)sortDir*=-1;else{sortCol=col;sortDir=1}renderTable()}})}renderTable()}
 function printReport(){const w=window.open('','_blank');const sn=getSchoolName();const today=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});const pupils=getPupils();let rows='';if(pupils.length>0){rows='<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-size:0.85rem"><thead><tr style="background:#11998e;color:white"><th>Name</th><th>Stars</th><th>Games</th><th>Spelling Correct</th><th>Maths Correct</th><th>Tables</th><th>Stories Read</th><th>Badges</th><th>Day Streak</th><th>Last Active</th></tr></thead><tbody>';pupils.forEach(p=>{const s=loadPupilState(p)||{};rows+='<tr><td>'+p+'</td><td>'+(s.stars||0)+'</td><td>'+(s.games||0)+'</td><td>'+(s.spellingCorrect||0)+' words</td><td>'+(s.mathsCorrect||0)+' questions</td><td>'+((s.ttCompleted||[]).length)+'/11</td><td>'+((s.storiesRead||[]).length)+'/18</td><td>'+((s.achievements||[]).length)+'/31</td><td>'+(s.streak||0)+' days</td><td>'+(s.lastPlayed?new Date(s.lastPlayed).toLocaleDateString('en-GB'):'Never')+'</td></tr>'});rows+='</tbody></table>'}else{rows='<p>No pupils registered.</p>'}w.document.write('<!DOCTYPE html><html><head><title>Progress Report</title><style>@page{size:landscape;margin:20mm}body{font-family:Arial,sans-serif}h1{color:#11998e;font-size:1.5rem}.meta{color:#636e72;font-size:0.9rem;margin-bottom:16px}table{margin-top:16px}th,td{text-align:left}</style></head><body><h1>'+sn+' — Classmates Progress Report</h1><p class="meta">'+today+'</p>'+rows+'</body></html>');w.document.close();setTimeout(()=>w.print(),300)}
 function exportCSV(){const headers=['Name','Stars','Games','Streak','Spelling Correct','Maths Correct','Tables Completed','Stories Read','Badges Earned','Last Active'];const rows=[headers];const pupils=getPupils();pupils.forEach(p=>{const s=loadPupilState(p)||{};rows.push([p,s.stars||0,s.games||0,s.streak||0,s.spellingCorrect||0,s.mathsCorrect||0,(s.ttCompleted||[]).length,(s.storiesRead||[]).length,(s.achievements||[]).length,s.lastPlayed||'Never'])});if(pupils.length===0)rows.push(['No pupils','','','','','','','','']);const csv=rows.map(r=>r.join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='classmates-progress-'+new Date().toISOString().slice(0,10)+'.csv';a.click()}
-function resetAllData(){if(!confirm('This will delete ALL pupil data and progress. This cannot be undone.'))return;if(!confirm('Are you absolutely sure?'))return;storageClearAppData();currentPupil=null;state=JSON.parse(JSON.stringify(DEFAULT_STATE));renderPupilGrid();renderPupilSelect();updateHomeStats();renderTeacher();setBackupStatus('All local Classmates data was cleared from this device.','#8899aa')}
+function resetAllData(){if(!confirm('This will delete ALL pupil data and progress. This cannot be undone.'))return;if(!confirm('Are you absolutely sure?'))return;storageClearAppData();currentPupil=null;state=ClassmatesAppState.createDefaultState();renderPupilGrid();renderPupilSelect();updateHomeStats();renderTeacher();setBackupStatus('All local Classmates data was cleared from this device.','#8899aa')}
 
 // ==================== SPELLING ====================
 let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false,missed:[]};
@@ -3330,7 +3772,7 @@ function launchConfetti(duration){const canvas=document.createElement('canvas');
 // ==================== RESULTS ====================
 const ENCOURAGEMENT={3:['Amazing work!','You\'re a superstar!','Absolutely brilliant!','Perfect score — wow!','Top of the class!','Incredible effort!'],2:['Great job!','Well done!','Really good work!','You\'re getting better!','Nearly perfect!','Fantastic effort!'],1:['Good try!','Keep going!','You\'re learning!','Practice makes perfect!','Getting there!','Don\'t give up!'],0:['Let\'s try again!','Every expert was once a beginner!','You\'ll get it next time!','Keep practising!','Learning takes time!','Try a different level?']};
 function getEncouragement(stars){const msgs=ENCOURAGEMENT[stars]||ENCOURAGEMENT[0];return msgs[Math.floor(Math.random()*msgs.length)]}
-function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn,missed){showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=getEncouragement(stars);const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num" id="rsCorrect">0/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num" id="rsScore">0%</div><div class="rs-lbl">Score</div></div>';setTimeout(()=>{const rcEl=document.getElementById('rsCorrect');const rsEl=document.getElementById('rsScore');if(rcEl)animateCounterSuffix(rcEl,correct,'/'+total,600);if(rsEl)animateCounterSuffix(rsEl,Math.round(correct/total*100),'%',600)},100);const mb=document.getElementById('missedWords');if(missed&&missed.length>0){let h='<div style="margin-top:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Words I missed:</div>';missed.forEach(m=>{h+='<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">'+m.w+'</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— '+m.h+'</span></div>'});h+='</div>';mb.innerHTML=h}else{mb.innerHTML=''}let coins=correct+(correct===total?10:0);addCoins(coins);const certBtn=document.getElementById('certBtn');if(stars>=3){certBtn.style.display='inline-flex';certBtn.onclick=()=>printCert(title,sub)}else{certBtn.style.display='none'}document.getElementById('resultsPlayAgain').onclick=playAgainFn;if(stars>=3){sfxLevelUp();launchConfetti(2500)}else if(stars>=2){sfxStreak();launchConfetti(1500)}else if(stars>=1){sfxStreak()}else{sfxWrong()}}
+function showResults(color,iconText,title,sub,stars,correct,total,playAgainFn,missed){const activeScreen=document.querySelector('.screen.active');const gameId=activeScreen&&activeScreen.id!=='results'?activeScreen.id:null;if(gameId){ClassmatesAttempts.recordAttempt({pupilName:currentPupil,gameId:gameId,category:GAME_CATS[gameId]||null,title:title,subtitle:sub,correct:correct,total:total,stars:stars,assignment:getAssignment()})}showScreen('results');const icon=document.getElementById('resultsIcon');icon.style.background='linear-gradient(135deg,'+color+','+lighten(color)+')';icon.textContent=iconText;document.getElementById('resultsTitle').textContent=title;document.getElementById('resultsSub').textContent=getEncouragement(stars);const sr=document.getElementById('starRow');sr.innerHTML='';for(let i=0;i<3;i++){const s=document.createElement('div');s.className='star '+(i<stars?'earned':'empty');s.innerHTML=STAR_SVG;if(i<stars)s.style.animationDelay=(i*0.15)+'s';sr.appendChild(s)}document.getElementById('resultsStats').innerHTML='<div class="rs-item"><div class="rs-num" id="rsCorrect">0/'+total+'</div><div class="rs-lbl">Correct</div></div><div class="rs-item"><div class="rs-num" id="rsScore">0%</div><div class="rs-lbl">Score</div></div>';setTimeout(()=>{const rcEl=document.getElementById('rsCorrect');const rsEl=document.getElementById('rsScore');if(rcEl)animateCounterSuffix(rcEl,correct,'/'+total,600);if(rsEl)animateCounterSuffix(rsEl,Math.round(correct/total*100),'%',600)},100);const mb=document.getElementById('missedWords');if(missed&&missed.length>0){let h='<div style="margin-top:16px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto;"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">Words I missed:</div>';missed.forEach(m=>{h+='<div style="background:#fff0ed;border:2px solid #fad0c4;border-radius:10px;padding:10px 14px;margin-bottom:6px;"><strong style="text-transform:capitalize;color:#2d3436;">'+m.w+'</strong><span style="color:#636e72;font-size:0.85rem;margin-left:8px;">— '+m.h+'</span></div>'});h+='</div>';mb.innerHTML=h}else{mb.innerHTML=''}let coins=correct+(correct===total?10:0);addCoins(coins);const certBtn=document.getElementById('certBtn');if(stars>=3){certBtn.style.display='inline-flex';certBtn.onclick=()=>printCert(title,sub)}else{certBtn.style.display='none'}document.getElementById('resultsPlayAgain').onclick=playAgainFn;if(stars>=3){sfxLevelUp();launchConfetti(2500)}else if(stars>=2){sfxStreak();launchConfetti(1500)}else if(stars>=1){sfxStreak()}else{sfxWrong()}}
 function lighten(hex){return hex+'99'}
 
 // ==================== UTILITIES ====================
@@ -3421,9 +3863,9 @@ function generateWorksheet(){const lv=parseInt(prompt('Level (1, 2 or 3):','2'))
 
 // ==================== SPACED REPETITION ====================
 // Track wrong answers per topic. Mix 20-30% of weak-area questions into future sessions.
-function recordWeak(topic,item){if(!state.weakItems)state.weakItems={};if(!state.weakItems[topic])state.weakItems[topic]=[];const arr=state.weakItems[topic];if(!arr.find(x=>JSON.stringify(x)===JSON.stringify(item))){arr.push(item);if(arr.length>20)arr.shift()}saveState()}
-function getWeakItems(topic,count){if(!state.weakItems||!state.weakItems[topic])return[];const arr=[...state.weakItems[topic]];shuffle(arr);return arr.slice(0,count)}
-function clearWeakItem(topic,item){if(!state.weakItems||!state.weakItems[topic])return;state.weakItems[topic]=state.weakItems[topic].filter(x=>JSON.stringify(x)!==JSON.stringify(item));saveState()}
+function recordWeak(topic,item){state=ClassmatesAppState.addWeakItem(state,topic,item);saveState()}
+function getWeakItems(topic,count){return ClassmatesAppState.getWeakItems(state,topic,count)}
+function clearWeakItem(topic,item){state=ClassmatesAppState.clearWeakItem(state,topic,item);saveState()}
 
 // ==================== WHITEBOARD MODE ====================
 let wb={questions:[],idx:0,answerShown:false};
@@ -3441,8 +3883,8 @@ document.addEventListener('keydown',function(e){if(document.getElementById('whit
 // ==================== ADAPTIVE DIFFICULTY ====================
 // Track per-topic streaks. After 3 correct in a row, suggest harder level. After 2 wrong, suggest easier.
 function getAdaptiveLevel(topic,defaultLv){if(!state.adaptive[topic])state.adaptive[topic]={streak:0,level:defaultLv};return state.adaptive[topic].level}
-function adaptiveCorrect(topic){if(!state.adaptive[topic])state.adaptive[topic]={streak:0,level:1};const a=state.adaptive[topic];a.streak=Math.max(a.streak,0)+1;if(a.streak>=3&&a.level<3){a.level++;a.streak=0;saveState();return'up'}saveState();return null}
-function adaptiveWrong(topic){if(!state.adaptive[topic])state.adaptive[topic]={streak:0,level:1};const a=state.adaptive[topic];a.streak=Math.min(a.streak,0)-1;if(a.streak<=-2&&a.level>1){a.level--;a.streak=0;saveState();return'down'}saveState();return null}
+function adaptiveCorrect(topic){const result=ClassmatesAppState.adaptiveCorrect(state,topic);saveState();return result}
+function adaptiveWrong(topic){const result=ClassmatesAppState.adaptiveWrong(state,topic);saveState();return result}
 function getAdaptiveBadge(topic){if(!state.adaptive||!state.adaptive[topic])return'';const lv=state.adaptive[topic].level;const labels=['','&#x1F423;','&#x2B50;','&#x1F680;'];return'<span style="font-size:0.7rem;margin-left:6px;opacity:0.7">'+labels[lv]+'</span>'}
 function highlightRecommended(screenId,topic){const lv=getAdaptiveLevel(topic,1);const screen=document.getElementById(screenId);if(!screen)return;screen.querySelectorAll('.level-card').forEach((c,i)=>{c.classList.remove('recommended');c.querySelector('.lc-recommended')?.remove();if(i+1===lv){c.classList.add('recommended');const badge=document.createElement('div');badge.className='lc-recommended';badge.textContent='Recommended';c.appendChild(badge)}})}
 
