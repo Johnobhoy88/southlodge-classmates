@@ -40,6 +40,7 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "games", "punctuation.js"),
     path.join(root, "src", "scripts", "games", "word-problems.js"),
     path.join(root, "src", "scripts", "games", "shapes.js"),
+    path.join(root, "src", "scripts", "games", "vocab.js"),
     path.join(root, "src", "scripts", "games", "grammar.js"),
     path.join(root, "src", "scripts", "games", "rhyme.js"),
     path.join(root, "src", "scripts", "games", "measure.js"),
