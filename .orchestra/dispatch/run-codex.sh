@@ -6,7 +6,21 @@ WORKTREE="C:/Users/Farsight.DESKTOP-CQ0CL93/classmates-codex"
 MAX_TASKS="${1:-3}"
 DONE=0
 
-cd "$WORKTREE" || exit 1
+cd "$WORKTREE" || { echo "HEALTH: worktree missing at $WORKTREE"; exit 1; }
+
+# Pre-flight health check
+echo "=== HEALTH CHECK ==="
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ "$BRANCH" != "codex/dev" ]; then
+  echo "HEALTH FAIL: on $BRANCH, expected codex/dev"
+  exit 1
+fi
+DIRTY=$(git status --porcelain -- '*.js' '*.css' '*.html' '*.mjs' | grep -v '^\?' | wc -l)
+if [ "$DIRTY" -gt 0 ]; then
+  echo "HEALTH WARN: $DIRTY uncommitted changes, cleaning..."
+  git checkout -- . 2>/dev/null
+fi
+echo "HEALTH OK: codex/dev, clean worktree"
 
 while [ "$DONE" -lt "$MAX_TASKS" ]; do
   echo ""
@@ -24,13 +38,24 @@ Read the task description and the existing code files BEFORE building. Build the
     -C "$WORKTREE" \
     -m gpt-5.4 2>&1
 
-  CHANGES=$(cd "$WORKTREE" && git status --porcelain -- '*.js' '*.html' '*.css' '*.json' '*.mjs' 2>/dev/null | grep -v '^\?' | head -1)
-  if [ -z "$CHANGES" ]; then
+  # Health: check if Phase 1 produced changes
+  CHANGES=$(cd "$WORKTREE" && git status --porcelain -- '*.js' '*.html' '*.css' '*.json' '*.mjs' 2>/dev/null | grep -v '^\?' | wc -l)
+  echo "HEALTH: $CHANGES files changed after Phase 1"
+  if [ "$CHANGES" -eq 0 ]; then
     echo "=== No changes. Stopping. ==="
     break
   fi
 
-  echo "=== PHASE 2: Commit + Proposals + New Tasks (after 5s cooldown) ==="
+  # Health: verify build passes before committing
+  cd "$WORKTREE" && npm run build 2>&1 | tail -1
+  BUILD_EXIT=$?
+  if [ "$BUILD_EXIT" -ne 0 ]; then
+    echo "HEALTH FAIL: build failed after Phase 1, discarding changes"
+    git checkout -- . 2>/dev/null
+    break
+  fi
+
+  echo "=== PHASE 2: Commit + Proposals + Tasks (after 5s cooldown) ==="
   sleep 5
   codex exec "Do these steps IN ORDER:
 1. git add -A && git diff --cached --stat
@@ -43,9 +68,14 @@ Do NOT skip steps 1-4. Step 5 is optional but encouraged." \
     -C "$WORKTREE" \
     -m gpt-5.4 2>&1
 
+  # Health: verify commit exists
+  LATEST=$(cd "$WORKTREE" && git log codex/dev --oneline -1)
+  echo "HEALTH: latest commit: $LATEST"
+
   DONE=$((DONE + 1))
 done
 
 echo ""
 echo "=== CODEX DONE: $DONE tasks ==="
+echo "HEALTH SUMMARY: completed $DONE tasks"
 cd "$WORKTREE" && git log codex/dev --oneline -5
