@@ -219,6 +219,70 @@ console.log('\nMaths Module:');
   });
 }
 
+// --- Test 5: CfE Curriculum module ---
+console.log('\nCfE Curriculum Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/cfe-curriculum.js', ctx);
+
+  test('ClassmatesCurriculum exports', () => {
+    assert(g.ClassmatesCurriculum, 'ClassmatesCurriculum should exist');
+  });
+
+  test('getOutcome returns outcome for valid code', () => {
+    const result = g.ClassmatesCurriculum.getOutcome('LIT 0-21a');
+    assert(result, 'Should return an outcome for LIT 0-21a');
+    assert(result.code === 'LIT 0-21a', 'Should have correct code');
+    assert(result.title, 'Should have a title');
+  });
+
+  test('getOutcome returns fallback for unknown code', () => {
+    const result = g.ClassmatesCurriculum.getOutcome('FAKE-99');
+    assert(result && result.code === 'FAKE-99', 'Should return fallback with the requested code');
+  });
+}
+
+// --- Test 6: Reading module ---
+console.log('\nReading Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/reading.js', ctx);
+
+  test('ClassmatesReading exports READING', () => {
+    assert(g.ClassmatesReading, 'ClassmatesReading should exist');
+    assert(g.ClassmatesReading.READING, 'Should have READING data');
+  });
+
+  test('READING has 3 levels', () => {
+    const r = g.ClassmatesReading.READING;
+    assert(r[1] && r[2] && r[3], 'Should have levels 1, 2, 3');
+  });
+
+  test('Each story has title, text, and questions', () => {
+    const stories = g.ClassmatesReading.READING[1];
+    assert(stories.length > 0, 'Level 1 should have stories');
+    const story = stories[0];
+    assert(story.title, 'Story should have title');
+    assert(story.text, 'Story should have text');
+    assert(Array.isArray(story.questions), 'Story should have questions array');
+    assert(story.questions.length > 0, 'Story should have at least one question');
+  });
+
+  test('Questions have q, a (answers array), and c (correct index)', () => {
+    const q = g.ClassmatesReading.READING[1][0].questions[0];
+    assert(q.q, 'Question should have text (q)');
+    assert(Array.isArray(q.a), 'Should have answers array (a)');
+    assert(typeof q.c === 'number', 'Should have correct index (c)');
+    assert(q.a.length >= 2, 'Should have at least 2 answer options');
+  });
+}
+
 // --- Summary ---
 console.log(`\n${'='.repeat(40)}`);
 console.log(`Logic tests: ${passed} passed, ${failed} failed, ${passed + failed} total`);
