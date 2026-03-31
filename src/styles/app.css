@@ -723,6 +723,7 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .spell-clue{font-size:0.9rem;color:rgba(255,255,255,0.7);margin-bottom:6px;min-height:24px;font-weight:600}
 .spell-picture{width:120px;height:120px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:rgba(255,250,235,0.85);border:3px solid rgba(255,234,167,0.7);box-shadow:0 8px 24px rgba(253,203,110,0.25),0 0 40px rgba(253,203,110,0.1);padding:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:pictureFloat 3s ease-in-out infinite}
 @keyframes pictureFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes streakPop{0%{transform:scale(0.5);opacity:0}50%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
 .spell-picture svg{width:80px;height:80px}
 .daily-box svg{width:64px;height:64px;display:block;margin:0 auto}
 .spell-slots{display:flex;justify-content:center;gap:8px;margin:16px 0;flex-wrap:wrap}
