@@ -247,8 +247,52 @@
     return listFlagshipAttempts().slice(0, max);
   }
 
+  function getClassMasterySnapshot() {
+    const classPackMasteries = listClassPackMasteries();
+    const interventionSignals = listInterventionSignals(1000);
+    
+    const totalPupils = (function(){
+      const pupilSet = new Set();
+      getAttempts().forEach(function(attempt){
+        if (attempt.pupilName) {
+          pupilSet.add(attempt.pupilName);
+        }
+      });
+      return pupilSet.size;
+    })();
+
+    const avgAccuracy = classPackMasteries.length > 0
+      ? Math.round(classPackMasteries.reduce(function(sum, pack){
+          return sum + pack.accuracy;
+        }, 0) / classPackMasteries.length)
+      : 0;
+
+    const pupilsNeedingSupport = interventionSignals.length;
+
+    const topPack = classPackMasteries.length > 0
+      ? classPackMasteries.slice().sort(function(left, right){
+          return right.accuracy - left.accuracy;
+        })[0]
+      : null;
+
+    const weakestPack = classPackMasteries.length > 0
+      ? classPackMasteries.slice().sort(function(left, right){
+          return left.accuracy - right.accuracy;
+        })[0]
+      : null;
+
+    return {
+      totalPupils: totalPupils,
+      avgAccuracy: avgAccuracy,
+      pupilsNeedingSupport: pupilsNeedingSupport,
+      topPack: topPack,
+      weakestPack: weakestPack
+    };
+  }
+
   window.ClassmatesMastery = {
     buildPackSummary: buildPackSummary,
+    getClassMasterySnapshot: getClassMasterySnapshot,
     getPupilOverview: getPupilOverview,
     listClassPackMasteries: listClassPackMasteries,
     listFlagshipAttempts: listFlagshipAttempts,
