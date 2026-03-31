@@ -746,7 +746,7 @@ function nextSpellWord(){sp.idx++;if(sp.idx>=sp.total)finishSpelling();else load
 function finishSpelling(){show('spellingLevelSelect');hide('spellingGame');const pct=sp.correct/sp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('spelling');else if(pct<0.4)adaptiveWrong('spelling');sp.missed.forEach(m=>recordWeak('spelling',m));addStars(stars);recordPlay();showResults('#f7971e','Aa','Spelling Done!','Level '+sp.level,stars,sp.correct,sp.total,()=>{showScreen('spelling')},sp.missed)}
 
 // ==================== MATHS ====================
-let ma={level:1,idx:0,total:10,correct:0,answer:'',question:null};
+let ma={level:1,idx:0,total:10,correct:0,answer:'',question:null,streak:0,bestStreak:0};
 
 function setMathsLevel(lv){ma.level=lv;ma.idx=0;ma.correct=0;ma.answer='';ma.streak=0;ma.bestStreak=0;var adaptiveLv=state&&state.adaptive&&state.adaptive.maths?state.adaptive.maths.level:lv;ma.adaptiveLevel=Math.min(Math.max(adaptiveLv,1),3);hide('mathsLevelSelect');show('mathsGame');renderNumpad('numpad',numpadPress);loadMathQ()}
 function getMathQuestionGenerator(){const mathsApi=window.ClassmatesMaths;return mathsApi&&typeof mathsApi.genMathQuestion==='function'?mathsApi.genMathQuestion:genMathQLocal}
@@ -759,7 +759,7 @@ function checkMathAns(){if(!ma.answer)return;var ok=parseInt(ma.answer)===ma.que
 function finishMaths(){show('mathsLevelSelect');hide('mathsGame');const pct=ma.correct/ma.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_math',true);checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('maths');else if(pct<0.4)adaptiveWrong('maths');addStars(stars);recordPlay();showResults('#0984e3','1+2','Maths Done!','Level '+ma.level,stars,ma.correct,ma.total,()=>{showScreen('maths')})}
 
 // ==================== TIMES TABLES ====================
-let tt={table:0,questions:[],idx:0,total:12,correct:0,answer:'',startTime:0,timer:null,elapsed:0};
+let tt={table:0,questions:[],idx:0,total:12,correct:0,answer:'',startTime:0,timer:null,elapsed:0,streak:0};
 
 function renderTTSelect(){const g=document.getElementById('tableGrid');g.innerHTML='';const mix=document.createElement('button');mix.className='tt-btn';mix.style.gridColumn='1/-1';mix.style.background='linear-gradient(135deg,#e44d26,#f16529)';mix.style.color='white';mix.style.borderColor='#e44d26';mix.innerHTML='Mixed Tables';mix.onclick=()=>startTT(0);g.appendChild(mix);for(let t=2;t<=12;t++){const b=document.createElement('button');b.className='tt-btn';const pb=state.ttPersonalBests[t];b.innerHTML=t+'x<span class="tt-pb'+(pb?' has':'')+'\">'+(pb?(pb/1000).toFixed(1)+'s':'---')+'</span>';b.onclick=()=>startTT(t);g.appendChild(b)}}
 function startTT(t){tt.table=t;tt.idx=0;tt.correct=0;tt.answer='';tt.streak=0;tt.questions=[];if(t===0){for(let i=0;i<12;i++){var a=rand(2,12);var b=rand(2,12);tt.questions.push({a:a,b:b,answer:a*b})}}else{for(let i=1;i<=12;i++)tt.questions.push({a:t,b:i,answer:t*i})}shuffle(tt.questions);hide('timesTableSelect');show('timesGame');var pbEl=document.getElementById('ttPB');if(pbEl){var pb=state.ttPersonalBests&&state.ttPersonalBests[t];pbEl.textContent=pb?'Your best: '+(pb/1000).toFixed(1)+'s — beat it!':'First try — set your time!';pbEl.style.display='block'}renderNumpad('ttNumpad',ttPress);tt.startTime=Date.now();tt.timer=setInterval(()=>{tt.elapsed=Date.now()-tt.startTime;document.getElementById('ttTimer').textContent=(tt.elapsed/1000).toFixed(1)+'s'},100);loadTTQ()}
@@ -863,7 +863,7 @@ const WORD_PROBLEMS={
   ]
 };
 
-let wp={level:1,problems:[],idx:0,total:10,correct:0,answer:''};
+let wp={level:1,problems:[],idx:0,total:10,correct:0,answer:'',streak:0};
 
 function startWP(lv){wp.level=lv;const pool=[...WORD_PROBLEMS[lv]];shuffle(pool);wp.problems=pool.slice(0,10);wp.idx=0;wp.correct=0;wp.answer='';hide('wpLevelSelect');show('wpGame');renderNumpad('wpNumpad',wpPress);loadWPQ()}
 function loadWPQ(){wp.answer='';document.getElementById('wpProgress').style.width=(wp.idx/wp.total*100)+'%';document.getElementById('wpProgressText').textContent='Problem '+(wp.idx+1)+' of '+wp.total;document.getElementById('wpProblem').textContent=wp.problems[wp.idx].q;document.getElementById('wpAnswer').textContent='_';document.getElementById('wpFeedback').classList.remove('show')}
@@ -874,7 +874,7 @@ function finishWP(){show('wpLevelSelect');hide('wpGame');const pct=wp.correct/wp
 document.addEventListener('keydown',function(e){if(document.getElementById('wordprob').classList.contains('active')&&document.getElementById('wpGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))wpPress(e.key);else if(e.key==='Enter')wpPress('enter');else if(e.key==='Backspace'||e.key==='Delete')wpPress('C')}});
 
 // ==================== FRACTIONS ====================
-let frac={level:1,idx:0,total:10,correct:0};
+let frac={level:1,idx:0,total:10,correct:0,streak:0};
 
 function drawFracBar(total,shaded){let h='<div class="frac-bar">';for(let i=0;i<total;i++){h+='<div class="frac-part '+(i<shaded?'shaded':'unshaded')+'"></div>'}h+='</div>';return h}
 
@@ -1519,14 +1519,14 @@ const SHAPES_DATA={
   ]
 };
 
-let shp={level:1,questions:[],idx:0,total:10,correct:0};
+let shp={level:1,questions:[],idx:0,total:10,correct:0,streak:0};
 function startShapes(lv){shp.level=lv;shp.questions=[...SHAPES_DATA[lv]];shuffle(shp.questions);shp.idx=0;shp.correct=0;hide('shapesLevelSelect');show('shapesGame');loadShapeQ()}
 function loadShapeQ(){const q=shp.questions[shp.idx];document.getElementById('shapeProgress').style.width=(shp.idx/shp.total*100)+'%';document.getElementById('shapeProgressText').textContent='Question '+(shp.idx+1)+' of '+shp.total;document.getElementById('shapeDisplay').innerHTML=(q.svg||'')+'<div class="ph-sound" style="background:#f5f0ff;border-color:#a29bfe;color:#6c5ce7;font-size:1rem;margin-top:12px">'+q.q+'</div>';const opts=document.getElementById('shapeOpts');opts.innerHTML='';shuffle(q.opts).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectShapeAns(b,o===q.correct,q.correct);opts.appendChild(b)})}
 function selectShapeAns(btn,correct,right){document.querySelectorAll('#shapeOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===right)o.classList.add('ph-correct')});if(correct){shp.correct++;sfxCorrect();btn.classList.add('ph-correct')}else{sfxWrong();btn.classList.add('ph-wrong')}setTimeout(()=>{shp.idx++;if(shp.idx>=shp.total)finishShapes();else loadShapeQ()},correct?500:1200)}
 function finishShapes(){show('shapesLevelSelect');hide('shapesGame');const pct=shp.correct/shp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_shapes',true);if(pct>=0.8)adaptiveCorrect('shapes');else if(pct<0.4)adaptiveWrong('shapes');addStars(stars);recordPlay();showResults('#6c5ce7','\u25B3','Shapes Done!','Level '+shp.level,stars,shp.correct,shp.total,()=>{showScreen('shapes')},null)}
 
 // ==================== DATA HANDLING ====================
-let dh={level:1,questions:[],idx:0,total:10,correct:0};
+let dh={level:1,questions:[],idx:0,total:10,correct:0,streak:0};
 
 function genDataQ(lv){const items=lv===1?['Apples','Bananas','Oranges']:lv===2?['Monday','Tuesday','Wednesday','Thursday','Friday']:['Isla','Ewan','Finn','Priya','Marcus','Ailsa'];const vals=items.map(()=>lv===1?rand(1,6):lv===2?rand(2,15):rand(5,30));const colors=['#FF6B6B','#FFD93D','#4ECDC4','#A78BFA','#6BCB77','#e84393'];const maxVal=Math.max(...vals);const type=rand(0,2);let q,correct,opts;if(type===0){const idx=rand(0,items.length-1);q='How many for '+items[idx]+'?';correct=String(vals[idx]);opts=shuffle([correct,String(vals[idx]+rand(1,3)),String(Math.max(1,vals[idx]-rand(1,3))),String(vals[(idx+1)%items.length])].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4)}else if(type===1){const maxIdx=vals.indexOf(maxVal);q='Which has the most?';correct=items[maxIdx];opts=shuffle([...items]).slice(0,4);if(!opts.includes(correct)){opts[0]=correct;shuffle(opts)}}else{const total=vals.reduce((a,b)=>a+b,0);q='What is the total?';correct=String(total);opts=shuffle([correct,String(total+rand(1,5)),String(total-rand(1,5)),String(Math.round(total/2))].filter((v,i,a)=>a.indexOf(v)===i)).slice(0,4)}let chart='<div class="chart-bar">';items.forEach((item,i)=>{const h=Math.round(vals[i]/maxVal*120);chart+='<div class="chart-col"><div class="chart-val">'+vals[i]+'</div><div class="chart-fill" style="height:'+h+'px;background:'+colors[i%colors.length]+'"></div><div class="chart-label">'+item+'</div></div>'});chart+='</div>';return{chart:chart,q:q,correct:correct,opts:opts}}
 
