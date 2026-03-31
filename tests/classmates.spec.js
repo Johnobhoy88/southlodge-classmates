@@ -108,3 +108,26 @@ test('teacher can add a pupil and see them in the list', async ({ page }) => {
 
   await expect(page.locator('#pupilList')).not.toContainText(pupilName);
 });
+
+test('clicking game cards launches the correct game screens', async ({ page }) => {
+  await openPupilHome(page);
+
+  const games = [
+    { id: 'spelling', title: 'Spelling' },
+    { id: 'maths', title: 'Maths' },
+    { id: 'times', title: 'Times Tables' },
+    { id: 'bonds', title: 'Number Bonds' },
+    { id: 'phonics', title: 'Phonics' },
+  ];
+
+  for (const game of games) {
+    const card = page.locator('#home .subject-card').filter({ hasText: game.title }).first();
+
+    await expect(card).toBeVisible();
+    await card.click();
+    await expect(page.locator(`#${game.id}`)).toHaveClass(/active/);
+
+    await page.evaluate(() => window.showScreen('home'));
+    await expect(page.locator('#home')).toHaveClass(/active/);
+  }
+});
