@@ -256,9 +256,15 @@
     });
   }
 
+  function getClassMastery() {
+    if (!window.ClassmatesMastery || typeof ClassmatesMastery.getClassMasterySnapshot !== 'function') return null;
+    return ClassmatesMastery.getClassMasterySnapshot();
+  }
+
   function getTeacherHomeModel() {
     return {
       classSummary: getClassSummary(),
+      classMastery: getClassMastery(),
       needsAttention: getNeedsAttention(),
       interventions: getInterventionSignals(),
       recentActivity: getRecentActivity(),
