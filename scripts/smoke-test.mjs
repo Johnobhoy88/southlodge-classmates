@@ -230,7 +230,77 @@ test('Storage quota function present', () => {
   assert(html.includes('getStorageUsage') || html.includes('storageGetUsage'), 'Missing storage usage function');
 });
 
-// --- 10. Platform modules ---
+// --- 10. Extracted game modules ---
+console.log('\nExtracted Game Modules:');
+
+test('ClassmatesTimesTable module present', () => {
+  assert(html.includes('ClassmatesTimesTable'), 'Missing ClassmatesTimesTable');
+});
+
+test('ClassmatesTimesTable.getPersonalBest exists', () => {
+  assert(html.includes('getPersonalBest'), 'Missing getPersonalBest');
+});
+
+test('ClassmatesTimesTable.isTableCompleted exists', () => {
+  assert(html.includes('isTableCompleted'), 'Missing isTableCompleted');
+});
+
+test('CfE Curriculum module present', () => {
+  assert(html.includes('ClassmatesCfeCurriculum') || html.includes('CFE_OUTCOMES'), 'Missing CfE curriculum module');
+});
+
+test('Sessions module present', () => {
+  assert(html.includes('ClassmatesSessions') || html.includes('getRecentSessions'), 'Missing sessions module');
+});
+
+test('Spelling data getters present', () => {
+  assert(html.includes('getSpellingWords') && html.includes('getSpellingWordEmoji'), 'Missing spelling data getters');
+});
+
+// --- 11. Build completeness — every src JS file should be in the artifact ---
+console.log('\nBuild Completeness:');
+
+import { readdirSync } from 'fs';
+
+function listSrcJsFiles(dir) {
+  const results = [];
+  try {
+    const entries = readdirSync(resolve(__dirname, '..', dir), { withFileTypes: true });
+    for (const entry of entries) {
+      const path = dir + '/' + entry.name;
+      if (entry.isDirectory()) {
+        results.push(...listSrcJsFiles(path));
+      } else if (entry.name.endsWith('.js')) {
+        results.push(path);
+      }
+    }
+  } catch (e) { /* dir doesn't exist */ }
+  return results;
+}
+
+const srcJsFiles = listSrcJsFiles('src/scripts');
+srcJsFiles.forEach(file => {
+  const fileName = file.split('/').pop();
+  test(`Source file bundled: ${fileName}`, () => {
+    // Check that at least some unique content from this file appears in the artifact
+    // We use the filename sans extension as a heuristic — most files define a window.Classmates* object
+    const content = readFileSync(resolve(__dirname, '..', file), 'utf-8');
+    // Find the first window.Classmates* or window.* assignment as a fingerprint
+    const fingerprint = content.match(/window\.(Classmates\w+|hdashInit|hdashStop)/);
+    if (fingerprint) {
+      assert(html.includes(fingerprint[1]), `${fileName}: window.${fingerprint[1]} not found in bundle`);
+    } else {
+      // Fallback: check the file's first function or const name
+      const funcMatch = content.match(/function\s+(\w{6,})/);
+      if (funcMatch) {
+        assert(html.includes(funcMatch[1]), `${fileName}: function ${funcMatch[1]} not found in bundle`);
+      }
+      // If no fingerprint found, skip silently (file may be inline data)
+    }
+  });
+});
+
+// --- 12. Platform modules ---
 console.log('\nPlatform:');
 
 test('Module manifest present', () => {
