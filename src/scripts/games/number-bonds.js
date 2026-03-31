@@ -6,4 +6,4 @@
   window.ClassmatesNumberBonds = {
     genQuestion: genNbQ
   }
-})()
+})();
