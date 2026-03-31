@@ -1191,6 +1191,72 @@ const REWARDS=[
 function renderShop(){const c=document.getElementById('shopGrid');if(!c)return;c.innerHTML='';REWARDS.forEach(r=>{const owned=state.unlockedRewards&&state.unlockedRewards.includes(r.id);const canBuy=state.coins>=r.cost&&!owned;c.innerHTML+='<div class="shop-item'+(owned?' owned':'')+'"><div class="shop-icon">'+(r.type==='accessory'?'\u{1F451}':r.type==='pack'?'\u{1F4E6}':'\u{2728}')+'</div><div class="shop-name">'+r.name+'</div><div class="shop-desc">'+r.desc+'</div><div class="shop-cost">'+(owned?'\u2705 Owned':'\u{1FA99} '+r.cost)+'</div>'+(owned?'':'<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyReward(\''+r.id+'\','+r.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>')+'</div>'});const pg=document.getElementById('powerupShopGrid');if(pg){pg.innerHTML='';POWERUPS.forEach(pu=>{const cnt=getPowerupCount(pu.id);const canBuy=state.coins>=pu.cost;pg.innerHTML+='<div class="shop-item"><div class="shop-icon">'+pu.icon+'</div><div class="shop-name">'+pu.name+'</div><div class="shop-desc">'+pu.desc+'</div><div class="shop-cost">\uD83E\uDE99 '+pu.cost+(cnt>0?' <span style="color:#27ae60;font-weight:700;">('+cnt+' owned)</span>':'')+'</div><button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyPowerup(\''+pu.id+'\')"'+(canBuy?'':' disabled')+'>Buy</button></div>'})}}
 function buyReward(id,cost){if(state.coins<cost||state.unlockedRewards.includes(id))return;state.coins-=cost;if(!state.unlockedRewards)state.unlockedRewards=[];state.unlockedRewards.push(id);saveState();updateCoinDisplay();renderShop();sfxLevelUp()}
 
+// ==================== AVATAR STORE ====================
+function renderAvatarStore(){
+  var el=document.getElementById('avatarStoreGrid');
+  if(!el||!window.ClassmatesAvatar)return;
+  var store=ClassmatesAvatar.getStoreItems();
+  var pupil=getCurrentPupil();
+  var av=pupil?ClassmatesAvatar.getAvatarData(pupil):ClassmatesAvatar.createDefaultAvatar();
+  var owned=state.unlockedRewards||[];
+  var h='';
+
+  function renderCategory(title,items,category){
+    h+='<div style="font-family:var(--font-display);font-size:0.9rem;color:var(--color-text-dark);margin:12px 0 6px">'+title+'</div>';
+    Object.keys(items).forEach(function(id){
+      var item=items[id];
+      var storeId=category+'_'+id;
+      var isOwned=owned.includes(storeId);
+      var isEquipped=av.equipped&&av.equipped[category]===id;
+      var canBuy=state.coins>=item.cost&&!isOwned;
+      h+='<div class="shop-item'+(isOwned?' owned':'')+'" style="'+(isEquipped?'border:2px solid var(--color-primary);':'')+'"><div class="shop-icon" style="font-size:1.5rem">';
+      // Show mini avatar preview with this item equipped
+      var previewAv=JSON.parse(JSON.stringify(av));
+      if(!previewAv.equipped)previewAv.equipped={hat:null,pet:null,effect:null,frame:null};
+      previewAv.equipped[category]=id;
+      h+=ClassmatesAvatar.renderAvatarSVG(previewAv,36);
+      h+='</div><div class="shop-name">'+item.name+'</div>';
+      h+='<div class="shop-cost">';
+      if(isEquipped)h+='<span style="color:var(--color-primary);font-weight:700">Wearing</span>';
+      else if(isOwned)h+='<button class="shop-buy" onclick="equipAvatarItem(\''+category+'\',\''+id+'\')">Wear</button>';
+      else h+='\u{1FA99} '+item.cost;
+      h+='</div>';
+      if(!isOwned&&!isEquipped)h+='<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyAvatarItem(\''+storeId+'\',\''+category+'\',\''+id+'\','+item.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>';
+      h+='</div>';
+    });
+  }
+
+  renderCategory('\u{1F3A9} Hats',store.hats,'hat');
+  renderCategory('\u{1F43E} Pets',store.pets,'pet');
+  renderCategory('\u{2728} Effects',store.effects,'effect');
+  renderCategory('\u{1F5BC} Frames',store.frames,'frame');
+  el.innerHTML=h;
+}
+
+function buyAvatarItem(storeId,category,itemId,cost){
+  if(state.coins<cost)return;
+  if(!state.unlockedRewards)state.unlockedRewards=[];
+  if(state.unlockedRewards.includes(storeId))return;
+  state.coins-=cost;
+  state.unlockedRewards.push(storeId);
+  saveState();
+  // Auto-equip on purchase
+  var pupil=getCurrentPupil();
+  if(pupil)ClassmatesAvatar.equipItem(pupil,category,itemId);
+  updateCoinDisplay();
+  renderAvatarStore();
+  renderShop();
+  sfxLevelUp();
+}
+
+function equipAvatarItem(category,itemId){
+  var pupil=getCurrentPupil();
+  if(!pupil)return;
+  ClassmatesAvatar.equipItem(pupil,category,itemId);
+  renderAvatarStore();
+  updateHomeStats();
+}
+
 // ==================== JOURNEY MAP ====================
 const JOURNEY_STOPS=[
   {id:'invergordon',name:'Invergordon',desc:'Home! Where your journey begins.',stars:0,emoji:'\u{1F3E0}',fact:'Your school town on the Cromarty Firth'},
