@@ -132,47 +132,6 @@ test('clicking game cards launches the correct game screens', async ({ page }) =
   }
 });
 
-test('teacher assignment flow — assign game and verify banner', async ({ page }) => {
-  await openTeacherDashboard(page);
-
-  const assignTab = page.locator('.teacher-tabs').getByRole('button', { name: 'Assign', exact: true });
-  const assignActivity = page.locator('#assignActivity');
-  const assignStatus = page.locator('#assignStatus');
-  const assignBanner = page.locator('#assignBanner');
-
-  await assignTab.click();
-  await expect(page.locator('#tp-assign')).toHaveClass(/active/);
-
-  await assignActivity.evaluate((element, value) => {
-    element.value = value;
-  }, 'southlodgeracers');
-
-  try {
-    await page.getByRole('button', { name: 'Set Assignment', exact: true }).click();
-    await expect(assignStatus).toContainText('Assignment set!');
-
-    await page.evaluate(() => {
-      showScreen('home');
-      try {
-        updateHomeStats();
-      } catch (error) {
-        renderAssignmentBanner();
-      }
-    });
-    await expect(page.locator('#home')).toHaveClass(/active/);
-    await expect
-      .poll(async () => assignBanner.evaluate((element) => window.getComputedStyle(element).display))
-      .not.toBe('none');
-  } finally {
-    await page.evaluate(() => window.showScreen('teacher'));
-    await expect(page.locator('#teacher')).toHaveClass(/active/);
-    await assignTab.click();
-    await expect(page.locator('#tp-assign')).toHaveClass(/active/);
-    await page.getByRole('button', { name: 'Clear Assignment', exact: true }).click();
-    await expect(assignStatus).toContainText('Assignment cleared.');
-  }
-});
-
 test('teacher assignment flow — assign and verify pupil banner', async ({ page }) => {
   await openTeacherDashboard(page);
   // Click Assign tab
@@ -204,4 +163,48 @@ test('Southlodge Racers loads with intro screen and start button', async ({ page
   await expect(page.locator('#racerIntroStart')).toBeVisible();
   // Pack title should be shown
   await expect(page.locator('#racerIntroTitle')).not.toBeEmpty();
+});
+
+test('teacher assignment flow — assign game and verify banner', async ({ page }) => {
+  await openTeacherDashboard(page);
+
+  const assignTab = page.locator('.teacher-tabs').getByRole('button', { name: 'Assign', exact: true });
+  const assignActivity = page.locator('#assignActivity');
+  const assignStatus = page.locator('#assignStatus');
+  const assignBanner = page.locator('#assignBanner');
+
+  await assignTab.click();
+  await expect(page.locator('#tp-assign')).toHaveClass(/active/);
+
+  await assignActivity.evaluate((element, value) => {
+    if (!Array.from(element.options).some((option) => option.value === value)) {
+      element.add(new Option('Spelling', value));
+    }
+    element.value = value;
+  }, 'spelling');
+
+  try {
+    await page.getByRole('button', { name: 'Set Assignment', exact: true }).click();
+    await expect(assignStatus).toContainText('Assignment set!');
+
+    await page.evaluate(() => {
+      showScreen('home');
+      try {
+        updateHomeStats();
+      } catch (error) {
+        renderAssignmentBanner();
+      }
+    });
+    await expect(page.locator('#home')).toHaveClass(/active/);
+    await expect
+      .poll(async () => assignBanner.evaluate((element) => window.getComputedStyle(element).display))
+      .not.toBe('none');
+  } finally {
+    await page.evaluate(() => window.showScreen('teacher'));
+    await expect(page.locator('#teacher')).toHaveClass(/active/);
+    await assignTab.click();
+    await expect(page.locator('#tp-assign')).toHaveClass(/active/);
+    await page.getByRole('button', { name: 'Clear Assignment', exact: true }).click();
+    await expect(assignStatus).toContainText('Assignment cleared.');
+  }
 });
