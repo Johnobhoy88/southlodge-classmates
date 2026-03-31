@@ -230,7 +230,34 @@ test('Storage quota function present', () => {
   assert(html.includes('getStorageUsage') || html.includes('storageGetUsage'), 'Missing storage usage function');
 });
 
-// --- 10. Platform modules ---
+// --- 10. Extracted game modules ---
+console.log('\nExtracted Game Modules:');
+
+test('ClassmatesTimesTable module present', () => {
+  assert(html.includes('ClassmatesTimesTable'), 'Missing ClassmatesTimesTable');
+});
+
+test('ClassmatesTimesTable.getPersonalBest exists', () => {
+  assert(html.includes('getPersonalBest'), 'Missing getPersonalBest');
+});
+
+test('ClassmatesTimesTable.isTableCompleted exists', () => {
+  assert(html.includes('isTableCompleted'), 'Missing isTableCompleted');
+});
+
+test('CfE Curriculum module present', () => {
+  assert(html.includes('ClassmatesCfeCurriculum') || html.includes('CFE_OUTCOMES'), 'Missing CfE curriculum module');
+});
+
+test('Sessions module present', () => {
+  assert(html.includes('ClassmatesSessions') || html.includes('getRecentSessions'), 'Missing sessions module');
+});
+
+test('Spelling data getters present', () => {
+  assert(html.includes('getSpellingWords') && html.includes('getSpellingWordEmoji'), 'Missing spelling data getters');
+});
+
+// --- 11. Platform modules ---
 console.log('\nPlatform:');
 
 test('Module manifest present', () => {
