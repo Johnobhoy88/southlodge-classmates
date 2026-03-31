@@ -163,11 +163,37 @@
     return true;
   }
 
+  function getSuggestedGame(state) {
+    if (!state) return null;
+    var games = state.games || 0;
+    var spelling = state.spellingCorrect || 0;
+    var maths = state.mathsCorrect || 0;
+    var streak = state.streak || 0;
+
+    if (games === 0) return { game: 'spelling', label: 'Try Spelling!', reason: 'Start with words' };
+    if (streak >= 3) return { game: 'daily', label: 'Daily Challenge!', reason: 'Keep your streak going' };
+    if (spelling < maths * 0.5) return { game: 'spelling', label: 'Spelling Practice', reason: 'Build your word power' };
+    if (maths < spelling * 0.5) return { game: 'maths', label: 'Maths Practice', reason: 'Sharpen your numbers' };
+    if ((state.ttCompleted || []).length < 6) return { game: 'times', label: 'Times Tables', reason: 'Learn a new table' };
+    if (games % 5 === 0) return { game: 'hdash', label: 'Southlodge Racers!', reason: 'Race and spell' };
+    return null;
+  }
+
+  function renderSuggestedGame(el, state, onStart) {
+    if (!el) return;
+    var suggestion = getSuggestedGame(state);
+    if (!suggestion) { el.style.display = 'none'; return; }
+    el.style.display = 'block';
+    el.innerHTML = '<div style="background:linear-gradient(135deg,#11998e,#38ef7d);border-radius:14px;padding:14px 18px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 4px 12px rgba(17,153,142,0.2)" onclick="startGame(\'' + suggestion.game + '\')"><div><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem">' + escapeHtml(suggestion.label) + '</div><div style="font-size:0.7rem;opacity:0.8">' + escapeHtml(suggestion.reason) + '</div></div><div style="font-size:1.5rem">&#x27A1;</div></div>';
+  }
+
   const pupilShellApi = Object.freeze({
     renderHomeHeader: renderHomeHeader,
     renderLeaderboard: renderLeaderboard,
     renderPupilGrid: renderPupilGrid,
-    renderPupilSelect: renderPupilSelect
+    renderPupilSelect: renderPupilSelect,
+    getSuggestedGame: getSuggestedGame,
+    renderSuggestedGame: renderSuggestedGame
   });
 
   window.ClassmatesPupilShell = pupilShellApi;
