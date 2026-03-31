@@ -462,7 +462,9 @@
         <div class="level-card lc-3" onclick="setSpellingLevel(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
-    <div id="spellingGame" style="display:none;">
+    <div id="spellingGame" style="display:none;position:relative;">
+      <canvas id="spellCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;border-radius:16px"></canvas>
+      <div style="position:relative;z-index:1">
       <div class="progress-bar"><div class="progress-fill orange" id="spellProgress"></div></div>
       <div class="progress-text" id="spellProgressText"></div>
       <div class="spell-display">
@@ -477,6 +479,7 @@
         <button class="hint-btn" id="revealLetterBtn" onclick="useRevealLetter()" style="background:#f39c12;color:#fff;display:none;">\uD83D\uDCA1 Reveal Letter</button>
       </div>
       <div class="keyboard" id="keyboard"></div>
+      </div>
     </div>
   </div>
 </div>
