@@ -451,22 +451,22 @@
 </div>
 
 <!-- SPELLING -->
-<div id="spelling" class="screen game-screen">
-  <div class="game-header" style="border-color:#ffd200"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#f7971e">Spelling</h2></div>
-  <div class="game-body">
+<div id="spelling" class="screen game-screen" style="position:relative;overflow:hidden">
+  <canvas id="spellCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh">
+  <div class="game-header" style="border-color:#ffd200;background:rgba(26,35,50,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ffd200">Spelling</h2></div>
+  <div class="game-body" style="flex:1;display:flex;flex-direction:column;justify-content:center">
     <div id="spellingLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <p style="color:rgba(255,255,255,0.7);margin-bottom:8px;font-weight:700;">Choose your level:</p>
       <div class="level-cards">
         <div class="level-card lc-1" onclick="setSpellingLevel(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
         <div class="level-card lc-2" onclick="setSpellingLevel(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
         <div class="level-card lc-3" onclick="setSpellingLevel(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
-    <div id="spellingGame" style="display:none;position:relative;">
-      <canvas id="spellCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;border-radius:16px"></canvas>
-      <div style="position:relative;z-index:1">
+    <div id="spellingGame" style="display:none;">
       <div class="progress-bar"><div class="progress-fill orange" id="spellProgress"></div></div>
-      <div class="progress-text" id="spellProgressText"></div>
+      <div class="progress-text" id="spellProgressText" style="color:rgba(255,255,255,0.8)"></div>
       <div class="spell-display">
         <div class="spell-picture" id="spellPic"></div>
         <div class="spell-clue" id="spellHint"></div>
@@ -480,8 +480,8 @@
         <button class="hint-btn" id="revealLetterBtn" onclick="useRevealLetter()" style="background:#f39c12;color:#fff;display:none;">\uD83D\uDCA1 Reveal Letter</button>
       </div>
       <div class="keyboard" id="keyboard"></div>
-      </div>
     </div>
+  </div>
   </div>
 </div>
 
