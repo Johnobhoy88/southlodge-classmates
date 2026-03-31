@@ -134,16 +134,8 @@ const EMOJI_SVG = {
   '1f478':'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><path fill="#FFAC33" d="M18 4c6 0 16 3 16 16s0 16-3 16-7-3-13-3-9.915 3-13 3c-3.343 0-3-12-3-16C2 7 12 4 18 4z"/><path fill="#FFDC5D" d="M6 19.562c0-8.526 5.373-15.438 12-15.438s12 6.912 12 15.438S24.627 35 18 35 6 28.088 6 19.562z"/><path fill="#DF1F32" d="M18 31c-2.347 0-3.575-1.16-3.707-1.293-.391-.391-.391-1.023 0-1.414.387-.388 1.013-.39 1.404-.01.051.047.806.717 2.303.717 1.519 0 2.273-.69 2.305-.719.399-.374 1.027-.363 1.408.029.379.393.38 1.011-.006 1.397C21.575 29.84 20.347 31 18 31z"/><path fill="#C1694F" d="M19 26h-2c-.552 0-1-.447-1-1s.448-1 1-1h2c.553 0 1 .447 1 1s-.447 1-1 1z"/><path fill="#FFAC33" d="M3.064 25c-.03-.325-.064-.647-.064-1 0-5 3 .562 3-3 0-3.563 2-4 4-6l3-3s5 3 9 3 8 2 8 6 3-2 3 3c0 .355-.033.673-.058 1h1.049C34 23.523 34 21.868 34 20 34 7 24 2 18 2S2 7 2 20c0 1.158-.028 2.986.012 5h1.052z"/><path fill="#A7A9AC" d="M8 6h20V5l-3-1-2-3-3 1-2-2-2 2-3-1-2 3-3 1z"/><ellipse fill="#F1F2F2" cx="18" cy="3.5" rx="1" ry="1.5"/><circle fill="#F1F2F2" cx="14" cy="4" r="1"/><circle fill="#F1F2F2" cx="22" cy="4" r="1"/><path fill="#662113" d="M13 23c-.552 0-1-.447-1-1v-2c0-.553.448-1 1-1s1 .447 1 1v2c0 .553-.448 1-1 1zm10 0c-.553 0-1-.447-1-1v-2c0-.553.447-1 1-1s1 .447 1 1v2c0 .553-.447 1-1 1z"/></svg>',
 };
 
-// Word emoji and spelling data now in ClassmatesSpelling module (games/spelling.js)
-const WORD_EMOJI = window.ClassmatesSpelling ? window.ClassmatesSpelling.WORD_EMOJI : {};
-const SPELLING = window.ClassmatesSpelling ? window.ClassmatesSpelling.SPELLING : {1:[],2:[],3:[]};
-
-/* Legacy fallback data removed — 230 lines saved. Source of truth: games/spelling.js */
-
-/* REMOVED: WORD_EMOJI_FALLBACK (156 lines) */
-/* REMOVED: SPELLING_FALLBACK (74 lines) */
-
-function getSpellingWordEmoji(){
+const WORD_EMOJI_FALLBACK = {
+  'cat':'1f431',
   'dog':'1f436',
   'hat':'1f3a9',
   'sun':'2600',
@@ -378,11 +370,11 @@ const SPELLING_FALLBACK = {
 };
 
 function getSpellingWordEmoji(){
-  return window.ClassmatesSpelling.WORD_EMOJI
+  return window.ClassmatesSpelling&&window.ClassmatesSpelling.WORD_EMOJI?window.ClassmatesSpelling.WORD_EMOJI:WORD_EMOJI_FALLBACK
 }
 
 function getSpellingWords(){
-  return window.ClassmatesSpelling.SPELLING
+  return window.ClassmatesSpelling&&window.ClassmatesSpelling.SPELLING?window.ClassmatesSpelling.SPELLING:SPELLING_FALLBACK
 }
 
 const READING = {
@@ -757,7 +749,7 @@ function finishSpelling(){show('spellingLevelSelect');hide('spellingGame');const
 let ma={level:1,idx:0,total:10,correct:0,answer:'',question:null};
 
 function setMathsLevel(lv){ma.level=lv;ma.idx=0;ma.correct=0;ma.answer='';ma.streak=0;ma.bestStreak=0;var adaptiveLv=state&&state.adaptive&&state.adaptive.maths?state.adaptive.maths.level:lv;ma.adaptiveLevel=Math.min(Math.max(adaptiveLv,1),3);hide('mathsLevelSelect');show('mathsGame');renderNumpad('numpad',numpadPress);loadMathQ()}
-function getMathQuestionGenerator(){return window.ClassmatesMaths.genMathQuestion}
+function getMathQuestionGenerator(){const mathsApi=window.ClassmatesMaths;return mathsApi&&typeof mathsApi.genMathQuestion==='function'?mathsApi.genMathQuestion:genMathQLocal}
 function genMathQLocal(lv){let a,b,op,ans;if(lv===1){op=Math.random()<.5?'+':'-';if(op==='+'){a=rand(1,9);b=rand(1,10-a);ans=a+b}else{a=rand(2,10);b=rand(1,a);ans=a-b}}else if(lv===2){const r=Math.random();if(r<.4){op='+';a=rand(1,15);b=rand(1,20-a);ans=a+b}else if(r<.8){op='-';a=rand(5,20);b=rand(1,a);ans=a-b}else{op='\u00D7';a=rand(2,5);b=rand(2,5);ans=a*b}}else{const r=Math.random();if(r<.3){op='+';a=rand(10,90);b=rand(5,100-a);ans=a+b}else if(r<.6){op='-';a=rand(20,100);b=rand(5,a);ans=a-b}else if(r<.85){op='\u00D7';a=rand(2,12);b=rand(2,12);ans=a*b}else{ans=rand(2,12);b=rand(2,12);a=ans*b;op='\u00F7'}}return{text:a+' '+op+' '+b+' = ?',answer:ans}}
 function genMathQ(lv){return getMathQuestionGenerator()(lv)}
 function loadMathQ(){var qLevel=ma.level;if(ma.adaptiveLevel>ma.level&&Math.random()<0.3)qLevel=Math.min(ma.level+1,3);else if(ma.adaptiveLevel<ma.level&&Math.random()<0.2)qLevel=Math.max(ma.level-1,1);ma.question=getMathQuestionGenerator()(qLevel);ma.answer='';document.getElementById('mathQuestion').textContent=ma.question.text;document.getElementById('mathAnswer').textContent='_';const pct=(ma.idx/ma.total)*100;document.getElementById('mathProgress').style.width=pct+'%';document.getElementById('mathProgressText').textContent='Question '+(ma.idx+1)+' of '+ma.total;document.getElementById('mathFeedback').classList.remove('show');animateQuestion('mathQuestion')}
