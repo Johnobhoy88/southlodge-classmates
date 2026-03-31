@@ -1,64 +1,65 @@
-# Game Enhancement Progress
+# Game Enhancement Progress — COMPLETE
 
-Each game browser-tested with Playwright, verified working, enhanced, committed.
+Every game browser-tested with Playwright, verified working, enhanced.
 
-## Literacy (12 games) — ALL VERIFIED WORKING
-| # | Game | ID | Browser Test | Streak | Missed | Remix | Adaptive | Status |
-|---|------|-----|-------------|--------|--------|-------|----------|--------|
-| 1 | Spelling | spelling | ✓ L1-3 | ✓ | ✓ | ✓ | ✓ | DONE |
-| 2 | Dictation | dictation | ✓ L1-3 | ✓ | ✓ | ✓ | ✓ | DONE |
-| 3 | Missing Vowels | vowels | ✓ L1-3 | ✓ | ✓ | ✓ | ✓ | DONE |
-| 4 | Anagrams | anagram | ✓ L1-3 | ✓ | ✓ | ✓ | ✓ | DONE |
-| 5 | Phonics | phonics | ✓ L1 | ✓ | ✓ | - | ✓ | DONE |
-| 6 | Word Families | wordfam | ✓ L1 | ✓ | ✓ | - | ✓ | DONE |
-| 7 | Sentences | sentence | ✓ L1 | ✓ | - | - | ✓ | DONE |
-| 8 | Punctuation | punctuation | ✓ L1 | ✓ | - | - | ✓ | DONE |
-| 9 | Vocabulary | vocab | ✓ L1 | ✓ | - | - | ✓ | DONE |
-| 10 | Reading | reading | ✓ L1 | ✓ (fixed) | - | - | - | DONE |
-| 11 | Grammar | grammar | ✓ L1 | ✓ | - | - | - | DONE |
-| 12 | Rhyming | rhyme | ✓ L1 | ✓ | - | - | - | DONE |
+## Literacy (12 games) — ALL DONE
+| # | Game | ID | Works | Streak | Missed | Remix | Adaptive |
+|---|------|-----|-------|--------|--------|-------|----------|
+| 1 | Spelling | spelling | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 2 | Dictation | dictation | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 3 | Missing Vowels | vowels | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 4 | Anagrams | anagram | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 5 | Phonics | phonics | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 6 | Word Families | wordfam | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 7 | Sentences | sentence | ✓ | ✓ | ✓ | - | ✓ |
+| 8 | Punctuation | punctuation | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 9 | Vocabulary | vocab | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 10 | Reading | reading | ✓ | ✓ | - | - | - |
+| 11 | Grammar | grammar | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 12 | Rhyming | rhyme | ✓ | ✓ | ✓ | ✓ | ✓ |
 
-## Numeracy (14 games) — ALL VERIFIED WORKING
-| # | Game | ID | Browser Test | Streak | PB | Adaptive | Status |
-|---|------|-----|-------------|--------|-----|----------|--------|
-| 13 | Maths | maths | ✓ L1 | ✓ (fixed) | - | ✓ | DONE |
-| 14 | Times Tables | times | ✓ L1 | ✓ (fixed) | ✓ | ✓ | DONE |
-| 15 | Speed Maths | speed | ✓ L1 | combo | ✓ | - | DONE |
-| 16 | Number Bonds | bonds | ✓ L1 | ✓ | - | ✓ | DONE |
-| 17 | Missing Number | missnum | ✓ L1 | ✓ | - | ✓ | DONE |
-| 18 | Place Value | placeval | ✓ L1 | ✓ | - | ✓ | DONE |
-| 19 | Telling Time | telltime | ✓ L1 | ✓ | - | ✓ | DONE |
-| 20 | Money | money | ✓ L1 | ✓ | - | ✓ | DONE |
-| 21 | Fractions | fractions | ✓ L1 | ✓ (fixed) | - | ✓ | DONE |
-| 22 | Word Problems | wordprob | ✓ L1 | ✓ (fixed) | - | ✓ | DONE |
-| 23 | Shapes | shapes | ✓ L1 | ✓ (fixed) | - | ✓ | DONE |
-| 24 | Data Handling | datahandling | ✓ L1 | ✓ (fixed) | - | - | DONE |
-| 25 | Measurement | measure | ✓ L1 | ✓ | - | - | DONE |
-| 26 | Sequences | sequence | ✓ L1 | ✓ | - | - | DONE |
+## Numeracy (14 games) — ALL DONE
+| # | Game | ID | Works | Streak | Missed | PB | Adaptive |
+|---|------|-----|-------|--------|--------|-----|----------|
+| 13 | Maths | maths | ✓ | ✓ | - | - | ✓ |
+| 14 | Times Tables | times | ✓ | ✓ | - | ✓ | ✓ |
+| 15 | Speed Maths | speed | ✓ | combo | - | ✓ | - |
+| 16 | Number Bonds | bonds | ✓ | ✓ | ✓ | - | ✓ |
+| 17 | Missing Number | missnum | ✓ | ✓ | - | - | ✓ |
+| 18 | Place Value | placeval | ✓ | ✓ | - | - | ✓ |
+| 19 | Telling Time | telltime | ✓ | ✓ | - | - | ✓ |
+| 20 | Money | money | ✓ | ✓ | - | - | ✓ |
+| 21 | Fractions | fractions | ✓ | ✓ | - | - | ✓ |
+| 22 | Word Problems | wordprob | ✓ | ✓ | - | - | ✓ |
+| 23 | Shapes | shapes | ✓ | ✓ | ✓ | - | ✓ |
+| 24 | Data Handling | datahandling | ✓ | ✓ | ✓ | - | - |
+| 25 | Measurement | measure | ✓ | ✓ | ✓ | - | - |
+| 26 | Sequences | sequence | ✓ | ✓ | ✓ | - | - |
 
-## Geography (5 games) — ALL VERIFIED WORKING
-| # | Game | ID | Browser Test | Streak | Status |
-|---|------|-----|-------------|--------|--------|
-| 27 | Capitals | capitals | ✓ | ✓ | DONE |
-| 28 | Continents | continents | ✓ | ✓ | DONE |
-| 29 | Weather | weather | ✓ | ✓ | DONE |
-| 30 | Compass | compass | ✓ | ✓ | DONE |
-| 31 | Flags | flags | ✓ | ✓ | DONE |
+## Geography (5 games) — ALL DONE
+| # | Game | ID | Works | Streak | Missed |
+|---|------|-----|-------|--------|--------|
+| 27 | Capitals | capitals | ✓ | ✓ | ✓ |
+| 28 | Continents | continents | ✓ | ✓ | ✓ |
+| 29 | Weather | weather | ✓ | ✓ | ✓ |
+| 30 | Compass | compass | ✓ | ✓ | ✓ |
+| 31 | Flags | flags | ✓ | ✓ | ✓ |
 
-## Challenge (8 games) — ALL VERIFIED WORKING
-| # | Game | ID | Browser Test | Special | Status |
-|---|------|-----|-------------|---------|--------|
-| 32 | Scotland Quiz | scotquiz | ✓ | streak | DONE |
-| 33 | Spelling Bee | spellingbee | ✓ | lives, PB | DONE |
-| 34 | Typing | typing | ✓ | timer, PB | DONE |
-| 35 | Memory Match | memorymatch | ✓ | pairs, PB | DONE |
-| 36 | Daily Challenge | daily | ✓ | daily streak, history | DONE |
-| 37 | Head to Head | h2h | ✓ | 2-player | DONE |
-| 38 | Teacher Quiz | customquiz | hidden | teacher-authored | DONE |
-| 39 | Southlodge Racers | hdash | ✓ (fixed) | 3D, rewards, CfE | DONE |
+## Challenge (8 games) — ALL DONE
+| # | Game | ID | Works | Special Features |
+|---|------|-----|-------|-----------------|
+| 32 | Scotland Quiz | scotquiz | ✓ | streak, missed items |
+| 33 | Spelling Bee | spellingbee | ✓ | lives, persistent PB |
+| 34 | Typing | typing | ✓ | timer, persistent PB |
+| 35 | Memory Match | memorymatch | ✓ | pairs, persistent PB (moves) |
+| 36 | Daily Challenge | daily | ✓ | daily streak, yesterday's score |
+| 37 | Head to Head | h2h | ✓ | 2-player |
+| 38 | Teacher Quiz | customquiz | ✓ | teacher-authored (hidden by design) |
+| 39 | Southlodge Racers | hdash | ✓ | 3D, rewards, pacing, CfE, classroom launch |
 
 ## Bugs Found & Fixed
-1. **Spelling** — `WORD_EMOJI` undefined in `loadSpellWord` (renamed variable not updated)
-2. **Southlodge Racers** — `trailParticles` missing from RACER object init (crash on start)
-3. **Reading** — `streak:0` missing from state init
-4. **6 numeracy games** — `streak:0` missing from state init (maths, times, wordprob, fractions, shapes, datahandling)
+1. Spelling — WORD_EMOJI undefined in loadSpellWord
+2. Southlodge Racers — trailParticles missing from RACER init
+3. Reading — streak:0 missing from state init
+4. 6 numeracy games — streak:0 missing from state init
+5. 3 game modules — missing semicolons causing concatenation crash
