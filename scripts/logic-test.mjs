@@ -219,6 +219,48 @@ console.log('\nMaths Module:');
   });
 }
 
+// --- Test 4b: Number Bonds module ---
+console.log('\nNumber Bonds Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/games/number-bonds.js', ctx);
+
+  test('ClassmatesNumberBonds exports genQuestion', () => {
+    assert(g.ClassmatesNumberBonds, 'ClassmatesNumberBonds should exist');
+    assert(typeof g.ClassmatesNumberBonds.genQuestion === 'function', 'genQuestion should be a function');
+  });
+
+  test('genQuestion for target 10 produces valid bond', () => {
+    const q = g.ClassmatesNumberBonds.genQuestion(10);
+    assert(q.target === 10, 'Target should be 10');
+    assert(typeof q.answer === 'number', 'Answer should be a number');
+    assert(q.answer >= 1 && q.answer <= 9, 'Answer should be 1-9 for target 10');
+  });
+
+  test('genQuestion produces different formats', () => {
+    const formats = new Set();
+    for (let i = 0; i < 30; i++) {
+      formats.add(g.ClassmatesNumberBonds.genQuestion(10).format);
+    }
+    assert(formats.size >= 2, 'Should produce at least 2 different formats');
+  });
+
+  test('Pupil suggested game function exists', () => {
+    // Test the pupil shell getSuggestedGame via a separate load
+    const g2 = createMockGlobal();
+    g2.window = g2;
+    const ctx2 = vm.createContext(g2);
+    loadModule('src/scripts/pupil/shell.js', ctx2);
+    assert(g2.ClassmatesPupilShell, 'ClassmatesPupilShell should exist');
+    assert(typeof g2.ClassmatesPupilShell.getSuggestedGame === 'function', 'getSuggestedGame should be a function');
+    const suggestion = g2.ClassmatesPupilShell.getSuggestedGame({ games: 0 });
+    assert(suggestion && suggestion.game === 'spelling', 'New pupil should get spelling suggestion');
+  });
+}
+
 // --- Test 5: CfE Curriculum module ---
 console.log('\nCfE Curriculum Module:');
 {
