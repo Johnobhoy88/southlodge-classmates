@@ -769,7 +769,7 @@ function checkTTAns(){if(!tt.answer)return;var q=tt.questions[tt.idx];var ok=par
 function finishTT(){clearInterval(tt.timer);var time=tt.elapsed;show('timesTableSelect');hide('timesGame');var t=tt.table;var oldPB=state.ttPersonalBests&&state.ttPersonalBests[t]?state.ttPersonalBests[t]:null;var isNewPB=!oldPB||time<oldPB;if(isNewPB)state.ttPersonalBests[t]=time;if(!state.ttCompleted.includes(t))state.ttCompleted.push(t);checkAch('tt_complete',true);checkAch('tt_speed',time<30000);checkAch('first_game',true);var pct=tt.correct/tt.total;var stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct>=0.8)adaptiveCorrect('times');else if(pct<0.4)adaptiveWrong('times');addStars(stars);recordPlay();var subtitle=(time/1000).toFixed(1)+'s';if(isNewPB&&oldPB){var improvement=((oldPB-time)/1000).toFixed(1);subtitle+=' \u{1F3C6} NEW PB! '+improvement+'s faster!'}else if(isNewPB){subtitle+=' \u{1F3C6} New personal best!'}else if(oldPB){subtitle+=' (PB: '+(oldPB/1000).toFixed(1)+'s)'}showResults('#e44d26','3x4',(t===0?'Mixed':t+'x')+' Table Done!',subtitle,stars,tt.correct,tt.total,()=>{showScreen('times');renderTTSelect()})}
 
 // ==================== READING ====================
-let rd={level:1,storyIdx:0,questionIdx:0,correct:0,totalQ:0,story:null};
+let rd={level:1,storyIdx:0,questionIdx:0,correct:0,totalQ:0,story:null,streak:0};
 
 function setReadingLevel(lv){rd.level=lv;hide('readingLevelSelect');show('readingStorySelect');hide('readingGame');renderStoryList()}
 function showReadingLevels(){show('readingLevelSelect');hide('readingStorySelect');hide('readingGame')}
