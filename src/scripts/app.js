@@ -286,20 +286,21 @@ function exportCSV(){const csv=ClassmatesTeacherReports.buildProgressCsv();const
 function resetAllData(){if(!confirm('This will delete ALL pupil data and progress. This cannot be undone.'))return;if(!confirm('Are you absolutely sure?'))return;storageClearAppData();clearCurrentPupil();state=ClassmatesAppState.createDefaultState();renderPupilGrid();renderPupilSelect();updateHomeStats();renderTeacher();setBackupStatus('All local Classmates data was cleared from this device.','#8899aa')}
 
 // ==================== SPELLING ====================
-let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false,missed:[]};
+let sp={level:1,words:[],idx:0,word:'',revealed:[],lives:0,maxLives:6,correct:0,total:10,hintUsed:false,missed:[],wordStreak:0,bestStreak:0,perfectWords:[]};
 
-function setSpellingLevel(lv){sp.level=lv;sp.maxLives=lv===1?7:lv===2?6:5;var spellingWords=getSpellingWords();var adaptiveLevel=state&&state.adaptive&&state.adaptive.spelling?state.adaptive.spelling.level:lv;var weak=getWeakItems('spelling',3);var pool=[...spellingWords[lv]];if(adaptiveLevel>lv&&spellingWords[Math.min(lv+1,3)]){var harder=spellingWords[Math.min(lv+1,3)];shuffle(harder=[...harder]);pool=pool.concat(harder.slice(0,Math.ceil(sp.total*0.3)))}else if(adaptiveLevel<lv&&lv>1&&spellingWords[lv-1]){var easier=spellingWords[lv-1];shuffle(easier=[...easier]);pool=pool.concat(easier.slice(0,Math.ceil(sp.total*0.2)))}shuffle(pool);var fresh=pool.filter(w=>!weak.find(wk=>wk.w===w.w)).slice(0,sp.total-weak.length);sp.words=[...weak,...fresh];shuffle(sp.words);sp.idx=0;sp.correct=0;sp.missed=[];hide('spellingLevelSelect');show('spellingGame');loadSpellWord()}
+function setSpellingLevel(lv){sp.level=lv;sp.maxLives=lv===1?7:lv===2?6:5;var spellingWords=getSpellingWords();var adaptiveLevel=state&&state.adaptive&&state.adaptive.spelling?state.adaptive.spelling.level:lv;var weak=getWeakItems('spelling',3);var pool=[...spellingWords[lv]];if(adaptiveLevel>lv&&spellingWords[Math.min(lv+1,3)]){var harder=spellingWords[Math.min(lv+1,3)];shuffle(harder=[...harder]);pool=pool.concat(harder.slice(0,Math.ceil(sp.total*0.3)))}else if(adaptiveLevel<lv&&lv>1&&spellingWords[lv-1]){var easier=spellingWords[lv-1];shuffle(easier=[...easier]);pool=pool.concat(easier.slice(0,Math.ceil(sp.total*0.2)))}shuffle(pool);var fresh=pool.filter(w=>!weak.find(wk=>wk.w===w.w)).slice(0,sp.total-weak.length);sp.words=[...weak,...fresh];shuffle(sp.words);sp.idx=0;sp.correct=0;sp.missed=[];sp.wordStreak=0;sp.bestStreak=0;sp.perfectWords=[];hide('spellingLevelSelect');show('spellingGame');if(window.ClassmatesSpellingFX){ClassmatesSpellingFX.init(document.getElementById('spellCanvas'));ClassmatesSpellingFX.start()}loadSpellWord()}
 function loadSpellWord(){const item=sp.words[sp.idx];sp.word=item.w.toLowerCase();sp.revealed=new Array(sp.word.length).fill(false);sp.lives=sp.maxLives;sp.hintUsed=false;const pic=document.getElementById('spellPic');const wordEmoji=getSpellingWordEmoji();const eFn=wordEmoji[sp.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('spellHint').textContent=item.h;document.getElementById('hintBtn').style.display='none';updateSpellProgress();renderSpellWord();renderLives();renderKeyboard();animateQuestion('spellWord');var elWrap=document.getElementById('extraLifeWrap');if(elWrap)elWrap.style.display=getPowerupCount('extra_life')>0?'':'none';var rlBtn=document.getElementById('revealLetterBtn');if(rlBtn)rlBtn.style.display=getPowerupCount('reveal_letter')>0?'inline-block':'none'}
 function updateSpellProgress(){document.getElementById('spellProgress').style.width=(sp.idx/sp.total*100)+'%';document.getElementById('spellProgressText').textContent='Word '+(sp.idx+1)+' of '+sp.total}
+function updateSpellStreak(){var el=document.getElementById('spellStreak');if(!el)return;if(sp.wordStreak>=2){el.style.display='block';el.textContent=sp.wordStreak>=5?'\u{1F525}\u{1F525} '+sp.wordStreak+' words! On fire!':sp.wordStreak>=3?'\u{1F525} '+sp.wordStreak+' in a row!':'\u2B50 '+sp.wordStreak+' streak!';el.style.animation='none';el.offsetHeight;el.style.animation='streakPop 0.4s ease'}else{el.style.display='none'}}
 function renderSpellWord(){const el=document.getElementById('spellWord');el.innerHTML='';for(let i=0;i<sp.word.length;i++){const s=document.createElement('div');s.className='letter-slot'+(sp.revealed[i]?' revealed':'');s.textContent=sp.revealed[i]?sp.word[i]:'';el.appendChild(s)}}
 function renderLives(){const el=document.getElementById('spellLives');el.innerHTML='';for(let i=0;i<sp.maxLives;i++){const d=document.createElement('div');d.className='life'+(i>=sp.lives?' lost':'');d.innerHTML='<div class="life-heart"></div>';el.appendChild(d)}}
 function renderKeyboard(){const rows=['qwertyuiop','asdfghjkl','zxcvbnm'];const kb=document.getElementById('keyboard');kb.innerHTML='';rows.forEach(row=>{const r=document.createElement('div');r.className='kb-row';for(const ch of row){const k=document.createElement('button');k.className='kb-key';k.textContent=ch;k.id='key_'+ch;k.onclick=()=>pressKey(ch);r.appendChild(k)}kb.appendChild(r)})}
-function pressKey(ch){const btn=document.getElementById('key_'+ch);if(!btn||btn.classList.contains('correct')||btn.classList.contains('wrong'))return;let found=false;for(let i=0;i<sp.word.length;i++){if(sp.word[i]===ch&&!sp.revealed[i]){sp.revealed[i]=true;found=true}}if(found){btn.classList.add('correct');sfxClick()}else{btn.classList.add('wrong');sp.lives--;renderLives();document.getElementById('spellWord').classList.add('shake');setTimeout(()=>document.getElementById('spellWord').classList.remove('shake'),300)}renderSpellWord();if(sp.revealed.every(r=>r)){sp.correct++;state.spellingCorrect++;sfxCorrect();checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();setTimeout(nextSpellWord,800)}else if(sp.lives<=0){sfxWrong();sp.missed.push({w:sp.word,h:sp.words[sp.idx].h});sp.revealed=sp.revealed.map(()=>true);renderSpellWord();document.querySelectorAll('.letter-slot').forEach(s=>{s.classList.remove('revealed');s.classList.add('wrong-reveal')});setTimeout(nextSpellWord,1200)}}
+function pressKey(ch){const btn=document.getElementById('key_'+ch);if(!btn||btn.classList.contains('correct')||btn.classList.contains('wrong'))return;var FX=window.ClassmatesSpellingFX;let found=false;var revealedCount=sp.revealed.filter(Boolean).length;for(let i=0;i<sp.word.length;i++){if(sp.word[i]===ch&&!sp.revealed[i]){sp.revealed[i]=true;found=true}}if(found){btn.classList.add('correct');if(FX)FX.onCorrectLetter(revealedCount,sp.revealed.filter(Boolean).length);else sfxClick()}else{btn.classList.add('wrong');sp.lives--;renderLives();document.getElementById('spellWord').classList.add('shake');setTimeout(()=>document.getElementById('spellWord').classList.remove('shake'),300);if(FX)FX.onWrongLetter(sp.lives);else sfxWrong()}renderSpellWord();if(sp.revealed.every(r=>r)){sp.correct++;sp.wordStreak++;sp.bestStreak=Math.max(sp.bestStreak,sp.wordStreak);if(sp.lives===sp.maxLives)sp.perfectWords.push(sp.word);state.spellingCorrect++;if(!FX)sfxCorrect();checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();if(FX)FX.onWordComplete((sp.idx+1)/sp.total);updateSpellStreak();setTimeout(nextSpellWord,800)}else if(sp.lives<=0){sp.wordStreak=0;updateSpellStreak();if(!FX)sfxWrong();var unrevealed=sp.revealed.filter(function(r){return!r}).length;sp.missed.push({w:sp.word,h:sp.words[sp.idx].h});sp.revealed=sp.revealed.map(()=>true);renderSpellWord();document.querySelectorAll('.letter-slot').forEach(s=>{s.classList.remove('revealed');s.classList.add('wrong-reveal')});if(FX)FX.onWordFailed(unrevealed===1);setTimeout(nextSpellWord,1200)}}
 function showHint(){if(!sp.hintUsed){sp.hintUsed=true;document.getElementById('spellHint').textContent=sp.words[sp.idx].h;document.getElementById('hintBtn').style.display='none'}}
 function useExtraLife(){if(usePowerup('extra_life')){sp.maxLives++;sp.lives++;renderLives();var elWrap=document.getElementById('extraLifeWrap');if(getPowerupCount('extra_life')<=0&&elWrap)elWrap.style.display='none';sfxClick()}}
 function useRevealLetter(){var unrevealed=[];for(var i=0;i<sp.word.length;i++){if(!sp.revealed[i])unrevealed.push(i)}if(unrevealed.length===0)return;if(usePowerup('reveal_letter')){var ri=unrevealed[Math.floor(Math.random()*unrevealed.length)];sp.revealed[ri]=true;renderSpellWord();var ch=sp.word[ri];var btn=document.getElementById('key_'+ch);if(btn&&!btn.classList.contains('correct')&&!btn.classList.contains('wrong')){var allRevealed=true;for(var j=0;j<sp.word.length;j++){if(sp.word[j]===ch&&!sp.revealed[j])allRevealed=false}if(allRevealed)btn.classList.add('correct')}if(getPowerupCount('reveal_letter')<=0){var rlBtn=document.getElementById('revealLetterBtn');if(rlBtn)rlBtn.style.display='none'}if(sp.revealed.every(function(r){return r})){sp.correct++;state.spellingCorrect++;sfxCorrect();saveState();setTimeout(nextSpellWord,800)}else{sfxClick()}}}
 function nextSpellWord(){sp.idx++;if(sp.idx>=sp.total)finishSpelling();else loadSpellWord()}
-function finishSpelling(){show('spellingLevelSelect');hide('spellingGame');const pct=sp.correct/sp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('spelling');else if(pct<0.4)adaptiveWrong('spelling');sp.missed.forEach(m=>recordWeak('spelling',m));addStars(stars);recordPlay();showResults('#f7971e','Aa','Spelling Done!','Level '+sp.level,stars,sp.correct,sp.total,()=>{showScreen('spelling')},sp.missed)}
+function finishSpelling(){if(window.ClassmatesSpellingFX){ClassmatesSpellingFX.onGameComplete(sp.correct,sp.total);setTimeout(function(){ClassmatesSpellingFX.stop()},1200)}show('spellingLevelSelect');hide('spellingGame');const pct=sp.correct/sp.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('spelling');else if(pct<0.4)adaptiveWrong('spelling');sp.missed.forEach(m=>recordWeak('spelling',m));addStars(stars);recordPlay();var subtitle='Level '+sp.level;if(sp.bestStreak>=3)subtitle+=' \u{1F525} '+sp.bestStreak+' word streak!';var starWord=sp.perfectWords.sort(function(a,b){return b.length-a.length})[0];showResults('#f7971e','Aa','Spelling Done!',subtitle,stars,sp.correct,sp.total,()=>{showScreen('spelling')},sp.missed);if(starWord){var mb=document.getElementById('missedWords');var existing=mb?mb.innerHTML:'';mb.innerHTML='<div style="text-align:center;margin:12px auto;max-width:320px;padding:12px;background:rgba(253,203,110,0.15);border:2px solid #fdcb6e;border-radius:14px"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:0.9rem;color:#d4a520">\u2B50 Star Word</div><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1.5rem;color:#2d3436;text-transform:capitalize;margin-top:4px">'+starWord+'</div><div style="font-size:0.75rem;color:#8a8078">Spelled perfectly first try!</div></div>'+existing}}
 
 // ==================== MATHS ====================
 let ma={level:1,idx:0,total:10,correct:0,answer:'',question:null,streak:0,bestStreak:0};
@@ -1190,6 +1191,72 @@ const REWARDS=[
 ];
 function renderShop(){const c=document.getElementById('shopGrid');if(!c)return;c.innerHTML='';REWARDS.forEach(r=>{const owned=state.unlockedRewards&&state.unlockedRewards.includes(r.id);const canBuy=state.coins>=r.cost&&!owned;c.innerHTML+='<div class="shop-item'+(owned?' owned':'')+'"><div class="shop-icon">'+(r.type==='accessory'?'\u{1F451}':r.type==='pack'?'\u{1F4E6}':'\u{2728}')+'</div><div class="shop-name">'+r.name+'</div><div class="shop-desc">'+r.desc+'</div><div class="shop-cost">'+(owned?'\u2705 Owned':'\u{1FA99} '+r.cost)+'</div>'+(owned?'':'<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyReward(\''+r.id+'\','+r.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>')+'</div>'});const pg=document.getElementById('powerupShopGrid');if(pg){pg.innerHTML='';POWERUPS.forEach(pu=>{const cnt=getPowerupCount(pu.id);const canBuy=state.coins>=pu.cost;pg.innerHTML+='<div class="shop-item"><div class="shop-icon">'+pu.icon+'</div><div class="shop-name">'+pu.name+'</div><div class="shop-desc">'+pu.desc+'</div><div class="shop-cost">\uD83E\uDE99 '+pu.cost+(cnt>0?' <span style="color:#27ae60;font-weight:700;">('+cnt+' owned)</span>':'')+'</div><button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyPowerup(\''+pu.id+'\')"'+(canBuy?'':' disabled')+'>Buy</button></div>'})}}
 function buyReward(id,cost){if(state.coins<cost||state.unlockedRewards.includes(id))return;state.coins-=cost;if(!state.unlockedRewards)state.unlockedRewards=[];state.unlockedRewards.push(id);saveState();updateCoinDisplay();renderShop();sfxLevelUp()}
+
+// ==================== AVATAR STORE ====================
+function renderAvatarStore(){
+  var el=document.getElementById('avatarStoreGrid');
+  if(!el||!window.ClassmatesAvatar)return;
+  var store=ClassmatesAvatar.getStoreItems();
+  var pupil=getCurrentPupil();
+  var av=pupil?ClassmatesAvatar.getAvatarData(pupil):ClassmatesAvatar.createDefaultAvatar();
+  var owned=state.unlockedRewards||[];
+  var h='';
+
+  function renderCategory(title,items,category){
+    h+='<div style="font-family:var(--font-display);font-size:0.9rem;color:var(--color-text-dark);margin:12px 0 6px">'+title+'</div>';
+    Object.keys(items).forEach(function(id){
+      var item=items[id];
+      var storeId=category+'_'+id;
+      var isOwned=owned.includes(storeId);
+      var isEquipped=av.equipped&&av.equipped[category]===id;
+      var canBuy=state.coins>=item.cost&&!isOwned;
+      h+='<div class="shop-item'+(isOwned?' owned':'')+'" style="'+(isEquipped?'border:2px solid var(--color-primary);':'')+'"><div class="shop-icon" style="font-size:1.5rem">';
+      // Show mini avatar preview with this item equipped
+      var previewAv=JSON.parse(JSON.stringify(av));
+      if(!previewAv.equipped)previewAv.equipped={hat:null,pet:null,effect:null,frame:null};
+      previewAv.equipped[category]=id;
+      h+=ClassmatesAvatar.renderAvatarSVG(previewAv,36);
+      h+='</div><div class="shop-name">'+item.name+'</div>';
+      h+='<div class="shop-cost">';
+      if(isEquipped)h+='<span style="color:var(--color-primary);font-weight:700">Wearing</span>';
+      else if(isOwned)h+='<button class="shop-buy" onclick="equipAvatarItem(\''+category+'\',\''+id+'\')">Wear</button>';
+      else h+='\u{1FA99} '+item.cost;
+      h+='</div>';
+      if(!isOwned&&!isEquipped)h+='<button class="shop-buy'+(canBuy?'':' disabled')+'" onclick="buyAvatarItem(\''+storeId+'\',\''+category+'\',\''+id+'\','+item.cost+')"'+(canBuy?'':' disabled')+'>Buy</button>';
+      h+='</div>';
+    });
+  }
+
+  renderCategory('\u{1F3A9} Hats',store.hats,'hat');
+  renderCategory('\u{1F43E} Pets',store.pets,'pet');
+  renderCategory('\u{2728} Effects',store.effects,'effect');
+  renderCategory('\u{1F5BC} Frames',store.frames,'frame');
+  el.innerHTML=h;
+}
+
+function buyAvatarItem(storeId,category,itemId,cost){
+  if(state.coins<cost)return;
+  if(!state.unlockedRewards)state.unlockedRewards=[];
+  if(state.unlockedRewards.includes(storeId))return;
+  state.coins-=cost;
+  state.unlockedRewards.push(storeId);
+  saveState();
+  // Auto-equip on purchase
+  var pupil=getCurrentPupil();
+  if(pupil)ClassmatesAvatar.equipItem(pupil,category,itemId);
+  updateCoinDisplay();
+  renderAvatarStore();
+  renderShop();
+  sfxLevelUp();
+}
+
+function equipAvatarItem(category,itemId){
+  var pupil=getCurrentPupil();
+  if(!pupil)return;
+  ClassmatesAvatar.equipItem(pupil,category,itemId);
+  renderAvatarStore();
+  updateHomeStats();
+}
 
 // ==================== JOURNEY MAP ====================
 const JOURNEY_STOPS=[

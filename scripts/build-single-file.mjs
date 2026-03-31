@@ -34,6 +34,7 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "pupil", "avatar.js"),
     path.join(root, "src", "scripts", "pupil", "shell.js"),
     path.join(root, "src", "scripts", "games", "spelling.js"),
+    path.join(root, "src", "scripts", "games", "spelling-fx.js"),
     path.join(root, "src", "scripts", "games", "times-tables.js"),
     path.join(root, "src", "scripts", "games", "maths.js"),
     path.join(root, "src", "scripts", "games", "number-bonds.js"),

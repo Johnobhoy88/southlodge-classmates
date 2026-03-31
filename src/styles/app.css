@@ -692,7 +692,9 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .progress-bar{width:100%;height:8px;background:#e8eaed;border-radius:var(--space-xs);overflow:hidden;margin:var(--space-sm) 0}
 .progress-fill{height:100%;border-radius:4px;transition:width 0.4s ease;position:relative}
 .progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0.3),transparent);border-radius:4px}
-.progress-fill.orange{background:linear-gradient(90deg,#f7971e,#ffd200)}
+.progress-fill.orange{background:linear-gradient(90deg,#f7971e,#ffd200);position:relative;overflow:visible}
+.progress-fill.orange::after{content:'';position:absolute;right:-2px;top:-3px;width:8px;height:14px;background:#ffd200;border-radius:50%;box-shadow:0 0 8px rgba(255,210,0,0.6),0 0 16px rgba(247,151,30,0.3);animation:progressGlow 1.5s ease-in-out infinite}
+@keyframes progressGlow{0%,100%{opacity:0.6;transform:scale(0.8)}50%{opacity:1;transform:scale(1.2)}}
 .progress-fill.blue{background:linear-gradient(90deg,#00b4db,#0083b0)}
 .progress-fill.red{background:linear-gradient(90deg,#e44d26,#f16529)}
 .progress-fill.green{background:linear-gradient(90deg,#56ab2f,#a8e063)}
@@ -719,14 +721,17 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 /* ===== SPELLING ===== */
 .spell-display{text-align:center;padding:16px 0}
 .spell-clue{font-size:0.9rem;color:rgba(255,255,255,0.7);margin-bottom:6px;min-height:24px;font-weight:600}
-.spell-picture{width:120px;height:120px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff9e6,#fff3cc);border:4px solid #ffeaa7;box-shadow:0 4px 15px rgba(253,203,110,0.3);padding:16px}
+.spell-picture{width:120px;height:120px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:rgba(255,250,235,0.85);border:3px solid rgba(255,234,167,0.7);box-shadow:0 8px 24px rgba(253,203,110,0.25),0 0 40px rgba(253,203,110,0.1);padding:16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:pictureFloat 3s ease-in-out infinite}
+@keyframes pictureFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes streakPop{0%{transform:scale(0.5);opacity:0}50%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
 .spell-picture svg{width:80px;height:80px}
 .daily-box svg{width:64px;height:64px;display:block;margin:0 auto}
 .spell-slots{display:flex;justify-content:center;gap:8px;margin:16px 0;flex-wrap:wrap}
-.letter-slot{width:42px;height:50px;border-radius:12px;background:white;border:2px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.5rem;color:#2d3436;text-transform:uppercase;transition:all 0.3s;box-shadow:0 2px 6px rgba(0,0,0,0.04)}
-.letter-slot.revealed{border-color:#2ecc71;background:linear-gradient(135deg,#e8fff5,#d0fde5);color:#1e8449;animation:slotPop 0.3s ease;box-shadow:0 2px 8px rgba(46,204,113,0.2)}
-.letter-slot.wrong-reveal{border-color:#e74c3c;background:linear-gradient(135deg,#fff0ed,#fde0da);color:#c0392b;box-shadow:0 2px 8px rgba(231,76,60,0.2)}
-@keyframes slotPop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.letter-slot{width:42px;height:50px;border-radius:12px;background:rgba(255,255,255,0.9);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.5rem;color:var(--color-text-dark);text-transform:uppercase;transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 12px rgba(0,0,0,0.08),inset 0 1px 0 rgba(255,255,255,0.8);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.letter-slot.revealed{border-color:#2ecc71;background:linear-gradient(135deg,#e8fff5,#d0fde5);color:#1e8449;animation:letterRevealPremium 0.4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 2px 12px rgba(46,204,113,0.3),0 0 20px rgba(46,204,113,0.15)}
+.letter-slot.wrong-reveal{border-color:var(--color-error);background:linear-gradient(135deg,#fff0ed,#fde0da);color:var(--color-error-dark);box-shadow:0 2px 12px rgba(231,76,60,0.25);animation:wrongRevealPremium 0.5s ease}
+@keyframes letterRevealPremium{0%{transform:scale(0.5) translateY(8px);opacity:0.3}40%{transform:scale(1.2) translateY(-4px)}70%{transform:scale(0.95)}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes wrongRevealPremium{0%{transform:scale(1)}15%{transform:scale(1.05) rotate(2deg)}30%{transform:scale(1.05) rotate(-2deg)}45%{transform:scale(1.02) rotate(1deg)}60%{transform:scale(1)}100%{transform:scale(1)}}
 
 .lives-row{display:flex;justify-content:center;gap:6px;margin:10px 0}
 .life{width:28px;height:26px;position:relative}
@@ -734,17 +739,21 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .life-heart::before,.life-heart::after{content:'';position:absolute;width:14px;height:22px;background:#e74c3c;border-radius:14px 14px 0 0;top:0}
 .life-heart::before{left:0;transform:rotate(-45deg);transform-origin:bottom right}
 .life-heart::after{right:0;transform:rotate(45deg);transform-origin:bottom left}
-.life.lost .life-heart::before,.life.lost .life-heart::after{background:#dfe6e9}
+.life.lost .life-heart::before,.life.lost .life-heart::after{background:#dfe6e9;animation:heartFade 0.4s ease}
+@keyframes heartFade{0%{transform:rotate(-45deg) scale(1);opacity:1}50%{transform:rotate(-45deg) scale(1.2);opacity:0.5}100%{transform:rotate(-45deg) scale(0.8);opacity:0.6}}
+.life.lost .life-heart::after{animation:heartFade 0.4s ease 0.05s}
 
 .hint-btn{background:linear-gradient(135deg,#fdcb6e,#ffeaa7);color:#856404;border:none;border-radius:12px;padding:10px 20px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s;box-shadow:0 3px 0 #e0b050}
 .hint-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #e0b050}
 
-.keyboard{display:flex;flex-direction:column;gap:6px;margin:14px 0;padding:12px;background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.keyboard{display:flex;flex-direction:column;gap:6px;margin:14px 0;padding:12px;background:rgba(255,255,255,0.85);border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,0.08);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .kb-row{display:flex;justify-content:center;gap:5px}
-.kb-key{min-width:36px;height:var(--touch-min);border-radius:var(--radius-sm);border:none;background:linear-gradient(180deg,#f8f8f8,#ececec);color:var(--color-text-dark);font-family:var(--font-body);font-weight:800;font-size:1rem;cursor:pointer;text-transform:uppercase;transition:all 0.1s;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 #d0d0d0}
-.kb-key:active{transform:translateY(2px);box-shadow:none;background:#e0e0e0}
-.kb-key.correct{background:linear-gradient(180deg,#2ecc71,#27ae60);color:white;box-shadow:0 2px 0 #1e8449}
-.kb-key.wrong{background:linear-gradient(180deg,#e74c3c,#c0392b);color:white;opacity:0.4;box-shadow:0 2px 0 #922b21}
+.kb-key{min-width:36px;height:var(--touch-min);border-radius:10px;border:none;background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(240,240,240,0.9));color:var(--color-text-dark);font-family:var(--font-body);font-weight:800;font-size:1rem;cursor:pointer;text-transform:uppercase;transition:transform 0.06s ease,box-shadow 0.06s ease,background 0.15s;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 rgba(0,0,0,0.12),0 2px 8px rgba(0,0,0,0.04)}
+.kb-key:active{transform:translateY(3px);box-shadow:0 0px 0 rgba(0,0,0,0.12);background:rgba(230,230,230,0.9)}
+.kb-key.correct{background:linear-gradient(180deg,#2ecc71,#27ae60);color:white;box-shadow:0 3px 0 #1e8449,0 0 12px rgba(46,204,113,0.3);animation:keyCorrectPulse 0.3s ease}
+.kb-key.wrong{background:linear-gradient(180deg,#e74c3c,#c0392b);color:white;opacity:0.35;box-shadow:0 2px 0 #922b21;animation:keyWrongShrink 0.2s ease}
+@keyframes keyCorrectPulse{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes keyWrongShrink{0%{transform:scale(1)}50%{transform:scale(0.92)}100%{transform:scale(1)}}
 
 /* ===== MATHS ===== */
 .maths-display{text-align:center;padding:20px 0}

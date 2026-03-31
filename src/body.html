@@ -174,6 +174,10 @@
       </div>
       <div class="shop-grid" id="shopGrid" style="display:none"></div>
     </div>
+    <div class="shop-section">
+      <div class="shop-title" onclick="var el=document.getElementById('avatarStoreGrid');el.style.display=el.style.display==='none'?'grid':'none';if(el.style.display==='grid')renderAvatarStore()">Avatar Store <span style="font-size:0.7rem;color:#b2bec3">(tap to open)</span></div>
+      <div class="shop-grid" id="avatarStoreGrid" style="display:none"></div>
+    </div>
     <div class="progress-map">
       <div class="progress-map-title">My Progress</div>
       <div id="progressMap"></div>
@@ -458,7 +462,9 @@
         <div class="level-card lc-3" onclick="setSpellingLevel(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
-    <div id="spellingGame" style="display:none;">
+    <div id="spellingGame" style="display:none;position:relative;">
+      <canvas id="spellCanvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;border-radius:16px"></canvas>
+      <div style="position:relative;z-index:1">
       <div class="progress-bar"><div class="progress-fill orange" id="spellProgress"></div></div>
       <div class="progress-text" id="spellProgressText"></div>
       <div class="spell-display">
@@ -466,6 +472,7 @@
         <div class="spell-clue" id="spellHint"></div>
         <div class="spell-slots" id="spellWord"></div>
         <div class="lives-row" id="spellLives"></div>
+        <div id="spellStreak" style="display:none;text-align:center;margin-top:4px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.9rem;color:#fdcb6e;text-shadow:0 0 8px rgba(253,203,110,0.5)"></div>
         <div id="extraLifeWrap" style="text-align:center;margin-top:6px;display:none;"><button class="hint-btn" id="extraLifeBtn" onclick="useExtraLife()" style="background:#e74c3c;color:#fff;">\u2764\uFE0F Use Extra Life</button></div>
       </div>
       <div style="text-align:center;margin-bottom:10px;">
@@ -473,6 +480,7 @@
         <button class="hint-btn" id="revealLetterBtn" onclick="useRevealLetter()" style="background:#f39c12;color:#fff;display:none;">\uD83D\uDCA1 Reveal Letter</button>
       </div>
       <div class="keyboard" id="keyboard"></div>
+      </div>
     </div>
   </div>
 </div>
