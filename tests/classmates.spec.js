@@ -85,3 +85,26 @@ test('teacher dashboard shows tabs and backup export control', async ({ page }) 
   await expect(page.locator('#tp-settings')).toHaveClass(/active/);
   await expect(page.getByRole('button', { name: /Download Backup/i })).toBeVisible();
 });
+
+test('teacher can add a pupil and see them in the list', async ({ page }) => {
+  const pupilName = `Playwright Pupil ${Date.now()}`;
+
+  await openTeacherDashboard(page);
+  await page.getByRole('button', { name: 'Pupils', exact: true }).click();
+  await expect(page.locator('#tp-pupils')).toHaveClass(/active/);
+
+  await page.locator('#newPupilInput').fill(pupilName);
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+
+  const pupilRow = page.locator('#pupilList .pupil-row').filter({ hasText: pupilName });
+  await expect(pupilRow).toHaveCount(1);
+  await expect(pupilRow).toContainText(pupilName);
+
+  const dialogPromise = page.waitForEvent('dialog');
+  await pupilRow.getByRole('button', { name: 'Remove', exact: true }).click();
+  const dialog = await dialogPromise;
+  expect(dialog.message()).toContain(`Remove ${pupilName}`);
+  await dialog.accept();
+
+  await expect(page.locator('#pupilList')).not.toContainText(pupilName);
+});
