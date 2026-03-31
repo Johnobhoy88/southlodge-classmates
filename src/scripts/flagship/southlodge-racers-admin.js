@@ -82,6 +82,18 @@
     return pack ? pack.id : '';
   }
 
+  function getPackMetaSummary(pack) {
+    if (!pack) return '';
+    const outcomes = window.ClassmatesCurriculum && typeof ClassmatesCurriculum.getOutcomesForPack === 'function'
+      ? ClassmatesCurriculum.getOutcomesForPack(pack)
+      : [];
+    const primaryOutcome = outcomes[0] || null;
+    return [
+      primaryOutcome ? primaryOutcome.code : (Array.isArray(pack.cfeOutcomeLabels) ? pack.cfeOutcomeLabels[0] : ''),
+      primaryOutcome ? primaryOutcome.title : ''
+    ].filter(Boolean).join(' · ');
+  }
+
   function getAssignmentFormState() {
     const assignment = window.ClassmatesAssignments
       ? ClassmatesAssignments.getAssignment()
@@ -166,12 +178,13 @@
       activity: ACTIVITY_ID,
       launchId: 'hdash',
       title: 'Teacher mission ready',
-      text: assignment.message || ('Race the ' + (pack ? pack.shortTitle : 'spelling') + ' route for your class task.'),
+      text: assignment.message || ('Race the ' + (pack ? pack.title : 'spelling') + ' route for your class task.'),
       meta: [
         assignment.stageBand + ' Level',
         pack ? pack.title : 'Spelling route',
-        assignment.missionLength + ' gates'
-      ].join(' · ')
+        assignment.missionLength + ' gates',
+        getPackMetaSummary(pack)
+      ].filter(Boolean).join(' · ')
     };
   }
 
@@ -403,7 +416,7 @@
         ? ClassmatesSouthlodgeRacersPacks.getPack(nextValue)
         : null;
       metaEl.innerHTML = selectedPack
-        ? '<strong>' + escapeHtmlSafe(selectedPack.skillFocus) + '</strong> · ' + escapeHtmlSafe(selectedPack.cfeOutcomeLabels.join(', '))
+        ? '<strong>' + escapeHtmlSafe(selectedPack.skillFocus) + '</strong> · ' + escapeHtmlSafe(getPackMetaSummary(selectedPack))
         : '';
     }
   }

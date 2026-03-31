@@ -310,7 +310,7 @@
         </div>
         <div style="margin-bottom:12px">
           <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Spelling Pack:</label>
-          <select class="teacher-input" id="assignPackId" style="width:100%"></select>
+          <select class="teacher-input" id="assignPackId" style="width:100%" onchange="syncSouthlodgeAssignmentForm()"></select>
           <div id="assignPackMeta" style="margin-top:6px;font-size:0.78rem;color:#667788"></div>
         </div>
         <div style="margin-bottom:12px">
@@ -1114,6 +1114,8 @@
       <div class="racer-label">Prompt word</div>
       <div class="racer-word" id="racerPromptWord">Get ready</div>
       <div class="racer-sentence" id="racerPromptSentence">Press start to open the first spelling gate.</div>
+      <div class="racer-title" id="racerTitle">Racing Rookie</div>
+      <div class="racer-loadout" id="racerLoadout">Car: Ember Orange · Trail: None</div>
       <button class="racer-replay" id="racerReplayPrompt" type="button">Replay prompt</button>
     </div>
     <div class="racer-statusbar">
@@ -1145,8 +1147,10 @@
       <div class="racer-intro-kicker">South Lodge Primary flagship</div>
       <h3 id="racerIntroTitle">Southlodge Racers</h3>
       <p id="racerIntroBody">Steer into the correct spelling gate. Correct choices keep your speed and chain your streak.</p>
-      <div id="racerCfeBrief" style="margin:12px 0;padding:10px;background:rgba(0,0,0,0.03);border-radius:8px;font-size:0.75rem;color:#566b79;display:none"></div>
+      <div class="racer-intro-cfe" id="racerCfeBrief" style="display:none"></div>
       <div class="racer-intro-note" id="racerIntroNote"></div>
+      <div class="racer-intro-loadout" id="racerIntroLoadout">Car: Ember Orange · Trail: None</div>
+      <div class="racer-intro-countdown" id="racerIntroCountdown"></div>
       <button class="teacher-btn teal" id="racerIntroStart" type="button">Start mission</button>
     </div>
   </div>
