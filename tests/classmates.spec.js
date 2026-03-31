@@ -208,3 +208,29 @@ test('teacher assignment flow — assign game and verify banner', async ({ page 
     await expect(assignStatus).toContainText('Assignment cleared.');
   }
 });
+
+test('reward shop renders items with prices', async ({ page }) => {
+  await openPupilHome(page);
+  const shopGrid = page.locator('#shopGrid');
+  await expect(shopGrid).toBeVisible();
+  const items = shopGrid.locator('.shop-item');
+  await expect(items.first()).toBeVisible();
+  // Verify at least one item has a price with coin emoji
+  await expect(shopGrid).toContainText('coins');
+});
+
+test('results screen shows after completing a quick game action', async ({ page }) => {
+  await openPupilHome(page);
+  // Start spelling and immediately finish via evaluate
+  await page.evaluate(() => {
+    startGame('spelling');
+    setSpellingLevel(1);
+    // Simulate completion
+    sp.idx = sp.total;
+    finishSpelling();
+  });
+  await expect(page.locator('#results')).toHaveClass(/active/);
+  await expect(page.locator('#resultsTitle')).not.toBeEmpty();
+  await expect(page.locator('.star-row')).toBeVisible();
+  await expect(page.locator('#resultsPlayAgain')).toBeVisible();
+});
