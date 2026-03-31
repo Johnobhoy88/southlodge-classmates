@@ -235,4 +235,4 @@
     SPELLING: SPELLING,
     WORD_EMOJI: WORD_EMOJI
   }
-})()
+})();

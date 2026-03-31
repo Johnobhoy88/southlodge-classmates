@@ -62,4 +62,4 @@
   window.ClassmatesMaths = {
     genMathQuestion: genMathQ
   }
-})()
+})();
