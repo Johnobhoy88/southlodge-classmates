@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "clickup": {
+      "command": "node",
+      "args": ["C:/Users/Farsight.DESKTOP-CQ0CL93/projects/clickup-mcp/dist/index.js"],
+      "env": {
+        "CLICKUP_API_KEY": "pk_290466935_RAFKHLLTS05ZJVZQTJXAU3NIEPX331TR"
+      }
+    },
+    "orchestra": {
+      "command": "node",
+      "args": ["C:/Users/Farsight.DESKTOP-CQ0CL93/projects/orchestra/dist/index.js"],
+      "env": {
+        "ORCHESTRA_CONFIG": "C:/Users/Farsight.DESKTOP-CQ0CL93/classmates/.orchestra/orchestra.config.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "project": {
+    "name": "classmates",
+    "root": "C:/Users/Farsight.DESKTOP-CQ0CL93/classmates",
+    "buildCommand": "npm run build",
+    "verifyCommand": "npm run verify"
+  },
+  "branches": {
+    "main": "master",
+    "integration": "dev",
+    "agents": {
+      "claude": "claude/dev",
+      "codex": "codex/dev",
+      "gemini": "gemini/dev"
+    }
+  },
+  "clickup": {
+    "readyListId": "901216778613",
+    "inProgressListId": "901216778663",
+    "reviewListId": "901216778671",
+    "blockedListId": "901216778900",
+    "proposalsListId": "901216781412"
+  },
+  "timeouts": {
+    "lockMaxMinutes": 30,
+    "taskStaleMinutes": 60
+  }
+}

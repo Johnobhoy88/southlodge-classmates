@@ -1,0 +1,23 @@
+{
+  "name": "classmates",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Local-first offline classroom learning platform that ships as a single HTML file.",
+  "scripts": {
+    "extract:legacy": "node scripts/extract-legacy.mjs",
+    "build": "node scripts/build-single-file.mjs && node scripts/verify-single-file.mjs",
+    "verify": "node scripts/verify-single-file.mjs",
+    "test": "node scripts/smoke-test.mjs && node scripts/logic-test.mjs",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "test:logic": "node scripts/logic-test.mjs",
+    "test:e2e": "npx playwright test --reporter=list",
+    "test:all": "node scripts/smoke-test.mjs && node scripts/logic-test.mjs && npx playwright test --reporter=list"
+  },
+  "dependencies": {
+    "three": "0.128.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.5.0"
+  }
+}

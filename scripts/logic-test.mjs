@@ -1,0 +1,389 @@
+/**
+ * Logic tests for classmates modules.
+ * Tests actual function behaviour, not just artifact presence.
+ * Runs source files in a minimal mock environment.
+ */
+
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import vm from 'vm';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const root = resolve(__dirname, '..');
+
+let passed = 0;
+let failed = 0;
+
+function test(name, fn) {
+  try {
+    fn();
+    passed++;
+    console.log(`  ✓ ${name}`);
+  } catch (e) {
+    failed++;
+    console.log(`  ✗ ${name}`);
+    console.log(`    ${e.message}`);
+  }
+}
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+// --- Create a mock window/global for module loading ---
+function createMockGlobal() {
+  return {
+    window: {},
+    localStorage: {
+      _store: {},
+      getItem(k) { return this._store[k] || null; },
+      setItem(k, v) { this._store[k] = String(v); },
+      removeItem(k) { delete this._store[k]; },
+      get length() { return Object.keys(this._store).length; },
+      key(i) { return Object.keys(this._store)[i] || null; },
+    },
+    document: { createElement: () => ({ click() {}, href: '', download: '' }) },
+    URL: { createObjectURL: () => 'blob:', revokeObjectURL: () => {} },
+    Blob: function(parts, opts) { this.parts = parts; },
+    Date,
+    Math,
+    JSON,
+    Array,
+    Object,
+    String,
+    Number,
+    parseInt,
+    parseFloat,
+    isNaN,
+    console,
+    setTimeout: (fn) => fn(),
+    speechSynthesis: null,
+  };
+}
+
+function loadModule(filePath, ctx) {
+  const code = readFileSync(resolve(root, filePath), 'utf-8');
+  const script = new vm.Script(code, { filename: filePath });
+  script.runInContext(ctx);
+}
+
+// --- Test 1: Storage module ---
+console.log('\nStorage Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/storage.js', ctx);
+
+  test('storageIsAvailable returns true', () => {
+    assert(g.storageIsAvailable(), 'Storage should be available with mock localStorage');
+  });
+
+  test('storageSetJson + storageGetJson round-trip', () => {
+    g.storageSetJson('classmates_test', { name: 'Alice', score: 42 });
+    const result = g.storageGetJson('classmates_test', null);
+    assert(result && result.name === 'Alice', 'Should round-trip JSON');
+    assert(result.score === 42, 'Should preserve number values');
+  });
+
+  test('storageListAppKeys returns classmates_ keys', () => {
+    g.storageSetJson('classmates_a', 1);
+    g.storageSetJson('classmates_b', 2);
+    g.storageSetJson('other_key', 3);
+    const keys = g.storageListAppKeys();
+    assert(keys.includes('classmates_a'), 'Should include classmates_a');
+    assert(keys.includes('classmates_b'), 'Should include classmates_b');
+    assert(!keys.includes('other_key'), 'Should not include non-classmates keys');
+  });
+
+  test('storageClearAppData removes only classmates keys', () => {
+    g.storageClearAppData();
+    assert(g.storageGetJson('classmates_a', null) === null, 'classmates_a should be cleared');
+    assert(g.localStorage._store['other_key'] === '3', 'other_key should survive');
+  });
+
+  test('storageGetUsage returns usage object', () => {
+    g.storageSetJson('classmates_x', { data: 'hello' });
+    const usage = g.storageGetUsage();
+    assert(usage.available === true, 'Should report available');
+    assert(typeof usage.usedKB === 'number', 'Should report KB used');
+  });
+
+  test('needsBackupReminder returns boolean', () => {
+    const result = g.storageNeedsBackupReminder();
+    assert(typeof result === 'boolean', 'Should return boolean');
+  });
+}
+
+// --- Test 2: Spelling module ---
+console.log('\nSpelling Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/games/spelling.js', ctx);
+
+  test('ClassmatesSpelling exports SPELLING', () => {
+    assert(g.ClassmatesSpelling, 'ClassmatesSpelling should exist');
+    assert(g.ClassmatesSpelling.SPELLING, 'Should have SPELLING data');
+  });
+
+  test('SPELLING has 3 levels', () => {
+    const s = g.ClassmatesSpelling.SPELLING;
+    assert(s[1] && s[2] && s[3], 'Should have levels 1, 2, 3');
+  });
+
+  test('Each spelling word has w and h properties', () => {
+    const words = g.ClassmatesSpelling.SPELLING[1];
+    assert(words.length > 0, 'Level 1 should have words');
+    assert(words[0].w && words[0].h, 'Each word should have w (word) and h (hint)');
+  });
+
+  test('WORD_EMOJI is a mapping object', () => {
+    assert(g.ClassmatesSpelling.WORD_EMOJI, 'Should have WORD_EMOJI');
+    assert(typeof g.ClassmatesSpelling.WORD_EMOJI === 'object', 'Should be an object');
+    assert(g.ClassmatesSpelling.WORD_EMOJI['cat'], 'Should have common words like cat');
+  });
+}
+
+// --- Test 3: Times Tables module ---
+console.log('\nTimes Tables Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/games/times-tables.js', ctx);
+
+  test('ClassmatesTimesTable exports', () => {
+    assert(g.ClassmatesTimesTable, 'ClassmatesTimesTable should exist');
+  });
+
+  test('getPersonalBest returns null for no data', () => {
+    const result = g.ClassmatesTimesTable.getPersonalBest({}, 5);
+    assert(result === null, 'Should be null with no data');
+  });
+
+  test('getPersonalBest returns time when set', () => {
+    const state = { ttPersonalBests: { 5: 25000 } };
+    assert(g.ClassmatesTimesTable.getPersonalBest(state, 5) === 25000, 'Should return 25000');
+  });
+
+  test('isTableCompleted works', () => {
+    const state = { ttCompleted: [2, 5, 10] };
+    assert(g.ClassmatesTimesTable.isTableCompleted(state, 5) === true, '5 should be completed');
+    assert(g.ClassmatesTimesTable.isTableCompleted(state, 3) === false, '3 should not be completed');
+  });
+
+  test('getCompletionCount works', () => {
+    const state = { ttCompleted: [2, 5, 10] };
+    assert(g.ClassmatesTimesTable.getCompletionCount(state) === 3, 'Should be 3');
+  });
+}
+
+// --- Test 4: Maths module ---
+console.log('\nMaths Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/games/maths.js', ctx);
+
+  test('ClassmatesMaths exports genMathQuestion', () => {
+    assert(g.ClassmatesMaths, 'ClassmatesMaths should exist');
+    assert(typeof g.ClassmatesMaths.genMathQuestion === 'function', 'genMathQuestion should be a function');
+  });
+
+  test('Level 1 generates simple questions', () => {
+    const q = g.ClassmatesMaths.genMathQuestion(1);
+    assert(q.text && q.text.includes('='), 'Should have text with =');
+    assert(typeof q.answer === 'number', 'Should have numeric answer');
+    assert(q.answer >= 0 && q.answer <= 20, 'Level 1 answer should be 0-20');
+  });
+
+  test('Level 3 generates harder questions', () => {
+    const q = g.ClassmatesMaths.genMathQuestion(3);
+    assert(q.text && q.answer !== undefined, 'Should generate a valid question');
+  });
+
+  test('Generates different questions (not deterministic)', () => {
+    const answers = new Set();
+    for (let i = 0; i < 20; i++) {
+      answers.add(g.ClassmatesMaths.genMathQuestion(2).answer);
+    }
+    assert(answers.size > 1, 'Should produce varied answers across 20 calls');
+  });
+}
+
+// --- Test 4b: Number Bonds module ---
+console.log('\nNumber Bonds Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/games/number-bonds.js', ctx);
+
+  test('ClassmatesNumberBonds exports genQuestion', () => {
+    assert(g.ClassmatesNumberBonds, 'ClassmatesNumberBonds should exist');
+    assert(typeof g.ClassmatesNumberBonds.genQuestion === 'function', 'genQuestion should be a function');
+  });
+
+  test('genQuestion for target 10 produces valid bond', () => {
+    const q = g.ClassmatesNumberBonds.genQuestion(10);
+    assert(q.target === 10, 'Target should be 10');
+    assert(typeof q.answer === 'number', 'Answer should be a number');
+    assert(q.answer >= 1 && q.answer <= 9, 'Answer should be 1-9 for target 10');
+  });
+
+  test('genQuestion produces different formats', () => {
+    const formats = new Set();
+    for (let i = 0; i < 30; i++) {
+      formats.add(g.ClassmatesNumberBonds.genQuestion(10).format);
+    }
+    assert(formats.size >= 2, 'Should produce at least 2 different formats');
+  });
+
+  test('Pupil suggested game function exists', () => {
+    // Test the pupil shell getSuggestedGame via a separate load
+    const g2 = createMockGlobal();
+    g2.window = g2;
+    const ctx2 = vm.createContext(g2);
+    loadModule('src/scripts/pupil/shell.js', ctx2);
+    assert(g2.ClassmatesPupilShell, 'ClassmatesPupilShell should exist');
+    assert(typeof g2.ClassmatesPupilShell.getSuggestedGame === 'function', 'getSuggestedGame should be a function');
+    const suggestion = g2.ClassmatesPupilShell.getSuggestedGame({ games: 0 });
+    assert(suggestion && suggestion.game === 'spelling', 'New pupil should get spelling suggestion');
+  });
+}
+
+// --- Test 5: CfE Curriculum module ---
+console.log('\nCfE Curriculum Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/cfe-curriculum.js', ctx);
+
+  test('ClassmatesCurriculum exports', () => {
+    assert(g.ClassmatesCurriculum, 'ClassmatesCurriculum should exist');
+  });
+
+  test('getOutcome returns outcome for valid code', () => {
+    const result = g.ClassmatesCurriculum.getOutcome('LIT 0-21a');
+    assert(result, 'Should return an outcome for LIT 0-21a');
+    assert(result.code === 'LIT 0-21a', 'Should have correct code');
+    assert(result.title, 'Should have a title');
+  });
+
+  test('getOutcome returns fallback for unknown code', () => {
+    const result = g.ClassmatesCurriculum.getOutcome('FAKE-99');
+    assert(result && result.code === 'FAKE-99', 'Should return fallback with the requested code');
+  });
+}
+
+// --- Test 6: Reading module ---
+console.log('\nReading Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/reading.js', ctx);
+
+  test('ClassmatesReading exports READING', () => {
+    assert(g.ClassmatesReading, 'ClassmatesReading should exist');
+    assert(g.ClassmatesReading.READING, 'Should have READING data');
+  });
+
+  test('READING has 3 levels', () => {
+    const r = g.ClassmatesReading.READING;
+    assert(r[1] && r[2] && r[3], 'Should have levels 1, 2, 3');
+  });
+
+  test('Each story has title, text, and questions', () => {
+    const stories = g.ClassmatesReading.READING[1];
+    assert(stories.length > 0, 'Level 1 should have stories');
+    const story = stories[0];
+    assert(story.title, 'Story should have title');
+    assert(story.text, 'Story should have text');
+    assert(Array.isArray(story.questions), 'Story should have questions array');
+    assert(story.questions.length > 0, 'Story should have at least one question');
+  });
+
+  test('Questions have q, a (answers array), and c (correct index)', () => {
+    const q = g.ClassmatesReading.READING[1][0].questions[0];
+    assert(q.q, 'Question should have text (q)');
+    assert(Array.isArray(q.a), 'Should have answers array (a)');
+    assert(typeof q.c === 'number', 'Should have correct index (c)');
+    assert(q.a.length >= 2, 'Should have at least 2 answer options');
+  });
+}
+
+// --- Test 7: Phonics module ---
+console.log('\nPhonics Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/phonics.js', ctx);
+
+  test('ClassmatesPhonics exports PHONICS_DATA', () => {
+    assert(g.ClassmatesPhonics, 'ClassmatesPhonics should exist');
+    assert(g.ClassmatesPhonics.PHONICS_DATA, 'Should have PHONICS_DATA');
+  });
+
+  test('PHONICS_DATA has levels', () => {
+    const d = g.ClassmatesPhonics.PHONICS_DATA;
+    assert(d[1], 'Should have level 1');
+    assert(Array.isArray(d[1]), 'Level 1 should be an array');
+    assert(d[1].length > 0, 'Level 1 should have entries');
+  });
+
+  test('Each phonics entry has sound, words, and wrong', () => {
+    const entry = g.ClassmatesPhonics.PHONICS_DATA[1][0];
+    assert(entry.sound, 'Entry should have sound');
+    assert(Array.isArray(entry.words), 'Entry should have words array');
+    assert(Array.isArray(entry.wrong), 'Entry should have wrong array');
+  });
+}
+
+// --- Test 8: Word Families module ---
+console.log('\nWord Families Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/word-families.js', ctx);
+
+  test('ClassmatesWordFamilies exports WORDFAM_DATA', () => {
+    assert(g.ClassmatesWordFamilies, 'ClassmatesWordFamilies should exist');
+    assert(g.ClassmatesWordFamilies.WORDFAM_DATA, 'Should have WORDFAM_DATA');
+  });
+
+  test('Each word family entry has ending and words', () => {
+    const d = g.ClassmatesWordFamilies.WORDFAM_DATA;
+    assert(d[1], 'Should have level 1');
+    const entry = d[1][0];
+    assert(entry.ending, 'Entry should have ending');
+    assert(Array.isArray(entry.words), 'Entry should have words array');
+  });
+}
+
+// --- Summary ---
+console.log(`\n${'='.repeat(40)}`);
+console.log(`Logic tests: ${passed} passed, ${failed} failed, ${passed + failed} total`);
+
+if (failed > 0) {
+  console.log('\nLOGIC TESTS FAILED');
+  process.exit(1);
+} else {
+  console.log('\nLOGIC TESTS PASSED');
+}
