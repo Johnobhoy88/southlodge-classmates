@@ -68,20 +68,39 @@
   }
 
   function buildProgressCsv() {
-    const rows = [
-      ['Name', 'Stars', 'Games', 'Streak', 'Spelling Correct', 'Maths Correct', 'Tables Completed', 'Stories Read', 'Badges Earned', 'Last Active']
-    ];
-    const progressRows = ClassmatesTeacherSummary.listProgressRows();
+    var headers = ['Name', 'Stars', 'Games', 'Streak', 'Spelling Correct', 'Maths Correct', 'Tables Completed', 'Stories Read', 'Badges Earned', 'Last Active'];
 
-    progressRows.forEach(function(row){
-      rows.push(row.csvCells.slice());
+    var packHeaders = [];
+    if (window.ClassmatesMastery && window.ClassmatesPupils) {
+      var allPacks = ClassmatesMastery.listClassPackMasteries();
+      allPacks.forEach(function(pack) {
+        var col = pack.shortTitle || pack.packTitle;
+        if (packHeaders.indexOf(col) === -1) packHeaders.push(col);
+      });
+    }
+    packHeaders.forEach(function(p) { headers.push(p + ' %'); headers.push(p + ' Status'); });
+
+    var rows = [headers];
+    var progressRows = ClassmatesTeacherSummary.listProgressRows();
+
+    progressRows.forEach(function(row) {
+      var cells = row.csvCells.slice();
+      if (window.ClassmatesMastery) {
+        var masteries = ClassmatesMastery.listPupilPackMasteries(row.name);
+        packHeaders.forEach(function(packName) {
+          var match = masteries.find(function(m) { return (m.shortTitle || m.packTitle) === packName; });
+          cells.push(match ? match.accuracy : '');
+          cells.push(match ? match.status : '');
+        });
+      }
+      rows.push(cells);
     });
 
     if (progressRows.length === 0) {
-      rows.push(['No pupils', '', '', '', '', '', '', '', '', '']);
+      rows.push(['No pupils']);
     }
 
-    return rows.map(function(row){
+    return rows.map(function(row) {
       return row.map(csvEscape).join(',');
     }).join('\n');
   }
