@@ -1206,16 +1206,16 @@ function finishDict(){show('dictLevelSelect');hide('dictGame');const pct=dict.co
 document.addEventListener('keydown',function(e){if(document.getElementById('dictation').classList.contains('active')&&document.getElementById('dictGame').style.display!=='none'){if(e.key==='Enter'){e.preventDefault();checkDictAns()}}});
 
 // ==================== MISSING VOWELS ====================
-let mv={level:1,words:[],idx:0,total:10,correct:0,missed:[]};
+let mv={level:1,words:[],idx:0,total:10,correct:0,missed:[],streak:0};
 const VOWELS='aeiou';
 
 function removeVowels(w){return w.split('').map(c=>VOWELS.includes(c.toLowerCase())?'_':c).join('')}
 
-function startVowels(lv){mv.level=lv;const pool=[...getSpellingWords()[lv]];shuffle(pool);mv.words=pool.slice(0,mv.total);mv.idx=0;mv.correct=0;mv.missed=[];hide('vowelsLevelSelect');show('vowelsGame');loadMvQ()}
+function startVowels(lv){mv.level=lv;const pool=[...getSpellingWords()[lv]];shuffle(pool);mv.words=pool.slice(0,mv.total);mv.idx=0;mv.correct=0;mv.missed=[];mv.streak=0;hide('vowelsLevelSelect');show('vowelsGame');loadMvQ()}
 
 function loadMvQ(){const wordEmoji=getSpellingWordEmoji();const item=mv.words[mv.idx];const word=item.w.toLowerCase();document.getElementById('mvProgress').style.width=(mv.idx/mv.total*100)+'%';document.getElementById('mvProgressText').textContent='Word '+(mv.idx+1)+' of '+mv.total;const pic=document.getElementById('mvPic');const eFn=wordEmoji[word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('mvHint').textContent=item.h;const stripped=removeVowels(word);document.getElementById('mvWord').innerHTML=stripped.split('').map(c=>c==='_'?'<span class="mv-gap">_</span>':c).join('');const inp=document.getElementById('mvInput');inp.value='';inp.className='mv-input';inp.focus()}
 
-function checkMvAns(){const inp=document.getElementById('mvInput');const val=inp.value.trim().toLowerCase();const word=mv.words[mv.idx].w.toLowerCase();if(!val)return;if(val===word){mv.correct++;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();inp.className='mv-input flash-correct';setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},400)}else{mv.missed.push({w:word,h:mv.words[mv.idx].h});inp.className='mv-input flash-wrong';document.getElementById('mvHint').textContent='It was: '+word;setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},1200)}}
+function checkMvAns(){const inp=document.getElementById('mvInput');const val=inp.value.trim().toLowerCase();const word=mv.words[mv.idx].w.toLowerCase();if(!val)return;if(val===word){mv.correct++;mv.streak=(mv.streak||0)+1;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();sfxCorrect();var mvWords=['Yes!','Great!','Nice!','Super!'];inp.className='mv-input flash-correct';document.getElementById('mvHint').textContent=mvWords[Math.floor(Math.random()*mvWords.length)]+(mv.streak>=3?' Streak: '+mv.streak+'!':'');setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},500)}else{mv.streak=0;mv.missed.push({w:word,h:mv.words[mv.idx].h});sfxWrong();inp.className='mv-input flash-wrong';document.getElementById('mvHint').textContent='It was: '+word;setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},1200)}}
 
 function finishVowels(){show('vowelsLevelSelect');hide('vowelsGame');const pct=mv.correct/mv.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('vowels');else if(pct<0.4)adaptiveWrong('vowels');addStars(stars);recordPlay();showResults('#e84393','_e_','Missing Vowels Done!','Level '+mv.level,stars,mv.correct,mv.total,()=>{showScreen('vowels')},mv.missed)}
 
