@@ -131,3 +131,63 @@ test('clicking game cards launches the correct game screens', async ({ page }) =
     await expect(page.locator('#home')).toHaveClass(/active/);
   }
 });
+
+test('teacher assignment flow — assign game and verify banner', async ({ page }) => {
+  await openTeacherDashboard(page);
+
+  const assignTab = page.locator('.teacher-tabs').getByRole('button', { name: 'Assign', exact: true });
+  const assignActivity = page.locator('#assignActivity');
+  const assignStatus = page.locator('#assignStatus');
+  const assignBanner = page.locator('#assignBanner');
+
+  await assignTab.click();
+  await expect(page.locator('#tp-assign')).toHaveClass(/active/);
+
+  await assignActivity.evaluate((element, value) => {
+    element.value = value;
+  }, 'southlodgeracers');
+
+  try {
+    await page.getByRole('button', { name: 'Set Assignment', exact: true }).click();
+    await expect(assignStatus).toContainText('Assignment set!');
+
+    await page.evaluate(() => {
+      showScreen('home');
+      try {
+        updateHomeStats();
+      } catch (error) {
+        renderAssignmentBanner();
+      }
+    });
+    await expect(page.locator('#home')).toHaveClass(/active/);
+    await expect
+      .poll(async () => assignBanner.evaluate((element) => window.getComputedStyle(element).display))
+      .not.toBe('none');
+  } finally {
+    await page.evaluate(() => window.showScreen('teacher'));
+    await expect(page.locator('#teacher')).toHaveClass(/active/);
+    await assignTab.click();
+    await expect(page.locator('#tp-assign')).toHaveClass(/active/);
+    await page.getByRole('button', { name: 'Clear Assignment', exact: true }).click();
+    await expect(assignStatus).toContainText('Assignment cleared.');
+  }
+});
+
+test('teacher assignment flow — assign and verify pupil banner', async ({ page }) => {
+  await openTeacherDashboard(page);
+  // Click Assign tab
+  await page.getByRole('button', { name: 'Assign', exact: true }).click();
+  // Set activity to spelling using page.evaluate
+  await page.evaluate(() => { document.getElementById('assignActivity').value = 'spelling'; });
+  // Click Set Assignment button
+  await page.getByRole('button', { name: 'Set Assignment' }).click();
+  // Verify success message appears in #assignStatus
+  await expect(page.locator('#assignStatus')).toContainText('Assignment set');
+  // Go to pupil home and check banner
+  await page.evaluate(() => { showScreen('home'); updateHomeStats(); });
+  await expect(page.locator('#assignBanner')).toBeVisible();
+  // Clean up — go back to teacher and clear
+  await openTeacherDashboard(page);
+  await page.getByRole('button', { name: 'Assign', exact: true }).click();
+  await page.getByRole('button', { name: 'Clear Assignment' }).click();
+});
