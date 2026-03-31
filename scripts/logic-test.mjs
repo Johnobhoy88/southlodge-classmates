@@ -325,6 +325,58 @@ console.log('\nReading Module:');
   });
 }
 
+// --- Test 7: Phonics module ---
+console.log('\nPhonics Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/phonics.js', ctx);
+
+  test('ClassmatesPhonics exports PHONICS_DATA', () => {
+    assert(g.ClassmatesPhonics, 'ClassmatesPhonics should exist');
+    assert(g.ClassmatesPhonics.PHONICS_DATA, 'Should have PHONICS_DATA');
+  });
+
+  test('PHONICS_DATA has levels', () => {
+    const d = g.ClassmatesPhonics.PHONICS_DATA;
+    assert(d[1], 'Should have level 1');
+    assert(Array.isArray(d[1]), 'Level 1 should be an array');
+    assert(d[1].length > 0, 'Level 1 should have entries');
+  });
+
+  test('Each phonics entry has sound, words, and wrong', () => {
+    const entry = g.ClassmatesPhonics.PHONICS_DATA[1][0];
+    assert(entry.sound, 'Entry should have sound');
+    assert(Array.isArray(entry.words), 'Entry should have words array');
+    assert(Array.isArray(entry.wrong), 'Entry should have wrong array');
+  });
+}
+
+// --- Test 8: Word Families module ---
+console.log('\nWord Families Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/domain/word-families.js', ctx);
+
+  test('ClassmatesWordFamilies exports WORDFAM_DATA', () => {
+    assert(g.ClassmatesWordFamilies, 'ClassmatesWordFamilies should exist');
+    assert(g.ClassmatesWordFamilies.WORDFAM_DATA, 'Should have WORDFAM_DATA');
+  });
+
+  test('Each word family entry has ending and words', () => {
+    const d = g.ClassmatesWordFamilies.WORDFAM_DATA;
+    assert(d[1], 'Should have level 1');
+    const entry = d[1][0];
+    assert(entry.ending, 'Entry should have ending');
+    assert(Array.isArray(entry.words), 'Entry should have words array');
+  });
+}
+
 // --- Summary ---
 console.log(`\n${'='.repeat(40)}`);
 console.log(`Logic tests: ${passed} passed, ${failed} failed, ${passed + failed} total`);
