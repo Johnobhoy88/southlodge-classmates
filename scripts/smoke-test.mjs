@@ -73,6 +73,19 @@ test('Size is over 500 KB (sanity check)', () => {
   assert(size > 500 * 1024, `Artifact is only ${(size / 1024).toFixed(0)} KB — suspiciously small`);
 });
 
+test('All script tags have valid JavaScript syntax', () => {
+  const scriptBlocks = html.match(/<script[^>]*>([\s\S]*?)<\/script>/g) || [];
+  scriptBlocks.forEach((block, i) => {
+    const code = block.replace(/<\/?script[^>]*>/g, '');
+    if (code.trim().length < 10) return; // skip empty/tiny scripts
+    try {
+      new Function(code);
+    } catch (e) {
+      throw new Error(`Script block ${i} has syntax error: ${e.message}`);
+    }
+  });
+});
+
 // --- 2. Offline contract ---
 console.log('\nOffline Contract:');
 
