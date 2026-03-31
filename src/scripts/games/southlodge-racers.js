@@ -16,7 +16,12 @@
     touchMode: false,
     keyHandlers: null,
     resizeHandler: null,
-    launchSource: null
+    launchSource: null,
+    trailParticles: [],
+    countdownTimer: null,
+    streakHudTimer: null,
+    messageTimer: null,
+    session: null
   };
 
   function clearChildren(node) {
