@@ -191,3 +191,17 @@ test('teacher assignment flow — assign and verify pupil banner', async ({ page
   await page.getByRole('button', { name: 'Assign', exact: true }).click();
   await page.getByRole('button', { name: 'Clear Assignment' }).click();
 });
+
+test('Southlodge Racers loads with intro screen and start button', async ({ page }) => {
+  await openPupilHome(page);
+  const racerCard = page.locator('#home .subject-card').filter({ hasText: 'Southlodge Racers' }).first();
+  await racerCard.click();
+  // The game screen should be active
+  await expect(page.locator('#hdash')).toHaveClass(/active/);
+  // The 3D canvas or racer intro should appear
+  await expect(page.locator('#racerIntro')).toBeVisible();
+  // The start button should be visible
+  await expect(page.locator('#racerIntroStart')).toBeVisible();
+  // Pack title should be shown
+  await expect(page.locator('#racerIntroTitle')).not.toBeEmpty();
+});
