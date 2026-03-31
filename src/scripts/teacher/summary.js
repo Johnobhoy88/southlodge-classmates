@@ -38,6 +38,9 @@
       };
     });
     const recommendedNextStep = getRecommendedNextStep(pupilName);
+    const recentSessions = (window.ClassmatesSessions && typeof ClassmatesSessions.getRecentSessions === 'function')
+      ? ClassmatesSessions.getRecentSessions(pupilName, 10)
+      : [];
 
     return {
       name: pupilName,
@@ -89,7 +92,8 @@
         achievements.length,
         state.lastPlayed || 'Never'
       ],
-      recommendedNextStep: recommendedNextStep
+      recommendedNextStep: recommendedNextStep,
+      sessionHistory: recentSessions
     };
   }
 
