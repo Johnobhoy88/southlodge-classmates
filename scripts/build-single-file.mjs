@@ -29,6 +29,7 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "teacher", "tools.js"),
     path.join(root, "src", "scripts", "pupil", "avatar.js"),
     path.join(root, "src", "scripts", "pupil", "shell.js"),
+    path.join(root, "src", "scripts", "games", "spelling.js"),
     path.join(root, "src", "scripts", "games", "times-tables.js"),
     path.join(root, "src", "scripts", "app.js"),
     path.join(root, "src", "scripts", "flagship", "southlodge-racers-admin.js"),
