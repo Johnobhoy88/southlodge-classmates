@@ -242,6 +242,20 @@
           <button class="teacher-btn teal" onclick="generateWorksheet()">&#x1F4C4; Generate Worksheet</button>
           <button class="teacher-btn outline" onclick="showTeacherTab('progress',document.querySelectorAll('.teacher-tab')[2])">&#x1F4CA; View Progress</button>
         </div>
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="quickAssignGame" class="teacher-input" style="width:auto;min-width:140px;font-size:0.8rem;padding:8px">
+            <option value="">Set assignment...</option>
+            <option value="spelling">Spelling</option>
+            <option value="maths">Maths</option>
+            <option value="times">Times Tables</option>
+            <option value="reading">Reading</option>
+            <option value="hdash">Southlodge Racers</option>
+            <option value="daily">Daily Challenge</option>
+            <option value="phonics">Phonics</option>
+          </select>
+          <button class="teacher-btn teal" style="font-size:0.8rem" onclick="quickAssign()">Assign</button>
+          <span id="quickAssignStatus" style="font-size:0.75rem;color:#636e72"></span>
+        </div>
       </div>
       <div class="teacher-section">
         <h3>Curriculum Alignment</h3>
