@@ -171,6 +171,74 @@ test('Three.js library embedded', () => {
   assert(html.includes('THREE') && html.includes('WebGLRenderer'), 'Three.js not found in bundle');
 });
 
+// --- 7. Module API surface ---
+console.log('\nModule API Surface:');
+
+const MODULE_APIS = {
+  'ClassmatesAppState': ['loadState', 'saveState', 'resetState', 'applyPlayProgress', 'applyStars', 'adaptiveCorrect', 'adaptiveWrong'],
+  'ClassmatesPupils': ['listPupils', 'addPupil', 'removePupil'],
+  'ClassmatesSettings': ['getSchoolName', 'setSchoolName', 'getStaffPassword'],
+  'ClassmatesAttempts': ['listAttempts', 'recordAttempt'],
+  'ClassmatesMastery': ['listClassPackMasteries', 'listInterventionSignals', 'getPupilOverview', 'getClassMasterySnapshot'],
+  'ClassmatesTeacherSummary': ['getClassSummary', 'getPupilDetail', 'getTeacherHomeModel', 'getNeedsAttention'],
+  'ClassmatesTeacherReports': ['buildPupilReportHtml', 'buildClassReportHtml', 'buildProgressCsv'],
+  'ClassmatesSouthlodgeRacersPacks': ['listPacks', 'getPack', 'buildMissionWords', 'validatePack'],
+};
+
+Object.entries(MODULE_APIS).forEach(([mod, methods]) => {
+  methods.forEach(method => {
+    test(`${mod}.${method} exists`, () => {
+      assert(
+        html.includes(`${method}:`) || html.includes(`${method} =`) || html.includes(`function ${method}`),
+        `Missing ${mod}.${method} in bundle`
+      );
+    });
+  });
+});
+
+// --- 8. Game screens present ---
+console.log('\nGame Screens:');
+
+const GAME_SCREENS = [
+  'spelling', 'maths', 'times', 'reading', 'daily',
+  'phonics', 'grammar', 'vocab', 'dictation',
+];
+
+GAME_SCREENS.forEach(game => {
+  test(`Game screen: ${game}`, () => {
+    assert(
+      html.includes(`startGame('${game}')`) || html.includes(`startGame("${game}")`),
+      `Missing startGame('${game}') in bundle`
+    );
+  });
+});
+
+// --- 9. Storage safety ---
+console.log('\nStorage Safety:');
+
+test('Storage migration function present', () => {
+  assert(html.includes('migrateStorage'), 'Missing migrateStorage function');
+});
+
+test('Backup reminder function present', () => {
+  assert(html.includes('needsBackupReminder'), 'Missing needsBackupReminder function');
+});
+
+test('Storage quota function present', () => {
+  assert(html.includes('getStorageUsage') || html.includes('storageGetUsage'), 'Missing storage usage function');
+});
+
+// --- 10. Platform modules ---
+console.log('\nPlatform:');
+
+test('Module manifest present', () => {
+  assert(html.includes('ClassmatesModuleManifest') || html.includes('MODULE_MANIFEST'), 'Missing module manifest');
+});
+
+test('Platform runtime present', () => {
+  assert(html.includes('ClassmatesPlatform'), 'Missing ClassmatesPlatform');
+});
+
 // --- Summary ---
 console.log(`\n${'='.repeat(40)}`);
 console.log(`Results: ${passed} passed, ${failed} failed, ${passed + failed} total`);
