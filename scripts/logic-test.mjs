@@ -184,6 +184,41 @@ console.log('\nTimes Tables Module:');
   });
 }
 
+// --- Test 4: Maths module ---
+console.log('\nMaths Module:');
+{
+  const g = createMockGlobal();
+  g.window = g;
+  const ctx = vm.createContext(g);
+
+  loadModule('src/scripts/games/maths.js', ctx);
+
+  test('ClassmatesMaths exports genMathQuestion', () => {
+    assert(g.ClassmatesMaths, 'ClassmatesMaths should exist');
+    assert(typeof g.ClassmatesMaths.genMathQuestion === 'function', 'genMathQuestion should be a function');
+  });
+
+  test('Level 1 generates simple questions', () => {
+    const q = g.ClassmatesMaths.genMathQuestion(1);
+    assert(q.text && q.text.includes('='), 'Should have text with =');
+    assert(typeof q.answer === 'number', 'Should have numeric answer');
+    assert(q.answer >= 0 && q.answer <= 20, 'Level 1 answer should be 0-20');
+  });
+
+  test('Level 3 generates harder questions', () => {
+    const q = g.ClassmatesMaths.genMathQuestion(3);
+    assert(q.text && q.answer !== undefined, 'Should generate a valid question');
+  });
+
+  test('Generates different questions (not deterministic)', () => {
+    const answers = new Set();
+    for (let i = 0; i < 20; i++) {
+      answers.add(g.ClassmatesMaths.genMathQuestion(2).answer);
+    }
+    assert(answers.size > 1, 'Should produce varied answers across 20 calls');
+  });
+}
+
 // --- Summary ---
 console.log(`\n${'='.repeat(40)}`);
 console.log(`Logic tests: ${passed} passed, ${failed} failed, ${passed + failed} total`);
