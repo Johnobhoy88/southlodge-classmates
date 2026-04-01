@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup C — Storybook Landing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Nunito',sans-serif;background:#1a2633}
+
+.scene{position:relative;width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+
+.ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;pointer-events:none}
+.ui>*{pointer-events:auto}
+
+.book{background:rgba(250,246,240,0.95);border-radius:28px;padding:36px 32px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3),0 0 0 4px rgba(255,255,255,0.1);position:relative;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.book::before{content:'';position:absolute;inset:-3px;border-radius:31px;background:linear-gradient(135deg,#2d8f7b,#e8956b,#6b8fb2,#fdcb6e);z-index:-1;opacity:0.4}
+
+.book-logo{width:80px;height:80px;border-radius:50%;background:white;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.1);border:3px solid #2d8f7b;font-family:'Fredoka One',cursive;font-size:1.8rem;color:#2d8f7b}
+
+.book-title{font-family:'Fredoka One',cursive;font-size:2.6rem;color:#2d3436;line-height:1.05;margin-bottom:4px}
+.book-school{font-size:0.7rem;color:#b2bec3;letter-spacing:3px;text-transform:uppercase;font-weight:800;margin-bottom:20px}
+
+.book-worlds{display:flex;justify-content:center;gap:6px;margin-bottom:24px;flex-wrap:wrap}
+.mini-world{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;cursor:pointer;transition:all 0.2s;border:2px solid transparent;box-shadow:0 2px 0 var(--shadow),0 2px 8px rgba(0,0,0,0.06)}
+.mini-world:hover{transform:translateY(-4px) scale(1.1);border-color:rgba(255,255,255,0.5);box-shadow:0 8px 20px rgba(0,0,0,0.15)}
+
+.tooltip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#2d3436;color:white;font-family:'Fredoka One',cursive;font-size:0.65rem;padding:4px 10px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.mini-world:hover .tooltip{opacity:1}
+.mini-world{position:relative}
+
+.book-btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;font-family:'Fredoka One',cursive;cursor:pointer;transition:all 0.2s;margin-bottom:10px;font-size:1.15rem}
+.book-btn:active{transform:scale(0.97)}
+.btn-learn{background:linear-gradient(135deg,#2d8f7b,#38c9a9);color:white;box-shadow:0 4px 0 #1e6b5a,0 8px 20px rgba(45,143,123,0.2)}
+.btn-learn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #1e6b5a,0 12px 28px rgba(45,143,123,0.3)}
+.btn-staff2{background:transparent;color:#b2bec3;border:2px solid #e0d8cc;font-size:0.8rem;padding:12px}
+.btn-staff2:hover{border-color:#2d8f7b;color:#2d8f7b}
+
+.book-footer{font-size:0.55rem;color:rgba(0,0,0,0.25);letter-spacing:1.5px;text-transform:uppercase;font-weight:800;margin-top:14px}
+
+.avatar-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px;padding:8px 16px;background:rgba(45,143,123,0.06);border-radius:14px}
+.av-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#fdcb6e,#e17055);display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:white;font-family:'Fredoka One',cursive}
+.av-name{font-family:'Fredoka One',cursive;font-size:0.9rem;color:#2d3436}
+.av-coins{font-size:0.65rem;color:#e8956b;font-weight:800;margin-left:auto}
+</style>
+</head>
+<body>
+<div class="scene">
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="ui">
+    <div class="book">
+      <div class="book-logo">SL</div>
+      <div class="book-title">Classmates</div>
+      <div class="book-school">South Lodge Primary</div>
+
+      <div class="avatar-row">
+        <div class="av-circle">E</div>
+        <div class="av-name">Eilidh</div>
+        <div class="av-coins">&#x2B50; 42 coins</div>
+      </div>
+
+      <div class="book-worlds">
+        <div class="mini-world" style="background:linear-gradient(135deg,#2d8f7b,#27ae60);--shadow:#1e6b5a">&#x1F332;<div class="tooltip">Word Forest</div></div>
+        <div class="mini-world" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe);--shadow:#5641c4">&#x1F680;<div class="tooltip">Star Station</div></div>
+        <div class="mini-world" style="background:linear-gradient(135deg,#0984e3,#74b9ff);--shadow:#0669b8">&#x1F30A;<div class="tooltip">Deep Blue</div></div>
+        <div class="mini-world" style="background:linear-gradient(135deg,#fdcb6e,#f0a500);--shadow:#c48800">&#x26A1;<div class="tooltip">Thunder Tables</div></div>
+        <div class="mini-world" style="background:linear-gradient(135deg,#e84393,#fd79a8);--shadow:#c0357a">&#x1F338;<div class="tooltip">Petal Garden</div></div>
+        <div class="mini-world" style="background:linear-gradient(135deg,#00b4d8,#90e0ef);--shadow:#0090ad">&#x2744;<div class="tooltip">Frost Peak</div></div>
+        <div class="mini-world" style="background:linear-gradient(135deg,#e8956b,#e17055);--shadow:#c46b45">&#x1F3DC;<div class="tooltip">Sand Dunes</div></div>
+        <div class="mini-world" style="background:linear-gradient(135deg,#636e72,#b2bec3);--shadow:#4a5256">&#x1F4DA;<div class="tooltip">Story Tower</div></div>
+      </div>
+
+      <button class="book-btn btn-learn">Let's Learn!</button>
+      <button class="book-btn btn-staff2">Staff Access</button>
+
+      <div class="book-footer">Aligned to the Scottish Curriculum for Excellence</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const C=document.getElementById('bgCanvas');
+const ctx=C.getContext('2d');
+let W,H;
+function resize(){W=C.width=C.clientWidth;H=C.height=C.clientHeight}
+window.addEventListener('resize',resize);resize();
+
+// Soft aurora background
+const stars=[];
+for(let i=0;i<80;i++) stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.2+0.3,a:Math.random()});
+
+const auroras=[
+  {cx:0.3,cy:0.3,rx:0.35,ry:0.15,color:'rgba(45,143,123,0.06)',phase:0},
+  {cx:0.7,cy:0.25,rx:0.3,ry:0.12,color:'rgba(107,143,178,0.05)',phase:2},
+  {cx:0.5,cy:0.7,rx:0.4,ry:0.15,color:'rgba(232,149,107,0.04)',phase:4},
+];
+
+function draw(t){
+  // Dark warm sky
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'#0f1b2d');
+  g.addColorStop(0.4,'#1a2e42');
+  g.addColorStop(1,'#1e2a35');
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,W,H);
+
+  // Stars
+  stars.forEach(s=>{
+    const flicker=0.4+0.6*Math.sin(t*0.001+s.a*10);
+    ctx.globalAlpha=flicker*0.6;
+    ctx.fillStyle='#fff';
+    ctx.beginPath();
+    ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha=1;
+
+  // Soft aurora blobs
+  auroras.forEach(a=>{
+    const ox=Math.sin(t*0.0003+a.phase)*W*0.05;
+    const oy=Math.cos(t*0.0004+a.phase)*H*0.02;
+    const pulse=1+0.15*Math.sin(t*0.0006+a.phase);
+    ctx.fillStyle=a.color;
+    ctx.beginPath();
+    ctx.ellipse(a.cx*W+ox,a.cy*H+oy,a.rx*W*pulse,a.ry*H*pulse,0,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  // Gentle ground glow
+  const gg=ctx.createRadialGradient(W*0.5,H,0,W*0.5,H,H*0.5);
+  gg.addColorStop(0,'rgba(45,143,123,0.05)');
+  gg.addColorStop(1,'transparent');
+  ctx.fillStyle=gg;
+  ctx.fillRect(0,H*0.5,W,H*0.5);
+
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

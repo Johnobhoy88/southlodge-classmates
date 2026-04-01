@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup A — World Map Landing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Nunito',sans-serif;background:#1a2a3a}
+
+.scene{position:relative;width:100%;height:100%;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+
+.ui{position:absolute;inset:0;display:flex;flex-direction:column;z-index:10;pointer-events:none}
+.ui>*{pointer-events:auto}
+
+.top-bar{display:flex;align-items:center;padding:16px 24px;gap:12px}
+.logo-sm{width:48px;height:48px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.2);border:3px solid rgba(255,255,255,0.9)}
+.app-title{font-family:'Fredoka One',cursive;font-size:1.4rem;color:white;text-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.app-sub{font-size:0.65rem;color:rgba(255,255,255,0.5);letter-spacing:3px;text-transform:uppercase;font-weight:800}
+
+.spacer{flex:1}
+
+.avatar-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);backdrop-filter:blur(8px);border-radius:30px;padding:6px 16px 6px 6px;border:1px solid rgba(255,255,255,0.15);margin-left:auto}
+.avatar-circle{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#fdcb6e,#e17055);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.avatar-name{font-family:'Fredoka One',cursive;font-size:0.85rem;color:white}
+.avatar-coins{font-size:0.7rem;color:#fdcb6e;font-weight:800}
+
+.world-labels{position:absolute;inset:0;z-index:5;pointer-events:none}
+.world-pin{position:absolute;pointer-events:auto;cursor:pointer;text-align:center;transition:transform 0.2s}
+.world-pin:hover{transform:scale(1.12)}
+.pin-glow{width:56px;height:56px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 0 20px var(--glow),0 4px 12px rgba(0,0,0,0.3);border:3px solid rgba(255,255,255,0.8);animation:pinPulse 3s ease-in-out infinite;position:relative}
+.pin-glow::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--glow);opacity:0.3;animation:ringExpand 3s ease-in-out infinite}
+@keyframes pinPulse{0%,100%{box-shadow:0 0 20px var(--glow),0 4px 12px rgba(0,0,0,0.3)}50%{box-shadow:0 0 32px var(--glow),0 4px 16px rgba(0,0,0,0.4)}}
+@keyframes ringExpand{0%,100%{transform:scale(1);opacity:0.3}50%{transform:scale(1.2);opacity:0}}
+.pin-label{font-family:'Fredoka One',cursive;font-size:0.7rem;color:white;text-shadow:0 1px 6px rgba(0,0,0,0.5);white-space:nowrap}
+.pin-sub{font-size:0.55rem;color:rgba(255,255,255,0.5);font-weight:800;letter-spacing:0.5px}
+
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:12px;padding:20px;z-index:10}
+.bottom-btn{padding:14px 28px;border:none;border-radius:16px;font-family:'Fredoka One',cursive;font-size:1.1rem;cursor:pointer;transition:all 0.2s}
+.bottom-btn:active{transform:scale(0.96)}
+.btn-play{background:linear-gradient(135deg,#FFD93D,#F0A500);color:#1a3a4a;box-shadow:0 4px 0 #c48800,0 8px 24px rgba(0,0,0,0.3);font-size:1.2rem;padding:16px 40px}
+.btn-play:hover{transform:translateY(-2px);box-shadow:0 6px 0 #c48800,0 12px 32px rgba(0,0,0,0.4)}
+.btn-staff{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:2px solid rgba(255,255,255,0.15);backdrop-filter:blur(8px);font-size:0.8rem;padding:12px 20px}
+.btn-staff:hover{background:rgba(255,255,255,0.2);color:white}
+
+.footer{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:0.55rem;color:rgba(255,255,255,0.25);letter-spacing:2px;text-transform:uppercase;font-weight:800;z-index:10}
+</style>
+</head>
+<body>
+<div class="scene">
+  <canvas id="mapCanvas"></canvas>
+
+  <div class="ui">
+    <div class="top-bar">
+      <div class="logo-sm">SL</div>
+      <div>
+        <div class="app-title">Classmates</div>
+        <div class="app-sub">South Lodge Primary</div>
+      </div>
+      <div class="avatar-pill">
+        <div class="avatar-circle">E</div>
+        <div>
+          <div class="avatar-name">Eilidh</div>
+          <div class="avatar-coins">42 coins</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="world-labels">
+    <!-- Positions tuned for a landscape map -->
+    <div class="world-pin" style="left:12%;top:28%;--glow:rgba(46,204,113,0.6)">
+      <div class="pin-glow" style="background:linear-gradient(135deg,#2d8f7b,#27ae60)">&#x1F332;</div>
+      <div class="pin-label">Word Forest</div>
+      <div class="pin-sub">Spelling</div>
+    </div>
+    <div class="world-pin" style="left:38%;top:18%;--glow:rgba(108,92,231,0.6)">
+      <div class="pin-glow" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)">&#x1F680;</div>
+      <div class="pin-label">Star Station</div>
+      <div class="pin-sub">Maths</div>
+    </div>
+    <div class="world-pin" style="left:62%;top:22%;--glow:rgba(0,206,209,0.6)">
+      <div class="pin-glow" style="background:linear-gradient(135deg,#00b4d8,#0077b6)">&#x1F30A;</div>
+      <div class="pin-label">Deep Blue</div>
+      <div class="pin-sub">Vocabulary</div>
+    </div>
+    <div class="world-pin" style="left:82%;top:30%;--glow:rgba(232,149,107,0.6)">
+      <div class="pin-glow" style="background:linear-gradient(135deg,#e8956b,#e17055)">&#x1F3DC;</div>
+      <div class="pin-label">Sand Dunes</div>
+      <div class="pin-sub">Geography</div>
+    </div>
+    <div class="world-pin" style="left:25%;top:55%;--glow:rgba(253,203,110,0.6)">
+      <div class="pin-glow" style="background:linear-gradient(135deg,#fdcb6e,#f0a500)">&#x2716;</div>
+      <div class="pin-label">Thunder Tables</div>
+      <div class="pin-sub">Times Tables</div>
+    </div>
+    <div class="world-pin" style="left:50%;top:50%;--glow:rgba(232,96,182,0.6)">
+      <div class="pin-glow" style="background:linear-gradient(135deg,#e84393,#fd79a8)">&#x1F338;</div>
+      <div class="pin-label">Petal Garden</div>
+      <div class="pin-sub">Phonics</div>
+    </div>
+    <div class="world-pin" style="left:74%;top:52%;--glow:rgba(116,185,255,0.6)">
+      <div class="pin-glow" style="background:linear-gradient(135deg,#74b9ff,#0984e3)">&#x1F4DA;</div>
+      <div class="pin-label">Story Tower</div>
+      <div class="pin-sub">Reading</div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="bottom-btn btn-play">Let's Learn!</button>
+    <button class="bottom-btn btn-staff">Staff</button>
+  </div>
+  <div class="footer">Aligned to the Scottish Curriculum for Excellence</div>
+</div>
+
+<script>
+const C=document.getElementById('mapCanvas');
+const ctx=C.getContext('2d');
+let W,H;
+
+function resize(){
+  W=C.width=C.clientWidth;
+  H=C.height=C.clientHeight;
+}
+window.addEventListener('resize',resize);
+resize();
+
+// Scottish landscape palette
+const SKY_TOP='#0f1b2d';
+const SKY_BOT='#1a3a5c';
+const MOUNTAIN='#1e3448';
+const HILL1='#1a3a2a';
+const HILL2='#2d5a3e';
+const WATER='#1a4a6a';
+const LAND='#1e3a2e';
+
+// Stars
+const stars=[];
+for(let i=0;i<120;i++) stars.push({x:Math.random(),y:Math.random()*0.45,r:Math.random()*1.5+0.3,a:Math.random()});
+
+// Fireflies
+const flies=[];
+for(let i=0;i<30;i++) flies.push({x:Math.random(),y:0.4+Math.random()*0.5,r:Math.random()*3+1,phase:Math.random()*Math.PI*2,speed:0.3+Math.random()*0.7});
+
+function drawSky(){
+  const g=ctx.createLinearGradient(0,0,0,H*0.5);
+  g.addColorStop(0,SKY_TOP);
+  g.addColorStop(1,SKY_BOT);
+  ctx.fillStyle=g;
+  ctx.fillRect(0,0,W,H*0.5);
+}
+
+function drawMountains(){
+  ctx.fillStyle=MOUNTAIN;
+  ctx.beginPath();
+  ctx.moveTo(0,H*0.45);
+  ctx.lineTo(W*0.08,H*0.22);
+  ctx.lineTo(W*0.18,H*0.35);
+  ctx.lineTo(W*0.28,H*0.18);
+  ctx.lineTo(W*0.4,H*0.3);
+  ctx.lineTo(W*0.5,H*0.2);
+  ctx.lineTo(W*0.6,H*0.28);
+  ctx.lineTo(W*0.72,H*0.15);
+  ctx.lineTo(W*0.85,H*0.25);
+  ctx.lineTo(W*0.95,H*0.2);
+  ctx.lineTo(W,H*0.35);
+  ctx.lineTo(W,H*0.5);
+  ctx.closePath();
+  ctx.fill();
+
+  // Snow caps
+  ctx.fillStyle='rgba(255,255,255,0.15)';
+  ctx.beginPath();
+  ctx.moveTo(W*0.28,H*0.18);ctx.lineTo(W*0.26,H*0.22);ctx.lineTo(W*0.30,H*0.22);ctx.closePath();ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(W*0.72,H*0.15);ctx.lineTo(W*0.70,H*0.19);ctx.lineTo(W*0.74,H*0.19);ctx.closePath();ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(W*0.5,H*0.2);ctx.lineTo(W*0.48,H*0.24);ctx.lineTo(W*0.52,H*0.24);ctx.closePath();ctx.fill();
+}
+
+function drawLoch(){
+  const g=ctx.createLinearGradient(0,H*0.42,0,H*0.55);
+  g.addColorStop(0,'#1a4a6a');
+  g.addColorStop(1,'#0f2a3a');
+  ctx.fillStyle=g;
+  ctx.beginPath();
+  ctx.moveTo(W*0.1,H*0.42);
+  ctx.quadraticCurveTo(W*0.3,H*0.38,W*0.5,H*0.42);
+  ctx.quadraticCurveTo(W*0.7,H*0.46,W*0.9,H*0.42);
+  ctx.lineTo(W*0.9,H*0.55);
+  ctx.quadraticCurveTo(W*0.7,H*0.52,W*0.5,H*0.55);
+  ctx.quadraticCurveTo(W*0.3,H*0.58,W*0.1,H*0.55);
+  ctx.closePath();
+  ctx.fill();
+
+  // Shimmer
+  ctx.strokeStyle='rgba(116,185,255,0.08)';
+  ctx.lineWidth=1;
+  for(let i=0;i<8;i++){
+    const y=H*(0.44+i*0.012);
+    ctx.beginPath();
+    ctx.moveTo(W*0.15+i*20,y);
+    ctx.lineTo(W*0.15+i*20+40+Math.random()*30,y);
+    ctx.stroke();
+  }
+}
+
+function drawHills(){
+  // Far hills
+  ctx.fillStyle=HILL1;
+  ctx.beginPath();
+  ctx.moveTo(0,H*0.5);
+  ctx.quadraticCurveTo(W*0.2,H*0.38,W*0.4,H*0.48);
+  ctx.quadraticCurveTo(W*0.6,H*0.55,W*0.8,H*0.45);
+  ctx.quadraticCurveTo(W*0.9,H*0.4,W,H*0.48);
+  ctx.lineTo(W,H*0.65);
+  ctx.lineTo(0,H*0.65);
+  ctx.closePath();
+  ctx.fill();
+
+  // Near hills
+  ctx.fillStyle=HILL2;
+  ctx.beginPath();
+  ctx.moveTo(0,H*0.6);
+  ctx.quadraticCurveTo(W*0.15,H*0.52,W*0.3,H*0.58);
+  ctx.quadraticCurveTo(W*0.5,H*0.65,W*0.7,H*0.56);
+  ctx.quadraticCurveTo(W*0.85,H*0.5,W,H*0.58);
+  ctx.lineTo(W,H);
+  ctx.lineTo(0,H);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawGround(){
+  const g=ctx.createLinearGradient(0,H*0.6,0,H);
+  g.addColorStop(0,'#1e3a2e');
+  g.addColorStop(0.5,'#1a3028');
+  g.addColorStop(1,'#0f1f18');
+  ctx.fillStyle=g;
+  ctx.fillRect(0,H*0.65,W,H*0.35);
+}
+
+function drawStars(t){
+  stars.forEach(s=>{
+    const flicker=0.5+0.5*Math.sin(t*0.001+s.a*10);
+    ctx.globalAlpha=flicker*0.8;
+    ctx.fillStyle='#fff';
+    ctx.beginPath();
+    ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha=1;
+}
+
+function drawMoon(t){
+  const mx=W*0.82,my=H*0.1,mr=30;
+  ctx.fillStyle='#ffeaa7';
+  ctx.shadowColor='rgba(255,234,167,0.4)';
+  ctx.shadowBlur=40;
+  ctx.beginPath();
+  ctx.arc(mx,my,mr,0,Math.PI*2);
+  ctx.fill();
+  ctx.shadowBlur=0;
+  // Crescent shadow
+  ctx.fillStyle=SKY_TOP;
+  ctx.beginPath();
+  ctx.arc(mx+10,my-3,mr*0.85,0,Math.PI*2);
+  ctx.fill();
+}
+
+function drawFireflies(t){
+  flies.forEach(f=>{
+    const x=f.x*W+Math.sin(t*0.0005*f.speed+f.phase)*30;
+    const y=f.y*H+Math.cos(t*0.0007*f.speed+f.phase)*15;
+    const a=0.3+0.7*Math.sin(t*0.002*f.speed+f.phase);
+    ctx.globalAlpha=a*0.6;
+    ctx.fillStyle='#fdcb6e';
+    ctx.shadowColor='rgba(253,203,110,0.5)';
+    ctx.shadowBlur=12;
+    ctx.beginPath();
+    ctx.arc(x,y,f.r,0,Math.PI*2);
+    ctx.fill();
+    ctx.shadowBlur=0;
+  });
+  ctx.globalAlpha=1;
+}
+
+// Winding path
+function drawPath(){
+  ctx.strokeStyle='rgba(255,255,255,0.06)';
+  ctx.lineWidth=8;
+  ctx.lineCap='round';
+  ctx.setLineDash([12,16]);
+  ctx.beginPath();
+  ctx.moveTo(W*0.12,H*0.32);
+  ctx.quadraticCurveTo(W*0.2,H*0.45,W*0.3,H*0.4);
+  ctx.quadraticCurveTo(W*0.4,H*0.35,W*0.5,H*0.45);
+  ctx.quadraticCurveTo(W*0.55,H*0.5,W*0.62,H*0.38);
+  ctx.quadraticCurveTo(W*0.7,H*0.3,W*0.82,H*0.35);
+  ctx.stroke();
+  // Lower path
+  ctx.beginPath();
+  ctx.moveTo(W*0.25,H*0.58);
+  ctx.quadraticCurveTo(W*0.35,H*0.55,W*0.5,H*0.54);
+  ctx.quadraticCurveTo(W*0.62,H*0.53,W*0.74,H*0.56);
+  ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// Small trees scattered
+function drawTrees(){
+  ctx.fillStyle='rgba(45,90,62,0.6)';
+  const spots=[[0.05,0.58],[0.15,0.62],[0.22,0.6],[0.35,0.64],[0.45,0.6],[0.55,0.63],[0.65,0.58],[0.78,0.62],[0.88,0.6],[0.92,0.57],[0.08,0.7],[0.32,0.72],[0.6,0.7],[0.85,0.68]];
+  spots.forEach(([px,py])=>{
+    const x=px*W,y=py*H,h=12+Math.random()*8;
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x-6,y);
+    ctx.lineTo(x,y-h);
+    ctx.lineTo(x+6,y);
+    ctx.closePath();
+    ctx.fill();
+  });
+}
+
+function draw(t){
+  ctx.clearRect(0,0,W,H);
+  drawSky();
+  drawStars(t);
+  drawMoon(t);
+  drawMountains();
+  drawLoch();
+  drawHills();
+  drawGround();
+  drawPath();
+  drawTrees();
+  drawFireflies(t);
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup B — Portal Doors Landing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Nunito',sans-serif;background:#faf6f0}
+
+.scene{position:relative;width:100%;height:100%;display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(170deg,#faf6f0 0%,#f5ede0 50%,#efe4d4 100%)}
+
+/* Warm ambient shapes */
+.scene::before{content:'';position:absolute;top:-20%;right:-10%;width:50%;height:60%;background:radial-gradient(ellipse,rgba(232,149,107,0.12),transparent 70%);border-radius:50%;pointer-events:none}
+.scene::after{content:'';position:absolute;bottom:-15%;left:-10%;width:50%;height:50%;background:radial-gradient(ellipse,rgba(45,143,123,0.08),transparent 70%);border-radius:50%;pointer-events:none}
+
+.header{display:flex;align-items:center;padding:20px 28px;gap:14px;position:relative;z-index:2}
+.logo-wrap{width:56px;height:56px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);border:3px solid #2d8f7b;font-family:'Fredoka One',cursive;font-size:1.2rem;color:#2d8f7b}
+.title-block .title{font-family:'Fredoka One',cursive;font-size:1.8rem;color:#2d3436;line-height:1}
+.title-block .subtitle{font-size:0.65rem;color:#b2bec3;letter-spacing:3px;text-transform:uppercase;font-weight:800;margin-top:2px}
+
+.avatar-pill{display:flex;align-items:center;gap:8px;background:white;border-radius:30px;padding:6px 14px 6px 6px;border:2px solid #f0e6d6;margin-left:auto;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.avatar-circle{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#fdcb6e,#e17055);display:flex;align-items:center;justify-content:center;font-size:1rem;color:white;font-family:'Fredoka One',cursive}
+.avatar-name{font-family:'Fredoka One',cursive;font-size:0.85rem;color:#2d3436}
+.avatar-coins{font-size:0.65rem;color:#e8956b;font-weight:800}
+
+.worlds{flex:1;display:flex;align-items:center;justify-content:center;padding:0 20px;position:relative;z-index:2}
+
+.door-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:720px;width:100%}
+@media(max-width:600px){.door-grid{grid-template-columns:repeat(2,1fr);gap:12px;max-width:360px}}
+
+.door{background:white;border-radius:24px;padding:20px 12px;text-align:center;cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);border:3px solid transparent;position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+.door:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 16px 40px rgba(0,0,0,0.1);border-color:var(--accent)}
+
+.door-glow{position:absolute;top:-30%;left:-30%;width:160%;height:80%;background:radial-gradient(ellipse,var(--glow),transparent 70%);opacity:0;transition:opacity 0.3s;pointer-events:none}
+.door:hover .door-glow{opacity:1}
+
+.door-icon{width:64px;height:64px;border-radius:20px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:var(--bg);box-shadow:0 4px 0 var(--shadow),0 4px 12px rgba(0,0,0,0.06);position:relative;z-index:1}
+.door-name{font-family:'Fredoka One',cursive;font-size:0.95rem;color:#2d3436;position:relative;z-index:1;margin-bottom:2px}
+.door-game{font-size:0.65rem;color:#b2bec3;font-weight:800;text-transform:uppercase;letter-spacing:1px;position:relative;z-index:1}
+
+.door-stars{display:flex;justify-content:center;gap:2px;margin-top:8px;position:relative;z-index:1}
+.door-star{font-size:0.7rem;color:#ddd}
+.door-star.earned{color:#fdcb6e}
+
+.bottom{padding:16px 28px;display:flex;justify-content:center;gap:12px;position:relative;z-index:2}
+.btn{padding:14px 32px;border:none;border-radius:16px;font-family:'Fredoka One',cursive;cursor:pointer;transition:all 0.2s;font-size:1rem}
+.btn:active{transform:scale(0.96)}
+.btn-play{background:linear-gradient(135deg,#2d8f7b,#38c9a9);color:white;box-shadow:0 4px 0 #1e6b5a,0 8px 20px rgba(45,143,123,0.25);font-size:1.15rem;padding:16px 40px}
+.btn-play:hover{transform:translateY(-2px);box-shadow:0 6px 0 #1e6b5a,0 12px 28px rgba(45,143,123,0.35)}
+.btn-staff{background:transparent;color:#b2bec3;border:2px solid #e0d8cc;font-size:0.8rem;padding:12px 20px}
+.btn-staff:hover{border-color:#2d8f7b;color:#2d8f7b}
+
+.footer{text-align:center;padding-bottom:10px;font-size:0.55rem;color:rgba(0,0,0,0.2);letter-spacing:2px;text-transform:uppercase;font-weight:800;position:relative;z-index:2}
+
+/* floating particles */
+.particle{position:absolute;border-radius:50%;pointer-events:none;animation:floatUp linear infinite}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:0.6}90%{opacity:0.6}100%{transform:translateY(-100vh) rotate(360deg);opacity:0}}
+</style>
+</head>
+<body>
+<div class="scene" id="scene">
+  <div class="header">
+    <div class="logo-wrap">SL</div>
+    <div class="title-block">
+      <div class="title">Classmates</div>
+      <div class="subtitle">South Lodge Primary</div>
+    </div>
+    <div class="avatar-pill">
+      <div class="avatar-circle">E</div>
+      <div>
+        <div class="avatar-name">Eilidh</div>
+        <div class="avatar-coins">42 coins</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="worlds">
+    <div class="door-grid">
+      <div class="door" style="--accent:#2d8f7b;--glow:rgba(45,143,123,0.1);--bg:linear-gradient(135deg,#2d8f7b,#27ae60);--shadow:#1e6b5a">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x1F332;</div>
+        <div class="door-name">Word Forest</div>
+        <div class="door-game">Spelling</div>
+        <div class="door-stars"><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+
+      <div class="door" style="--accent:#6c5ce7;--glow:rgba(108,92,231,0.1);--bg:linear-gradient(135deg,#6c5ce7,#a29bfe);--shadow:#5641c4">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x1F680;</div>
+        <div class="door-name">Star Station</div>
+        <div class="door-game">Maths</div>
+        <div class="door-stars"><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+
+      <div class="door" style="--accent:#0984e3;--glow:rgba(9,132,227,0.1);--bg:linear-gradient(135deg,#0984e3,#74b9ff);--shadow:#0669b8">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x1F30A;</div>
+        <div class="door-name">Deep Blue</div>
+        <div class="door-game">Vocabulary</div>
+        <div class="door-stars"><span class="door-star earned">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+
+      <div class="door" style="--accent:#fdcb6e;--glow:rgba(253,203,110,0.15);--bg:linear-gradient(135deg,#fdcb6e,#f0a500);--shadow:#c48800">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x26A1;</div>
+        <div class="door-name">Thunder Tables</div>
+        <div class="door-game">Times Tables</div>
+        <div class="door-stars"><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+
+      <div class="door" style="--accent:#e84393;--glow:rgba(232,67,147,0.1);--bg:linear-gradient(135deg,#e84393,#fd79a8);--shadow:#c0357a">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x1F338;</div>
+        <div class="door-name">Petal Garden</div>
+        <div class="door-game">Phonics</div>
+        <div class="door-stars"><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+
+      <div class="door" style="--accent:#00b4d8;--glow:rgba(0,180,216,0.1);--bg:linear-gradient(135deg,#00b4d8,#90e0ef);--shadow:#0090ad">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x2744;</div>
+        <div class="door-name">Frost Peak</div>
+        <div class="door-game">Number Bonds</div>
+        <div class="door-stars"><span class="door-star earned">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+
+      <div class="door" style="--accent:#e8956b;--glow:rgba(232,149,107,0.1);--bg:linear-gradient(135deg,#e8956b,#e17055);--shadow:#c46b45">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x1F3DC;</div>
+        <div class="door-name">Sand Dunes</div>
+        <div class="door-game">Geography</div>
+        <div class="door-stars"><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+
+      <div class="door" style="--accent:#636e72;--glow:rgba(99,110,114,0.08);--bg:linear-gradient(135deg,#636e72,#b2bec3);--shadow:#4a5256">
+        <div class="door-glow"></div>
+        <div class="door-icon">&#x1F4DA;</div>
+        <div class="door-name">Story Tower</div>
+        <div class="door-game">Reading</div>
+        <div class="door-stars"><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star earned">&#9733;</span><span class="door-star">&#9733;</span><span class="door-star">&#9733;</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <button class="btn btn-play">Let's Learn!</button>
+    <button class="btn btn-staff">Staff Access</button>
+  </div>
+  <div class="footer">Aligned to the Scottish Curriculum for Excellence</div>
+</div>
+
+<script>
+// Floating particles
+const scene=document.getElementById('scene');
+const colors=['#2d8f7b','#e8956b','#6c5ce7','#fdcb6e','#e84393','#74b9ff'];
+function spawnParticle(){
+  const p=document.createElement('div');
+  p.className='particle';
+  const size=4+Math.random()*6;
+  const color=colors[Math.floor(Math.random()*colors.length)];
+  const dur=8+Math.random()*12;
+  p.style.cssText=`width:${size}px;height:${size}px;background:${color};left:${Math.random()*100}%;bottom:-10px;animation-duration:${dur}s;opacity:0.4`;
+  scene.appendChild(p);
+  setTimeout(()=>p.remove(),dur*1000);
+}
+setInterval(spawnParticle,800);
+for(let i=0;i<8;i++) setTimeout(spawnParticle,i*200);
+</script>
+</body>
+</html>
