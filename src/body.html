@@ -1137,12 +1137,28 @@
 </div>
 
 <!-- CONTINENTS -->
-<div id="continents" class="screen game-screen geo-theme">
+<div id="continents" class="screen game-screen geo-theme cont-game">
   <canvas class="game-canvas" id="continentsCanvas"></canvas>
-  <div class="game-header" style="border-color:#2a9d8f"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#264653">World Geography</h2></div>
+  <div class="game-header" style="border-color:#0284c7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#38bdf8">World Geography</h2></div>
   <div class="game-body">
-    <div id="contLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div><div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div><div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div></div></div>
-    <div id="contGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="contProgress" style="background:linear-gradient(90deg,#264653,#2a9d8f)"></div></div><div class="progress-text" id="contProgressText"></div><div id="contDisplay"></div><div class="ph-options" id="contOpts"></div></div>
+    <div id="contLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F6F0;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#7dd3fc">Orbital View</div>
+        <div style="font-size:0.75rem;color:#38bdf8;margin-top:4px">Explore the continents and oceans of planet Earth!</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">&#x1F30D;</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div>
+        <div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div>
+        <div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">&#x1F30E;</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div>
+      </div>
+    </div>
+    <div id="contGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="contProgress" style="background:linear-gradient(90deg,#0284c7,#38bdf8)"></div></div>
+      <div class="progress-text" id="contProgressText"></div>
+      <div class="cont-prompt" id="contDisplay"></div>
+      <div class="cont-opts" id="contOpts"></div>
+    </div>
   </div>
 </div>
 

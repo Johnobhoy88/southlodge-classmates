@@ -1672,6 +1672,20 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .caps-opts .ph-opt.ph-correct,.caps-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
 .caps-opts .ph-opt.ph-wrong,.caps-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
 .caps-opts .ph-opt.ph-disabled,.caps-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== CONTINENTS — Orbital View ===== */
+.cont-game .game-header{background:rgba(2,44,80,0.92);border-bottom:2px solid rgba(2,132,199,0.3)}
+.cont-game .game-title{color:#38bdf8;text-shadow:0 0 10px rgba(56,189,248,0.25)}
+.cont-game .nav-btn{color:#38bdf8;border-color:rgba(2,132,199,0.3)}
+.cont-prompt{text-align:center;margin:18px auto;padding:16px 18px;max-width:360px;background:rgba(2,132,199,0.06);border:1px solid rgba(2,132,199,0.18);border-left:3px solid rgba(56,189,248,0.4);border-radius:12px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.cont-prompt .ph-sound,.cont-prompt .ph-prompt{color:#bae6fd;background:rgba(2,132,199,0.08);border-color:rgba(56,189,248,0.12)}
+.cont-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:320px;margin:14px auto 0;padding:0 12px}
+.cont-opts .ph-opt,.cont-opts button{padding:15px 12px;border:2px solid rgba(2,132,199,0.2);border-radius:10px;background:rgba(2,132,199,0.08);font-family:'Fredoka One',cursive;font-size:0.95rem;color:#bae6fd;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 3px 0 rgba(3,69,107,0.45);text-align:center}
+.cont-opts .ph-opt:hover,.cont-opts button:hover{transform:translateY(-3px);border-color:#0284c7;box-shadow:0 6px 0 rgba(3,69,107,0.45),0 0 12px rgba(2,132,199,0.1)}
+.cont-opts .ph-opt:active,.cont-opts button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(3,69,107,0.45)}
+.cont-opts .ph-opt.ph-correct,.cont-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
+.cont-opts .ph-opt.ph-wrong,.cont-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
+.cont-opts .ph-opt.ph-disabled,.cont-opts button.ph-disabled{pointer-events:none;opacity:0.7}
 </style>
 </head>
 <body>
@@ -2814,12 +2828,28 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- CONTINENTS -->
-<div id="continents" class="screen game-screen geo-theme">
+<div id="continents" class="screen game-screen geo-theme cont-game">
   <canvas class="game-canvas" id="continentsCanvas"></canvas>
-  <div class="game-header" style="border-color:#2a9d8f"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#264653">World Geography</h2></div>
+  <div class="game-header" style="border-color:#0284c7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#38bdf8">World Geography</h2></div>
   <div class="game-body">
-    <div id="contLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div><div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div><div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div></div></div>
-    <div id="contGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="contProgress" style="background:linear-gradient(90deg,#264653,#2a9d8f)"></div></div><div class="progress-text" id="contProgressText"></div><div id="contDisplay"></div><div class="ph-options" id="contOpts"></div></div>
+    <div id="contLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F6F0;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#7dd3fc">Orbital View</div>
+        <div style="font-size:0.75rem;color:#38bdf8;margin-top:4px">Explore the continents and oceans of planet Earth!</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">&#x1F30D;</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div>
+        <div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div>
+        <div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">&#x1F30E;</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div>
+      </div>
+    </div>
+    <div id="contGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="contProgress" style="background:linear-gradient(90deg,#0284c7,#38bdf8)"></div></div>
+      <div class="progress-text" id="contProgressText"></div>
+      <div class="cont-prompt" id="contDisplay"></div>
+      <div class="cont-opts" id="contOpts"></div>
+    </div>
   </div>
 </div>
 
@@ -11583,7 +11613,7 @@ const CONT_DATA={1:[{q:'How many continents are there?',correct:'7',opts:['5','6
 3:[{q:'What is a tropical climate?',correct:'Hot and wet all year',opts:['Cold and dry','Hot and wet all year','Mild with seasons','Freezing']},{q:'What is the equator?',correct:'An imaginary line around the middle of Earth',opts:['A river','An imaginary line around the middle of Earth','A mountain range','A country']},{q:'What are the poles?',correct:'The very top and bottom of Earth',opts:['Mountains','Islands','The very top and bottom of Earth','Deserts']},{q:'What is latitude?',correct:'Distance north or south of the equator',opts:['Distance east or west','Distance north or south of the equator','Height above sea level','Size of a country']},{q:'The Amazon Rainforest is the largest in the world. Where is it?',correct:'South America',opts:['Africa','South America','Asia','North America']},{q:'What causes seasons?',correct:'The tilt of the Earth',opts:['The moon','The tilt of the Earth','Clouds','The sun moving']},{q:'What is a volcano?',correct:'An opening where molten rock escapes',opts:['A very tall mountain','An opening where molten rock escapes','A type of river','A desert']},{q:'What is erosion?',correct:'Wearing away of land by wind or water',opts:['Building of mountains','Wearing away of land by wind or water','A type of weather','Growing of plants']},{q:'What is a glacier?',correct:'A slow-moving river of ice',opts:['A lake','A slow-moving river of ice','A volcano','A desert']},{q:'Greenwich Mean Time (GMT) passes through which country?',correct:'United Kingdom',opts:['France','United Kingdom','USA','Japan']}]};
 let cont={level:1,questions:[],idx:0,total:10,correct:0,streak:0,missed:[]};
 function startCont(lv){cont.level=lv;cont.questions=[...CONT_DATA[lv]];shuffle(cont.questions);cont.idx=0;cont.correct=0;hide('contLevelSelect');show('contGame');loadContQ()}
-function loadContQ(){const q=cont.questions[cont.idx];document.getElementById('contProgress').style.width=(cont.idx/cont.total*100)+'%';document.getElementById('contProgressText').textContent=(cont.idx+1)+'/'+cont.total;document.getElementById('contDisplay').innerHTML='<div class="ph-sound" style="background:#e8f4f0;border-color:#2a9d8f;color:#264653;font-size:1rem">'+q.q+'</div>';const opts=document.getElementById('contOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#contOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){cont.correct++;cont.streak=(cont.streak||0)+1;sfxCorrect();b.classList.add('ph-correct');if(cont.streak>=3)b.textContent=o+' \u2714 '+cont.streak+'!'}else{cont.streak=0;cont.missed.push({w:q.q,h:q.correct});sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{cont.idx++;if(cont.idx>=cont.total){show('contLevelSelect');hide('contGame');const pct=cont.correct/cont.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_continents',true);addStars(stars);recordPlay();showResults('#264653','\u{1F30D}','World Geography Done!','Level '+cont.level,stars,cont.correct,cont.total,()=>{showScreen('continents')},cont.missed)}else loadContQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
+function loadContQ(){const q=cont.questions[cont.idx];document.getElementById('contProgress').style.width=(cont.idx/cont.total*100)+'%';document.getElementById('contProgressText').textContent=(cont.idx+1)+'/'+cont.total;document.getElementById('contDisplay').innerHTML='<div class="ph-sound">'+q.q+'</div>';const opts=document.getElementById('contOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#contOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){cont.correct++;cont.streak=(cont.streak||0)+1;sfxCorrect();if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.onCorrect(null,null);b.classList.add('ph-correct');if(cont.streak>=3)b.textContent=o+' \u2714 '+cont.streak+'!'}else{cont.streak=0;cont.missed.push({w:q.q,h:q.correct});sfxWrong();if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.onWrong();b.classList.add('ph-wrong')}if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.setProgress((cont.idx+1)/cont.total);setTimeout(()=>{cont.idx++;if(cont.idx>=cont.total){if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.onComplete(1);show('contLevelSelect');hide('contGame');const pct=cont.correct/cont.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_continents',true);addStars(stars);recordPlay();showResults('#0284c7','\u{1F30D}','World Geography Done!','Level '+cont.level,stars,cont.correct,cont.total,()=>{showScreen('continents')},cont.missed)}else loadContQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
 
 // ==================== WEATHER ====================
 const WEATHER_DATA={1:[{q:'How many seasons are there?',correct:'4',opts:['2','3','4','5']},{q:'Which season comes after winter?',correct:'Spring',opts:['Summer','Spring','Autumn','Winter']},{q:'In which season do leaves fall from trees?',correct:'Autumn',opts:['Spring','Summer','Autumn','Winter']},{q:'What falls from clouds when it rains?',correct:'Water',opts:['Snow','Water','Hail','Wind']},{q:'What is snow made of?',correct:'Frozen water crystals',opts:['Cotton','Frozen water crystals','Clouds','Dust']},{q:'What makes a rainbow appear?',correct:'Sun and rain together',opts:['Wind','Sun and rain together','Snow','Night time']},{q:'Which is the hottest season?',correct:'Summer',opts:['Spring','Summer','Autumn','Winter']},{q:'What instrument measures temperature?',correct:'Thermometer',opts:['Barometer','Thermometer','Ruler','Clock']},{q:'What is fog?',correct:'A cloud near the ground',opts:['Heavy rain','A cloud near the ground','Smoke','Steam']},{q:'What does windy mean?',correct:'Lots of moving air',opts:['Very hot','Very cold','Lots of moving air','Very wet']}],

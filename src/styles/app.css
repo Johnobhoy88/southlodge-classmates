@@ -1655,3 +1655,17 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .caps-opts .ph-opt.ph-correct,.caps-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
 .caps-opts .ph-opt.ph-wrong,.caps-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
 .caps-opts .ph-opt.ph-disabled,.caps-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== CONTINENTS — Orbital View ===== */
+.cont-game .game-header{background:rgba(2,44,80,0.92);border-bottom:2px solid rgba(2,132,199,0.3)}
+.cont-game .game-title{color:#38bdf8;text-shadow:0 0 10px rgba(56,189,248,0.25)}
+.cont-game .nav-btn{color:#38bdf8;border-color:rgba(2,132,199,0.3)}
+.cont-prompt{text-align:center;margin:18px auto;padding:16px 18px;max-width:360px;background:rgba(2,132,199,0.06);border:1px solid rgba(2,132,199,0.18);border-left:3px solid rgba(56,189,248,0.4);border-radius:12px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.cont-prompt .ph-sound,.cont-prompt .ph-prompt{color:#bae6fd;background:rgba(2,132,199,0.08);border-color:rgba(56,189,248,0.12)}
+.cont-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:320px;margin:14px auto 0;padding:0 12px}
+.cont-opts .ph-opt,.cont-opts button{padding:15px 12px;border:2px solid rgba(2,132,199,0.2);border-radius:10px;background:rgba(2,132,199,0.08);font-family:'Fredoka One',cursive;font-size:0.95rem;color:#bae6fd;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 3px 0 rgba(3,69,107,0.45);text-align:center}
+.cont-opts .ph-opt:hover,.cont-opts button:hover{transform:translateY(-3px);border-color:#0284c7;box-shadow:0 6px 0 rgba(3,69,107,0.45),0 0 12px rgba(2,132,199,0.1)}
+.cont-opts .ph-opt:active,.cont-opts button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(3,69,107,0.45)}
+.cont-opts .ph-opt.ph-correct,.cont-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
+.cont-opts .ph-opt.ph-wrong,.cont-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
+.cont-opts .ph-opt.ph-disabled,.cont-opts button.ph-disabled{pointer-events:none;opacity:0.7}
