@@ -714,24 +714,28 @@
 </div>
 
 <!-- TELLING TIME -->
-<div id="telltime" class="screen game-screen num-theme">
+<div id="telltime" class="screen game-screen num-theme tt-game">
   <canvas class="game-canvas" id="telltimeCanvas"></canvas>
-  <div class="game-header" style="border-color:#3498db"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2c3e50">Telling Time</h2></div>
+  <div class="game-header" style="border-color:#0ea5e9"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#38bdf8">Telling Time</h2></div>
   <div class="game-body">
     <div id="ttimeLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F570;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#7dd3fc">Clock Tower</div>
+        <div style="font-size:0.75rem;color:#38bdf8;margin-top:4px">Read the clock and tell the time!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startTTime(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">O'clock &amp; half past</div></div>
-        <div class="level-card lc-2" onclick="startTTime(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Quarter past/to</div></div>
-        <div class="level-card lc-3" onclick="startTTime(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">5-min intervals</div></div>
+        <div class="level-card lc-1" onclick="startTTime(1)"><div class="lc-icon">&#x1F552;</div><div class="lc-title">Easy</div><div class="lc-sub">O'clock &amp; half past</div></div>
+        <div class="level-card lc-2" onclick="startTTime(2)"><div class="lc-icon">&#x1F553;</div><div class="lc-title">Medium</div><div class="lc-sub">Quarter past/to</div></div>
+        <div class="level-card lc-3" onclick="startTTime(3)"><div class="lc-icon">&#x1F55B;</div><div class="lc-title">Hard</div><div class="lc-sub">5-min intervals</div></div>
       </div>
     </div>
     <div id="ttimeGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="ttimeProgress" style="background:linear-gradient(90deg,#2c3e50,#3498db)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="ttimeProgress" style="background:linear-gradient(90deg,#0ea5e9,#7dd3fc)"></div></div>
       <div class="progress-text" id="ttimeProgressText"></div>
-      <div id="clockDisplay"></div>
-      <div class="ph-prompt" id="ttimePrompt">What time does the clock show?</div>
-      <div class="ph-options" id="ttimeOpts"></div>
+      <div class="tt-clock-wrap" id="clockDisplay"></div>
+      <div class="tt-prompt" id="ttimePrompt">What time does the clock show?</div>
+      <div class="tt-options" id="ttimeOpts"></div>
     </div>
   </div>
 </div>
