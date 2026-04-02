@@ -347,27 +347,27 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 @media(max-width:500px){.wb-question{font-size:2.5rem}.wb-answer{font-size:3.5rem}}
 
 /* ===== LANDING PAGE ===== */
-.landing-bg{background:linear-gradient(170deg,#1a3a4a 0%,#1f5066 25%,#2a7c8e 50%,#45B7D1 80%,#78d4e6 100%);align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
-.landing-bg::before{content:'';position:absolute;top:-15%;left:-15%;width:70%;height:70%;background:radial-gradient(ellipse,rgba(255,217,61,0.12),transparent 60%);border-radius:50%;pointer-events:none;animation:glowDrift 8s ease-in-out infinite alternate}
-.landing-bg::after{content:'';position:absolute;bottom:-10%;right:-15%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(255,255,255,0.06),transparent 60%);border-radius:50%;pointer-events:none}
+.landing-bg{background:transparent;align-items:center;justify-content:center;text-align:center;padding:40px 24px;position:relative;overflow:hidden}
+.landing-bg::before{display:none}
+.landing-bg::after{display:none}
 @keyframes glowDrift{0%{transform:translate(0,0)}100%{transform:translate(30px,20px)}}
 .landing-brand{position:relative;z-index:1}
 .landing-logo-wrap{position:relative;display:inline-block;margin-bottom:12px}
-.landing-logo{width:220px;height:220px;border-radius:50%;object-fit:cover;border:5px solid rgba(255,255,255,0.9);box-shadow:0 16px 48px rgba(0,0,0,0.25),0 0 0 12px rgba(255,255,255,0.08);animation:floatLogo 4s ease-in-out infinite;display:block}
-.landing-logo-glow{position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(255,217,61,0.2) 0%,rgba(255,255,255,0.05) 50%,transparent 70%);z-index:-1;animation:glowPulse 4s ease-in-out infinite}
+.landing-logo{width:220px;height:220px;border-radius:50%;object-fit:cover;border:5px solid white;box-shadow:0 12px 40px rgba(0,0,0,0.15),0 0 0 10px rgba(255,255,255,0.5);animation:floatLogo 4s ease-in-out infinite;display:block}
+.landing-logo-glow{position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(255,235,59,0.25) 0%,rgba(255,255,255,0.1) 50%,transparent 70%);z-index:-1;animation:glowPulse 4s ease-in-out infinite}
 @keyframes glowPulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.12);opacity:1}}
-.landing-divider{width:60px;height:3px;background:linear-gradient(90deg,rgba(255,217,61,0.8),rgba(255,255,255,0.5));border-radius:3px;margin:4px auto 10px}
-.landing-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.4rem;margin:0 0 6px;letter-spacing:-0.5px;color:white;line-height:1.05;text-shadow:0 2px 12px rgba(0,0,0,0.15)}
-.landing-school{font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.8rem;font-weight:700;color:rgba(255,255,255,0.65);letter-spacing:4px;text-transform:uppercase;margin-bottom:36px}
+.landing-divider{width:60px;height:3px;background:linear-gradient(90deg,#FFD93D,#F0A500);border-radius:3px;margin:4px auto 10px}
+.landing-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.4rem;margin:0 0 6px;letter-spacing:-0.5px;color:#1a3a4a;line-height:1.05;text-shadow:0 2px 8px rgba(255,255,255,0.6)}
+.landing-school{font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.8rem;font-weight:700;color:#2E7D32;letter-spacing:4px;text-transform:uppercase;margin-bottom:36px}
 .landing-sub{display:none}
 .landing-btn-group{position:relative;z-index:1}
 .landing-btn{display:block;width:280px;margin:12px auto;padding:18px 28px;border:none;border-radius:18px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.1rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
 .landing-btn:active{transform:scale(0.96)}
 .landing-btn.btn-learn{background:linear-gradient(135deg,#FFD93D,#F0A500);color:#1a3a4a;box-shadow:0 5px 0 #c48800,0 8px 28px rgba(0,0,0,0.2);font-size:1.25rem;letter-spacing:0.5px}
 .landing-btn.btn-learn:hover{box-shadow:0 5px 0 #c48800,0 12px 40px rgba(0,0,0,0.3);transform:translateY(-2px)}
-.landing-btn.btn-staff{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);border:2px solid rgba(255,255,255,0.2);box-shadow:none;font-size:0.85rem;padding:14px 24px;border-radius:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.landing-btn.btn-staff:hover{background:rgba(255,255,255,0.2);color:white;border-color:rgba(255,255,255,0.4)}
-.landing-footer{margin-top:auto;padding:20px 0;text-align:center;font-size:0.6rem;color:rgba(255,255,255,0.35);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;position:relative;z-index:1}
+.landing-btn.btn-staff{background:rgba(255,255,255,0.65);color:#2E7D32;border:2px solid rgba(46,125,50,0.25);box-shadow:none;font-size:0.85rem;padding:14px 24px;border-radius:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.landing-btn.btn-staff:hover{background:rgba(255,255,255,0.85);color:#1B5E20;border-color:rgba(46,125,50,0.4)}
+.landing-footer{margin-top:auto;padding:20px 0;text-align:center;font-size:0.6rem;color:rgba(30,80,50,0.45);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;position:relative;z-index:1}
 .pupil-select{margin:20px auto;max-width:300px}
 .pupil-select-title{font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:8px}
 .pupil-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
@@ -391,6 +391,25 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .section-header .collapse-arrow{margin-left:auto;font-size:0.7rem;color:rgba(255,255,255,0.3);transition:transform 0.2s}
 .section-header.collapsed .collapse-arrow{transform:rotate(-90deg)}
 .subject-grid.collapsed{display:none}
+
+/* ===== WORLD PORTAL ===== */
+.portal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:16px 0}
+.portal-card{border-radius:20px;padding:20px 12px;text-align:center;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;position:relative;overflow:hidden;user-select:none;box-shadow:0 4px 16px rgba(0,0,0,0.12)}
+.portal-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.18)}
+.portal-card:active{transform:scale(0.96)}
+.portal-card.portal-open{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
+.portal-emoji{font-size:2.4rem;margin-bottom:6px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1))}
+.portal-title{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1rem;color:white;text-shadow:0 1px 4px rgba(0,0,0,0.2)}
+.portal-count{font-size:0.65rem;color:rgba(255,255,255,0.75);font-weight:600;margin-top:2px}
+.portal-literacy{background:linear-gradient(145deg,#FF6B6B,#ee5a24);border:3px solid rgba(255,255,255,0.25)}
+.portal-numeracy{background:linear-gradient(145deg,#74b9ff,#0984e3);border:3px solid rgba(255,255,255,0.25)}
+.portal-geography{background:linear-gradient(145deg,#55efc4,#00b894);border:3px solid rgba(255,255,255,0.25)}
+.portal-games{margin:12px 0;animation:portalSlide 0.25s ease-out}
+.portal-games-header{display:flex;align-items:center;justify-content:space-between;padding:8px 4px;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.9rem;color:rgba(255,255,255,0.8);cursor:pointer}
+.portal-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:1.4rem;cursor:pointer;padding:0 4px;line-height:1}
+.portal-close:hover{color:rgba(255,255,255,0.8)}
+@keyframes portalSlide{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
 .pupil-name-bar{text-align:center;font-size:0.85rem;color:rgba(255,255,255,0.6);font-weight:700;margin-bottom:4px}
 .pupil-name-bar strong{color:#38ef7d}
 
@@ -721,6 +740,75 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 /* ===== SPELLING — WORD FOREST ===== */
 /* Full-screen canvas scene — UI floats on top */
 #spelling.game-screen{background:transparent}
+
+/* ===== GAME CANVAS (shared by all themed games) ===== */
+.game-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+/* ===== LITERACY THEME ===== */
+.lit-theme.game-screen{background:transparent}
+.lit-theme .game-header{background:rgba(255,240,220,0.85);border-bottom:2px solid rgba(255,160,80,0.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.lit-theme .game-title{color:#c44c00}
+.lit-theme .nav-btn{color:#c44c00;border-color:rgba(196,76,0,0.2)}
+.lit-theme .nav-btn:hover{background:rgba(255,160,80,0.15)}
+.lit-theme .game-body{color:#3d2c1e}
+.lit-theme .game-screen::after{display:none}
+.lit-theme .level-btn,.lit-theme .r-btn{background:linear-gradient(135deg,#FFD93D,#F0A500);color:#3d2c1e;border:none;box-shadow:0 3px 0 #c48800,0 4px 12px rgba(0,0,0,0.1)}
+.lit-theme .level-btn:hover,.lit-theme .r-btn:hover{transform:translateY(-2px);box-shadow:0 3px 0 #c48800,0 8px 20px rgba(0,0,0,0.15)}
+.lit-theme .kb-key{background:rgba(255,240,220,0.9);color:#3d2c1e;border:2px solid rgba(196,76,0,0.15);box-shadow:0 2px 0 rgba(196,76,0,0.2)}
+.lit-theme .kb-key:hover{background:rgba(255,220,180,1);border-color:rgba(196,76,0,0.3)}
+.lit-theme .kb-key.correct{background:#55efc4;color:#1a5e3a;border-color:#00b894}
+.lit-theme .kb-key.wrong{background:#fab1a0;color:#c0392b;border-color:#e17055}
+.lit-theme .letter-slot{background:rgba(255,240,220,0.8);border:2px solid rgba(196,76,0,0.2);color:#3d2c1e;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.lit-theme .letter-slot.revealed{background:rgba(255,217,61,0.3);border-color:#F0A500}
+.lit-theme .hint-btn{background:linear-gradient(135deg,#fdcb6e,#e17055);color:white;border:none}
+.lit-theme .hearts span{color:#e17055;text-shadow:0 1px 4px rgba(225,112,85,0.3)}
+.lit-theme .progress-bar{background:rgba(0,0,0,0.08);border-radius:8px}
+.lit-theme .progress-fill{background:linear-gradient(90deg,#FFD93D,#F0A500)}
+
+/* ===== NUMERACY THEME ===== */
+.num-theme.game-screen{background:transparent}
+.num-theme .game-header{background:rgba(30,40,80,0.85);border-bottom:2px solid rgba(116,185,255,0.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.num-theme .game-title{color:#74b9ff}
+.num-theme .nav-btn{color:#74b9ff;border-color:rgba(116,185,255,0.2)}
+.num-theme .nav-btn:hover{background:rgba(116,185,255,0.15)}
+.num-theme .game-body{color:#e0e0ff}
+.num-theme .game-screen::after{display:none}
+.num-theme .level-btn,.num-theme .r-btn{background:linear-gradient(135deg,#74b9ff,#0984e3);color:white;border:none;box-shadow:0 3px 0 #065cb5,0 4px 12px rgba(0,0,0,0.2)}
+.num-theme .level-btn:hover,.num-theme .r-btn:hover{transform:translateY(-2px);box-shadow:0 3px 0 #065cb5,0 8px 20px rgba(0,0,0,0.25)}
+.num-theme .kb-key{background:rgba(30,40,80,0.85);color:#e0e0ff;border:2px solid rgba(116,185,255,0.2);box-shadow:0 2px 0 rgba(9,132,227,0.3)}
+.num-theme .kb-key:hover{background:rgba(50,60,110,0.9);border-color:rgba(116,185,255,0.4)}
+.num-theme .kb-key.correct{background:#55efc4;color:#1a5e3a;border-color:#00b894}
+.num-theme .kb-key.wrong{background:#fab1a0;color:#c0392b;border-color:#e17055}
+.num-theme .letter-slot{background:rgba(30,40,80,0.7);border:2px solid rgba(116,185,255,0.2);color:#e0e0ff;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.num-theme .letter-slot.revealed{background:rgba(116,185,255,0.25);border-color:#74b9ff}
+.num-theme .hint-btn{background:linear-gradient(135deg,#a29bfe,#6c5ce7);color:white;border:none}
+.num-theme .hearts span{color:#FF6B6B;text-shadow:0 1px 4px rgba(255,107,107,0.3)}
+.num-theme .progress-bar{background:rgba(255,255,255,0.08);border-radius:8px}
+.num-theme .progress-fill{background:linear-gradient(90deg,#74b9ff,#0984e3)}
+.num-theme .maths-answer-input,.num-theme input[type="number"],.num-theme input[type="text"]{background:rgba(30,40,80,0.8);border:2px solid rgba(116,185,255,0.3);color:#e0e0ff;border-radius:12px}
+.num-theme .maths-answer-input:focus,.num-theme input:focus{border-color:#74b9ff;outline:none;box-shadow:0 0 12px rgba(116,185,255,0.3)}
+.num-theme .tt-btn{background:rgba(30,40,80,0.7);border:2px solid rgba(116,185,255,0.2);color:#e0e0ff}
+.num-theme .tt-btn:hover{border-color:#74b9ff;background:rgba(50,60,110,0.8)}
+.num-theme .tt-btn.completed{background:rgba(85,239,196,0.2);border-color:#55efc4}
+
+/* ===== GEOGRAPHY THEME ===== */
+.geo-theme.game-screen{background:transparent}
+.geo-theme .game-header{background:rgba(230,245,240,0.88);border-bottom:2px solid rgba(0,105,92,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.geo-theme .game-title{color:#00695C}
+.geo-theme .nav-btn{color:#00695C;border-color:rgba(0,105,92,0.2)}
+.geo-theme .nav-btn:hover{background:rgba(0,105,92,0.1)}
+.geo-theme .game-body{color:#1a3a2a}
+.geo-theme .game-screen::after{display:none}
+.geo-theme .level-btn,.geo-theme .r-btn{background:linear-gradient(135deg,#55efc4,#00b894);color:#1a3a2a;border:none;box-shadow:0 3px 0 #00856f,0 4px 12px rgba(0,0,0,0.1)}
+.geo-theme .level-btn:hover,.geo-theme .r-btn:hover{transform:translateY(-2px);box-shadow:0 3px 0 #00856f,0 8px 20px rgba(0,0,0,0.15)}
+.geo-theme .kb-key{background:rgba(230,245,240,0.9);color:#1a3a2a;border:2px solid rgba(0,105,92,0.15);box-shadow:0 2px 0 rgba(0,105,92,0.2)}
+.geo-theme .kb-key:hover{background:rgba(200,235,220,1);border-color:rgba(0,105,92,0.3)}
+.geo-theme .letter-slot{background:rgba(230,245,240,0.8);border:2px solid rgba(0,105,92,0.15);color:#1a3a2a}
+.geo-theme .letter-slot.revealed{background:rgba(85,239,196,0.25);border-color:#00b894}
+.geo-theme .hint-btn{background:linear-gradient(135deg,#F57F17,#E65100);color:white;border:none}
+.geo-theme .hearts span{color:#e17055;text-shadow:0 1px 4px rgba(225,112,85,0.3)}
+.geo-theme .progress-bar{background:rgba(0,0,0,0.06);border-radius:8px}
+.geo-theme .progress-fill{background:linear-gradient(90deg,#55efc4,#00b894)}
 #spelling.game-screen::after{display:none}
 #spelling .game-body{max-width:100%;padding:16px 5%}
 #spelling .spell-display{max-width:600px;margin:0 auto;width:100%}
@@ -1045,6 +1133,10 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 }
 @media(max-width:380px){
   html{font-size:15px}
+  .portal-grid{grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .portal-card{padding:14px 8px}
+  .portal-emoji{font-size:1.8rem}
+  .portal-title{font-size:0.8rem}
   .kb-key{min-width:28px;height:40px;font-size:0.9rem}
   .letter-slot{width:32px;height:40px;font-size:1.2rem}
   .subject-grid{grid-template-columns:repeat(3,1fr);gap:8px}

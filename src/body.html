@@ -2,6 +2,7 @@
 
 <!-- LANDING PAGE -->
 <div id="landing" class="screen landing-bg branded active">
+  <canvas id="landingCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
   <div class="landing-brand">
     <div class="landing-logo-wrap">
       <div class="landing-logo-glow"></div>
@@ -35,13 +36,14 @@
 
 <!-- PUPIL SELECT -->
 <div id="pupilselect" class="screen landing-bg branded" style="padding:20px">
-  <div style="text-align:center;padding:16px 0;">
+  <canvas id="pupilSelectCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+  <div style="text-align:center;padding:16px 0;position:relative;z-index:1;">
     <img src="logo.jpg" alt="South Lodge Primary" style="width:70px;border-radius:50%;border:4px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
-    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;color:white;margin:10px 0 4px;">Who's playing today?</div>
-    <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);">Tap your name to start!</div>
+    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;color:#1a3a4a;margin:10px 0 4px;text-shadow:0 1px 4px rgba(255,255,255,0.5)">Who's playing today?</div>
+    <div style="font-size:0.85rem;color:#2E7D32;">Tap your name to start!</div>
   </div>
-  <div class="pupil-grid" id="pupilGrid"></div>
-  <div style="text-align:center;padding:16px;">
+  <div class="pupil-grid" id="pupilGrid" style="position:relative;z-index:1"></div>
+  <div style="text-align:center;padding:16px;position:relative;z-index:1;">
     <button class="nav-btn" onclick="showScreen('landing')" style="margin:0 auto">&larr; Back</button>
   </div>
 </div>
@@ -106,50 +108,79 @@
       <button class="journey-btn" onclick="showScreen('journey');renderJourney()">&#x1F5FA;&#xFE0F; My Scottish Journey</button>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x270F;&#xFE0F; Literacy</span><span class="collapse-arrow">&#x25BC;</span></div>
-    <div class="subject-grid">
-      <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
-      <div class="subject-card card-dictation" onclick="startGame('dictation')"><div class="card-icon">&#x1F50A;</div><div class="card-title">Dictation</div><div class="card-desc">Listen and spell!</div></div>
-      <div class="subject-card card-vowels" onclick="startGame('vowels')"><div class="card-icon">_e_</div><div class="card-title">Missing Vowels</div><div class="card-desc">Fill in the gaps!</div></div>
-      <div class="subject-card card-anagram" onclick="startGame('anagram')"><div class="card-icon">ABC</div><div class="card-title">Anagrams</div><div class="card-desc">Unjumble the letters!</div></div>
-      <div class="subject-card card-phonics" onclick="startGame('phonics')"><div class="card-icon">ai</div><div class="card-title">Phonics</div><div class="card-desc">Sound patterns</div></div>
-      <div class="subject-card card-wordfam" onclick="startGame('wordfam')"><div class="card-icon">-ing</div><div class="card-title">Word Families</div><div class="card-desc">Common endings</div></div>
-      <div class="subject-card card-sentence" onclick="startGame('sentence')"><div class="card-icon">1 2 3</div><div class="card-title">Sentences</div><div class="card-desc">Put words in order</div></div>
-      <div class="subject-card card-punctuation" onclick="startGame('punctuation')"><div class="card-icon">.?!</div><div class="card-title">Punctuation</div><div class="card-desc">Add the missing marks</div></div>
-      <div class="subject-card card-vocab" onclick="startGame('vocab')"><div class="card-icon">A-Z</div><div class="card-title">Vocabulary</div><div class="card-desc">Words and meanings</div></div>
-      <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
-      <div class="subject-card card-grammar" onclick="startGame('grammar')"><div class="card-icon">N V</div><div class="card-title">Grammar</div><div class="card-desc">Word types</div></div>
-      <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
+    <!-- WORLD PORTAL — Category Cards -->
+    <div class="portal-grid">
+      <div class="portal-card portal-literacy" onclick="togglePortal(this,'literacy')">
+        <div class="portal-emoji">&#x1F4DA;</div>
+        <div class="portal-title">Literacy</div>
+        <div class="portal-count">12 games</div>
+      </div>
+      <div class="portal-card portal-numeracy" onclick="togglePortal(this,'numeracy')">
+        <div class="portal-emoji">&#x1F522;</div>
+        <div class="portal-title">Numeracy</div>
+        <div class="portal-count">14 games</div>
+      </div>
+      <div class="portal-card portal-geography" onclick="togglePortal(this,'geography')">
+        <div class="portal-emoji">&#x1F30D;</div>
+        <div class="portal-title">Geography</div>
+        <div class="portal-count">5 games</div>
+      </div>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F522; Numeracy</span><span class="collapse-arrow">&#x25BC;</span></div>
-    <div class="subject-grid">
-      <div class="subject-card card-maths" onclick="startGame('maths')"><div class="card-icon">1+2</div><div class="card-title">Maths</div><div class="card-desc">Solve the sums</div></div>
-      <div class="subject-card card-times" onclick="startGame('times')"><div class="card-icon">3x4</div><div class="card-title">Times Tables</div><div class="card-desc">Beat the clock!</div></div>
-      <div class="subject-card card-speed" onclick="startGame('speed')"><div class="card-icon">60s</div><div class="card-title">Speed Maths</div><div class="card-desc">60 second challenge</div></div>
-      <div class="subject-card card-bonds" onclick="startGame('bonds')"><div class="card-icon">?+3</div><div class="card-title">Number Bonds</div><div class="card-desc">Find the missing number</div></div>
-      <div class="subject-card card-missnum" onclick="startGame('missnum')"><div class="card-icon">?=</div><div class="card-title">Missing Number</div><div class="card-desc">Find the gap</div></div>
-      <div class="subject-card card-placeval" onclick="startGame('placeval')"><div class="card-icon">HTO</div><div class="card-title">Place Value</div><div class="card-desc">Hundreds, tens &amp; ones</div></div>
-      <div class="subject-card card-time" onclick="startGame('telltime')"><div class="card-icon">3:00</div><div class="card-title">Telling Time</div><div class="card-desc">Read the clock</div></div>
-      <div class="subject-card card-money" onclick="startGame('money')"><div class="card-icon">&#xA3;p</div><div class="card-title">Money</div><div class="card-desc">Coins and change</div></div>
-      <div class="subject-card card-fractions" onclick="startGame('fractions')"><div class="card-icon">&#xBD;</div><div class="card-title">Fractions</div><div class="card-desc">Halves, quarters &amp; more</div></div>
-      <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
-      <div class="subject-card card-shapes" onclick="startGame('shapes')"><div class="card-icon">&#x25B3;</div><div class="card-title">Shapes</div><div class="card-desc">Geometry</div></div>
-      <div class="subject-card card-data" onclick="startGame('datahandling')"><div class="card-icon">&#x1F4CA;</div><div class="card-title">Data</div><div class="card-desc">Charts</div></div>
-      <div class="subject-card card-measure" onclick="startGame('measure')"><div class="card-icon">cm</div><div class="card-title">Measurement</div><div class="card-desc">Compare</div></div>
-      <div class="subject-card card-sequence" onclick="startGame('sequence')"><div class="card-icon">1,2,?</div><div class="card-title">Sequences</div><div class="card-desc">Patterns</div></div>
+    <!-- Literacy Games (hidden until portal tapped) -->
+    <div class="portal-games" id="portal-literacy" style="display:none">
+      <div class="portal-games-header" onclick="togglePortal(null,'literacy')"><span>&#x1F4DA; Literacy</span><button class="portal-close">&times;</button></div>
+      <div class="subject-grid">
+        <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
+        <div class="subject-card card-dictation" onclick="startGame('dictation')"><div class="card-icon">&#x1F50A;</div><div class="card-title">Dictation</div><div class="card-desc">Listen and spell!</div></div>
+        <div class="subject-card card-vowels" onclick="startGame('vowels')"><div class="card-icon">_e_</div><div class="card-title">Missing Vowels</div><div class="card-desc">Fill in the gaps!</div></div>
+        <div class="subject-card card-anagram" onclick="startGame('anagram')"><div class="card-icon">ABC</div><div class="card-title">Anagrams</div><div class="card-desc">Unjumble the letters!</div></div>
+        <div class="subject-card card-phonics" onclick="startGame('phonics')"><div class="card-icon">ai</div><div class="card-title">Phonics</div><div class="card-desc">Sound patterns</div></div>
+        <div class="subject-card card-wordfam" onclick="startGame('wordfam')"><div class="card-icon">-ing</div><div class="card-title">Word Families</div><div class="card-desc">Common endings</div></div>
+        <div class="subject-card card-sentence" onclick="startGame('sentence')"><div class="card-icon">1 2 3</div><div class="card-title">Sentences</div><div class="card-desc">Put words in order</div></div>
+        <div class="subject-card card-punctuation" onclick="startGame('punctuation')"><div class="card-icon">.?!</div><div class="card-title">Punctuation</div><div class="card-desc">Add the missing marks</div></div>
+        <div class="subject-card card-vocab" onclick="startGame('vocab')"><div class="card-icon">A-Z</div><div class="card-title">Vocabulary</div><div class="card-desc">Words and meanings</div></div>
+        <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
+        <div class="subject-card card-grammar" onclick="startGame('grammar')"><div class="card-icon">N V</div><div class="card-title">Grammar</div><div class="card-desc">Word types</div></div>
+        <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
+      </div>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F30D; Geography</span><span class="collapse-arrow">&#x25BC;</span></div>
-    <div class="subject-grid">
-      <div class="subject-card card-capitals" onclick="startGame('capitals')"><div class="card-icon">&#x1F3DB;</div><div class="card-title">Capitals</div><div class="card-desc">Cities</div></div>
-      <div class="subject-card card-continents" onclick="startGame('continents')"><div class="card-icon">&#x1F30D;</div><div class="card-title">World</div><div class="card-desc">Continents</div></div>
-      <div class="subject-card card-weather" onclick="startGame('weather')"><div class="card-icon">&#x2600;</div><div class="card-title">Weather</div><div class="card-desc">Climate</div></div>
-      <div class="subject-card card-compass" onclick="startGame('compass')"><div class="card-icon">&#x1F9ED;</div><div class="card-title">Compass</div><div class="card-desc">Directions</div></div>
-      <div class="subject-card card-flags" onclick="startGame('flags')"><div class="card-icon">&#x1F3F3;</div><div class="card-title">Flags</div><div class="card-desc">Countries</div></div>
+    <!-- Numeracy Games -->
+    <div class="portal-games" id="portal-numeracy" style="display:none">
+      <div class="portal-games-header" onclick="togglePortal(null,'numeracy')"><span>&#x1F522; Numeracy</span><button class="portal-close">&times;</button></div>
+      <div class="subject-grid">
+        <div class="subject-card card-maths" onclick="startGame('maths')"><div class="card-icon">1+2</div><div class="card-title">Maths</div><div class="card-desc">Solve the sums</div></div>
+        <div class="subject-card card-times" onclick="startGame('times')"><div class="card-icon">3x4</div><div class="card-title">Times Tables</div><div class="card-desc">Beat the clock!</div></div>
+        <div class="subject-card card-speed" onclick="startGame('speed')"><div class="card-icon">60s</div><div class="card-title">Speed Maths</div><div class="card-desc">60 second challenge</div></div>
+        <div class="subject-card card-bonds" onclick="startGame('bonds')"><div class="card-icon">?+3</div><div class="card-title">Number Bonds</div><div class="card-desc">Find the missing number</div></div>
+        <div class="subject-card card-missnum" onclick="startGame('missnum')"><div class="card-icon">?=</div><div class="card-title">Missing Number</div><div class="card-desc">Find the gap</div></div>
+        <div class="subject-card card-placeval" onclick="startGame('placeval')"><div class="card-icon">HTO</div><div class="card-title">Place Value</div><div class="card-desc">Hundreds, tens &amp; ones</div></div>
+        <div class="subject-card card-time" onclick="startGame('telltime')"><div class="card-icon">3:00</div><div class="card-title">Telling Time</div><div class="card-desc">Read the clock</div></div>
+        <div class="subject-card card-money" onclick="startGame('money')"><div class="card-icon">&#xA3;p</div><div class="card-title">Money</div><div class="card-desc">Coins and change</div></div>
+        <div class="subject-card card-fractions" onclick="startGame('fractions')"><div class="card-icon">&#xBD;</div><div class="card-title">Fractions</div><div class="card-desc">Halves, quarters &amp; more</div></div>
+        <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
+        <div class="subject-card card-shapes" onclick="startGame('shapes')"><div class="card-icon">&#x25B3;</div><div class="card-title">Shapes</div><div class="card-desc">Geometry</div></div>
+        <div class="subject-card card-data" onclick="startGame('datahandling')"><div class="card-icon">&#x1F4CA;</div><div class="card-title">Data</div><div class="card-desc">Charts</div></div>
+        <div class="subject-card card-measure" onclick="startGame('measure')"><div class="card-icon">cm</div><div class="card-title">Measurement</div><div class="card-desc">Compare</div></div>
+        <div class="subject-card card-sequence" onclick="startGame('sequence')"><div class="card-icon">1,2,?</div><div class="card-title">Sequences</div><div class="card-desc">Patterns</div></div>
+      </div>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F3C6; Challenges</span><span class="collapse-arrow">&#x25BC;</span></div>
+    <!-- Geography Games -->
+    <div class="portal-games" id="portal-geography" style="display:none">
+      <div class="portal-games-header" onclick="togglePortal(null,'geography')"><span>&#x1F30D; Geography</span><button class="portal-close">&times;</button></div>
+      <div class="subject-grid">
+        <div class="subject-card card-capitals" onclick="startGame('capitals')"><div class="card-icon">&#x1F3DB;</div><div class="card-title">Capitals</div><div class="card-desc">Cities</div></div>
+        <div class="subject-card card-continents" onclick="startGame('continents')"><div class="card-icon">&#x1F30D;</div><div class="card-title">World</div><div class="card-desc">Continents</div></div>
+        <div class="subject-card card-weather" onclick="startGame('weather')"><div class="card-icon">&#x2600;</div><div class="card-title">Weather</div><div class="card-desc">Climate</div></div>
+        <div class="subject-card card-compass" onclick="startGame('compass')"><div class="card-icon">&#x1F9ED;</div><div class="card-title">Compass</div><div class="card-desc">Directions</div></div>
+        <div class="subject-card card-flags" onclick="startGame('flags')"><div class="card-icon">&#x1F3F3;</div><div class="card-title">Flags</div><div class="card-desc">Countries</div></div>
+      </div>
+    </div>
+
+    <!-- Challenges (stays as-is) -->
+    <div class="section-header" onclick="toggleSection(this)" style="margin-top:24px"><span>&#x1F3C6; Challenges</span><span class="collapse-arrow">&#x25BC;</span></div>
     <div class="subject-grid">
       <div class="subject-card card-daily" onclick="startGame('daily')"><div class="card-icon">GO</div><div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">5 daily challenges — spelling, maths, reading &amp; more</div></div></div>
       <div class="subject-card card-h2h" onclick="startGame('h2h')"><div class="card-icon">VS</div><div class="card-title">Head to Head</div><div class="card-desc">Race!</div></div>
@@ -486,7 +517,8 @@
 </div>
 
 <!-- MATHS -->
-<div id="maths" class="screen game-screen">
+<div id="maths" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="mathsCanvas"></canvas>
   <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Maths</h2></div>
   <div class="game-body">
     <div id="mathsLevelSelect">
@@ -511,7 +543,8 @@
 </div>
 
 <!-- TIMES TABLES -->
-<div id="times" class="screen game-screen">
+<div id="times" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="timesCanvas"></canvas>
   <div class="game-header" style="border-color:#f16529"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e44d26">Times Tables</h2></div>
   <div class="game-body">
     <div id="timesTableSelect">
@@ -534,7 +567,8 @@
 </div>
 
 <!-- READING -->
-<div id="reading" class="screen game-screen">
+<div id="reading" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="readingCanvas"></canvas>
   <div class="game-header" style="border-color:#a8e063"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#56ab2f">Reading</h2></div>
   <div class="game-body">
     <div id="readingLevelSelect">
@@ -584,7 +618,8 @@
 </div>
 
 <!-- SPEED MATHS -->
-<div id="speed" class="screen game-screen">
+<div id="speed" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="speedCanvas"></canvas>
   <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
   <div class="game-body">
     <div id="speedLevelSelect">
@@ -607,7 +642,8 @@
 </div>
 
 <!-- WORD PROBLEMS -->
-<div id="wordprob" class="screen game-screen">
+<div id="wordprob" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="wordprobCanvas"></canvas>
   <div class="game-header" style="border-color:#4286f4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#373b44">Word Problems</h2></div>
   <div class="game-body">
     <div id="wpLevelSelect">
@@ -630,7 +666,8 @@
 </div>
 
 <!-- FRACTIONS -->
-<div id="fractions" class="screen game-screen">
+<div id="fractions" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="fractionsCanvas"></canvas>
   <div class="game-header" style="border-color:#ee9ca7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
   <div class="game-body">
     <div id="fracLevelSelect">
@@ -651,7 +688,8 @@
 </div>
 
 <!-- MONEY -->
-<div id="money" class="screen game-screen">
+<div id="money" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="moneyCanvas"></canvas>
   <div class="game-header" style="border-color:#2ecc71"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#1a5276">Money</h2></div>
   <div class="game-body">
     <div id="moneyLevelSelect">
@@ -672,7 +710,8 @@
 </div>
 
 <!-- TELLING TIME -->
-<div id="telltime" class="screen game-screen">
+<div id="telltime" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="telltimeCanvas"></canvas>
   <div class="game-header" style="border-color:#3498db"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2c3e50">Telling Time</h2></div>
   <div class="game-body">
     <div id="ttimeLevelSelect">
@@ -694,7 +733,8 @@
 </div>
 
 <!-- PLACE VALUE -->
-<div id="placeval" class="screen game-screen">
+<div id="placeval" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="placevalCanvas"></canvas>
   <div class="game-header" style="border-color:#eea849"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#f46b45">Place Value</h2></div>
   <div class="game-body">
     <div id="pvLevelSelect">
@@ -715,7 +755,8 @@
 </div>
 
 <!-- MISSING NUMBER -->
-<div id="missnum" class="screen game-screen">
+<div id="missnum" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="missnumCanvas"></canvas>
   <div class="game-header" style="border-color:#71b280"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
   <div class="game-body">
     <div id="mnLevelSelect">
@@ -737,7 +778,8 @@
 </div>
 
 <!-- VOCABULARY -->
-<div id="vocab" class="screen game-screen">
+<div id="vocab" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="vocabCanvas"></canvas>
   <div class="game-header" style="border-color:#8e54e9"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#4776e6">Vocabulary</h2></div>
   <div class="game-body">
     <div id="vocabLevelSelect">
@@ -758,7 +800,8 @@
 </div>
 
 <!-- PUNCTUATION -->
-<div id="punctuation" class="screen game-screen">
+<div id="punctuation" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="punctuationCanvas"></canvas>
   <div class="game-header" style="border-color:#f0932b"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ee5a24">Punctuation</h2></div>
   <div class="game-body">
     <div id="punctLevelSelect">
@@ -780,7 +823,8 @@
 </div>
 
 <!-- SENTENCE ORDERING -->
-<div id="sentence" class="screen game-screen">
+<div id="sentence" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="sentenceCanvas"></canvas>
   <div class="game-header" style="border-color:#5fc3e4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e55d87">Sentences</h2></div>
   <div class="game-body">
     <div id="sentLevelSelect">
@@ -804,7 +848,8 @@
 </div>
 
 <!-- WORD FAMILIES -->
-<div id="wordfam" class="screen game-screen">
+<div id="wordfam" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="wordfamCanvas"></canvas>
   <div class="game-header" style="border-color:#c39bd3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#8e44ad">Word Families</h2></div>
   <div class="game-body">
     <div id="wfLevelSelect">
@@ -824,7 +869,8 @@
 </div>
 
 <!-- PHONICS -->
-<div id="phonics" class="screen game-screen">
+<div id="phonics" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="phonicsCanvas"></canvas>
   <div class="game-header" style="border-color:#48dbfb"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0abde3">Phonics</h2></div>
   <div class="game-body">
     <div id="phonicsLevelSelect">
@@ -844,7 +890,8 @@
 </div>
 
 <!-- ANAGRAM -->
-<div id="anagram" class="screen game-screen">
+<div id="anagram" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="anagramCanvas"></canvas>
   <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c44569">Anagrams</h2></div>
   <div class="game-body">
     <div id="anagramLevelSelect">
@@ -869,7 +916,8 @@
 </div>
 
 <!-- DICTATION -->
-<div id="dictation" class="screen game-screen">
+<div id="dictation" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="dictationCanvas"></canvas>
   <div class="game-header" style="border-color:#ab83a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6a0572">Dictation</h2></div>
   <div class="game-body">
     <div id="dictLevelSelect">
@@ -893,7 +941,8 @@
 </div>
 
 <!-- MISSING VOWELS -->
-<div id="vowels" class="screen game-screen">
+<div id="vowels" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="vowelsCanvas"></canvas>
   <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e84393">Missing Vowels</h2></div>
   <div class="game-body">
     <div id="vowelsLevelSelect">
@@ -917,7 +966,8 @@
 </div>
 
 <!-- NUMBER BONDS -->
-<div id="bonds" class="screen game-screen">
+<div id="bonds" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="bondsCanvas"></canvas>
   <div class="game-header" style="border-color:#38ef7d"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
   <div class="game-body">
     <div id="bondsLevelSelect">
@@ -939,7 +989,8 @@
 </div>
 
 <!-- SHAPES -->
-<div id="shapes" class="screen game-screen">
+<div id="shapes" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="shapesCanvas"></canvas>
   <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Shapes</h2></div>
   <div class="game-body">
     <div id="shapesLevelSelect">
@@ -960,7 +1011,8 @@
 </div>
 
 <!-- DATA HANDLING -->
-<div id="datahandling" class="screen game-screen">
+<div id="datahandling" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="datahandlingCanvas"></canvas>
   <div class="game-header" style="border-color:#55efc4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00b894">Data Handling</h2></div>
   <div class="game-body">
     <div id="dataLevelSelect">
@@ -981,7 +1033,8 @@
 </div>
 
 <!-- CAPITALS -->
-<div id="capitals" class="screen game-screen">
+<div id="capitals" class="screen game-screen geo-theme">
+  <canvas class="game-canvas" id="capitalsCanvas"></canvas>
   <div class="game-header" style="border-color:#52b788"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2d6a4f">Capital Cities</h2></div>
   <div class="game-body">
     <div id="capsLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div><div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div><div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div></div></div>
@@ -990,7 +1043,8 @@
 </div>
 
 <!-- CONTINENTS -->
-<div id="continents" class="screen game-screen">
+<div id="continents" class="screen game-screen geo-theme">
+  <canvas class="game-canvas" id="continentsCanvas"></canvas>
   <div class="game-header" style="border-color:#2a9d8f"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#264653">World Geography</h2></div>
   <div class="game-body">
     <div id="contLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div><div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div><div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div></div></div>
@@ -999,7 +1053,8 @@
 </div>
 
 <!-- WEATHER -->
-<div id="weather" class="screen game-screen">
+<div id="weather" class="screen game-screen geo-theme">
+  <canvas class="game-canvas" id="weatherCanvas"></canvas>
   <div class="game-header" style="border-color:#a8dadc"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#457b9d">Weather &amp; Climate</h2></div>
   <div class="game-body">
     <div id="weatherLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startWeather(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Seasons &amp; weather</div></div><div class="level-card lc-2" onclick="startWeather(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Weather patterns</div></div><div class="level-card lc-3" onclick="startWeather(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate zones</div></div></div></div>
@@ -1008,7 +1063,8 @@
 </div>
 
 <!-- COMPASS -->
-<div id="compass" class="screen game-screen">
+<div id="compass" class="screen game-screen geo-theme">
+  <canvas class="game-canvas" id="compassCanvas"></canvas>
   <div class="game-header" style="border-color:#ca6702"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#9b2226">Compass Directions</h2></div>
   <div class="game-body">
     <div id="compassGame"><div class="progress-bar"><div class="progress-fill" id="compassProgress" style="background:linear-gradient(90deg,#9b2226,#ca6702)"></div></div><div class="progress-text" id="compassProgressText"></div><div id="compassDisplay"></div><div class="ph-options" id="compassOpts"></div></div>
@@ -1016,7 +1072,8 @@
 </div>
 
 <!-- FLAGS -->
-<div id="flags" class="screen game-screen">
+<div id="flags" class="screen game-screen geo-theme">
+  <canvas class="game-canvas" id="flagsCanvas"></canvas>
   <div class="game-header" style="border-color:#669bbc"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#003049">Flags</h2></div>
   <div class="game-body">
     <div id="flagsGame"><div class="progress-bar"><div class="progress-fill" id="flagsProgress" style="background:linear-gradient(90deg,#003049,#669bbc)"></div></div><div class="progress-text" id="flagsProgressText"></div><div id="flagsDisplay" style="text-align:center;margin:16px 0"></div><div class="ph-options" id="flagsOpts"></div></div>
@@ -1030,7 +1087,8 @@
 </div>
 
 <!-- GRAMMAR -->
-<div id="grammar" class="screen game-screen">
+<div id="grammar" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="grammarCanvas"></canvas>
   <div class="game-header" style="border-color:#b2bec3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#636e72">Grammar</h2></div>
   <div class="game-body">
     <div id="grammarLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startGrammar(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Nouns &amp; Verbs</div></div><div class="level-card lc-2" onclick="startGrammar(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Adjectives</div></div><div class="level-card lc-3" onclick="startGrammar(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Adverbs &amp; more</div></div></div></div>
@@ -1047,7 +1105,8 @@
 </div>
 
 <!-- RHYMING -->
-<div id="rhyme" class="screen game-screen">
+<div id="rhyme" class="screen game-screen lit-theme">
+  <canvas class="game-canvas" id="rhymeCanvas"></canvas>
   <div class="game-header" style="border-color:#a29bfe"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Rhyming</h2></div>
   <div class="game-body">
     <div id="rhymeLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startRhyme(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Simple rhymes</div></div><div class="level-card lc-2" onclick="startRhyme(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Longer words</div></div><div class="level-card lc-3" onclick="startRhyme(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Tricky rhymes</div></div></div></div>
@@ -1056,7 +1115,8 @@
 </div>
 
 <!-- MEASUREMENT -->
-<div id="measure" class="screen game-screen">
+<div id="measure" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="measureCanvas"></canvas>
   <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Measurement</h2></div>
   <div class="game-body">
     <div id="measureLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startMeasure(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Compare</div></div><div class="level-card lc-2" onclick="startMeasure(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Units</div></div><div class="level-card lc-3" onclick="startMeasure(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Convert</div></div></div></div>
@@ -1065,7 +1125,8 @@
 </div>
 
 <!-- SEQUENCES -->
-<div id="sequence" class="screen game-screen">
+<div id="sequence" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="sequenceCanvas"></canvas>
   <div class="game-header" style="border-color:#81ecec"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00cec9">Sequences</h2></div>
   <div class="game-body">
     <div id="seqLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startSeq(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Count by 1s, 2s</div></div><div class="level-card lc-2" onclick="startSeq(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Count by 5s, 10s</div></div><div class="level-card lc-3" onclick="startSeq(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mixed patterns</div></div></div></div>
