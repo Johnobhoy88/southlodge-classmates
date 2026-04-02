@@ -1499,6 +1499,24 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .speed-game .num-key:active{transform:translateY(3px);box-shadow:none}
 .speed-game .num-key.enter-key{background:linear-gradient(180deg,#22c55e,#16a34a);color:#052e16;border-color:#22c55e;box-shadow:0 3px 0 #15803d}
 .speed-game .num-key.clear-key{background:linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1));color:#fbbf24;border-color:rgba(251,191,36,0.3);box-shadow:0 3px 0 rgba(251,191,36,0.25)}
+
+/* ===== NUMBER BONDS — Liquid Bridge ===== */
+.bonds-game .game-header{background:rgba(5,30,28,0.9);border-bottom:2px solid rgba(20,184,166,0.3)}
+.bonds-game .game-title{color:#2dd4bf;text-shadow:0 0 12px rgba(45,212,191,0.3)}
+.bonds-game .nav-btn{color:#2dd4bf;border-color:rgba(20,184,166,0.3)}
+.bonds-game .nb-ans{font-family:'Fredoka One',cursive;font-size:2.8rem;text-align:center;color:#5eead4;text-shadow:0 0 12px rgba(94,234,212,0.3);min-height:50px;margin:8px 0}
+.bonds-game .bar-model{max-width:320px;margin:20px auto;padding:0 12px}
+.bonds-game .bar-top{background:linear-gradient(135deg,rgba(20,184,166,0.3),rgba(94,234,212,0.2));border:2px solid rgba(45,212,191,0.4);border-radius:14px;padding:14px;text-align:center;font-family:'Fredoka One',cursive;font-size:2rem;color:#5eead4;text-shadow:0 0 10px rgba(94,234,212,0.3);margin-bottom:8px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 0 16px rgba(20,184,166,0.1)}
+.bonds-game .bar-bottom{display:flex;gap:8px}
+.bonds-game .bar-part{flex:1;background:rgba(20,184,166,0.15);border:2px solid rgba(45,212,191,0.25);border-radius:12px;padding:12px;text-align:center;font-family:'Fredoka One',cursive;font-size:1.6rem;color:#99f6e4;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.bonds-game .bar-blank{border:2px dashed rgba(94,234,212,0.4);color:#2dd4bf;animation:bondsPulse 2s ease-in-out infinite;background:rgba(20,184,166,0.08)}
+@keyframes bondsPulse{0%,100%{border-color:rgba(94,234,212,0.4);box-shadow:0 0 0 0 rgba(94,234,212,0)}50%{border-color:rgba(94,234,212,0.7);box-shadow:0 0 12px rgba(94,234,212,0.15)}}
+.bonds-game .nb-equation{text-align:center;font-family:'Fredoka One',cursive;font-size:2.2rem;color:#e0fffa;margin:24px 0 16px;text-shadow:0 0 8px rgba(94,234,212,0.2)}
+.bonds-game .numpad{background:rgba(5,30,28,0.6);border:1px solid rgba(20,184,166,0.1);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.bonds-game .num-key{background:linear-gradient(180deg,rgba(20,184,166,0.15),rgba(20,184,166,0.08));color:#5eead4;border:2px solid rgba(20,184,166,0.2);box-shadow:0 3px 0 rgba(20,184,166,0.25)}
+.bonds-game .num-key:hover{background:rgba(20,184,166,0.25);border-color:#14b8a6;box-shadow:0 3px 0 rgba(20,184,166,0.4),0 0 10px rgba(20,184,166,0.12)}
+.bonds-game .num-key.enter-key{background:linear-gradient(180deg,#14b8a6,#0d9488);color:#042f2e;border-color:#14b8a6;box-shadow:0 3px 0 #0f766e}
+.bonds-game .num-key.clear-key{background:linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1));color:#fbbf24;border-color:rgba(251,191,36,0.3);box-shadow:0 3px 0 rgba(251,191,36,0.2)}
 </style>
 </head>
 <body>
@@ -2512,20 +2530,24 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- NUMBER BONDS -->
-<div id="bonds" class="screen game-screen num-theme">
+<div id="bonds" class="screen game-screen num-theme bonds-game">
   <canvas class="game-canvas" id="bondsCanvas"></canvas>
-  <div class="game-header" style="border-color:#38ef7d"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
+  <div class="game-header" style="border-color:#14b8a6"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2dd4bf">Number Bonds</h2></div>
   <div class="game-body">
     <div id="bondsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4A7;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#5eead4">Liquid Bridge</div>
+        <div style="font-size:0.75rem;color:#2dd4bf;margin-top:4px">Parts flow together to make the whole!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">10</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
-        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">20</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
-        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">100</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
+        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">&#x1F4A7;</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
+        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
+        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">&#x1F300;</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
       </div>
     </div>
     <div id="bondsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#11998e,#38ef7d)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#14b8a6,#5eead4)"></div></div>
       <div class="progress-text" id="nbProgressText"></div>
       <div id="nbDisplay"></div>
       <div class="nb-ans" id="nbAns">_</div>
@@ -11166,7 +11188,7 @@ function loadNbQ(){nb.question=genNbQ(nb.target);nb.answer='';document.getElemen
 
 function nbPress(v){if(v==='C'){nb.answer=''}else if(v==='enter'){checkNbAns();return}else{if(nb.answer.length<4)nb.answer+=v}document.getElementById('nbAns').textContent=nb.answer||'_'}
 
-function checkNbAns(){if(!nb.answer)return;var ok=parseInt(nb.answer)===nb.question.answer;var ans=document.getElementById('nbAns');if(ok){nb.correct++;nb.streak=(nb.streak||0)+1;sfxCorrect();ans.className='nb-ans flash-correct';var words=['Yes!','Great!','Nice!','Super!'];ans.textContent=nb.streak>=3?words[Math.floor(Math.random()*words.length)]+' '+nb.streak+'!':nb.question.answer}else{nb.streak=0;nb.missed.push(nb.question);sfxWrong();ans.className='nb-ans flash-wrong';var q=nb.question;var explain=q.format==='B'?q.answer+' + '+q.shown+' = '+q.target:q.format==='C'?(q.left==='?'?q.answer:q.left)+' + '+(q.right==='?'?q.answer:q.right)+' = '+q.target:q.shown+' + '+q.answer+' = '+q.target;ans.textContent=explain}setTimeout(function(){nb.idx++;if(nb.idx>=nb.total)finishBonds();else loadNbQ()},ok?300:800)}
+function checkNbAns(){if(!nb.answer)return;var ok=parseInt(nb.answer)===nb.question.answer;var ans=document.getElementById('nbAns');if(ok){nb.correct++;nb.streak=(nb.streak||0)+1;sfxCorrect();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onCorrect(null,null,nb.idx);ans.className='nb-ans flash-correct';var words=['Yes!','Great!','Nice!','Super!','\uD83D\uDCA7 Flowing!'];ans.textContent=nb.streak>=3?words[Math.floor(Math.random()*words.length)]+' '+nb.streak+'!':nb.question.answer}else{nb.streak=0;nb.missed.push(nb.question);sfxWrong();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onWrong();ans.className='nb-ans flash-wrong';var q=nb.question;var explain=q.format==='B'?q.answer+' + '+q.shown+' = '+q.target:q.format==='C'?(q.left==='?'?q.answer:q.left)+' + '+(q.right==='?'?q.answer:q.right)+' = '+q.target:q.shown+' + '+q.answer+' = '+q.target;ans.textContent=explain}if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.setProgress((nb.idx+1)/nb.total);setTimeout(function(){nb.idx++;if(nb.idx>=nb.total){if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onComplete(1);finishBonds()}else loadNbQ()},ok?300:800)}
 
 function finishBonds(){show('bondsLevelSelect');hide('bondsGame');checkAch('first_game',true);checkAch('first_bonds',true);const pct=nb.correct/nb.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct>=0.8)adaptiveCorrect('bonds');else if(pct<0.4)adaptiveWrong('bonds');addStars(stars);recordPlay();const trickyHtml=nb.missed.length>0?nb.missed:null;showResults('#11998e','?+3','Number Bonds Done!','Bonds to '+nb.target,stars,nb.correct,nb.total,()=>{showScreen('bonds')},null);const extra=document.getElementById('missedWords');if(trickyHtml&&trickyHtml.length>0){let h='<div class="tricky-bonds"><div style="font-family:Fredoka One,Comic Sans MS,cursive;font-size:1rem;color:#e17055;margin-bottom:8px;">You found these tricky:</div>';trickyHtml.forEach(q=>{let txt;if(q.format==='B')txt='? + '+q.shown+' = '+q.target+' (answer: '+q.answer+')';else if(q.format==='C'){const l=q.left==='?'?q.answer:q.left;const r=q.right==='?'?q.answer:q.right;txt=l+' + '+r+' = '+q.target}else txt=q.shown+' + ? = '+q.target+' (answer: '+q.answer+')';h+='<div class="tricky-row">'+txt+'</div>'});h+='</div>';extra.innerHTML=h}}
 

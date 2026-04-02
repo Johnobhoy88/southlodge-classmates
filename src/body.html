@@ -1008,20 +1008,24 @@
 </div>
 
 <!-- NUMBER BONDS -->
-<div id="bonds" class="screen game-screen num-theme">
+<div id="bonds" class="screen game-screen num-theme bonds-game">
   <canvas class="game-canvas" id="bondsCanvas"></canvas>
-  <div class="game-header" style="border-color:#38ef7d"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
+  <div class="game-header" style="border-color:#14b8a6"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2dd4bf">Number Bonds</h2></div>
   <div class="game-body">
     <div id="bondsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4A7;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#5eead4">Liquid Bridge</div>
+        <div style="font-size:0.75rem;color:#2dd4bf;margin-top:4px">Parts flow together to make the whole!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">10</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
-        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">20</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
-        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">100</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
+        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">&#x1F4A7;</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
+        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
+        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">&#x1F300;</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
       </div>
     </div>
     <div id="bondsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#11998e,#38ef7d)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#14b8a6,#5eead4)"></div></div>
       <div class="progress-text" id="nbProgressText"></div>
       <div id="nbDisplay"></div>
       <div class="nb-ans" id="nbAns">_</div>
