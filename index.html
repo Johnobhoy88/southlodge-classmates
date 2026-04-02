@@ -1379,6 +1379,21 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .wrong-tile{background:linear-gradient(145deg,#FEE2E2,#FECACA)!important;color:#991b1b!important;border-color:#EF4444!important;box-shadow:0 2px 0 #DC2626!important;animation:dictShake 0.4s ease}
 @keyframes anaTileCorrect{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
 .ana-hint{text-align:center;font-family:'Fredoka One',cursive;font-size:0.85rem;color:#d97706;min-height:24px;margin-top:8px}
+
+/* ===== PHONICS — Sound-wave cyan theme ===== */
+.ph-game .game-header{background:rgba(236,254,255,0.88);border-bottom:2px solid rgba(6,182,212,0.15)}
+.ph-game .game-title{color:#06b6d4}
+.ph-game .nav-btn{color:#06b6d4;border-color:rgba(6,182,212,0.2)}
+.ph-sound,.ph-prompt{text-align:center;font-family:'Fredoka One',cursive;font-size:1.1rem;color:#0e7490;margin:20px 0 16px;padding:12px;background:rgba(255,255,255,0.6);border-radius:16px;border:2px solid rgba(6,182,212,0.12);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ph-word-display{text-align:center;font-family:'Fredoka One',cursive;font-size:1.8rem;color:#1a1a2e;margin:12px 0 16px;letter-spacing:2px}
+.ph-blank{display:inline-block;padding:2px 12px;border-bottom:3px solid #06b6d4;color:#06b6d4;animation:vowelGapPulse 2s ease-in-out infinite}
+.ph-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:340px;margin:0 auto;padding:0 12px}
+.ph-opt{padding:14px 12px;border:3px solid rgba(6,182,212,0.2);border-radius:16px;background:rgba(255,255,255,0.75);font-family:'Fredoka One',cursive;font-size:0.95rem;color:#0e7490;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);box-shadow:0 3px 0 rgba(6,182,212,0.15)}
+.ph-opt:hover{transform:translateY(-3px);border-color:#06b6d4;box-shadow:0 6px 0 rgba(6,182,212,0.15),0 8px 16px rgba(6,182,212,0.1)}
+.ph-opt:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(6,182,212,0.15)}
+.ph-opt.ph-correct{background:linear-gradient(135deg,#D1FAE5,#A7F3D0)!important;border-color:#10B981!important;color:#065f46!important;box-shadow:0 3px 0 #059669!important;animation:anaTileCorrect 0.3s ease}
+.ph-opt.ph-wrong{background:linear-gradient(135deg,#FEE2E2,#FECACA)!important;border-color:#EF4444!important;color:#991b1b!important;animation:dictShake 0.4s ease}
+.ph-opt.ph-disabled{pointer-events:none;opacity:0.7}
 </style>
 </head>
 <body>
@@ -2253,20 +2268,24 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- PHONICS -->
-<div id="phonics" class="screen game-screen lit-theme">
+<div id="phonics" class="screen game-screen lit-theme ph-game">
   <canvas class="game-canvas" id="phonicsCanvas"></canvas>
-  <div class="game-header" style="border-color:#48dbfb"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0abde3">Phonics</h2></div>
+  <div class="game-header" style="border-color:#06b6d4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#06b6d4">Phonics</h2></div>
   <div class="game-body">
     <div id="phonicsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4E2;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#0e7490">Sound Patterns</div>
+        <div style="font-size:0.75rem;color:#06b6d4;margin-top:4px">Listen for the sounds inside words!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startPhonics(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">CVC + digraphs</div></div>
-        <div class="level-card lc-2" onclick="startPhonics(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Vowel digraphs</div></div>
-        <div class="level-card lc-3" onclick="startPhonics(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Complex patterns</div></div>
+        <div class="level-card lc-1" onclick="startPhonics(1)"><div class="lc-icon">&#x1F4A7;</div><div class="lc-title">Easy</div><div class="lc-sub">CVC + digraphs</div></div>
+        <div class="level-card lc-2" onclick="startPhonics(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Vowel digraphs</div></div>
+        <div class="level-card lc-3" onclick="startPhonics(3)"><div class="lc-icon">&#x1F300;</div><div class="lc-title">Hard</div><div class="lc-sub">Complex patterns</div></div>
       </div>
     </div>
     <div id="phonicsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="phProgress" style="background:linear-gradient(90deg,#0abde3,#48dbfb)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="phProgress" style="background:linear-gradient(90deg,#06b6d4,#22d3ee)"></div></div>
       <div class="progress-text" id="phProgressText"></div>
       <div id="phDisplay"></div>
     </div>
@@ -10260,7 +10279,7 @@ function startPhonics(lv){ph.level=lv;ph.idx=0;ph.correct=0;ph.missed=[];const g
 
 function loadPhQ(){const q=ph.questions[ph.idx];document.getElementById('phProgress').style.width=(ph.idx/ph.total*100)+'%';document.getElementById('phProgressText').textContent='Question '+(ph.idx+1)+' of '+ph.total;const d=document.getElementById('phDisplay');if(q.type==='identify'){d.innerHTML='<div class="ph-sound">Which word has the /'+q.sound+'/ sound?</div><div class="ph-options" id="phOpts"></div>';const opts=document.getElementById('phOpts');q.options.forEach((o,i)=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectPhAns(b,o===q.correct,q);opts.appendChild(b)})}else{d.innerHTML='<div class="ph-prompt">Fill in the missing sound:</div><div class="ph-word-display">'+q.gapWord.replace('___','<span class="ph-blank">?</span>')+'</div><div class="ph-options" id="phOpts"></div>';const opts=document.getElementById('phOpts');q.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectPhAns(b,o===q.sound,q);opts.appendChild(b)})}}
 
-function selectPhAns(btn,correct,q){document.querySelectorAll('#phOpts .ph-opt').forEach((o,i)=>{o.classList.add('ph-disabled');if(o.textContent===q.correct||o.textContent===q.sound)o.classList.add('ph-correct')});if(correct){ph.correct++;ph.streak=(ph.streak||0)+1;sfxCorrect();btn.classList.add('ph-correct');if(ph.streak>=3)btn.textContent=btn.textContent+' \u2714 '+ph.streak+'!'}else{ph.streak=0;ph.missed.push(q);sfxWrong();btn.classList.add('ph-wrong')}setTimeout(()=>{ph.idx++;if(ph.idx>=ph.total)finishPhonics();else loadPhQ()},correct?500:1200)}
+function selectPhAns(btn,correct,q){document.querySelectorAll('#phOpts .ph-opt').forEach((o,i)=>{o.classList.add('ph-disabled');if(o.textContent===q.correct||o.textContent===q.sound)o.classList.add('ph-correct')});if(correct){ph.correct++;ph.streak=(ph.streak||0)+1;sfxCorrect();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onCorrect(null,null,ph.idx);btn.classList.add('ph-correct');if(ph.streak>=3)btn.textContent=btn.textContent+' \u2714 '+ph.streak+'!'}else{ph.streak=0;ph.missed.push(q);sfxWrong();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onWrong();btn.classList.add('ph-wrong')}if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.setProgress((ph.idx+1)/ph.total);setTimeout(()=>{ph.idx++;if(ph.idx>=ph.total){if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onComplete(1);finishPhonics()}else loadPhQ()},correct?500:1200)}
 
 function finishPhonics(){show('phonicsLevelSelect');hide('phonicsGame');const pct=ph.correct/ph.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_phonics',true);if(pct>=0.8)adaptiveCorrect('phonics');else if(pct<0.4)adaptiveWrong('phonics');addStars(stars);recordPlay();showResults('#0abde3','ai','Phonics Done!','Level '+ph.level,stars,ph.correct,ph.total,()=>{showScreen('phonics')},null)}
 

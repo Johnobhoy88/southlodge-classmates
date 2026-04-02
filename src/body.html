@@ -869,20 +869,24 @@
 </div>
 
 <!-- PHONICS -->
-<div id="phonics" class="screen game-screen lit-theme">
+<div id="phonics" class="screen game-screen lit-theme ph-game">
   <canvas class="game-canvas" id="phonicsCanvas"></canvas>
-  <div class="game-header" style="border-color:#48dbfb"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0abde3">Phonics</h2></div>
+  <div class="game-header" style="border-color:#06b6d4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#06b6d4">Phonics</h2></div>
   <div class="game-body">
     <div id="phonicsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4E2;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#0e7490">Sound Patterns</div>
+        <div style="font-size:0.75rem;color:#06b6d4;margin-top:4px">Listen for the sounds inside words!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startPhonics(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">CVC + digraphs</div></div>
-        <div class="level-card lc-2" onclick="startPhonics(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Vowel digraphs</div></div>
-        <div class="level-card lc-3" onclick="startPhonics(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Complex patterns</div></div>
+        <div class="level-card lc-1" onclick="startPhonics(1)"><div class="lc-icon">&#x1F4A7;</div><div class="lc-title">Easy</div><div class="lc-sub">CVC + digraphs</div></div>
+        <div class="level-card lc-2" onclick="startPhonics(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Vowel digraphs</div></div>
+        <div class="level-card lc-3" onclick="startPhonics(3)"><div class="lc-icon">&#x1F300;</div><div class="lc-title">Hard</div><div class="lc-sub">Complex patterns</div></div>
       </div>
     </div>
     <div id="phonicsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="phProgress" style="background:linear-gradient(90deg,#0abde3,#48dbfb)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="phProgress" style="background:linear-gradient(90deg,#06b6d4,#22d3ee)"></div></div>
       <div class="progress-text" id="phProgressText"></div>
       <div id="phDisplay"></div>
     </div>
