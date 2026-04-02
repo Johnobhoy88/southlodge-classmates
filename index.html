@@ -1360,6 +1360,25 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .vowel-check-btn{display:block;width:90%;max-width:320px;margin:0 auto;padding:14px 24px;border:none;border-radius:16px;background:linear-gradient(135deg,#ec4899,#f472b6);color:white;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #be185d,0 6px 16px rgba(236,72,153,0.2);transition:all 0.2s}
 .vowel-check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #be185d,0 10px 24px rgba(236,72,153,0.3)}
 .vowel-check-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #be185d}
+
+/* ===== ANAGRAM GAME — Scrabble-tile design ===== */
+.ana-game .game-header{background:rgba(255,248,235,0.88);border-bottom:2px solid rgba(245,158,11,0.15)}
+.ana-game .game-title{color:#d97706}
+.ana-game .nav-btn{color:#d97706;border-color:rgba(217,119,6,0.2)}
+.ana-emoji{text-align:center;font-size:3.5rem;margin:14px auto 10px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.7);border-radius:20px;border:3px solid rgba(245,158,11,0.2);box-shadow:0 4px 16px rgba(245,158,11,0.08);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ana-section-label{text-align:center;font-family:'Fredoka One',cursive;font-size:0.75rem;color:#92400e;text-transform:uppercase;letter-spacing:1px;margin:10px 0 6px}
+.ana-answer-zone,.ana-pool-zone{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-height:52px;padding:10px;margin:0 auto;max-width:360px}
+.ana-answer-zone{background:rgba(245,158,11,0.06);border:2px dashed rgba(245,158,11,0.2);border-radius:16px;margin-bottom:8px}
+.anagram-tile{width:42px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:1.3rem;cursor:pointer;transition:all 0.15s cubic-bezier(0.34,1.56,0.64,1);text-transform:uppercase;user-select:none}
+.pool-tile{background:linear-gradient(145deg,#FEF3C7,#FDE68A);color:#92400e;border:2px solid #F59E0B;box-shadow:0 3px 0 #D97706,0 4px 8px rgba(0,0,0,0.08)}
+.pool-tile:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 6px 0 #D97706,0 8px 16px rgba(0,0,0,0.12)}
+.pool-tile:active{transform:translateY(2px);box-shadow:0 1px 0 #D97706}
+.ans-tile{background:linear-gradient(145deg,#FFF,#F0F0F0);color:#1a1a2e;border:2px solid #d1d5db;box-shadow:0 2px 0 #9ca3af,0 3px 8px rgba(0,0,0,0.06)}
+.ans-tile:hover{border-color:#ef4444;color:#ef4444}
+.correct-tile{background:linear-gradient(145deg,#D1FAE5,#A7F3D0)!important;color:#065f46!important;border-color:#10B981!important;box-shadow:0 2px 0 #059669!important;animation:anaTileCorrect 0.3s ease}
+.wrong-tile{background:linear-gradient(145deg,#FEE2E2,#FECACA)!important;color:#991b1b!important;border-color:#EF4444!important;box-shadow:0 2px 0 #DC2626!important;animation:dictShake 0.4s ease}
+@keyframes anaTileCorrect{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+.ana-hint{text-align:center;font-family:'Fredoka One',cursive;font-size:0.85rem;color:#d97706;min-height:24px;margin-top:8px}
 </style>
 </head>
 <body>
@@ -2255,27 +2274,31 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- ANAGRAM -->
-<div id="anagram" class="screen game-screen lit-theme">
+<div id="anagram" class="screen game-screen lit-theme ana-game">
   <canvas class="game-canvas" id="anagramCanvas"></canvas>
-  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c44569">Anagrams</h2></div>
+  <div class="game-header" style="border-color:#f59e0b"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#d97706">Anagrams</h2></div>
   <div class="game-body">
     <div id="anagramLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F500;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#92400e">Unjumble the Letters</div>
+        <div style="font-size:0.75rem;color:#d97706;margin-top:4px">Tap the letters in the right order!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startAnagram(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startAnagram(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startAnagram(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startAnagram(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startAnagram(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startAnagram(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="anagramGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="anaProgress" style="background:linear-gradient(90deg,#c44569,#f78fb3)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="anaProgress" style="background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
       <div class="progress-text" id="anaProgressText"></div>
-      <div class="spell-picture" id="anaPic" style="border-color:#f78fb3;background:linear-gradient(135deg,#fff5f8,#ffe8f0)"></div>
-      <div class="anagram-label">Tap letters to spell the word:</div>
-      <div class="anagram-ans" id="anaAns"></div>
-      <div class="anagram-label">Available letters:</div>
-      <div class="anagram-pool" id="anaPool"></div>
-      <div class="mv-hint" id="anaHint"></div>
+      <div class="ana-emoji" id="anaPic"></div>
+      <div class="ana-section-label">Your word:</div>
+      <div class="ana-answer-zone" id="anaAns"></div>
+      <div class="ana-section-label">Letters:</div>
+      <div class="ana-pool-zone" id="anaPool"></div>
+      <div class="ana-hint" id="anaHint"></div>
     </div>
   </div>
 </div>
@@ -10246,11 +10269,11 @@ let ana={level:1,words:[],idx:0,total:10,correct:0,missed:[],word:'',pool:[],ans
 
 function startAnagram(lv){ana.level=lv;const p=[...getSpellingWords()[lv]];shuffle(p);ana.words=p.slice(0,ana.total);ana.idx=0;ana.correct=0;ana.missed=[];hide('anagramLevelSelect');show('anagramGame');loadAnaQ()}
 
-function loadAnaQ(){const wordEmoji=getSpellingWordEmoji();const item=ana.words[ana.idx];ana.word=item.w.toLowerCase();const letters=ana.word.split('');ana.pool=[...letters];shuffle(ana.pool);ana.ans=[];document.getElementById('anaProgress').style.width=(ana.idx/ana.total*100)+'%';document.getElementById('anaProgressText').textContent='Word '+(ana.idx+1)+' of '+ana.total;const pic=document.getElementById('anaPic');const eFn=wordEmoji[ana.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('anaHint').textContent=item.h;renderAna()}
+function loadAnaQ(){const wordEmoji=getSpellingWordEmoji();const item=ana.words[ana.idx];ana.word=item.w.toLowerCase();const letters=ana.word.split('');ana.pool=[...letters];shuffle(ana.pool);ana.ans=[];document.getElementById('anaProgress').style.width=(ana.idx/ana.total*100)+'%';document.getElementById('anaProgressText').textContent='Word '+(ana.idx+1)+' of '+ana.total;const pic=document.getElementById('anaPic');const eFn=wordEmoji[ana.word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else if(eFn){try{pic.textContent=String.fromCodePoint(parseInt(eFn,16));pic.style.display=''}catch(e){pic.textContent='?';pic.style.display=''}}else{pic.textContent='?';pic.style.display=''};document.getElementById('anaHint').textContent=item.h;if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.setProgress(ana.idx/ana.total);renderAna()}
 
 function renderAna(){const pool=document.getElementById('anaPool');const ans=document.getElementById('anaAns');pool.innerHTML='';ans.innerHTML='';ana.ans.forEach((ch,i)=>{const t=document.createElement('div');t.className='anagram-tile ans-tile';t.textContent=ch;t.onclick=()=>{ana.pool.push(ana.ans.splice(i,1)[0]);renderAna()};ans.appendChild(t)});for(let i=ana.ans.length;i<ana.word.length;i++){const t=document.createElement('div');t.className='anagram-tile';t.style.background='transparent';t.style.border='3px dashed #f0d0e0';t.style.boxShadow='none';ans.appendChild(t)}ana.pool.forEach((ch,i)=>{const t=document.createElement('div');t.className='anagram-tile pool-tile';t.textContent=ch;t.onclick=()=>{ana.ans.push(ana.pool.splice(i,1)[0]);renderAna();if(ana.ans.length===ana.word.length)checkAnaAns()};pool.appendChild(t)})}
 
-function checkAnaAns(){const attempt=ana.ans.join('');const correct=attempt===ana.word;const tiles=document.querySelectorAll('#anaAns .ans-tile');if(correct)sfxCorrect();else sfxWrong();tiles.forEach(t=>t.className='anagram-tile '+(correct?'correct-tile':'wrong-tile'));if(correct){ana.correct++;ana.streak=(ana.streak||0)+1;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();var anaMsg=['Yes!','Great!','Nice!'];document.getElementById('anaHint').textContent=anaMsg[Math.floor(Math.random()*anaMsg.length)]+(ana.streak>=3?' Streak: '+ana.streak+'!':'');setTimeout(()=>{ana.idx++;if(ana.idx>=ana.total)finishAnagram();else loadAnaQ()},600)}else{ana.streak=0;ana.missed.push({w:ana.word,h:ana.words[ana.idx].h});document.getElementById('anaHint').textContent='It was: '+ana.word;setTimeout(()=>{ana.idx++;if(ana.idx>=ana.total)finishAnagram();else loadAnaQ()},1500)}}
+function checkAnaAns(){const attempt=ana.ans.join('');const correct=attempt===ana.word;const tiles=document.querySelectorAll('#anaAns .ans-tile');if(correct){sfxCorrect();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onCorrect(null,null,ana.idx)}else{sfxWrong();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onWrong()}tiles.forEach(t=>t.className='anagram-tile '+(correct?'correct-tile':'wrong-tile'));if(correct){ana.correct++;ana.streak=(ana.streak||0)+1;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();var anaMsg=['Yes!','Great!','Nice!','Brilliant!','Super!'];document.getElementById('anaHint').textContent=anaMsg[Math.floor(Math.random()*anaMsg.length)]+(ana.streak>=3?' \uD83D\uDD25 Streak: '+ana.streak+'!':'');setTimeout(()=>{ana.idx++;if(ana.idx>=ana.total){if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onComplete(1);finishAnagram()}else loadAnaQ()},600)}else{ana.streak=0;ana.missed.push({w:ana.word,h:ana.words[ana.idx].h});document.getElementById('anaHint').textContent='It was: '+ana.word;setTimeout(()=>{ana.idx++;if(ana.idx>=ana.total)finishAnagram();else loadAnaQ()},1500)}}
 
 function finishAnagram(){show('anagramLevelSelect');hide('anagramGame');const pct=ana.correct/ana.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);checkAch('first_anagram',true);if(pct>=0.8)adaptiveCorrect('anagram');else if(pct<0.4)adaptiveWrong('anagram');ana.missed.forEach(m=>recordWeak('spelling',m));addStars(stars);recordPlay();showResults('#c44569','ABC','Anagrams Done!','Level '+ana.level,stars,ana.correct,ana.total,()=>{showScreen('anagram')},ana.missed)}
 

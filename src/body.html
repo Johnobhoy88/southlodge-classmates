@@ -890,27 +890,31 @@
 </div>
 
 <!-- ANAGRAM -->
-<div id="anagram" class="screen game-screen lit-theme">
+<div id="anagram" class="screen game-screen lit-theme ana-game">
   <canvas class="game-canvas" id="anagramCanvas"></canvas>
-  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c44569">Anagrams</h2></div>
+  <div class="game-header" style="border-color:#f59e0b"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#d97706">Anagrams</h2></div>
   <div class="game-body">
     <div id="anagramLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F500;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#92400e">Unjumble the Letters</div>
+        <div style="font-size:0.75rem;color:#d97706;margin-top:4px">Tap the letters in the right order!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startAnagram(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startAnagram(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startAnagram(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startAnagram(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startAnagram(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startAnagram(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="anagramGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="anaProgress" style="background:linear-gradient(90deg,#c44569,#f78fb3)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="anaProgress" style="background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
       <div class="progress-text" id="anaProgressText"></div>
-      <div class="spell-picture" id="anaPic" style="border-color:#f78fb3;background:linear-gradient(135deg,#fff5f8,#ffe8f0)"></div>
-      <div class="anagram-label">Tap letters to spell the word:</div>
-      <div class="anagram-ans" id="anaAns"></div>
-      <div class="anagram-label">Available letters:</div>
-      <div class="anagram-pool" id="anaPool"></div>
-      <div class="mv-hint" id="anaHint"></div>
+      <div class="ana-emoji" id="anaPic"></div>
+      <div class="ana-section-label">Your word:</div>
+      <div class="ana-answer-zone" id="anaAns"></div>
+      <div class="ana-section-label">Letters:</div>
+      <div class="ana-pool-zone" id="anaPool"></div>
+      <div class="ana-hint" id="anaHint"></div>
     </div>
   </div>
 </div>
