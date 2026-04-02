@@ -1472,6 +1472,33 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .rhyme-game .ph-opt:hover{transform:translateY(-3px);border-color:#db2777;box-shadow:0 6px 0 rgba(219,39,119,0.15)}
 .rhyme-game .ph-opt.ph-correct{background:linear-gradient(135deg,#FCE7F3,#FBCFE8)!important;border-color:#db2777!important;color:#831843!important}
 .rhyme-game .ph-opt.ph-wrong{background:linear-gradient(135deg,#FEE2E2,#FECACA)!important;border-color:#EF4444!important;color:#991b1b!important;animation:dictShake 0.4s}
+
+/* ===== SPEED MATHS — Neon Arcade Rush ===== */
+.speed-game .game-header{background:rgba(5,30,15,0.9);border-bottom:2px solid rgba(34,197,94,0.3)}
+.speed-game .game-title{color:#4ade80;text-shadow:0 0 12px rgba(34,197,94,0.4)}
+.speed-game .nav-btn{color:#4ade80;border-color:rgba(34,197,94,0.3)}
+.spd-timer-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:3px;margin:12px 16px 0;overflow:hidden}
+.spd-timer-fill{height:100%;background:linear-gradient(90deg,#22c55e,#4ade80);border-radius:3px;transition:width 0.3s;box-shadow:0 0 8px rgba(34,197,94,0.4)}
+.speed-game .speed-timer{font-size:4rem;color:#4ade80;text-shadow:0 0 20px rgba(34,197,94,0.5),0 0 40px rgba(34,197,94,0.2);margin:4px 0}
+.speed-game .speed-timer.amber{color:#fbbf24;text-shadow:0 0 20px rgba(251,191,36,0.5);animation:spdPulse 0.8s ease infinite}
+.speed-game .speed-timer.red{color:#ef4444;text-shadow:0 0 20px rgba(239,68,68,0.6);animation:spdPulse 0.4s ease infinite}
+@keyframes spdPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:0.85}}
+.spd-stats{display:flex;justify-content:center;gap:20px;margin:4px 0 8px;font-family:'Fredoka One',cursive}
+.spd-score{font-size:1.3rem;color:#4ade80;text-shadow:0 0 8px rgba(34,197,94,0.3)}
+.spd-combo{font-size:1rem;color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.4);min-width:60px;transition:all 0.2s}
+.spd-combo:not(:empty){animation:comboGlow 0.6s ease infinite alternate}
+@keyframes comboGlow{0%{text-shadow:0 0 10px rgba(251,191,36,0.4)}100%{text-shadow:0 0 20px rgba(251,191,36,0.7),0 0 40px rgba(251,191,36,0.2)}}
+.speed-game .speed-q{font-size:2.8rem;color:#e0ffe8;text-shadow:0 0 12px rgba(34,197,94,0.2);animation:spdQIn 0.2s ease-out}
+@keyframes spdQIn{from{opacity:0;transform:scale(0.9) translateY(-8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.speed-game .speed-ans{color:#4ade80;text-shadow:0 0 8px rgba(34,197,94,0.3)}
+.speed-game .speed-ans.flash-correct{color:#4ade80;text-shadow:0 0 24px rgba(34,197,94,0.6)}
+.speed-game .speed-ans.flash-wrong{color:#ef4444;text-shadow:0 0 16px rgba(239,68,68,0.4);animation:dictShake 0.3s}
+.speed-game .numpad{background:rgba(5,30,15,0.6);border:1px solid rgba(34,197,94,0.1);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.speed-game .num-key{background:linear-gradient(180deg,rgba(34,197,94,0.15),rgba(34,197,94,0.08));color:#4ade80;border:2px solid rgba(34,197,94,0.2);box-shadow:0 3px 0 rgba(34,197,94,0.25);font-size:1.6rem}
+.speed-game .num-key:hover{background:rgba(34,197,94,0.25);border-color:#22c55e;box-shadow:0 3px 0 rgba(34,197,94,0.4),0 0 12px rgba(34,197,94,0.15)}
+.speed-game .num-key:active{transform:translateY(3px);box-shadow:none}
+.speed-game .num-key.enter-key{background:linear-gradient(180deg,#22c55e,#16a34a);color:#052e16;border-color:#22c55e;box-shadow:0 3px 0 #15803d}
+.speed-game .num-key.clear-key{background:linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1));color:#fbbf24;border-color:rgba(251,191,36,0.3);box-shadow:0 3px 0 rgba(251,191,36,0.25)}
 </style>
 </head>
 <body>
@@ -2095,22 +2122,26 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- SPEED MATHS -->
-<div id="speed" class="screen game-screen num-theme">
+<div id="speed" class="screen game-screen num-theme speed-game">
   <canvas class="game-canvas" id="speedCanvas"></canvas>
-  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
+  <div class="game-header" style="border-color:#22c55e"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#22c55e">Speed Maths</h2></div>
   <div class="game-body">
     <div id="speedLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x26A1;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#166534">60 Second Blitz</div>
+        <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">How many can you solve before time runs out?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
-        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
-        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">&#x26A1;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">&#x1F525;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">&#x1F4A5;</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
       </div>
     </div>
     <div id="speedGame" style="display:none;">
+      <div class="spd-timer-bar"><div class="spd-timer-fill" id="speedTimerFill"></div></div>
       <div class="speed-timer normal" id="speedTimer">60</div>
-      <div class="speed-score">Score: <span id="speedScore">0</span></div>
-      <div id="speedCombo" style="text-align:center;font-size:0.8rem;font-weight:700;color:#6c5ce7;min-height:1.2em"></div>
+      <div class="spd-stats"><span class="spd-score">&#x2B50; <span id="speedScore">0</span></span><span id="speedCombo" class="spd-combo"></span></div>
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
@@ -10710,7 +10741,7 @@ function loadSpeedQ(){spd.question=getMathQuestionGenerator()(spd.level);spd.ans
 
 function speedPress(v){if(!spd.timer)return;if(v==='C'){spd.answer=''}else if(v==='enter'){checkSpeedAns();return}else{if(spd.answer.length<4)spd.answer+=v}document.getElementById('speedAns').textContent=spd.answer||'_'}
 
-function checkSpeedAns(){if(!spd.answer)return;var ok=parseInt(spd.answer)===spd.question.answer;var op=spd.question.text.match(/[+\-\u00D7\u00F7]/);var opKey=op?op[0]:'+';if(spd.ops[opKey])spd.ops[opKey].t++;spd.attempted++;if(ok){spd.combo=(spd.combo||0)+1;spd.maxCombo=Math.max(spd.maxCombo||0,spd.combo);var bonus=spd.combo>=5?3:spd.combo>=3?2:1;spd.score+=bonus;if(spd.ops[opKey])spd.ops[opKey].c++;var ans=document.getElementById('speedAns');ans.className='speed-ans flash-correct';sfxClick();var comboEl=document.getElementById('speedCombo');if(comboEl){if(spd.combo>=5)comboEl.textContent='x3 COMBO! \u{1F525}';else if(spd.combo>=3)comboEl.textContent='x2 combo!';else comboEl.textContent=''}setTimeout(function(){loadSpeedQ()},100)}else{spd.combo=0;var ans2=document.getElementById('speedAns');ans2.className='speed-ans flash-wrong';sfxWrong();var comboEl2=document.getElementById('speedCombo');if(comboEl2)comboEl2.textContent='';setTimeout(function(){loadSpeedQ()},200)}document.getElementById('speedScore').textContent=spd.score}
+function checkSpeedAns(){if(!spd.answer)return;var ok=parseInt(spd.answer)===spd.question.answer;var op=spd.question.text.match(/[+\-\u00D7\u00F7]/);var opKey=op?op[0]:'+';if(spd.ops[opKey])spd.ops[opKey].t++;spd.attempted++;if(ok){spd.combo=(spd.combo||0)+1;spd.maxCombo=Math.max(spd.maxCombo||0,spd.combo);var bonus=spd.combo>=5?3:spd.combo>=3?2:1;spd.score+=bonus;if(spd.ops[opKey])spd.ops[opKey].c++;var ans=document.getElementById('speedAns');ans.className='speed-ans flash-correct';sfxClick();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onCorrect(null,null,spd.score);var comboEl=document.getElementById('speedCombo');if(comboEl){if(spd.combo>=5)comboEl.textContent='x3 COMBO! \u{1F525}';else if(spd.combo>=3)comboEl.textContent='x2 combo!';else comboEl.textContent=''}setTimeout(function(){loadSpeedQ()},100)}else{spd.combo=0;var ans2=document.getElementById('speedAns');ans2.className='speed-ans flash-wrong';sfxWrong();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onWrong();var comboEl2=document.getElementById('speedCombo');if(comboEl2)comboEl2.textContent='';setTimeout(function(){loadSpeedQ()},200)}document.getElementById('speedScore').textContent=spd.score;if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.setProgress(Math.min(1,spd.score/20))}
 
 function endSpeed(){if(spd.timer){clearInterval(spd.timer);spd.timer=null}show('speedLevelSelect');hide('speedGame')}
 

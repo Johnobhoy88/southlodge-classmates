@@ -618,22 +618,26 @@
 </div>
 
 <!-- SPEED MATHS -->
-<div id="speed" class="screen game-screen num-theme">
+<div id="speed" class="screen game-screen num-theme speed-game">
   <canvas class="game-canvas" id="speedCanvas"></canvas>
-  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
+  <div class="game-header" style="border-color:#22c55e"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#22c55e">Speed Maths</h2></div>
   <div class="game-body">
     <div id="speedLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x26A1;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#166534">60 Second Blitz</div>
+        <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">How many can you solve before time runs out?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
-        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
-        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">&#x26A1;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">&#x1F525;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">&#x1F4A5;</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
       </div>
     </div>
     <div id="speedGame" style="display:none;">
+      <div class="spd-timer-bar"><div class="spd-timer-fill" id="speedTimerFill"></div></div>
       <div class="speed-timer normal" id="speedTimer">60</div>
-      <div class="speed-score">Score: <span id="speedScore">0</span></div>
-      <div id="speedCombo" style="text-align:center;font-size:0.8rem;font-weight:700;color:#6c5ce7;min-height:1.2em"></div>
+      <div class="spd-stats"><span class="spd-score">&#x2B50; <span id="speedScore">0</span></span><span id="speedCombo" class="spd-combo"></span></div>
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>

@@ -324,6 +324,85 @@ test('Platform runtime present', () => {
   assert(html.includes('ClassmatesPlatform'), 'Missing ClassmatesPlatform');
 });
 
+// --- Premium Game Components ---
+console.log('\nPremium Game Components:');
+
+// FX engines present
+test('LiteracyFX engine present', () => {
+  assert(html.includes('ClassmatesLiteracyFX'), 'Missing ClassmatesLiteracyFX');
+});
+test('NumeracyFX engine present', () => {
+  assert(html.includes('ClassmatesNumeracyFX'), 'Missing ClassmatesNumeracyFX');
+});
+test('GeographyFX engine present', () => {
+  assert(html.includes('ClassmatesGeographyFX'), 'Missing ClassmatesGeographyFX');
+});
+test('LandingFX engine present', () => {
+  assert(html.includes('ClassmatesLandingFX'), 'Missing ClassmatesLandingFX');
+});
+
+// Per-game Canvas elements
+const CANVAS_GAMES = [
+  'dictation','vowels','anagram','phonics','wordfam','sentence',
+  'punctuation','vocab','reading','grammar','rhyme',
+  'maths','times','speed','bonds','missnum','placeval','telltime','money',
+  'fractions','wordprob','shapes','datahandling','measure','sequence',
+  'capitals','continents','weather','compass','flags'
+];
+// Spelling uses spellCanvas (legacy name)
+test('Canvas element: spelling', () => {
+  assert(html.includes('id="spellCanvas"'), 'Missing canvas for spelling');
+});
+CANVAS_GAMES.forEach(g => {
+  test(`Canvas element: ${g}`, () => {
+    assert(html.includes(`id="${g}Canvas"`), `Missing canvas for ${g}`);
+  });
+});
+
+// FX mode switching
+test('LiteracyFX setMode present', () => {
+  assert(html.includes('ClassmatesLiteracyFX.setMode'), 'Missing LiteracyFX setMode');
+});
+test('NumeracyFX setMode present', () => {
+  assert(html.includes('ClassmatesNumeracyFX.setMode'), 'Missing NumeracyFX setMode');
+});
+test('GeographyFX setMode present', () => {
+  assert(html.includes('ClassmatesGeographyFX.setMode'), 'Missing GeographyFX setMode');
+});
+
+// Game theme classes
+const THEMED_GAMES = [
+  {id: 'dictation', cls: 'dict-game'},
+  {id: 'vowels', cls: 'vowel-game'},
+  {id: 'anagram', cls: 'ana-game'},
+  {id: 'phonics', cls: 'ph-game'},
+  {id: 'wordfam', cls: 'wf-game'},
+  {id: 'sentence', cls: 'sent-game'},
+  {id: 'punctuation', cls: 'punct-game'},
+  {id: 'vocab', cls: 'voc-game'},
+  {id: 'reading', cls: 'read-game'},
+  {id: 'grammar', cls: 'gram-game'},
+  {id: 'rhyme', cls: 'rhyme-game'},
+  {id: 'speed', cls: 'speed-game'},
+];
+THEMED_GAMES.forEach(g => {
+  test(`Theme class: ${g.cls}`, () => {
+    assert(html.includes(g.cls), `Missing theme class ${g.cls} for ${g.id}`);
+  });
+});
+
+// World Portal
+test('World portal cards present', () => {
+  assert(html.includes('portal-card portal-literacy'), 'Missing literacy portal card');
+  assert(html.includes('portal-card portal-numeracy'), 'Missing numeracy portal card');
+  assert(html.includes('portal-card portal-geography'), 'Missing geography portal card');
+});
+
+// Landing Canvas
+test('Landing canvas present', () => {
+  assert(html.includes('id="landingCanvas"'), 'Missing landing canvas');
+});
+
 // --- Summary ---
 console.log(`\n${'='.repeat(40)}`);
 console.log(`Results: ${passed} passed, ${failed} failed, ${passed + failed} total`);
