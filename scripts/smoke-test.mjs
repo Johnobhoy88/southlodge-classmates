@@ -392,6 +392,7 @@ const THEMED_GAMES = [
   {id: 'fractions', cls: 'frac-game'},
   {id: 'wordprob', cls: 'wp-game'},
   {id: 'shapes', cls: 'shapes-game'},
+  {id: 'datahandling', cls: 'data-game'},
 ];
 THEMED_GAMES.forEach(g => {
   test(`Theme class: ${g.cls}`, () => {

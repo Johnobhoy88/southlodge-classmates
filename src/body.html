@@ -1085,23 +1085,27 @@
 </div>
 
 <!-- DATA HANDLING -->
-<div id="datahandling" class="screen game-screen num-theme">
+<div id="datahandling" class="screen game-screen num-theme data-game">
   <canvas class="game-canvas" id="datahandlingCanvas"></canvas>
-  <div class="game-header" style="border-color:#55efc4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00b894">Data Handling</h2></div>
+  <div class="game-header" style="border-color:#475569"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#94a3b8">Data</h2></div>
   <div class="game-body">
     <div id="dataLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4CA;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#cbd5e1">Mission Control</div>
+        <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px">Read charts, compare data, find the answers!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startData(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Read charts</div></div>
-        <div class="level-card lc-2" onclick="startData(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Compare data</div></div>
-        <div class="level-card lc-3" onclick="startData(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mean &amp; totals</div></div>
+        <div class="level-card lc-1" onclick="startData(1)"><div class="lc-icon">&#x1F4C8;</div><div class="lc-title">Easy</div><div class="lc-sub">Read charts</div></div>
+        <div class="level-card lc-2" onclick="startData(2)"><div class="lc-icon">&#x1F4CA;</div><div class="lc-title">Medium</div><div class="lc-sub">Compare data</div></div>
+        <div class="level-card lc-3" onclick="startData(3)"><div class="lc-icon">&#x1F9EE;</div><div class="lc-title">Hard</div><div class="lc-sub">Mean &amp; totals</div></div>
       </div>
     </div>
     <div id="dataGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="dataProgress" style="background:linear-gradient(90deg,#00b894,#55efc4)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="dataProgress" style="background:linear-gradient(90deg,#475569,#94a3b8)"></div></div>
       <div class="progress-text" id="dataProgressText"></div>
-      <div id="dataDisplay"></div>
-      <div class="ph-options" id="dataOpts"></div>
+      <div class="data-chart" id="dataDisplay"></div>
+      <div class="data-opts" id="dataOpts"></div>
     </div>
   </div>
 </div>
