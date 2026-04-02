@@ -1111,12 +1111,28 @@
 </div>
 
 <!-- CAPITALS -->
-<div id="capitals" class="screen game-screen geo-theme">
+<div id="capitals" class="screen game-screen geo-theme caps-game">
   <canvas class="game-canvas" id="capitalsCanvas"></canvas>
-  <div class="game-header" style="border-color:#52b788"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2d6a4f">Capital Cities</h2></div>
+  <div class="game-header" style="border-color:#b45309"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fbbf24">Capital Cities</h2></div>
   <div class="game-body">
-    <div id="capsLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div><div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div><div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div></div></div>
-    <div id="capsGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="capsProgress" style="background:linear-gradient(90deg,#2d6a4f,#52b788)"></div></div><div class="progress-text" id="capsProgressText"></div><div id="capsDisplay"></div><div class="ph-options" id="capsOpts"></div></div>
+    <div id="capsLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F3DB;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fde68a">Ancient Atlas</div>
+        <div style="font-size:0.75rem;color:#fbbf24;margin-top:4px">Name the capital city of each country!</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">&#x1F3F4;&#xE0067;&#xE0062;&#xE0073;&#xE0063;&#xE0074;&#xE007F;</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div>
+        <div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">&#x1F1EA;&#x1F1FA;</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div>
+        <div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">&#x1F30D;</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div>
+      </div>
+    </div>
+    <div id="capsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="capsProgress" style="background:linear-gradient(90deg,#b45309,#fbbf24)"></div></div>
+      <div class="progress-text" id="capsProgressText"></div>
+      <div class="caps-prompt" id="capsDisplay"></div>
+      <div class="caps-opts" id="capsOpts"></div>
+    </div>
   </div>
 </div>
 

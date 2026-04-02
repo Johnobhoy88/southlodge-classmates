@@ -1658,6 +1658,20 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .seq-opts .ph-opt.ph-correct,.seq-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
 .seq-opts .ph-opt.ph-wrong,.seq-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
 .seq-opts .ph-opt.ph-disabled,.seq-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== CAPITALS — Ancient Atlas ===== */
+.caps-game .game-header{background:rgba(35,20,5,0.92);border-bottom:2px solid rgba(180,83,9,0.35)}
+.caps-game .game-title{color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.25)}
+.caps-game .nav-btn{color:#fbbf24;border-color:rgba(180,83,9,0.3)}
+.caps-prompt{text-align:center;margin:18px auto;padding:16px 18px;max-width:360px;background:rgba(180,83,9,0.08);border:2px solid rgba(180,83,9,0.2);border-radius:4px;border-top:4px solid rgba(251,191,36,0.3);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.caps-prompt .ph-sound,.caps-prompt .ph-prompt{color:#fde68a;background:rgba(180,83,9,0.1);border-color:rgba(251,191,36,0.15)}
+.caps-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:320px;margin:14px auto 0;padding:0 12px}
+.caps-opts .ph-opt,.caps-opts button{padding:15px 12px;border:2px solid rgba(180,83,9,0.25);border-radius:6px;background:linear-gradient(180deg,rgba(180,83,9,0.12),rgba(180,83,9,0.06));font-family:'Fredoka One',cursive;font-size:0.95rem;color:#fde68a;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 0 rgba(120,53,0,0.4);text-align:center}
+.caps-opts .ph-opt:hover,.caps-opts button:hover{transform:translateY(-3px);border-color:#b45309;box-shadow:0 7px 0 rgba(120,53,0,0.4),0 0 12px rgba(251,191,36,0.08)}
+.caps-opts .ph-opt:active,.caps-opts button:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(120,53,0,0.4)}
+.caps-opts .ph-opt.ph-correct,.caps-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
+.caps-opts .ph-opt.ph-wrong,.caps-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
+.caps-opts .ph-opt.ph-disabled,.caps-opts button.ph-disabled{pointer-events:none;opacity:0.7}
 </style>
 </head>
 <body>
@@ -2774,12 +2788,28 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- CAPITALS -->
-<div id="capitals" class="screen game-screen geo-theme">
+<div id="capitals" class="screen game-screen geo-theme caps-game">
   <canvas class="game-canvas" id="capitalsCanvas"></canvas>
-  <div class="game-header" style="border-color:#52b788"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2d6a4f">Capital Cities</h2></div>
+  <div class="game-header" style="border-color:#b45309"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fbbf24">Capital Cities</h2></div>
   <div class="game-body">
-    <div id="capsLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div><div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div><div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div></div></div>
-    <div id="capsGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="capsProgress" style="background:linear-gradient(90deg,#2d6a4f,#52b788)"></div></div><div class="progress-text" id="capsProgressText"></div><div id="capsDisplay"></div><div class="ph-options" id="capsOpts"></div></div>
+    <div id="capsLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F3DB;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fde68a">Ancient Atlas</div>
+        <div style="font-size:0.75rem;color:#fbbf24;margin-top:4px">Name the capital city of each country!</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">&#x1F3F4;&#xE0067;&#xE0062;&#xE0073;&#xE0063;&#xE0074;&#xE007F;</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div>
+        <div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">&#x1F1EA;&#x1F1FA;</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div>
+        <div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">&#x1F30D;</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div>
+      </div>
+    </div>
+    <div id="capsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="capsProgress" style="background:linear-gradient(90deg,#b45309,#fbbf24)"></div></div>
+      <div class="progress-text" id="capsProgressText"></div>
+      <div class="caps-prompt" id="capsDisplay"></div>
+      <div class="caps-opts" id="capsOpts"></div>
+    </div>
   </div>
 </div>
 
@@ -11545,7 +11575,7 @@ const CAPS_DATA={1:[{q:'What is the capital of Scotland?',correct:'Edinburgh',op
 3:[{q:'What is the capital of Australia?',correct:'Canberra',opts:['Sydney','Canberra','Melbourne','Brisbane']},{q:'What is the capital of Canada?',correct:'Ottawa',opts:['Toronto','Ottawa','Vancouver','Montreal']},{q:'What is the capital of Brazil?',correct:'Brasília',opts:['Rio de Janeiro','Brasília','São Paulo','Salvador']},{q:'What is the capital of Japan?',correct:'Tokyo',opts:['Osaka','Tokyo','Kyoto','Yokohama']},{q:'What is the capital of India?',correct:'New Delhi',opts:['Mumbai','New Delhi','Bangalore','Kolkata']},{q:'What is the capital of China?',correct:'Beijing',opts:['Shanghai','Beijing','Guangzhou','Shenzhen']},{q:'What is the capital of Egypt?',correct:'Cairo',opts:['Alexandria','Cairo','Luxor','Giza']},{q:'What is the capital of South Africa?',correct:'Pretoria',opts:['Cape Town','Pretoria','Johannesburg','Durban']},{q:'What is the capital of New Zealand?',correct:'Wellington',opts:['Auckland','Wellington','Christchurch','Queenstown']},{q:'What is the capital of the USA?',correct:'Washington D.C.',opts:['New York','Washington D.C.','Los Angeles','Chicago']}]};
 let caps={level:1,questions:[],idx:0,total:10,correct:0,streak:0,missed:[]};
 function startCaps(lv){caps.level=lv;caps.questions=[...CAPS_DATA[lv]];shuffle(caps.questions);caps.idx=0;caps.correct=0;hide('capsLevelSelect');show('capsGame');loadCapsQ()}
-function loadCapsQ(){const q=caps.questions[caps.idx];document.getElementById('capsProgress').style.width=(caps.idx/caps.total*100)+'%';document.getElementById('capsProgressText').textContent=(caps.idx+1)+'/'+caps.total;document.getElementById('capsDisplay').innerHTML='<div class="ph-sound" style="background:#e8f5e9;border-color:#52b788;color:#2d6a4f;font-size:1rem">'+q.q+'</div>';const opts=document.getElementById('capsOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#capsOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){caps.correct++;caps.streak=(caps.streak||0)+1;sfxCorrect();b.classList.add('ph-correct');if(caps.streak>=3)b.textContent=o+' \u2714 '+caps.streak+'!'}else{caps.streak=0;caps.missed.push({w:q.q,h:q.correct});sfxWrong();b.classList.add('ph-wrong')}setTimeout(()=>{caps.idx++;if(caps.idx>=caps.total){show('capsLevelSelect');hide('capsGame');const pct=caps.correct/caps.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_capitals',true);addStars(stars);recordPlay();showResults('#2d6a4f','\u{1F3DB}','Capitals Done!','Level '+caps.level,stars,caps.correct,caps.total,()=>{showScreen('capitals')},caps.missed)}else loadCapsQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
+function loadCapsQ(){const q=caps.questions[caps.idx];document.getElementById('capsProgress').style.width=(caps.idx/caps.total*100)+'%';document.getElementById('capsProgressText').textContent=(caps.idx+1)+'/'+caps.total;document.getElementById('capsDisplay').innerHTML='<div class="ph-sound">'+q.q+'</div>';const opts=document.getElementById('capsOpts');opts.innerHTML='';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>{document.querySelectorAll('#capsOpts .ph-opt').forEach(x=>{x.classList.add('ph-disabled');if(x.textContent===q.correct)x.classList.add('ph-correct')});if(o===q.correct){caps.correct++;caps.streak=(caps.streak||0)+1;sfxCorrect();if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.onCorrect(null,null);b.classList.add('ph-correct');if(caps.streak>=3)b.textContent=o+' \u2714 '+caps.streak+'!'}else{caps.streak=0;caps.missed.push({w:q.q,h:q.correct});sfxWrong();if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.onWrong();b.classList.add('ph-wrong')}if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.setProgress((caps.idx+1)/caps.total);setTimeout(()=>{caps.idx++;if(caps.idx>=caps.total){if(window.ClassmatesGeographyFX)ClassmatesGeographyFX.onComplete(1);show('capsLevelSelect');hide('capsGame');const pct=caps.correct/caps.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_capitals',true);addStars(stars);recordPlay();showResults('#b45309','\u{1F3DB}','Capitals Done!','Level '+caps.level,stars,caps.correct,caps.total,()=>{showScreen('capitals')},caps.missed)}else loadCapsQ()},o===q.correct?500:1000)};opts.appendChild(b)})}
 
 // ==================== CONTINENTS ====================
 const CONT_DATA={1:[{q:'How many continents are there?',correct:'7',opts:['5','6','7','8']},{q:'Which continent do we live on?',correct:'Europe',opts:['Asia','Europe','Africa','North America']},{q:'Which is the largest continent?',correct:'Asia',opts:['Africa','Asia','Europe','North America']},{q:'Which is the smallest continent?',correct:'Australia',opts:['Europe','Australia','Antarctica','South America']},{q:'Which continent is the coldest?',correct:'Antarctica',opts:['Europe','Asia','Antarctica','North America']},{q:'Which continent has the most people?',correct:'Asia',opts:['Europe','Asia','Africa','North America']},{q:'Which continent is Brazil in?',correct:'South America',opts:['North America','South America','Europe','Africa']},{q:'Which continent is Egypt in?',correct:'Africa',opts:['Asia','Africa','Europe','South America']},{q:'Scotland is part of which continent?',correct:'Europe',opts:['Asia','Europe','North America','Africa']},{q:'Penguins live wild on which continent?',correct:'Antarctica',opts:['Europe','Antarctica','Africa','Asia']}],
