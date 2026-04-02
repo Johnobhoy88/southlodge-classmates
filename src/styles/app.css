@@ -1215,3 +1215,88 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .journey-btn{padding:14px 28px;border:none;border-radius:16px;background:linear-gradient(135deg,rgba(255,217,61,0.15),rgba(240,165,0,0.15));border:2px solid rgba(255,217,61,0.25);color:#FFD93D;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.95rem;cursor:pointer;transition:all 0.2s;width:100%;max-width:320px}
 .journey-btn:hover{background:linear-gradient(135deg,rgba(255,217,61,0.25),rgba(240,165,0,0.25));transform:translateY(-1px)}
 .journey-btn:active{transform:scale(0.97)}
+
+/* ================================================================
+   PREMIUM UPGRADE — "Toy Box"
+   Playful, tactile, warm. Every element feels touchable.
+   ================================================================ */
+
+/* --- PUPIL SELECT: Character Select Screen --- */
+.pupil-grid{gap:24px;perspective:800px}
+.pupil-profile{background:rgba(255,255,255,0.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:3px solid rgba(255,255,255,0.6);border-radius:26px;box-shadow:0 8px 0 rgba(0,0,0,0.06),0 12px 32px rgba(0,0,0,0.1);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s,border-color 0.3s;width:150px;padding:22px 14px 16px}
+.pupil-profile:hover{transform:translateY(-12px) scale(1.04);box-shadow:0 18px 40px rgba(0,0,0,0.15);border-color:#FFD93D}
+.pupil-profile:active{transform:scale(0.93) translateY(0);transition-duration:0.1s}
+.landing-bg .pupil-profile{background:rgba(255,255,255,0.75)}
+.pupil-profile .pp-avatar{width:110px;height:110px;border:4px solid transparent;background-image:linear-gradient(white,white),linear-gradient(135deg,#FF6B6B,#FFD93D,#55efc4,#74b9ff);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 4px 16px rgba(255,107,107,0.2);animation:avatarRingPulse 3s ease-in-out infinite}
+@keyframes avatarRingPulse{0%,100%{box-shadow:0 4px 16px rgba(255,107,107,0.2)}50%{box-shadow:0 4px 24px rgba(255,217,61,0.35),0 0 0 4px rgba(255,217,61,0.1)}}
+.pupil-profile .pp-name{font-size:1.05rem;color:#1a3a4a;margin-bottom:8px}
+.pupil-profile .pp-go{padding:10px 18px;border-radius:14px;background:linear-gradient(135deg,#FFD93D,#F0A500);color:#1a3a4a;font-size:0.9rem;box-shadow:0 4px 0 #c48800,0 6px 16px rgba(240,165,0,0.25);transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1)}
+.pupil-profile .pp-go:hover{transform:translateY(-2px);box-shadow:0 6px 0 #c48800,0 10px 24px rgba(240,165,0,0.3)}
+.pupil-profile .pp-go:active{transform:translateY(3px);box-shadow:0 1px 0 #c48800}
+.pupil-profile .pp-edit{background:rgba(17,153,142,0.1);color:#11998e;border-radius:12px;padding:5px 12px;font-size:0.72rem;transition:all 0.15s}
+.pupil-profile .pp-edit:hover{background:rgba(17,153,142,0.2);transform:scale(1.05)}
+
+/* --- AVATAR BUILDER: Fun Workshop --- */
+#avatarbuilder.game-screen{background:linear-gradient(160deg,#FFF8E7 0%,#FFE8D6 30%,#FFDDD2 60%,#FFE0F0 100%)}
+#avatarbuilder .game-header{background:rgba(255,255,255,0.8);border-bottom:2px solid rgba(240,165,0,0.15);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#avatarbuilder .game-title{color:#e44d26}
+#avatarbuilder .nav-btn{color:#e44d26;border-color:rgba(228,77,38,0.2)}
+#avatarbuilder .game-body{color:#3d2c1e}
+.avatar-preview-lg{width:180px;height:180px;border:6px solid transparent;background-image:linear-gradient(#FFF8E7,#FFF8E7),linear-gradient(135deg,#FF6B6B,#FFD93D,#55efc4,#a29bfe);background-origin:border-box;background-clip:padding-box,border-box;box-shadow:0 12px 40px rgba(255,107,107,0.15),0 0 0 8px rgba(255,217,61,0.08);animation:avPreviewGlow 4s ease-in-out infinite}
+@keyframes avPreviewGlow{0%,100%{box-shadow:0 12px 40px rgba(255,107,107,0.15),0 0 0 8px rgba(255,217,61,0.08)}50%{box-shadow:0 16px 48px rgba(255,217,61,0.2),0 0 0 12px rgba(255,107,107,0.06)}}
+.av-tabs{background:rgba(0,0,0,0.04);border-radius:16px;padding:4px;gap:0}
+.av-tab{border-radius:12px;border-bottom:none;background:transparent;color:#8d6e63;font-size:0.85rem;transition:all 0.25s}
+.av-tab:hover{background:rgba(255,255,255,0.5);color:#5d4037}
+.av-tab.active{background:white;color:#e44d26;border-bottom:none;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.av-option{border:3px solid #e8e0d8;background:white;box-shadow:0 3px 0 rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.04);transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1)}
+.av-option:hover{border-color:#FFD93D;transform:scale(1.15);box-shadow:0 6px 16px rgba(255,217,61,0.2)}
+.av-option.selected{border-color:#FF6B6B;box-shadow:0 0 0 4px rgba(255,107,107,0.2),0 4px 12px rgba(255,107,107,0.15);transform:scale(1.1)}
+.av-section-label{color:#8d6e63;font-family:'Fredoka One','Comic Sans MS',cursive;font-size:0.8rem;letter-spacing:1px;text-transform:uppercase}
+.av-premade-item{border:3px solid #e8e0d8;background:white;border-radius:16px}
+.av-premade-item:hover{border-color:#FFD93D;background:rgba(255,217,61,0.05)}
+.av-premade-item.selected{border-color:#FF6B6B;background:rgba(255,107,107,0.05);box-shadow:0 0 0 4px rgba(255,107,107,0.15)}
+.av-premade-name{color:#5d4037}
+.av-premade-item.selected .av-premade-name{color:#e44d26}
+#avatarbuilder .r-btn-primary{background:linear-gradient(135deg,#FF6B6B,#ee5a24);color:white;border:none;padding:14px 40px;border-radius:18px;font-size:1.1rem;box-shadow:0 5px 0 #c0392b,0 8px 24px rgba(238,90,36,0.25);transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1)}
+#avatarbuilder .r-btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 0 #c0392b,0 14px 32px rgba(238,90,36,0.3)}
+#avatarbuilder .r-btn-primary:active{transform:translateY(3px);box-shadow:0 1px 0 #c0392b}
+
+/* --- PUPIL HOME: Warm & Cosy --- */
+.home-bg{background:linear-gradient(170deg,#1a2a1e 0%,#243832 30%,#2d4a3e 60%,#354a42 100%)}
+.home-bg::before{background:radial-gradient(circle,rgba(255,217,61,0.1),transparent 70%)}
+.home-bg::after{background:radial-gradient(circle,rgba(85,239,196,0.08),transparent 70%)}
+.home-header-bar{padding:4px 0}
+.home-logo-sm{border:2px solid rgba(255,217,61,0.3);box-shadow:0 4px 16px rgba(0,0,0,0.25),0 0 0 4px rgba(255,217,61,0.08);border-radius:16px}
+.home-brand-name{color:#FFD93D;text-shadow:0 2px 8px rgba(255,217,61,0.15);font-size:1.4rem}
+.home-brand-school{color:rgba(85,239,196,0.6)}
+
+/* Stats bar — glowing numbers */
+.stats-bar{background:rgba(255,255,255,0.05);border:1px solid rgba(85,239,196,0.1);border-radius:18px;padding:14px 12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.stat-val{color:#FFD93D;text-shadow:0 0 12px rgba(255,217,61,0.3);font-size:1.6rem}
+.stat-lbl{font-size:0.6rem;color:rgba(255,255,255,0.45);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-top:2px;display:block}
+
+/* Coin display — sparkle */
+.coin-display-home{background:linear-gradient(135deg,rgba(255,217,61,0.12),rgba(240,165,0,0.18));border:2px solid rgba(255,217,61,0.35);box-shadow:0 0 16px rgba(255,217,61,0.08);animation:coinShimmer 3s ease-in-out infinite}
+@keyframes coinShimmer{0%,100%{box-shadow:0 0 16px rgba(255,217,61,0.08)}50%{box-shadow:0 0 24px rgba(255,217,61,0.18),0 0 0 3px rgba(255,217,61,0.05)}}
+
+/* Weekly goal — alive */
+.weekly-goal{background:rgba(85,239,196,0.06);border:1px solid rgba(85,239,196,0.12);border-radius:14px}
+.wg-bar{background:rgba(255,255,255,0.08);border-radius:6px;height:10px}
+.wg-fill{background:linear-gradient(90deg,#55efc4,#00b894);border-radius:6px;box-shadow:0 0 8px rgba(85,239,196,0.3);position:relative}
+
+/* Badges — warmer */
+.badges-section{background:rgba(255,255,255,0.03);border-radius:16px;padding:14px 12px;border:1px solid rgba(255,255,255,0.06)}
+.badges-title{font-family:'Fredoka One','Comic Sans MS',cursive;color:rgba(255,217,61,0.6);font-size:0.8rem;letter-spacing:1px}
+
+/* Shop sections — elevated */
+.shop-section{background:rgba(255,255,255,0.03);border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,0.06)}
+.shop-item{background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.08);border-radius:16px;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1)}
+.shop-item:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,0.15);border-color:rgba(255,217,61,0.2)}
+
+/* Assignment banner — juicier */
+.assign-banner{background:linear-gradient(135deg,#0d4b5d,#1f7a8c 40%,#FFD93D);border:2px solid rgba(255,255,255,0.1);box-shadow:0 8px 32px rgba(13,75,93,0.3),0 0 0 1px rgba(255,255,255,0.05);animation:bannerPulse 4s ease-in-out infinite}
+@keyframes bannerPulse{0%,100%{box-shadow:0 8px 32px rgba(13,75,93,0.3),0 0 0 1px rgba(255,255,255,0.05)}50%{box-shadow:0 12px 40px rgba(13,75,93,0.35),0 0 0 2px rgba(255,217,61,0.1)}}
+
+/* Mute & dyslexia buttons — subtler */
+.mute-btn,.dyslexia-btn{border-radius:14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:all 0.2s}
+.mute-btn:hover,.dyslexia-btn:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
