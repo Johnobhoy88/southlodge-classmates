@@ -670,23 +670,27 @@
 </div>
 
 <!-- FRACTIONS -->
-<div id="fractions" class="screen game-screen num-theme">
+<div id="fractions" class="screen game-screen num-theme frac-game">
   <canvas class="game-canvas" id="fractionsCanvas"></canvas>
-  <div class="game-header" style="border-color:#ee9ca7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
+  <div class="game-header" style="border-color:#f43f5e"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fb7185">Fractions</h2></div>
   <div class="game-body">
     <div id="fracLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F370;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fecdd3">Slice House</div>
+        <div style="font-size:0.75rem;color:#fb7185;margin-top:4px">Halves, quarters and more — how much is shaded?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
-        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
-        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
+        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">&#xBD;</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
+        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">&#x2153;</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
+        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">&#xBE;</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
       </div>
     </div>
     <div id="fracGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#ee9ca7,#ffdde1)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#f43f5e,#fb7185)"></div></div>
       <div class="progress-text" id="fracProgressText"></div>
-      <div id="fracDisplay"></div>
-      <div class="ph-options" id="fracOpts"></div>
+      <div class="frac-display" id="fracDisplay"></div>
+      <div class="frac-opts" id="fracOpts"></div>
     </div>
   </div>
 </div>

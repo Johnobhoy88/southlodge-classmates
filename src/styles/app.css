@@ -1555,3 +1555,18 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .money-opts .ph-opt.ph-correct,.money-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;box-shadow:0 4px 0 rgba(21,128,61,0.35)!important;animation:anaTileCorrect 0.3s}
 .money-opts .ph-opt.ph-wrong,.money-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
 .money-opts .ph-opt.ph-disabled,.money-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== FRACTIONS — Slice House ===== */
+.frac-game .game-header{background:rgba(35,8,12,0.92);border-bottom:2px solid rgba(244,63,94,0.3)}
+.frac-game .game-title{color:#fb7185;text-shadow:0 0 10px rgba(251,113,133,0.3)}
+.frac-game .nav-btn{color:#fb7185;border-color:rgba(244,63,94,0.3)}
+.frac-display{text-align:center;margin:16px auto;padding:18px 16px;max-width:320px;background:rgba(244,63,94,0.06);border:2px solid rgba(244,63,94,0.15);border-radius:20px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.frac-display .ph-sound,.frac-display .ph-prompt{color:#fecdd3;background:rgba(244,63,94,0.1);border-color:rgba(251,113,133,0.2)}
+.frac-display svg{filter:drop-shadow(0 4px 12px rgba(244,63,94,0.15));margin:8px auto}
+.frac-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:320px;margin:14px auto 0;padding:0 12px}
+.frac-opts .ph-opt,.frac-opts button{padding:16px 12px;border:3px solid rgba(244,63,94,0.2);border-radius:16px;background:rgba(244,63,94,0.08);font-family:'Fredoka One',cursive;font-size:1.2rem;color:#fecdd3;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 0 rgba(159,18,57,0.35);text-align:center}
+.frac-opts .ph-opt:hover,.frac-opts button:hover{transform:translateY(-4px);border-color:#f43f5e;box-shadow:0 8px 0 rgba(159,18,57,0.35),0 0 14px rgba(244,63,94,0.1)}
+.frac-opts .ph-opt:active,.frac-opts button:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(159,18,57,0.35)}
+.frac-opts .ph-opt.ph-correct,.frac-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
+.frac-opts .ph-opt.ph-wrong,.frac-opts button.ph-wrong{background:rgba(239,68,68,0.25)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
+.frac-opts .ph-opt.ph-disabled,.frac-opts button.ph-disabled{pointer-events:none;opacity:0.7}

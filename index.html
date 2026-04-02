@@ -1572,6 +1572,21 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .money-opts .ph-opt.ph-correct,.money-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;box-shadow:0 4px 0 rgba(21,128,61,0.35)!important;animation:anaTileCorrect 0.3s}
 .money-opts .ph-opt.ph-wrong,.money-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
 .money-opts .ph-opt.ph-disabled,.money-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== FRACTIONS — Slice House ===== */
+.frac-game .game-header{background:rgba(35,8,12,0.92);border-bottom:2px solid rgba(244,63,94,0.3)}
+.frac-game .game-title{color:#fb7185;text-shadow:0 0 10px rgba(251,113,133,0.3)}
+.frac-game .nav-btn{color:#fb7185;border-color:rgba(244,63,94,0.3)}
+.frac-display{text-align:center;margin:16px auto;padding:18px 16px;max-width:320px;background:rgba(244,63,94,0.06);border:2px solid rgba(244,63,94,0.15);border-radius:20px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.frac-display .ph-sound,.frac-display .ph-prompt{color:#fecdd3;background:rgba(244,63,94,0.1);border-color:rgba(251,113,133,0.2)}
+.frac-display svg{filter:drop-shadow(0 4px 12px rgba(244,63,94,0.15));margin:8px auto}
+.frac-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:320px;margin:14px auto 0;padding:0 12px}
+.frac-opts .ph-opt,.frac-opts button{padding:16px 12px;border:3px solid rgba(244,63,94,0.2);border-radius:16px;background:rgba(244,63,94,0.08);font-family:'Fredoka One',cursive;font-size:1.2rem;color:#fecdd3;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 0 rgba(159,18,57,0.35);text-align:center}
+.frac-opts .ph-opt:hover,.frac-opts button:hover{transform:translateY(-4px);border-color:#f43f5e;box-shadow:0 8px 0 rgba(159,18,57,0.35),0 0 14px rgba(244,63,94,0.1)}
+.frac-opts .ph-opt:active,.frac-opts button:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(159,18,57,0.35)}
+.frac-opts .ph-opt.ph-correct,.frac-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
+.frac-opts .ph-opt.ph-wrong,.frac-opts button.ph-wrong{background:rgba(239,68,68,0.25)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
+.frac-opts .ph-opt.ph-disabled,.frac-opts button.ph-disabled{pointer-events:none;opacity:0.7}
 </style>
 </head>
 <body>
@@ -2247,23 +2262,27 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- FRACTIONS -->
-<div id="fractions" class="screen game-screen num-theme">
+<div id="fractions" class="screen game-screen num-theme frac-game">
   <canvas class="game-canvas" id="fractionsCanvas"></canvas>
-  <div class="game-header" style="border-color:#ee9ca7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
+  <div class="game-header" style="border-color:#f43f5e"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fb7185">Fractions</h2></div>
   <div class="game-body">
     <div id="fracLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F370;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fecdd3">Slice House</div>
+        <div style="font-size:0.75rem;color:#fb7185;margin-top:4px">Halves, quarters and more — how much is shaded?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
-        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
-        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
+        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">&#xBD;</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
+        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">&#x2153;</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
+        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">&#xBE;</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
       </div>
     </div>
     <div id="fracGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#ee9ca7,#ffdde1)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#f43f5e,#fb7185)"></div></div>
       <div class="progress-text" id="fracProgressText"></div>
-      <div id="fracDisplay"></div>
-      <div class="ph-options" id="fracOpts"></div>
+      <div class="frac-display" id="fracDisplay"></div>
+      <div class="frac-opts" id="fracOpts"></div>
     </div>
   </div>
 </div>
@@ -10910,7 +10929,7 @@ function genFracQ(lv){const type=rand(0,2);if(lv===1){const denoms=[2,4];const d
 
 function startFrac(lv){frac.level=lv;frac.idx=0;frac.correct=0;hide('fracLevelSelect');show('fracGame');loadFracQ()}
 function loadFracQ(){const q=genFracQ(frac.level);frac.question=q;document.getElementById('fracProgress').style.width=(frac.idx/frac.total*100)+'%';document.getElementById('fracProgressText').textContent='Question '+(frac.idx+1)+' of '+frac.total;document.getElementById('fracDisplay').innerHTML=(q.visual?'<div class="frac-shape">'+q.visual+'</div>':'')+'<div class="ph-sound" style="background:#fff5f7;border-color:#ee9ca7;color:#c0392b;font-size:1rem">'+q.prompt+'</div>';const opts=document.getElementById('fracOpts');opts.innerHTML='';q.options.forEach(o=>{const b=document.createElement('button');b.className='ph-opt';b.textContent=o;b.onclick=()=>selectFracAns(b,o===q.correct,q.correct);opts.appendChild(b)})}
-function selectFracAns(btn,correct,rightAnswer){document.querySelectorAll('#fracOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===rightAnswer)o.classList.add('ph-correct')});if(correct){frac.correct++;frac.streak=(frac.streak||0)+1;btn.classList.add('ph-correct');if(frac.streak>=3)btn.textContent=rightAnswer+' \u2714 '+frac.streak+'!'}else{frac.streak=0;btn.classList.add('ph-wrong')}setTimeout(()=>{frac.idx++;if(frac.idx>=frac.total)finishFrac();else loadFracQ()},correct?500:1200)}
+function selectFracAns(btn,correct,rightAnswer){document.querySelectorAll('#fracOpts .ph-opt').forEach(o=>{o.classList.add('ph-disabled');if(o.textContent===rightAnswer)o.classList.add('ph-correct')});if(correct){frac.correct++;frac.streak=(frac.streak||0)+1;sfxCorrect();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onCorrect(null,null,frac.idx);btn.classList.add('ph-correct');if(frac.streak>=3)btn.textContent=rightAnswer+' \u2714 '+frac.streak+'!'}else{frac.streak=0;sfxWrong();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onWrong();btn.classList.add('ph-wrong')}if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.setProgress((frac.idx+1)/frac.total);setTimeout(()=>{frac.idx++;if(frac.idx>=frac.total){if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onComplete(1);finishFrac()}else loadFracQ()},correct?500:1200)}
 function finishFrac(){show('fracLevelSelect');hide('fracGame');const pct=frac.correct/frac.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_fractions',true);if(pct>=0.8)adaptiveCorrect('fractions');else if(pct<0.4)adaptiveWrong('fractions');addStars(stars);recordPlay();showResults('#c0392b','\u00BD','Fractions Done!','Level '+frac.level,stars,frac.correct,frac.total,()=>{showScreen('fractions')},null)}
 
 // ==================== MONEY ====================
