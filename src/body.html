@@ -1163,12 +1163,28 @@
 </div>
 
 <!-- WEATHER -->
-<div id="weather" class="screen game-screen geo-theme">
+<div id="weather" class="screen game-screen geo-theme weath-game">
   <canvas class="game-canvas" id="weatherCanvas"></canvas>
-  <div class="game-header" style="border-color:#a8dadc"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#457b9d">Weather &amp; Climate</h2></div>
+  <div class="game-header" style="border-color:#0369a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0ea5e9">Weather</h2></div>
   <div class="game-body">
-    <div id="weatherLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startWeather(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Seasons &amp; weather</div></div><div class="level-card lc-2" onclick="startWeather(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Weather patterns</div></div><div class="level-card lc-3" onclick="startWeather(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate zones</div></div></div></div>
-    <div id="weatherGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="weatherProgress" style="background:linear-gradient(90deg,#457b9d,#a8dadc)"></div></div><div class="progress-text" id="weatherProgressText"></div><div id="weatherDisplay"></div><div class="ph-options" id="weatherOpts"></div></div>
+    <div id="weatherLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x26C5;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#1a3a4a">Forecast Desk</div>
+        <div style="font-size:0.75rem;color:#0369a1;margin-top:4px">Clouds, rain, sun and snow — what do you know?</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startWeather(1)"><div class="lc-icon">&#x2600;&#xFE0F;</div><div class="lc-title">Easy</div><div class="lc-sub">Seasons &amp; weather</div></div>
+        <div class="level-card lc-2" onclick="startWeather(2)"><div class="lc-icon">&#x1F327;&#xFE0F;</div><div class="lc-title">Medium</div><div class="lc-sub">Weather patterns</div></div>
+        <div class="level-card lc-3" onclick="startWeather(3)"><div class="lc-icon">&#x1F321;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">Climate zones</div></div>
+      </div>
+    </div>
+    <div id="weatherGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="weatherProgress" style="background:linear-gradient(90deg,#0369a1,#7dd3fc)"></div></div>
+      <div class="progress-text" id="weatherProgressText"></div>
+      <div class="weath-prompt" id="weatherDisplay"></div>
+      <div class="weath-opts" id="weatherOpts"></div>
+    </div>
   </div>
 </div>
 

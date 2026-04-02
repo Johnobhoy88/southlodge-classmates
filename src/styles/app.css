@@ -1669,3 +1669,17 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .cont-opts .ph-opt.ph-correct,.cont-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
 .cont-opts .ph-opt.ph-wrong,.cont-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
 .cont-opts .ph-opt.ph-disabled,.cont-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== WEATHER — Forecast Desk ===== */
+.weath-game .game-header{background:rgba(240,249,255,0.88);border-bottom:2px solid rgba(3,105,161,0.2)}
+.weath-game .game-title{color:#0369a1}
+.weath-game .nav-btn{color:#0369a1;border-color:rgba(3,105,161,0.2)}
+.weath-prompt{text-align:center;margin:18px auto;padding:16px 18px;max-width:360px;background:rgba(255,255,255,0.6);border:2px solid rgba(3,105,161,0.12);border-radius:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 4px 16px rgba(0,0,0,0.04)}
+.weath-prompt .ph-sound,.weath-prompt .ph-prompt{color:#0c4a6e;background:rgba(224,242,254,0.5);border-color:rgba(3,105,161,0.1)}
+.weath-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:320px;margin:14px auto 0;padding:0 12px}
+.weath-opts .ph-opt,.weath-opts button{padding:15px 12px;border:2px solid rgba(3,105,161,0.15);border-radius:14px;background:rgba(255,255,255,0.55);font-family:'Fredoka One',cursive;font-size:0.95rem;color:#0c4a6e;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 3px 0 rgba(3,105,161,0.12);text-align:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.weath-opts .ph-opt:hover,.weath-opts button:hover{transform:translateY(-3px);border-color:#0369a1;box-shadow:0 6px 0 rgba(3,105,161,0.12),0 0 12px rgba(3,105,161,0.06);background:rgba(255,255,255,0.75)}
+.weath-opts .ph-opt:active,.weath-opts button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(3,105,161,0.12)}
+.weath-opts .ph-opt.ph-correct,.weath-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#166534!important;animation:anaTileCorrect 0.3s}
+.weath-opts .ph-opt.ph-wrong,.weath-opts button.ph-wrong{background:rgba(239,68,68,0.15)!important;border-color:#ef4444!important;color:#991b1b!important;animation:dictShake 0.4s}
+.weath-opts .ph-opt.ph-disabled,.weath-opts button.ph-disabled{pointer-events:none;opacity:0.7}
