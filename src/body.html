@@ -2,6 +2,7 @@
 
 <!-- LANDING PAGE -->
 <div id="landing" class="screen landing-bg branded active">
+  <canvas id="landingCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
   <div class="landing-brand">
     <div class="landing-logo-wrap">
       <div class="landing-logo-glow"></div>
@@ -35,13 +36,14 @@
 
 <!-- PUPIL SELECT -->
 <div id="pupilselect" class="screen landing-bg branded" style="padding:20px">
-  <div style="text-align:center;padding:16px 0;">
+  <canvas id="pupilSelectCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none"></canvas>
+  <div style="text-align:center;padding:16px 0;position:relative;z-index:1;">
     <img src="logo.jpg" alt="South Lodge Primary" style="width:70px;border-radius:50%;border:4px solid white;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
-    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;color:white;margin:10px 0 4px;">Who's playing today?</div>
-    <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);">Tap your name to start!</div>
+    <div style="font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.8rem;color:#1a3a4a;margin:10px 0 4px;text-shadow:0 1px 4px rgba(255,255,255,0.5)">Who's playing today?</div>
+    <div style="font-size:0.85rem;color:#2E7D32;">Tap your name to start!</div>
   </div>
-  <div class="pupil-grid" id="pupilGrid"></div>
-  <div style="text-align:center;padding:16px;">
+  <div class="pupil-grid" id="pupilGrid" style="position:relative;z-index:1"></div>
+  <div style="text-align:center;padding:16px;position:relative;z-index:1;">
     <button class="nav-btn" onclick="showScreen('landing')" style="margin:0 auto">&larr; Back</button>
   </div>
 </div>
@@ -106,50 +108,79 @@
       <button class="journey-btn" onclick="showScreen('journey');renderJourney()">&#x1F5FA;&#xFE0F; My Scottish Journey</button>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x270F;&#xFE0F; Literacy</span><span class="collapse-arrow">&#x25BC;</span></div>
-    <div class="subject-grid">
-      <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
-      <div class="subject-card card-dictation" onclick="startGame('dictation')"><div class="card-icon">&#x1F50A;</div><div class="card-title">Dictation</div><div class="card-desc">Listen and spell!</div></div>
-      <div class="subject-card card-vowels" onclick="startGame('vowels')"><div class="card-icon">_e_</div><div class="card-title">Missing Vowels</div><div class="card-desc">Fill in the gaps!</div></div>
-      <div class="subject-card card-anagram" onclick="startGame('anagram')"><div class="card-icon">ABC</div><div class="card-title">Anagrams</div><div class="card-desc">Unjumble the letters!</div></div>
-      <div class="subject-card card-phonics" onclick="startGame('phonics')"><div class="card-icon">ai</div><div class="card-title">Phonics</div><div class="card-desc">Sound patterns</div></div>
-      <div class="subject-card card-wordfam" onclick="startGame('wordfam')"><div class="card-icon">-ing</div><div class="card-title">Word Families</div><div class="card-desc">Common endings</div></div>
-      <div class="subject-card card-sentence" onclick="startGame('sentence')"><div class="card-icon">1 2 3</div><div class="card-title">Sentences</div><div class="card-desc">Put words in order</div></div>
-      <div class="subject-card card-punctuation" onclick="startGame('punctuation')"><div class="card-icon">.?!</div><div class="card-title">Punctuation</div><div class="card-desc">Add the missing marks</div></div>
-      <div class="subject-card card-vocab" onclick="startGame('vocab')"><div class="card-icon">A-Z</div><div class="card-title">Vocabulary</div><div class="card-desc">Words and meanings</div></div>
-      <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
-      <div class="subject-card card-grammar" onclick="startGame('grammar')"><div class="card-icon">N V</div><div class="card-title">Grammar</div><div class="card-desc">Word types</div></div>
-      <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
+    <!-- WORLD PORTAL — Category Cards -->
+    <div class="portal-grid">
+      <div class="portal-card portal-literacy" onclick="togglePortal(this,'literacy')">
+        <div class="portal-emoji">&#x1F4DA;</div>
+        <div class="portal-title">Literacy</div>
+        <div class="portal-count">12 games</div>
+      </div>
+      <div class="portal-card portal-numeracy" onclick="togglePortal(this,'numeracy')">
+        <div class="portal-emoji">&#x1F522;</div>
+        <div class="portal-title">Numeracy</div>
+        <div class="portal-count">14 games</div>
+      </div>
+      <div class="portal-card portal-geography" onclick="togglePortal(this,'geography')">
+        <div class="portal-emoji">&#x1F30D;</div>
+        <div class="portal-title">Geography</div>
+        <div class="portal-count">5 games</div>
+      </div>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F522; Numeracy</span><span class="collapse-arrow">&#x25BC;</span></div>
-    <div class="subject-grid">
-      <div class="subject-card card-maths" onclick="startGame('maths')"><div class="card-icon">1+2</div><div class="card-title">Maths</div><div class="card-desc">Solve the sums</div></div>
-      <div class="subject-card card-times" onclick="startGame('times')"><div class="card-icon">3x4</div><div class="card-title">Times Tables</div><div class="card-desc">Beat the clock!</div></div>
-      <div class="subject-card card-speed" onclick="startGame('speed')"><div class="card-icon">60s</div><div class="card-title">Speed Maths</div><div class="card-desc">60 second challenge</div></div>
-      <div class="subject-card card-bonds" onclick="startGame('bonds')"><div class="card-icon">?+3</div><div class="card-title">Number Bonds</div><div class="card-desc">Find the missing number</div></div>
-      <div class="subject-card card-missnum" onclick="startGame('missnum')"><div class="card-icon">?=</div><div class="card-title">Missing Number</div><div class="card-desc">Find the gap</div></div>
-      <div class="subject-card card-placeval" onclick="startGame('placeval')"><div class="card-icon">HTO</div><div class="card-title">Place Value</div><div class="card-desc">Hundreds, tens &amp; ones</div></div>
-      <div class="subject-card card-time" onclick="startGame('telltime')"><div class="card-icon">3:00</div><div class="card-title">Telling Time</div><div class="card-desc">Read the clock</div></div>
-      <div class="subject-card card-money" onclick="startGame('money')"><div class="card-icon">&#xA3;p</div><div class="card-title">Money</div><div class="card-desc">Coins and change</div></div>
-      <div class="subject-card card-fractions" onclick="startGame('fractions')"><div class="card-icon">&#xBD;</div><div class="card-title">Fractions</div><div class="card-desc">Halves, quarters &amp; more</div></div>
-      <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
-      <div class="subject-card card-shapes" onclick="startGame('shapes')"><div class="card-icon">&#x25B3;</div><div class="card-title">Shapes</div><div class="card-desc">Geometry</div></div>
-      <div class="subject-card card-data" onclick="startGame('datahandling')"><div class="card-icon">&#x1F4CA;</div><div class="card-title">Data</div><div class="card-desc">Charts</div></div>
-      <div class="subject-card card-measure" onclick="startGame('measure')"><div class="card-icon">cm</div><div class="card-title">Measurement</div><div class="card-desc">Compare</div></div>
-      <div class="subject-card card-sequence" onclick="startGame('sequence')"><div class="card-icon">1,2,?</div><div class="card-title">Sequences</div><div class="card-desc">Patterns</div></div>
+    <!-- Literacy Games (hidden until portal tapped) -->
+    <div class="portal-games" id="portal-literacy" style="display:none">
+      <div class="portal-games-header" onclick="togglePortal(null,'literacy')"><span>&#x1F4DA; Literacy</span><button class="portal-close">&times;</button></div>
+      <div class="subject-grid">
+        <div class="subject-card card-spelling" onclick="startGame('spelling')"><div class="card-icon">Aa</div><div class="card-title">Spelling</div><div class="card-desc">Guess the word!</div></div>
+        <div class="subject-card card-dictation" onclick="startGame('dictation')"><div class="card-icon">&#x1F50A;</div><div class="card-title">Dictation</div><div class="card-desc">Listen and spell!</div></div>
+        <div class="subject-card card-vowels" onclick="startGame('vowels')"><div class="card-icon">_e_</div><div class="card-title">Missing Vowels</div><div class="card-desc">Fill in the gaps!</div></div>
+        <div class="subject-card card-anagram" onclick="startGame('anagram')"><div class="card-icon">ABC</div><div class="card-title">Anagrams</div><div class="card-desc">Unjumble the letters!</div></div>
+        <div class="subject-card card-phonics" onclick="startGame('phonics')"><div class="card-icon">ai</div><div class="card-title">Phonics</div><div class="card-desc">Sound patterns</div></div>
+        <div class="subject-card card-wordfam" onclick="startGame('wordfam')"><div class="card-icon">-ing</div><div class="card-title">Word Families</div><div class="card-desc">Common endings</div></div>
+        <div class="subject-card card-sentence" onclick="startGame('sentence')"><div class="card-icon">1 2 3</div><div class="card-title">Sentences</div><div class="card-desc">Put words in order</div></div>
+        <div class="subject-card card-punctuation" onclick="startGame('punctuation')"><div class="card-icon">.?!</div><div class="card-title">Punctuation</div><div class="card-desc">Add the missing marks</div></div>
+        <div class="subject-card card-vocab" onclick="startGame('vocab')"><div class="card-icon">A-Z</div><div class="card-title">Vocabulary</div><div class="card-desc">Words and meanings</div></div>
+        <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
+        <div class="subject-card card-grammar" onclick="startGame('grammar')"><div class="card-icon">N V</div><div class="card-title">Grammar</div><div class="card-desc">Word types</div></div>
+        <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
+      </div>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F30D; Geography</span><span class="collapse-arrow">&#x25BC;</span></div>
-    <div class="subject-grid">
-      <div class="subject-card card-capitals" onclick="startGame('capitals')"><div class="card-icon">&#x1F3DB;</div><div class="card-title">Capitals</div><div class="card-desc">Cities</div></div>
-      <div class="subject-card card-continents" onclick="startGame('continents')"><div class="card-icon">&#x1F30D;</div><div class="card-title">World</div><div class="card-desc">Continents</div></div>
-      <div class="subject-card card-weather" onclick="startGame('weather')"><div class="card-icon">&#x2600;</div><div class="card-title">Weather</div><div class="card-desc">Climate</div></div>
-      <div class="subject-card card-compass" onclick="startGame('compass')"><div class="card-icon">&#x1F9ED;</div><div class="card-title">Compass</div><div class="card-desc">Directions</div></div>
-      <div class="subject-card card-flags" onclick="startGame('flags')"><div class="card-icon">&#x1F3F3;</div><div class="card-title">Flags</div><div class="card-desc">Countries</div></div>
+    <!-- Numeracy Games -->
+    <div class="portal-games" id="portal-numeracy" style="display:none">
+      <div class="portal-games-header" onclick="togglePortal(null,'numeracy')"><span>&#x1F522; Numeracy</span><button class="portal-close">&times;</button></div>
+      <div class="subject-grid">
+        <div class="subject-card card-maths" onclick="startGame('maths')"><div class="card-icon">1+2</div><div class="card-title">Maths</div><div class="card-desc">Solve the sums</div></div>
+        <div class="subject-card card-times" onclick="startGame('times')"><div class="card-icon">3x4</div><div class="card-title">Times Tables</div><div class="card-desc">Beat the clock!</div></div>
+        <div class="subject-card card-speed" onclick="startGame('speed')"><div class="card-icon">60s</div><div class="card-title">Speed Maths</div><div class="card-desc">60 second challenge</div></div>
+        <div class="subject-card card-bonds" onclick="startGame('bonds')"><div class="card-icon">?+3</div><div class="card-title">Number Bonds</div><div class="card-desc">Find the missing number</div></div>
+        <div class="subject-card card-missnum" onclick="startGame('missnum')"><div class="card-icon">?=</div><div class="card-title">Missing Number</div><div class="card-desc">Find the gap</div></div>
+        <div class="subject-card card-placeval" onclick="startGame('placeval')"><div class="card-icon">HTO</div><div class="card-title">Place Value</div><div class="card-desc">Hundreds, tens &amp; ones</div></div>
+        <div class="subject-card card-time" onclick="startGame('telltime')"><div class="card-icon">3:00</div><div class="card-title">Telling Time</div><div class="card-desc">Read the clock</div></div>
+        <div class="subject-card card-money" onclick="startGame('money')"><div class="card-icon">&#xA3;p</div><div class="card-title">Money</div><div class="card-desc">Coins and change</div></div>
+        <div class="subject-card card-fractions" onclick="startGame('fractions')"><div class="card-icon">&#xBD;</div><div class="card-title">Fractions</div><div class="card-desc">Halves, quarters &amp; more</div></div>
+        <div class="subject-card card-wordprob" onclick="startGame('wordprob')"><div class="card-icon">Q&amp;A</div><div class="card-title">Word Problems</div><div class="card-desc">Real-world maths</div></div>
+        <div class="subject-card card-shapes" onclick="startGame('shapes')"><div class="card-icon">&#x25B3;</div><div class="card-title">Shapes</div><div class="card-desc">Geometry</div></div>
+        <div class="subject-card card-data" onclick="startGame('datahandling')"><div class="card-icon">&#x1F4CA;</div><div class="card-title">Data</div><div class="card-desc">Charts</div></div>
+        <div class="subject-card card-measure" onclick="startGame('measure')"><div class="card-icon">cm</div><div class="card-title">Measurement</div><div class="card-desc">Compare</div></div>
+        <div class="subject-card card-sequence" onclick="startGame('sequence')"><div class="card-icon">1,2,?</div><div class="card-title">Sequences</div><div class="card-desc">Patterns</div></div>
+      </div>
     </div>
 
-    <div class="section-header" onclick="toggleSection(this)"><span>&#x1F3C6; Challenges</span><span class="collapse-arrow">&#x25BC;</span></div>
+    <!-- Geography Games -->
+    <div class="portal-games" id="portal-geography" style="display:none">
+      <div class="portal-games-header" onclick="togglePortal(null,'geography')"><span>&#x1F30D; Geography</span><button class="portal-close">&times;</button></div>
+      <div class="subject-grid">
+        <div class="subject-card card-capitals" onclick="startGame('capitals')"><div class="card-icon">&#x1F3DB;</div><div class="card-title">Capitals</div><div class="card-desc">Cities</div></div>
+        <div class="subject-card card-continents" onclick="startGame('continents')"><div class="card-icon">&#x1F30D;</div><div class="card-title">World</div><div class="card-desc">Continents</div></div>
+        <div class="subject-card card-weather" onclick="startGame('weather')"><div class="card-icon">&#x2600;</div><div class="card-title">Weather</div><div class="card-desc">Climate</div></div>
+        <div class="subject-card card-compass" onclick="startGame('compass')"><div class="card-icon">&#x1F9ED;</div><div class="card-title">Compass</div><div class="card-desc">Directions</div></div>
+        <div class="subject-card card-flags" onclick="startGame('flags')"><div class="card-icon">&#x1F3F3;</div><div class="card-title">Flags</div><div class="card-desc">Countries</div></div>
+      </div>
+    </div>
+
+    <!-- Challenges (stays as-is) -->
+    <div class="section-header" onclick="toggleSection(this)" style="margin-top:24px"><span>&#x1F3C6; Challenges</span><span class="collapse-arrow">&#x25BC;</span></div>
     <div class="subject-grid">
       <div class="subject-card card-daily" onclick="startGame('daily')"><div class="card-icon">GO</div><div class="card-info"><div class="card-title">Daily Challenge</div><div class="card-desc">5 daily challenges — spelling, maths, reading &amp; more</div></div></div>
       <div class="subject-card card-h2h" onclick="startGame('h2h')"><div class="card-icon">VS</div><div class="card-title">Head to Head</div><div class="card-desc">Race!</div></div>
@@ -486,7 +517,8 @@
 </div>
 
 <!-- MATHS -->
-<div id="maths" class="screen game-screen">
+<div id="maths" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="mathsCanvas"></canvas>
   <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Maths</h2></div>
   <div class="game-body">
     <div id="mathsLevelSelect">
@@ -511,7 +543,8 @@
 </div>
 
 <!-- TIMES TABLES -->
-<div id="times" class="screen game-screen">
+<div id="times" class="screen game-screen num-theme">
+  <canvas class="game-canvas" id="timesCanvas"></canvas>
   <div class="game-header" style="border-color:#f16529"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e44d26">Times Tables</h2></div>
   <div class="game-body">
     <div id="timesTableSelect">
@@ -534,8 +567,9 @@
 </div>
 
 <!-- READING -->
-<div id="reading" class="screen game-screen">
-  <div class="game-header" style="border-color:#a8e063"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#56ab2f">Reading</h2></div>
+<div id="reading" class="screen game-screen lit-theme read-game">
+  <canvas class="game-canvas" id="readingCanvas"></canvas>
+  <div class="game-header" style="border-color:#a16207"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#a16207">Reading</h2></div>
   <div class="game-body">
     <div id="readingLevelSelect">
       <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
@@ -584,21 +618,26 @@
 </div>
 
 <!-- SPEED MATHS -->
-<div id="speed" class="screen game-screen">
-  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Speed Maths</h2></div>
+<div id="speed" class="screen game-screen num-theme speed-game">
+  <canvas class="game-canvas" id="speedCanvas"></canvas>
+  <div class="game-header" style="border-color:#22c55e"><button class="nav-btn" onclick="endSpeed();goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="endSpeed();showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#22c55e">Speed Maths</h2></div>
   <div class="game-body">
     <div id="speedLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose difficulty:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x26A1;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#166534">60 Second Blitz</div>
+        <div style="font-size:0.75rem;color:#22c55e;margin-top:4px">How many can you solve before time runs out?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
-        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
-        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+        <div class="level-card lc-1" onclick="startSpeed(1)"><div class="lc-icon">&#x26A1;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startSpeed(2)"><div class="lc-icon">&#x1F525;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startSpeed(3)"><div class="lc-icon">&#x1F4A5;</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
       </div>
     </div>
     <div id="speedGame" style="display:none;">
+      <div class="spd-timer-bar"><div class="spd-timer-fill" id="speedTimerFill"></div></div>
       <div class="speed-timer normal" id="speedTimer">60</div>
-      <div class="speed-score">Score: <span id="speedScore">0</span></div>
-      <div id="speedCombo" style="text-align:center;font-size:0.8rem;font-weight:700;color:#6c5ce7;min-height:1.2em"></div>
+      <div class="spd-stats"><span class="spd-score">&#x2B50; <span id="speedScore">0</span></span><span id="speedCombo" class="spd-combo"></span></div>
       <div class="speed-q" id="speedQ"></div>
       <div class="speed-ans normal" id="speedAns">_</div>
       <div class="numpad" id="speedNumpad"></div>
@@ -607,22 +646,27 @@
 </div>
 
 <!-- WORD PROBLEMS -->
-<div id="wordprob" class="screen game-screen">
-  <div class="game-header" style="border-color:#4286f4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#373b44">Word Problems</h2></div>
+<div id="wordprob" class="screen game-screen num-theme wp-game">
+  <canvas class="game-canvas" id="wordprobCanvas"></canvas>
+  <div class="game-header" style="border-color:#78716c"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#d6d3d1">Word Problems</h2></div>
   <div class="game-body">
     <div id="wpLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4DD;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#e7e5e4">Story Desk</div>
+        <div style="font-size:0.75rem;color:#a8a29e;margin-top:4px">Read the story and solve the maths!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startWP(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">One step</div></div>
-        <div class="level-card lc-2" onclick="startWP(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Two step</div></div>
-        <div class="level-card lc-3" onclick="startWP(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Multi-step</div></div>
+        <div class="level-card lc-1" onclick="startWP(1)"><div class="lc-icon">&#x1F4D6;</div><div class="lc-title">Easy</div><div class="lc-sub">One step</div></div>
+        <div class="level-card lc-2" onclick="startWP(2)"><div class="lc-icon">&#x1F4DA;</div><div class="lc-title">Medium</div><div class="lc-sub">Two step</div></div>
+        <div class="level-card lc-3" onclick="startWP(3)"><div class="lc-icon">&#x1F9E0;</div><div class="lc-title">Hard</div><div class="lc-sub">Multi-step</div></div>
       </div>
     </div>
     <div id="wpGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="wpProgress" style="background:linear-gradient(90deg,#373b44,#4286f4)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="wpProgress" style="background:linear-gradient(90deg,#78716c,#a8a29e)"></div></div>
       <div class="progress-text" id="wpProgressText"></div>
-      <div class="story-text" id="wpProblem" style="max-height:none;border-color:#4286f4"></div>
-      <div class="maths-ans" id="wpAnswer" style="color:#4286f4">_</div>
+      <div class="wp-problem" id="wpProblem"></div>
+      <div class="wp-ans" id="wpAnswer">_</div>
       <div class="numpad" id="wpNumpad"></div>
     </div>
   </div>
@@ -630,106 +674,131 @@
 </div>
 
 <!-- FRACTIONS -->
-<div id="fractions" class="screen game-screen">
-  <div class="game-header" style="border-color:#ee9ca7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c0392b">Fractions</h2></div>
+<div id="fractions" class="screen game-screen num-theme frac-game">
+  <canvas class="game-canvas" id="fractionsCanvas"></canvas>
+  <div class="game-header" style="border-color:#f43f5e"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fb7185">Fractions</h2></div>
   <div class="game-body">
     <div id="fracLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F370;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fecdd3">Slice House</div>
+        <div style="font-size:0.75rem;color:#fb7185;margin-top:4px">Halves, quarters and more — how much is shaded?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
-        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
-        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
+        <div class="level-card lc-1" onclick="startFrac(1)"><div class="lc-icon">&#xBD;</div><div class="lc-title">Easy</div><div class="lc-sub">Halves &amp; quarters</div></div>
+        <div class="level-card lc-2" onclick="startFrac(2)"><div class="lc-icon">&#x2153;</div><div class="lc-title">Medium</div><div class="lc-sub">Thirds &amp; fifths</div></div>
+        <div class="level-card lc-3" onclick="startFrac(3)"><div class="lc-icon">&#xBE;</div><div class="lc-title">Hard</div><div class="lc-sub">Equivalents</div></div>
       </div>
     </div>
     <div id="fracGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#ee9ca7,#ffdde1)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="fracProgress" style="background:linear-gradient(90deg,#f43f5e,#fb7185)"></div></div>
       <div class="progress-text" id="fracProgressText"></div>
-      <div id="fracDisplay"></div>
-      <div class="ph-options" id="fracOpts"></div>
+      <div class="frac-display" id="fracDisplay"></div>
+      <div class="frac-opts" id="fracOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- MONEY -->
-<div id="money" class="screen game-screen">
-  <div class="game-header" style="border-color:#2ecc71"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#1a5276">Money</h2></div>
+<div id="money" class="screen game-screen num-theme money-game">
+  <canvas class="game-canvas" id="moneyCanvas"></canvas>
+  <div class="game-header" style="border-color:#ca8a04"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#eab308">Money</h2></div>
   <div class="game-body">
     <div id="moneyLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1FA99;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fde68a">The Vault</div>
+        <div style="font-size:0.75rem;color:#eab308;margin-top:4px">Count the coins and notes!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startMoney(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 20p</div></div>
-        <div class="level-card lc-2" onclick="startMoney(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to &#xA3;1</div></div>
-        <div class="level-card lc-3" onclick="startMoney(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">&#xA3; and change</div></div>
+        <div class="level-card lc-1" onclick="startMoney(1)"><div class="lc-icon">&#x1FA99;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 20p</div></div>
+        <div class="level-card lc-2" onclick="startMoney(2)"><div class="lc-icon">&#xA3;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to &#xA3;1</div></div>
+        <div class="level-card lc-3" onclick="startMoney(3)"><div class="lc-icon">&#x1F4B7;</div><div class="lc-title">Hard</div><div class="lc-sub">&#xA3; and change</div></div>
       </div>
     </div>
     <div id="moneyGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="moneyProgress" style="background:linear-gradient(90deg,#1a5276,#2ecc71)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="moneyProgress" style="background:linear-gradient(90deg,#ca8a04,#fde68a)"></div></div>
       <div class="progress-text" id="moneyProgressText"></div>
-      <div id="moneyDisplay"></div>
-      <div class="ph-options" id="moneyOpts"></div>
+      <div class="money-coins" id="moneyDisplay"></div>
+      <div class="money-opts" id="moneyOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- TELLING TIME -->
-<div id="telltime" class="screen game-screen">
-  <div class="game-header" style="border-color:#3498db"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2c3e50">Telling Time</h2></div>
+<div id="telltime" class="screen game-screen num-theme tt-game">
+  <canvas class="game-canvas" id="telltimeCanvas"></canvas>
+  <div class="game-header" style="border-color:#0ea5e9"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#38bdf8">Telling Time</h2></div>
   <div class="game-body">
     <div id="ttimeLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F570;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#7dd3fc">Clock Tower</div>
+        <div style="font-size:0.75rem;color:#38bdf8;margin-top:4px">Read the clock and tell the time!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startTTime(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">O'clock &amp; half past</div></div>
-        <div class="level-card lc-2" onclick="startTTime(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Quarter past/to</div></div>
-        <div class="level-card lc-3" onclick="startTTime(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">5-min intervals</div></div>
+        <div class="level-card lc-1" onclick="startTTime(1)"><div class="lc-icon">&#x1F552;</div><div class="lc-title">Easy</div><div class="lc-sub">O'clock &amp; half past</div></div>
+        <div class="level-card lc-2" onclick="startTTime(2)"><div class="lc-icon">&#x1F553;</div><div class="lc-title">Medium</div><div class="lc-sub">Quarter past/to</div></div>
+        <div class="level-card lc-3" onclick="startTTime(3)"><div class="lc-icon">&#x1F55B;</div><div class="lc-title">Hard</div><div class="lc-sub">5-min intervals</div></div>
       </div>
     </div>
     <div id="ttimeGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="ttimeProgress" style="background:linear-gradient(90deg,#2c3e50,#3498db)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="ttimeProgress" style="background:linear-gradient(90deg,#0ea5e9,#7dd3fc)"></div></div>
       <div class="progress-text" id="ttimeProgressText"></div>
-      <div id="clockDisplay"></div>
-      <div class="ph-prompt" id="ttimePrompt">What time does the clock show?</div>
-      <div class="ph-options" id="ttimeOpts"></div>
+      <div class="tt-clock-wrap" id="clockDisplay"></div>
+      <div class="tt-prompt" id="ttimePrompt">What time does the clock show?</div>
+      <div class="tt-options" id="ttimeOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- PLACE VALUE -->
-<div id="placeval" class="screen game-screen">
-  <div class="game-header" style="border-color:#eea849"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#f46b45">Place Value</h2></div>
+<div id="placeval" class="screen game-screen num-theme pv-game">
+  <canvas class="game-canvas" id="placevalCanvas"></canvas>
+  <div class="game-header" style="border-color:#d97706"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fbbf24">Place Value</h2></div>
   <div class="game-body">
     <div id="pvLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F9F1;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fde68a">Number Blocks</div>
+        <div style="font-size:0.75rem;color:#fbbf24;margin-top:4px">Hundreds, tens and ones — what's each digit worth?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startPV(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Tens &amp; ones</div></div>
-        <div class="level-card lc-2" onclick="startPV(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Hundreds</div></div>
-        <div class="level-card lc-3" onclick="startPV(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Thousands</div></div>
+        <div class="level-card lc-1" onclick="startPV(1)"><div class="lc-icon">&#x1F9F1;</div><div class="lc-title">Easy</div><div class="lc-sub">Tens &amp; ones</div></div>
+        <div class="level-card lc-2" onclick="startPV(2)"><div class="lc-icon">&#x1F3D7;&#xFE0F;</div><div class="lc-title">Medium</div><div class="lc-sub">Hundreds</div></div>
+        <div class="level-card lc-3" onclick="startPV(3)"><div class="lc-icon">&#x1F3DB;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">Thousands</div></div>
       </div>
     </div>
     <div id="pvGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="pvProgress" style="background:linear-gradient(90deg,#f46b45,#eea849)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="pvProgress" style="background:linear-gradient(90deg,#d97706,#fbbf24)"></div></div>
       <div class="progress-text" id="pvProgressText"></div>
       <div id="pvDisplay"></div>
-      <div class="ph-options" id="pvOpts"></div>
+      <div class="pv-options" id="pvOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- MISSING NUMBER -->
-<div id="missnum" class="screen game-screen">
-  <div class="game-header" style="border-color:#71b280"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
+<div id="missnum" class="screen game-screen num-theme mn-game">
+  <canvas class="game-canvas" id="missnumCanvas"></canvas>
+  <div class="game-header" style="border-color:#a855f7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c084fc">Missing Number</h2></div>
   <div class="game-body">
     <div id="mnLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F52E;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#d8b4fe">Cosmic Enigma</div>
+        <div style="font-size:0.75rem;color:#c084fc;margin-top:4px">Find the number hiding in the equation!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
-        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
-        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">&#x2728;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">&#x1F52E;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">&#x1F30C;</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
       </div>
     </div>
     <div id="mnGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#134e5e,#71b280)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#a855f7,#d8b4fe)"></div></div>
       <div class="progress-text" id="mnProgressText"></div>
-      <div class="maths-display"><div class="maths-q" id="mnQuestion" style="color:#134e5e"></div><div class="maths-ans" id="mnAnswer" style="color:#134e5e">_</div></div>
+      <div class="maths-display"><div class="mn-equation" id="mnQuestion"></div><div class="maths-ans" id="mnAnswer">_</div></div>
       <div class="numpad" id="mnNumpad"></div>
     </div>
   </div>
@@ -737,86 +806,107 @@
 </div>
 
 <!-- VOCABULARY -->
-<div id="vocab" class="screen game-screen">
-  <div class="game-header" style="border-color:#8e54e9"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#4776e6">Vocabulary</h2></div>
+<div id="vocab" class="screen game-screen lit-theme voc-game">
+  <canvas class="game-canvas" id="vocabCanvas"></canvas>
+  <div class="game-header" style="border-color:#4f46e5"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#4f46e5">Vocabulary</h2></div>
   <div class="game-body">
     <div id="vocabLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4D6;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#3730a3">Word Explorer</div>
+        <div style="font-size:0.75rem;color:#4f46e5;margin-top:4px">Discover what words really mean!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startVocab(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startVocab(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startVocab(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startVocab(1)"><div class="lc-icon">&#x1F4D5;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startVocab(2)"><div class="lc-icon">&#x1F4D7;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startVocab(3)"><div class="lc-icon">&#x1F4D8;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="vocabGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="vocProgress" style="background:linear-gradient(90deg,#4776e6,#8e54e9)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="vocProgress" style="background:linear-gradient(90deg,#4f46e5,#818cf8)"></div></div>
       <div class="progress-text" id="vocProgressText"></div>
-      <div class="ph-sound" style="background:#f0ecff;border-color:#8e54e9;color:#4776e6" id="vocPrompt"></div>
-      <div class="ph-options" id="vocOpts"></div>
+      <div class="voc-prompt" id="vocPrompt"></div>
+      <div class="voc-options" id="vocOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- PUNCTUATION -->
-<div id="punctuation" class="screen game-screen">
-  <div class="game-header" style="border-color:#f0932b"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ee5a24">Punctuation</h2></div>
+<div id="punctuation" class="screen game-screen lit-theme punct-game">
+  <canvas class="game-canvas" id="punctuationCanvas"></canvas>
+  <div class="game-header" style="border-color:#ea580c"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ea580c">Punctuation</h2></div>
   <div class="game-body">
     <div id="punctLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x270D;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#9a3412">Ink &amp; Marks</div>
+        <div style="font-size:0.75rem;color:#ea580c;margin-top:4px">Every mark matters — spot the correct punctuation!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startPunct(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">. and ABC</div></div>
-        <div class="level-card lc-2" onclick="startPunct(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">, ? !</div></div>
-        <div class="level-card lc-3" onclick="startPunct(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">' " : ;</div></div>
+        <div class="level-card lc-1" onclick="startPunct(1)"><div class="lc-icon">.</div><div class="lc-title">Easy</div><div class="lc-sub">. and ABC</div></div>
+        <div class="level-card lc-2" onclick="startPunct(2)"><div class="lc-icon">?!</div><div class="lc-title">Medium</div><div class="lc-sub">, ? !</div></div>
+        <div class="level-card lc-3" onclick="startPunct(3)"><div class="lc-icon">&ldquo;&rdquo;</div><div class="lc-title">Hard</div><div class="lc-sub">&apos; &quot; : ;</div></div>
       </div>
     </div>
     <div id="punctGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="punctProgress" style="background:linear-gradient(90deg,#ee5a24,#f0932b)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="punctProgress" style="background:linear-gradient(90deg,#ea580c,#fb923c)"></div></div>
       <div class="progress-text" id="punctProgressText"></div>
-      <div class="ph-prompt" id="punctPrompt"></div>
+      <div class="punct-prompt" id="punctPrompt"></div>
       <div class="punct-sentence" id="punctSentence"></div>
-      <div class="ph-options" id="punctOpts"></div>
+      <div class="punct-options" id="punctOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- SENTENCE ORDERING -->
-<div id="sentence" class="screen game-screen">
-  <div class="game-header" style="border-color:#5fc3e4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e55d87">Sentences</h2></div>
+<div id="sentence" class="screen game-screen lit-theme sent-game">
+  <canvas class="game-canvas" id="sentenceCanvas"></canvas>
+  <div class="game-header" style="border-color:#0284c7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0284c7">Sentences</h2></div>
   <div class="game-body">
     <div id="sentLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F682;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#075985">Word Train</div>
+        <div style="font-size:0.75rem;color:#0284c7;margin-top:4px">Put the words in the right order to build a sentence!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startSent(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Short sentences</div></div>
-        <div class="level-card lc-2" onclick="startSent(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Longer sentences</div></div>
-        <div class="level-card lc-3" onclick="startSent(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Complex sentences</div></div>
+        <div class="level-card lc-1" onclick="startSent(1)"><div class="lc-icon">&#x1F68B;</div><div class="lc-title">Easy</div><div class="lc-sub">Short sentences</div></div>
+        <div class="level-card lc-2" onclick="startSent(2)"><div class="lc-icon">&#x1F684;</div><div class="lc-title">Medium</div><div class="lc-sub">Longer sentences</div></div>
+        <div class="level-card lc-3" onclick="startSent(3)"><div class="lc-icon">&#x1F685;</div><div class="lc-title">Hard</div><div class="lc-sub">Complex sentences</div></div>
       </div>
     </div>
     <div id="sentGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="sentProgress" style="background:linear-gradient(90deg,#e55d87,#5fc3e4)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="sentProgress" style="background:linear-gradient(90deg,#0284c7,#38bdf8)"></div></div>
       <div class="progress-text" id="sentProgressText"></div>
-      <div class="anagram-label">Tap words in the correct order:</div>
-      <div class="sent-ans" id="sentAns"></div>
-      <div class="sent-pool" id="sentPool"></div>
-      <button class="sent-check" id="sentCheck" onclick="checkSentAns()">Check</button>
-      <div id="sentFeedback"></div>
+      <div class="sent-label">Tap words to build the sentence:</div>
+      <div class="sent-track" id="sentAns"></div>
+      <div class="sent-label">Word station:</div>
+      <div class="sent-station" id="sentPool"></div>
+      <button class="sent-check-btn" id="sentCheck" onclick="checkSentAns()">Check &#x2714;&#xFE0F;</button>
+      <div class="sent-feedback" id="sentFeedback"></div>
     </div>
   </div>
 </div>
 
 <!-- WORD FAMILIES -->
-<div id="wordfam" class="screen game-screen">
-  <div class="game-header" style="border-color:#c39bd3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#8e44ad">Word Families</h2></div>
+<div id="wordfam" class="screen game-screen lit-theme wf-game">
+  <canvas class="game-canvas" id="wordfamCanvas"></canvas>
+  <div class="game-header" style="border-color:#16a34a"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#16a34a">Word Families</h2></div>
   <div class="game-body">
     <div id="wfLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F333;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#166534">Word Trees</div>
+        <div style="font-size:0.75rem;color:#16a34a;margin-top:4px">Words that share the same root grow together!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startWF(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">-at, -an, -ig</div></div>
-        <div class="level-card lc-2" onclick="startWF(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">-ight, -tion</div></div>
-        <div class="level-card lc-3" onclick="startWF(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Suffixes</div></div>
+        <div class="level-card lc-1" onclick="startWF(1)"><div class="lc-icon">&#x1F33F;</div><div class="lc-title">Easy</div><div class="lc-sub">-at, -an, -ig</div></div>
+        <div class="level-card lc-2" onclick="startWF(2)"><div class="lc-icon">&#x1F340;</div><div class="lc-title">Medium</div><div class="lc-sub">-ight, -tion</div></div>
+        <div class="level-card lc-3" onclick="startWF(3)"><div class="lc-icon">&#x1F332;</div><div class="lc-title">Hard</div><div class="lc-sub">Suffixes</div></div>
       </div>
     </div>
     <div id="wfGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="wfProgress" style="background:linear-gradient(90deg,#8e44ad,#c39bd3)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="wfProgress" style="background:linear-gradient(90deg,#16a34a,#4ade80)"></div></div>
       <div class="progress-text" id="wfProgressText"></div>
       <div id="wfDisplay"></div>
     </div>
@@ -824,19 +914,24 @@
 </div>
 
 <!-- PHONICS -->
-<div id="phonics" class="screen game-screen">
-  <div class="game-header" style="border-color:#48dbfb"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0abde3">Phonics</h2></div>
+<div id="phonics" class="screen game-screen lit-theme ph-game">
+  <canvas class="game-canvas" id="phonicsCanvas"></canvas>
+  <div class="game-header" style="border-color:#06b6d4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#06b6d4">Phonics</h2></div>
   <div class="game-body">
     <div id="phonicsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4E2;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#0e7490">Sound Patterns</div>
+        <div style="font-size:0.75rem;color:#06b6d4;margin-top:4px">Listen for the sounds inside words!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startPhonics(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">CVC + digraphs</div></div>
-        <div class="level-card lc-2" onclick="startPhonics(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Vowel digraphs</div></div>
-        <div class="level-card lc-3" onclick="startPhonics(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Complex patterns</div></div>
+        <div class="level-card lc-1" onclick="startPhonics(1)"><div class="lc-icon">&#x1F4A7;</div><div class="lc-title">Easy</div><div class="lc-sub">CVC + digraphs</div></div>
+        <div class="level-card lc-2" onclick="startPhonics(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Vowel digraphs</div></div>
+        <div class="level-card lc-3" onclick="startPhonics(3)"><div class="lc-icon">&#x1F300;</div><div class="lc-title">Hard</div><div class="lc-sub">Complex patterns</div></div>
       </div>
     </div>
     <div id="phonicsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="phProgress" style="background:linear-gradient(90deg,#0abde3,#48dbfb)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="phProgress" style="background:linear-gradient(90deg,#06b6d4,#22d3ee)"></div></div>
       <div class="progress-text" id="phProgressText"></div>
       <div id="phDisplay"></div>
     </div>
@@ -844,92 +939,117 @@
 </div>
 
 <!-- ANAGRAM -->
-<div id="anagram" class="screen game-screen">
-  <div class="game-header" style="border-color:#f78fb3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c44569">Anagrams</h2></div>
+<div id="anagram" class="screen game-screen lit-theme ana-game">
+  <canvas class="game-canvas" id="anagramCanvas"></canvas>
+  <div class="game-header" style="border-color:#f59e0b"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#d97706">Anagrams</h2></div>
   <div class="game-body">
     <div id="anagramLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F500;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#92400e">Unjumble the Letters</div>
+        <div style="font-size:0.75rem;color:#d97706;margin-top:4px">Tap the letters in the right order!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startAnagram(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startAnagram(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startAnagram(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startAnagram(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startAnagram(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startAnagram(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="anagramGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="anaProgress" style="background:linear-gradient(90deg,#c44569,#f78fb3)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="anaProgress" style="background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
       <div class="progress-text" id="anaProgressText"></div>
-      <div class="spell-picture" id="anaPic" style="border-color:#f78fb3;background:linear-gradient(135deg,#fff5f8,#ffe8f0)"></div>
-      <div class="anagram-label">Tap letters to spell the word:</div>
-      <div class="anagram-ans" id="anaAns"></div>
-      <div class="anagram-label">Available letters:</div>
-      <div class="anagram-pool" id="anaPool"></div>
-      <div class="mv-hint" id="anaHint"></div>
+      <div class="ana-emoji" id="anaPic"></div>
+      <div class="ana-section-label">Your word:</div>
+      <div class="ana-answer-zone" id="anaAns"></div>
+      <div class="ana-section-label">Letters:</div>
+      <div class="ana-pool-zone" id="anaPool"></div>
+      <div class="ana-hint" id="anaHint"></div>
     </div>
   </div>
 </div>
 
 <!-- DICTATION -->
-<div id="dictation" class="screen game-screen">
-  <div class="game-header" style="border-color:#ab83a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6a0572">Dictation</h2></div>
+<div id="dictation" class="screen game-screen lit-theme dict-game">
+  <canvas class="game-canvas" id="dictationCanvas"></canvas>
+  <div class="game-header" style="border-color:#7c3aed"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#7c3aed">Dictation</h2></div>
   <div class="game-body">
     <div id="dictLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F3A7;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#5b21b6">Listen &amp; Spell</div>
+        <div style="font-size:0.75rem;color:#8b5cf6;margin-top:4px">Can you spell the word you hear?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startDict(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startDict(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startDict(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startDict(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startDict(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startDict(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="dictGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="dictProgress" style="background:linear-gradient(90deg,#6a0572,#ab83a1)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="dictProgress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
       <div class="progress-text" id="dictProgressText"></div>
-      <div class="dict-speaker" id="dictSpeaker" onclick="speakWord()">&#x1F50A;</div>
-      <button class="dict-repeat" onclick="speakWord()">Hear it again</button>
-      <input type="text" id="dictInput" class="mv-input" style="border-color:#ab83a1" autocomplete="off" autocapitalize="off" placeholder="Type what you hear...">
-      <button class="mv-submit" style="background:linear-gradient(135deg,#6a0572,#ab83a1);box-shadow:0 4px 0 #4a0350" onclick="checkDictAns()">Check</button>
-      <div class="mv-hint" id="dictHint"></div>
+      <div class="dict-listen-zone" onclick="speakWord()">
+        <div class="dict-speaker-ring"></div>
+        <div class="dict-speaker-ring dict-ring-2"></div>
+        <div class="dict-speaker-ring dict-ring-3"></div>
+        <div class="dict-speaker" id="dictSpeaker">&#x1F50A;</div>
+      </div>
+      <button class="dict-repeat" onclick="speakWord()">&#x1F504; Hear it again</button>
+      <input type="text" id="dictInput" class="dict-text-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type what you hear...">
+      <button class="dict-check-btn" onclick="checkDictAns()">Check &#x2714;&#xFE0F;</button>
+      <div class="dict-feedback" id="dictHint"></div>
     </div>
   </div>
 </div>
 
 <!-- MISSING VOWELS -->
-<div id="vowels" class="screen game-screen">
-  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e84393">Missing Vowels</h2></div>
+<div id="vowels" class="screen game-screen lit-theme vowel-game">
+  <canvas class="game-canvas" id="vowelsCanvas"></canvas>
+  <div class="game-header" style="border-color:#ec4899"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ec4899">Missing Vowels</h2></div>
   <div class="game-body">
     <div id="vowelsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F9E9;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#be185d">Fill in the Gaps</div>
+        <div style="font-size:0.75rem;color:#ec4899;margin-top:4px">The vowels are missing — can you complete the word?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startVowels(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startVowels(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startVowels(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startVowels(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startVowels(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startVowels(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="vowelsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="mvProgress" style="background:linear-gradient(90deg,#e84393,#fd79a8)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="mvProgress" style="background:linear-gradient(90deg,#ec4899,#f472b6)"></div></div>
       <div class="progress-text" id="mvProgressText"></div>
-      <div class="spell-picture" id="mvPic" style="border-color:#fd79a8;background:linear-gradient(135deg,#fff0f6,#ffe0ec)"></div>
-      <div class="mv-word" id="mvWord"></div>
-      <div class="mv-hint" id="mvHint"></div>
-      <input type="text" id="mvInput" class="mv-input" autocomplete="off" autocapitalize="off" placeholder="Type the full word...">
-      <button class="mv-submit" onclick="checkMvAns()">Check</button>
+      <div class="vowel-emoji" id="mvPic"></div>
+      <div class="vowel-puzzle" id="mvWord"></div>
+      <div class="vowel-hint" id="mvHint"></div>
+      <input type="text" id="mvInput" class="vowel-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the full word...">
+      <button class="vowel-check-btn" onclick="checkMvAns()">Check &#x2714;&#xFE0F;</button>
     </div>
   </div>
 </div>
 
 <!-- NUMBER BONDS -->
-<div id="bonds" class="screen game-screen">
-  <div class="game-header" style="border-color:#38ef7d"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#11998e">Number Bonds</h2></div>
+<div id="bonds" class="screen game-screen num-theme bonds-game">
+  <canvas class="game-canvas" id="bondsCanvas"></canvas>
+  <div class="game-header" style="border-color:#14b8a6"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2dd4bf">Number Bonds</h2></div>
   <div class="game-body">
     <div id="bondsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4A7;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#5eead4">Liquid Bridge</div>
+        <div style="font-size:0.75rem;color:#2dd4bf;margin-top:4px">Parts flow together to make the whole!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">10</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
-        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">20</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
-        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">100</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
+        <div class="level-card lc-1" onclick="startBonds(1)"><div class="lc-icon">&#x1F4A7;</div><div class="lc-title">Easy</div><div class="lc-sub">Bonds to 10</div></div>
+        <div class="level-card lc-2" onclick="startBonds(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Bonds to 20</div></div>
+        <div class="level-card lc-3" onclick="startBonds(3)"><div class="lc-icon">&#x1F300;</div><div class="lc-title">Hard</div><div class="lc-sub">Bonds to 100</div></div>
       </div>
     </div>
     <div id="bondsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#11998e,#38ef7d)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="nbProgress" style="background:linear-gradient(90deg,#14b8a6,#5eead4)"></div></div>
       <div class="progress-text" id="nbProgressText"></div>
       <div id="nbDisplay"></div>
       <div class="nb-ans" id="nbAns">_</div>
@@ -939,84 +1059,152 @@
 </div>
 
 <!-- SHAPES -->
-<div id="shapes" class="screen game-screen">
-  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Shapes</h2></div>
+<div id="shapes" class="screen game-screen num-theme shapes-game">
+  <canvas class="game-canvas" id="shapesCanvas"></canvas>
+  <div class="game-header" style="border-color:#8b5cf6"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#a78bfa">Shapes</h2></div>
   <div class="game-body">
     <div id="shapesLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F536;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#c4b5fd">Kaleidoscope</div>
+        <div style="font-size:0.75rem;color:#a78bfa;margin-top:4px">Discover the world of shapes and geometry!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startShapes(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">2D shapes</div></div>
-        <div class="level-card lc-2" onclick="startShapes(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Properties</div></div>
-        <div class="level-card lc-3" onclick="startShapes(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">3D &amp; angles</div></div>
+        <div class="level-card lc-1" onclick="startShapes(1)"><div class="lc-icon">&#x25B3;</div><div class="lc-title">Easy</div><div class="lc-sub">2D shapes</div></div>
+        <div class="level-card lc-2" onclick="startShapes(2)"><div class="lc-icon">&#x2B21;</div><div class="lc-title">Medium</div><div class="lc-sub">Properties</div></div>
+        <div class="level-card lc-3" onclick="startShapes(3)"><div class="lc-icon">&#x1F4A0;</div><div class="lc-title">Hard</div><div class="lc-sub">3D &amp; angles</div></div>
       </div>
     </div>
     <div id="shapesGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="shapeProgress" style="background:linear-gradient(90deg,#6c5ce7,#fd79a8)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="shapeProgress" style="background:linear-gradient(90deg,#8b5cf6,#c4b5fd)"></div></div>
       <div class="progress-text" id="shapeProgressText"></div>
-      <div class="shape-display" id="shapeDisplay"></div>
-      <div class="ph-options" id="shapeOpts"></div>
+      <div class="shp-display" id="shapeDisplay"></div>
+      <div class="shp-opts" id="shapeOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- DATA HANDLING -->
-<div id="datahandling" class="screen game-screen">
-  <div class="game-header" style="border-color:#55efc4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00b894">Data Handling</h2></div>
+<div id="datahandling" class="screen game-screen num-theme data-game">
+  <canvas class="game-canvas" id="datahandlingCanvas"></canvas>
+  <div class="game-header" style="border-color:#475569"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#94a3b8">Data</h2></div>
   <div class="game-body">
     <div id="dataLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4CA;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#cbd5e1">Mission Control</div>
+        <div style="font-size:0.75rem;color:#94a3b8;margin-top:4px">Read charts, compare data, find the answers!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startData(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Read charts</div></div>
-        <div class="level-card lc-2" onclick="startData(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Compare data</div></div>
-        <div class="level-card lc-3" onclick="startData(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mean &amp; totals</div></div>
+        <div class="level-card lc-1" onclick="startData(1)"><div class="lc-icon">&#x1F4C8;</div><div class="lc-title">Easy</div><div class="lc-sub">Read charts</div></div>
+        <div class="level-card lc-2" onclick="startData(2)"><div class="lc-icon">&#x1F4CA;</div><div class="lc-title">Medium</div><div class="lc-sub">Compare data</div></div>
+        <div class="level-card lc-3" onclick="startData(3)"><div class="lc-icon">&#x1F9EE;</div><div class="lc-title">Hard</div><div class="lc-sub">Mean &amp; totals</div></div>
       </div>
     </div>
     <div id="dataGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="dataProgress" style="background:linear-gradient(90deg,#00b894,#55efc4)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="dataProgress" style="background:linear-gradient(90deg,#475569,#94a3b8)"></div></div>
       <div class="progress-text" id="dataProgressText"></div>
-      <div id="dataDisplay"></div>
-      <div class="ph-options" id="dataOpts"></div>
+      <div class="data-chart" id="dataDisplay"></div>
+      <div class="data-opts" id="dataOpts"></div>
     </div>
   </div>
 </div>
 
 <!-- CAPITALS -->
-<div id="capitals" class="screen game-screen">
-  <div class="game-header" style="border-color:#52b788"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#2d6a4f">Capital Cities</h2></div>
+<div id="capitals" class="screen game-screen geo-theme caps-game">
+  <canvas class="game-canvas" id="capitalsCanvas"></canvas>
+  <div class="game-header" style="border-color:#b45309"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#fbbf24">Capital Cities</h2></div>
   <div class="game-body">
-    <div id="capsLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div><div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div><div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div></div></div>
-    <div id="capsGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="capsProgress" style="background:linear-gradient(90deg,#2d6a4f,#52b788)"></div></div><div class="progress-text" id="capsProgressText"></div><div id="capsDisplay"></div><div class="ph-options" id="capsOpts"></div></div>
+    <div id="capsLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F3DB;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fde68a">Ancient Atlas</div>
+        <div style="font-size:0.75rem;color:#fbbf24;margin-top:4px">Name the capital city of each country!</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startCaps(1)"><div class="lc-icon">&#x1F3F4;&#xE0067;&#xE0062;&#xE0073;&#xE0063;&#xE0074;&#xE007F;</div><div class="lc-title">Easy</div><div class="lc-sub">UK &amp; Scotland</div></div>
+        <div class="level-card lc-2" onclick="startCaps(2)"><div class="lc-icon">&#x1F1EA;&#x1F1FA;</div><div class="lc-title">Medium</div><div class="lc-sub">Europe</div></div>
+        <div class="level-card lc-3" onclick="startCaps(3)"><div class="lc-icon">&#x1F30D;</div><div class="lc-title">Hard</div><div class="lc-sub">World</div></div>
+      </div>
+    </div>
+    <div id="capsGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="capsProgress" style="background:linear-gradient(90deg,#b45309,#fbbf24)"></div></div>
+      <div class="progress-text" id="capsProgressText"></div>
+      <div class="caps-prompt" id="capsDisplay"></div>
+      <div class="caps-opts" id="capsOpts"></div>
+    </div>
   </div>
 </div>
 
 <!-- CONTINENTS -->
-<div id="continents" class="screen game-screen">
-  <div class="game-header" style="border-color:#2a9d8f"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#264653">World Geography</h2></div>
+<div id="continents" class="screen game-screen geo-theme cont-game">
+  <canvas class="game-canvas" id="continentsCanvas"></canvas>
+  <div class="game-header" style="border-color:#0284c7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#38bdf8">World Geography</h2></div>
   <div class="game-body">
-    <div id="contLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div><div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div><div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div></div></div>
-    <div id="contGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="contProgress" style="background:linear-gradient(90deg,#264653,#2a9d8f)"></div></div><div class="progress-text" id="contProgressText"></div><div id="contDisplay"></div><div class="ph-options" id="contOpts"></div></div>
+    <div id="contLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F6F0;&#xFE0F;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#7dd3fc">Orbital View</div>
+        <div style="font-size:0.75rem;color:#38bdf8;margin-top:4px">Explore the continents and oceans of planet Earth!</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startCont(1)"><div class="lc-icon">&#x1F30D;</div><div class="lc-title">Easy</div><div class="lc-sub">Continents</div></div>
+        <div class="level-card lc-2" onclick="startCont(2)"><div class="lc-icon">&#x1F30A;</div><div class="lc-title">Medium</div><div class="lc-sub">Oceans &amp; features</div></div>
+        <div class="level-card lc-3" onclick="startCont(3)"><div class="lc-icon">&#x1F30E;</div><div class="lc-title">Hard</div><div class="lc-sub">Climate &amp; biomes</div></div>
+      </div>
+    </div>
+    <div id="contGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="contProgress" style="background:linear-gradient(90deg,#0284c7,#38bdf8)"></div></div>
+      <div class="progress-text" id="contProgressText"></div>
+      <div class="cont-prompt" id="contDisplay"></div>
+      <div class="cont-opts" id="contOpts"></div>
+    </div>
   </div>
 </div>
 
 <!-- WEATHER -->
-<div id="weather" class="screen game-screen">
-  <div class="game-header" style="border-color:#a8dadc"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#457b9d">Weather &amp; Climate</h2></div>
+<div id="weather" class="screen game-screen geo-theme weath-game">
+  <canvas class="game-canvas" id="weatherCanvas"></canvas>
+  <div class="game-header" style="border-color:#0369a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0ea5e9">Weather</h2></div>
   <div class="game-body">
-    <div id="weatherLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startWeather(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Seasons &amp; weather</div></div><div class="level-card lc-2" onclick="startWeather(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Weather patterns</div></div><div class="level-card lc-3" onclick="startWeather(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Climate zones</div></div></div></div>
-    <div id="weatherGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="weatherProgress" style="background:linear-gradient(90deg,#457b9d,#a8dadc)"></div></div><div class="progress-text" id="weatherProgressText"></div><div id="weatherDisplay"></div><div class="ph-options" id="weatherOpts"></div></div>
+    <div id="weatherLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x26C5;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#1a3a4a">Forecast Desk</div>
+        <div style="font-size:0.75rem;color:#0369a1;margin-top:4px">Clouds, rain, sun and snow — what do you know?</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startWeather(1)"><div class="lc-icon">&#x2600;&#xFE0F;</div><div class="lc-title">Easy</div><div class="lc-sub">Seasons &amp; weather</div></div>
+        <div class="level-card lc-2" onclick="startWeather(2)"><div class="lc-icon">&#x1F327;&#xFE0F;</div><div class="lc-title">Medium</div><div class="lc-sub">Weather patterns</div></div>
+        <div class="level-card lc-3" onclick="startWeather(3)"><div class="lc-icon">&#x1F321;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">Climate zones</div></div>
+      </div>
+    </div>
+    <div id="weatherGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="weatherProgress" style="background:linear-gradient(90deg,#0369a1,#7dd3fc)"></div></div>
+      <div class="progress-text" id="weatherProgressText"></div>
+      <div class="weath-prompt" id="weatherDisplay"></div>
+      <div class="weath-opts" id="weatherOpts"></div>
+    </div>
   </div>
 </div>
 
 <!-- COMPASS -->
-<div id="compass" class="screen game-screen">
-  <div class="game-header" style="border-color:#ca6702"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#9b2226">Compass Directions</h2></div>
+<div id="compass" class="screen game-screen geo-theme comp-game">
+  <canvas class="game-canvas" id="compassCanvas"></canvas>
+  <div class="game-header" style="border-color:#92400e"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#b45309">Compass</h2></div>
   <div class="game-body">
-    <div id="compassGame"><div class="progress-bar"><div class="progress-fill" id="compassProgress" style="background:linear-gradient(90deg,#9b2226,#ca6702)"></div></div><div class="progress-text" id="compassProgressText"></div><div id="compassDisplay"></div><div class="ph-options" id="compassOpts"></div></div>
+    <div id="compassGame">
+      <div class="progress-bar"><div class="progress-fill" id="compassProgress" style="background:linear-gradient(90deg,#92400e,#d97706)"></div></div>
+      <div class="progress-text" id="compassProgressText"></div>
+      <div class="comp-prompt" id="compassDisplay"></div>
+      <div class="comp-opts" id="compassOpts"></div>
+    </div>
   </div>
 </div>
 
 <!-- FLAGS -->
-<div id="flags" class="screen game-screen">
+<div id="flags" class="screen game-screen geo-theme">
+  <canvas class="game-canvas" id="flagsCanvas"></canvas>
   <div class="game-header" style="border-color:#669bbc"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#003049">Flags</h2></div>
   <div class="game-body">
     <div id="flagsGame"><div class="progress-bar"><div class="progress-fill" id="flagsProgress" style="background:linear-gradient(90deg,#003049,#669bbc)"></div></div><div class="progress-text" id="flagsProgressText"></div><div id="flagsDisplay" style="text-align:center;margin:16px 0"></div><div class="ph-options" id="flagsOpts"></div></div>
@@ -1030,7 +1218,8 @@
 </div>
 
 <!-- GRAMMAR -->
-<div id="grammar" class="screen game-screen">
+<div id="grammar" class="screen game-screen lit-theme gram-game">
+  <canvas class="game-canvas" id="grammarCanvas"></canvas>
   <div class="game-header" style="border-color:#b2bec3"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#636e72">Grammar</h2></div>
   <div class="game-body">
     <div id="grammarLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startGrammar(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Nouns &amp; Verbs</div></div><div class="level-card lc-2" onclick="startGrammar(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Adjectives</div></div><div class="level-card lc-3" onclick="startGrammar(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Adverbs &amp; more</div></div></div></div>
@@ -1047,7 +1236,8 @@
 </div>
 
 <!-- RHYMING -->
-<div id="rhyme" class="screen game-screen">
+<div id="rhyme" class="screen game-screen lit-theme rhyme-game">
+  <canvas class="game-canvas" id="rhymeCanvas"></canvas>
   <div class="game-header" style="border-color:#a29bfe"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Rhyming</h2></div>
   <div class="game-body">
     <div id="rhymeLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startRhyme(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Simple rhymes</div></div><div class="level-card lc-2" onclick="startRhyme(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Longer words</div></div><div class="level-card lc-3" onclick="startRhyme(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Tricky rhymes</div></div></div></div>
@@ -1056,20 +1246,54 @@
 </div>
 
 <!-- MEASUREMENT -->
-<div id="measure" class="screen game-screen">
-  <div class="game-header" style="border-color:#74b9ff"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#0984e3">Measurement</h2></div>
+<div id="measure" class="screen game-screen num-theme meas-game">
+  <canvas class="game-canvas" id="measureCanvas"></canvas>
+  <div class="game-header" style="border-color:#0891b2"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#22d3ee">Measurement</h2></div>
   <div class="game-body">
-    <div id="measureLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startMeasure(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Compare</div></div><div class="level-card lc-2" onclick="startMeasure(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Units</div></div><div class="level-card lc-3" onclick="startMeasure(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Convert</div></div></div></div>
-    <div id="measureGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="measureProgress" style="background:linear-gradient(90deg,#0984e3,#74b9ff)"></div></div><div class="progress-text" id="measureProgressText"></div><div id="measureDisplay"></div><div class="ph-options" id="measureOpts"></div></div>
+    <div id="measureLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4CF;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#67e8f9">The Workshop</div>
+        <div style="font-size:0.75rem;color:#22d3ee;margin-top:4px">Measure, weigh, compare — how big is it?</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startMeasure(1)"><div class="lc-icon">&#x1F4CF;</div><div class="lc-title">Easy</div><div class="lc-sub">Compare</div></div>
+        <div class="level-card lc-2" onclick="startMeasure(2)"><div class="lc-icon">&#x2696;&#xFE0F;</div><div class="lc-title">Medium</div><div class="lc-sub">Units</div></div>
+        <div class="level-card lc-3" onclick="startMeasure(3)"><div class="lc-icon">&#x1F9EA;</div><div class="lc-title">Hard</div><div class="lc-sub">Convert</div></div>
+      </div>
+    </div>
+    <div id="measureGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="measureProgress" style="background:linear-gradient(90deg,#0891b2,#22d3ee)"></div></div>
+      <div class="progress-text" id="measureProgressText"></div>
+      <div class="meas-prompt" id="measureDisplay"></div>
+      <div class="meas-opts" id="measureOpts"></div>
+    </div>
   </div>
 </div>
 
 <!-- SEQUENCES -->
-<div id="sequence" class="screen game-screen">
-  <div class="game-header" style="border-color:#81ecec"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00cec9">Sequences</h2></div>
+<div id="sequence" class="screen game-screen num-theme seq-game">
+  <canvas class="game-canvas" id="sequenceCanvas"></canvas>
+  <div class="game-header" style="border-color:#6366f1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#a5b4fc">Sequences</h2></div>
   <div class="game-body">
-    <div id="seqLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startSeq(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Count by 1s, 2s</div></div><div class="level-card lc-2" onclick="startSeq(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Count by 5s, 10s</div></div><div class="level-card lc-3" onclick="startSeq(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mixed patterns</div></div></div></div>
-    <div id="seqGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="seqProgress" style="background:linear-gradient(90deg,#00cec9,#81ecec)"></div></div><div class="progress-text" id="seqProgressText"></div><div id="seqDisplay"></div><div class="ph-options" id="seqOpts"></div></div>
+    <div id="seqLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F517;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#c7d2fe">Pattern Circuit</div>
+        <div style="font-size:0.75rem;color:#a5b4fc;margin-top:4px">Find the pattern — what comes next?</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startSeq(1)"><div class="lc-icon">&#x1F518;</div><div class="lc-title">Easy</div><div class="lc-sub">Count by 1s, 2s</div></div>
+        <div class="level-card lc-2" onclick="startSeq(2)"><div class="lc-icon">&#x1F519;</div><div class="lc-title">Medium</div><div class="lc-sub">Count by 5s, 10s</div></div>
+        <div class="level-card lc-3" onclick="startSeq(3)"><div class="lc-icon">&#x1F51F;</div><div class="lc-title">Hard</div><div class="lc-sub">Mixed patterns</div></div>
+      </div>
+    </div>
+    <div id="seqGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="seqProgress" style="background:linear-gradient(90deg,#6366f1,#a5b4fc)"></div></div>
+      <div class="progress-text" id="seqProgressText"></div>
+      <div class="seq-display" id="seqDisplay"></div>
+      <div class="seq-opts" id="seqOpts"></div>
+    </div>
   </div>
 </div>
 

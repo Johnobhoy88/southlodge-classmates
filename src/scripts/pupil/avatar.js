@@ -92,19 +92,35 @@
     return value.premade !== null && value.premade !== undefined || !!(value.skin || value.hair || value.eyes || value.mouth || value.outfit || value.accessory);
   }
 
+  // Darken/lighten a hex color
+  function shadeColor(hex, pct) {
+    var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    r = Math.min(255, Math.max(0, Math.round(r * (1 + pct))));
+    g = Math.min(255, Math.max(0, Math.round(g * (1 + pct))));
+    b = Math.min(255, Math.max(0, Math.round(b * (1 + pct))));
+    return '#' + ((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+  }
+
   function renderAvatarSVG(avatar, size) {
     const av = cloneAvatar(avatar);
     const svgSize = size || 50;
     if (av.premade !== null && av.premade !== undefined && AV_PREMADE[av.premade]) {
       const premade = AV_PREMADE[av.premade];
-      return premade.svg.replace('viewBox="0 0 50 50"', 'viewBox="0 0 50 50" width="' + svgSize + '" height="' + svgSize + '" class="avatar-svg"');
+      // Add shine overlay to all premade avatars for premium look
+      var shine = '<ellipse cx="18" cy="14" rx="8" ry="5" fill="white" opacity="0.08"/>';
+      var premadeSvg = premade.svg.replace('</svg>', shine + '</svg>');
+      return premadeSvg.replace('viewBox="0 0 50 50"', 'viewBox="0 0 50 50" width="' + svgSize + '" height="' + svgSize + '" class="avatar-svg"');
     }
     const skin = AV_SKINS[av.skin] || AV_SKINS[0];
+    const skinDark = shadeColor(skin, -0.15);
+    const skinLight = shadeColor(skin, 0.1);
     const hair = AV_HAIRS[av.hair] || AV_HAIRS[0];
     const hairColor = AV_HAIR_COLORS[av.hairColor] || AV_HAIR_COLORS[0];
+    const hairDark = shadeColor(hairColor, -0.2);
     const eyes = AV_EYES[av.eyes] || AV_EYES[0];
     const mouth = AV_MOUTHS[av.mouth] || AV_MOUTHS[0];
     const outfit = AV_OUTFITS[av.outfit] || AV_OUTFITS[0];
+    const outfitDark = shadeColor(outfit, -0.2);
     const accessory = AV_ACCESSORIES[av.accessory || 0] || AV_ACCESSORIES[0];
     let accessorySvg = '';
     if (accessory.d) {
@@ -122,14 +138,52 @@
     if (equip.pet && STORE_PETS[equip.pet]) petSvg = STORE_PETS[equip.pet].svg;
     if (equip.frame && STORE_FRAMES[equip.frame]) {
       var fr = STORE_FRAMES[equip.frame];
-      frameSvg = '<rect x="0.5" y="0.5" width="49" height="49" rx="25" fill="none" stroke="' + fr.stroke + '" stroke-width="' + fr.width + '"/>';
+      frameSvg = '<circle cx="25" cy="25" r="24" fill="none" stroke="' + fr.stroke + '" stroke-width="' + fr.width + '"/>';
     }
-    return '<svg viewBox="0 0 50 50" width="' + svgSize + '" height="' + svgSize + '" class="avatar-svg">' + frameSvg + '<rect x="0" y="0" width="50" height="50" fill="' + skin + '" rx="25"/><rect x="10" y="38" width="30" height="14" fill="' + outfit + '" rx="6"/>' + (hair.d ? '<path d="' + hair.d + '" fill="' + hairColor + '"/>' : '') + '<path d="' + eyes.d + '" fill="#2c3e50" stroke="#2c3e50" stroke-width="1.5" fill-rule="evenodd"/><path d="' + mouth.d + '" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/>' + accessorySvg + hatSvg + petSvg + '</svg>';
+    // Build premium SVG with shading and highlights
+    var defs = '<defs>'
+      + '<radialGradient id="skinG" cx="0.4" cy="0.35" r="0.6"><stop offset="0%" stop-color="' + skinLight + '"/><stop offset="100%" stop-color="' + skin + '"/></radialGradient>'
+      + '<radialGradient id="cheekL" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#FF9999" stop-opacity="0.35"/><stop offset="100%" stop-color="#FF9999" stop-opacity="0"/></radialGradient>'
+      + '<radialGradient id="cheekR" cx="0.5" cy="0.5" r="0.5"><stop offset="0%" stop-color="#FF9999" stop-opacity="0.35"/><stop offset="100%" stop-color="#FF9999" stop-opacity="0"/></radialGradient>'
+      + '<linearGradient id="outfitG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + outfit + '"/><stop offset="100%" stop-color="' + outfitDark + '"/></linearGradient>'
+      + '</defs>';
+    // Face with gradient
+    var face = '<circle cx="25" cy="25" r="24" fill="url(#skinG)"/>'
+      + '<ellipse cx="25" cy="26" rx="23" ry="22" fill="none" stroke="' + skinDark + '" stroke-width="0.5" opacity="0.3"/>';
+    // Cheek blush
+    var cheeks = '<ellipse cx="13" cy="30" rx="4" ry="3" fill="url(#cheekL)"/>'
+      + '<ellipse cx="37" cy="30" rx="4" ry="3" fill="url(#cheekR)"/>';
+    // Nose hint
+    var nose = '<ellipse cx="25" cy="28" rx="1.5" ry="1" fill="' + skinDark + '" opacity="0.25"/>';
+    // Outfit with gradient and collar
+    var outfitSvg = '<path d="M10,42 Q10,36 17,35 Q25,33 33,35 Q40,36 40,42 L40,50 L10,50Z" fill="url(#outfitG)"/>'
+      + '<path d="M20,35 Q25,38 30,35" fill="none" stroke="' + outfitDark + '" stroke-width="0.8" opacity="0.5"/>';
+    // Hair with highlight
+    var hairSvg = '';
+    if (hair.d) {
+      hairSvg = '<path d="' + hair.d + '" fill="' + hairColor + '"/>';
+      if (hair.highlight) hairSvg += '<path d="' + hair.highlight + '" fill="' + shadeColor(hairColor, 0.25) + '" opacity="0.5"/>';
+    }
+    // Eyes with proper rendering
+    var eyesSvg = '<path d="' + eyes.d + '" fill="#2c3e50" stroke="#2c3e50" stroke-width="1.2" fill-rule="evenodd"/>';
+    // Eye highlights for standard round-type eyes
+    if (eyes.id === 'round' || eyes.id === 'wide' || eyes.id === 'sparkle') {
+      eyesSvg += '<circle cx="18" cy="21" r="1" fill="white" opacity="0.7"/><circle cx="34" cy="21" r="1" fill="white" opacity="0.7"/>';
+    }
+    // Mouth
+    var mouthSvg = '<path d="' + mouth.d + '" fill="none" stroke="#2c3e50" stroke-width="1.3" stroke-linecap="round"/>';
+    if (mouth.id === 'grin' || mouth.id === 'tongue' || mouth.id === 'teeth' || mouth.id === 'braces') {
+      mouthSvg = '<path d="' + mouth.d + '" fill="#c0392b" stroke="#2c3e50" stroke-width="1" stroke-linecap="round" opacity="0.9"/>';
+    }
+    // Highlight on forehead
+    var highlight = '<ellipse cx="22" cy="12" rx="6" ry="3" fill="white" opacity="0.08"/>';
+    return '<svg viewBox="0 0 50 50" width="' + svgSize + '" height="' + svgSize + '" class="avatar-svg">'
+      + defs + frameSvg + face + outfitSvg + hairSvg + cheeks + nose + eyesSvg + mouthSvg + highlight + accessorySvg + hatSvg + petSvg + '</svg>';
   }
 
   function renderAvatarPreview() {
     const preview = document.getElementById('avatarPreviewLg');
-    if (preview) preview.innerHTML = renderAvatarSVG(currentAvatar, 140);
+    if (preview) preview.innerHTML = renderAvatarSVG(currentAvatar, 160);
   }
 
   function renderSelectionGrid(containerId, items, selectedIndex, renderItem, onSelect) {
