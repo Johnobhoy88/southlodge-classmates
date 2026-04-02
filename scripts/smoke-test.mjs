@@ -398,6 +398,7 @@ const THEMED_GAMES = [
   {id: 'capitals', cls: 'caps-game'},
   {id: 'continents', cls: 'cont-game'},
   {id: 'weather', cls: 'weath-game'},
+  {id: 'compass', cls: 'comp-game'},
 ];
 THEMED_GAMES.forEach(g => {
   test(`Theme class: ${g.cls}`, () => {

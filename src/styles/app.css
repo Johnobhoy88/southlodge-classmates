@@ -1683,3 +1683,17 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .weath-opts .ph-opt.ph-correct,.weath-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#166534!important;animation:anaTileCorrect 0.3s}
 .weath-opts .ph-opt.ph-wrong,.weath-opts button.ph-wrong{background:rgba(239,68,68,0.15)!important;border-color:#ef4444!important;color:#991b1b!important;animation:dictShake 0.4s}
 .weath-opts .ph-opt.ph-disabled,.weath-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== COMPASS — Explorer's Chart ===== */
+.comp-game .game-header{background:rgba(255,248,235,0.88);border-bottom:2px solid rgba(146,64,14,0.2)}
+.comp-game .game-title{color:#92400e}
+.comp-game .nav-btn{color:#92400e;border-color:rgba(146,64,14,0.2)}
+.comp-prompt{text-align:center;margin:18px auto;padding:16px 18px;max-width:360px;background:rgba(255,251,235,0.6);border:2px solid rgba(146,64,14,0.15);border-radius:4px;border-top:3px solid rgba(180,83,9,0.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.comp-prompt .ph-sound,.comp-prompt .ph-prompt{color:#78350f;background:rgba(254,243,199,0.4);border-color:rgba(146,64,14,0.1)}
+.comp-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:300px;margin:14px auto 0;padding:0 12px}
+.comp-opts .ph-opt,.comp-opts button{padding:16px 12px;border:2px solid rgba(146,64,14,0.2);border-radius:50%;width:68px;height:68px;margin:0 auto;display:flex;align-items:center;justify-content:center;background:rgba(255,251,235,0.6);font-family:'Fredoka One',cursive;font-size:0.9rem;color:#78350f;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 3px 0 rgba(120,53,15,0.2);text-align:center}
+.comp-opts .ph-opt:hover,.comp-opts button:hover{transform:translateY(-3px) scale(1.08);border-color:#92400e;box-shadow:0 6px 0 rgba(120,53,15,0.2),0 0 12px rgba(180,83,9,0.08);background:rgba(254,243,199,0.7)}
+.comp-opts .ph-opt:active,.comp-opts button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(120,53,15,0.2)}
+.comp-opts .ph-opt.ph-correct,.comp-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#166534!important;animation:anaTileCorrect 0.3s}
+.comp-opts .ph-opt.ph-wrong,.comp-opts button.ph-wrong{background:rgba(239,68,68,0.15)!important;border-color:#ef4444!important;color:#991b1b!important;animation:dictShake 0.4s}
+.comp-opts .ph-opt.ph-disabled,.comp-opts button.ph-disabled{pointer-events:none;opacity:0.7}

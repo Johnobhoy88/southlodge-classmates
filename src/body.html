@@ -1189,11 +1189,16 @@
 </div>
 
 <!-- COMPASS -->
-<div id="compass" class="screen game-screen geo-theme">
+<div id="compass" class="screen game-screen geo-theme comp-game">
   <canvas class="game-canvas" id="compassCanvas"></canvas>
-  <div class="game-header" style="border-color:#ca6702"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#9b2226">Compass Directions</h2></div>
+  <div class="game-header" style="border-color:#92400e"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#b45309">Compass</h2></div>
   <div class="game-body">
-    <div id="compassGame"><div class="progress-bar"><div class="progress-fill" id="compassProgress" style="background:linear-gradient(90deg,#9b2226,#ca6702)"></div></div><div class="progress-text" id="compassProgressText"></div><div id="compassDisplay"></div><div class="ph-options" id="compassOpts"></div></div>
+    <div id="compassGame">
+      <div class="progress-bar"><div class="progress-fill" id="compassProgress" style="background:linear-gradient(90deg,#92400e,#d97706)"></div></div>
+      <div class="progress-text" id="compassProgressText"></div>
+      <div class="comp-prompt" id="compassDisplay"></div>
+      <div class="comp-opts" id="compassOpts"></div>
+    </div>
   </div>
 </div>
 
