@@ -692,23 +692,27 @@
 </div>
 
 <!-- MONEY -->
-<div id="money" class="screen game-screen num-theme">
+<div id="money" class="screen game-screen num-theme money-game">
   <canvas class="game-canvas" id="moneyCanvas"></canvas>
-  <div class="game-header" style="border-color:#2ecc71"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#1a5276">Money</h2></div>
+  <div class="game-header" style="border-color:#ca8a04"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#eab308">Money</h2></div>
   <div class="game-body">
     <div id="moneyLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1FA99;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#fde68a">The Vault</div>
+        <div style="font-size:0.75rem;color:#eab308;margin-top:4px">Count the coins and notes!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startMoney(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 20p</div></div>
-        <div class="level-card lc-2" onclick="startMoney(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to &#xA3;1</div></div>
-        <div class="level-card lc-3" onclick="startMoney(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">&#xA3; and change</div></div>
+        <div class="level-card lc-1" onclick="startMoney(1)"><div class="lc-icon">&#x1FA99;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 20p</div></div>
+        <div class="level-card lc-2" onclick="startMoney(2)"><div class="lc-icon">&#xA3;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to &#xA3;1</div></div>
+        <div class="level-card lc-3" onclick="startMoney(3)"><div class="lc-icon">&#x1F4B7;</div><div class="lc-title">Hard</div><div class="lc-sub">&#xA3; and change</div></div>
       </div>
     </div>
     <div id="moneyGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="moneyProgress" style="background:linear-gradient(90deg,#1a5276,#2ecc71)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="moneyProgress" style="background:linear-gradient(90deg,#ca8a04,#fde68a)"></div></div>
       <div class="progress-text" id="moneyProgressText"></div>
-      <div id="moneyDisplay"></div>
-      <div class="ph-options" id="moneyOpts"></div>
+      <div class="money-coins" id="moneyDisplay"></div>
+      <div class="money-opts" id="moneyOpts"></div>
     </div>
   </div>
 </div>
