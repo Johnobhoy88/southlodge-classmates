@@ -1343,6 +1343,23 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .dict-check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #5b21b6,0 10px 24px rgba(124,58,237,0.3)}
 .dict-check-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #5b21b6}
 .dict-feedback{text-align:center;font-family:'Fredoka One',cursive;font-size:0.9rem;color:#7c3aed;min-height:28px;padding:4px;margin-top:4px}
+
+/* ===== MISSING VOWELS — Puzzle-piece design ===== */
+.vowel-game .game-header{background:rgba(255,240,248,0.88);border-bottom:2px solid rgba(236,72,153,0.15)}
+.vowel-game .game-title{color:#ec4899}
+.vowel-game .nav-btn{color:#ec4899;border-color:rgba(236,72,153,0.2)}
+.vowel-emoji{text-align:center;font-size:3.5rem;margin:16px auto 12px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.7);border-radius:20px;border:3px solid rgba(236,72,153,0.2);box-shadow:0 4px 16px rgba(236,72,153,0.08);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.vowel-puzzle{text-align:center;font-family:'Fredoka One',cursive;font-size:2rem;letter-spacing:4px;color:#1a1a2e;margin:12px 0;min-height:48px}
+.vowel-puzzle .mv-gap{display:inline-block;width:24px;height:36px;line-height:36px;margin:0 2px;border-bottom:3px solid #ec4899;color:#ec4899;font-size:1.8rem;animation:vowelGapPulse 2s ease-in-out infinite}
+@keyframes vowelGapPulse{0%,100%{border-color:#ec4899}50%{border-color:#f9a8d4}}
+.vowel-hint{text-align:center;font-size:0.8rem;color:#9ca3af;font-weight:600;margin:4px 0 14px;min-height:20px}
+.vowel-input{display:block;width:90%;max-width:320px;margin:0 auto 14px;padding:14px 18px;border:3px solid rgba(236,72,153,0.25);border-radius:16px;font-family:'Fredoka One',cursive;font-size:1.2rem;text-align:center;background:rgba(255,255,255,0.85);color:#2d3436;outline:none;transition:all 0.2s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.vowel-input:focus{border-color:#ec4899;box-shadow:0 0 16px rgba(236,72,153,0.15)}
+.vowel-input.flash-correct{border-color:#10b981;background:rgba(16,185,129,0.1)}
+.vowel-input.flash-wrong{border-color:#ef4444;background:rgba(239,68,68,0.08);animation:dictShake 0.4s ease}
+.vowel-check-btn{display:block;width:90%;max-width:320px;margin:0 auto;padding:14px 24px;border:none;border-radius:16px;background:linear-gradient(135deg,#ec4899,#f472b6);color:white;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #be185d,0 6px 16px rgba(236,72,153,0.2);transition:all 0.2s}
+.vowel-check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #be185d,0 10px 24px rgba(236,72,153,0.3)}
+.vowel-check-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #be185d}
 </style>
 </head>
 <body>
@@ -2298,26 +2315,30 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- MISSING VOWELS -->
-<div id="vowels" class="screen game-screen lit-theme">
+<div id="vowels" class="screen game-screen lit-theme vowel-game">
   <canvas class="game-canvas" id="vowelsCanvas"></canvas>
-  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e84393">Missing Vowels</h2></div>
+  <div class="game-header" style="border-color:#ec4899"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ec4899">Missing Vowels</h2></div>
   <div class="game-body">
     <div id="vowelsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F9E9;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#be185d">Fill in the Gaps</div>
+        <div style="font-size:0.75rem;color:#ec4899;margin-top:4px">The vowels are missing — can you complete the word?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startVowels(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startVowels(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startVowels(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startVowels(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startVowels(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startVowels(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="vowelsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="mvProgress" style="background:linear-gradient(90deg,#e84393,#fd79a8)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="mvProgress" style="background:linear-gradient(90deg,#ec4899,#f472b6)"></div></div>
       <div class="progress-text" id="mvProgressText"></div>
-      <div class="spell-picture" id="mvPic" style="border-color:#fd79a8;background:linear-gradient(135deg,#fff0f6,#ffe0ec)"></div>
-      <div class="mv-word" id="mvWord"></div>
-      <div class="mv-hint" id="mvHint"></div>
-      <input type="text" id="mvInput" class="mv-input" autocomplete="off" autocapitalize="off" placeholder="Type the full word...">
-      <button class="mv-submit" onclick="checkMvAns()">Check</button>
+      <div class="vowel-emoji" id="mvPic"></div>
+      <div class="vowel-puzzle" id="mvWord"></div>
+      <div class="vowel-hint" id="mvHint"></div>
+      <input type="text" id="mvInput" class="vowel-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the full word...">
+      <button class="vowel-check-btn" onclick="checkMvAns()">Check &#x2714;&#xFE0F;</button>
     </div>
   </div>
 </div>
@@ -10256,9 +10277,9 @@ function removeVowels(w){return w.split('').map(c=>VOWELS.includes(c.toLowerCase
 
 function startVowels(lv){mv.level=lv;const pool=[...getSpellingWords()[lv]];shuffle(pool);mv.words=pool.slice(0,mv.total);mv.idx=0;mv.correct=0;mv.missed=[];mv.streak=0;hide('vowelsLevelSelect');show('vowelsGame');loadMvQ()}
 
-function loadMvQ(){const wordEmoji=getSpellingWordEmoji();const item=mv.words[mv.idx];const word=item.w.toLowerCase();document.getElementById('mvProgress').style.width=(mv.idx/mv.total*100)+'%';document.getElementById('mvProgressText').textContent='Word '+(mv.idx+1)+' of '+mv.total;const pic=document.getElementById('mvPic');const eFn=wordEmoji[word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else{pic.textContent='?';pic.style.display=''};document.getElementById('mvHint').textContent=item.h;const stripped=removeVowels(word);document.getElementById('mvWord').innerHTML=stripped.split('').map(c=>c==='_'?'<span class="mv-gap">_</span>':c).join('');const inp=document.getElementById('mvInput');inp.value='';inp.className='mv-input';inp.focus()}
+function loadMvQ(){const wordEmoji=getSpellingWordEmoji();const item=mv.words[mv.idx];const word=item.w.toLowerCase();document.getElementById('mvProgress').style.width=(mv.idx/mv.total*100)+'%';document.getElementById('mvProgressText').textContent='Word '+(mv.idx+1)+' of '+mv.total;const pic=document.getElementById('mvPic');const eFn=wordEmoji[word];if(eFn&&EMOJI_SVG[eFn]){pic.innerHTML=EMOJI_SVG[eFn];pic.style.display=''}else if(eFn){try{pic.textContent=String.fromCodePoint(parseInt(eFn,16));pic.style.display=''}catch(e){pic.textContent='?';pic.style.display=''}}else{pic.textContent='?';pic.style.display=''};document.getElementById('mvHint').textContent=item.h;const stripped=removeVowels(word);document.getElementById('mvWord').innerHTML=stripped.split('').map(c=>c==='_'?'<span class="mv-gap">_</span>':c).join('');const inp=document.getElementById('mvInput');inp.value='';inp.className='vowel-input';inp.focus();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.setProgress(mv.idx/mv.total)}
 
-function checkMvAns(){const inp=document.getElementById('mvInput');const val=inp.value.trim().toLowerCase();const word=mv.words[mv.idx].w.toLowerCase();if(!val)return;if(val===word){mv.correct++;mv.streak=(mv.streak||0)+1;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();sfxCorrect();var mvWords=['Yes!','Great!','Nice!','Super!'];inp.className='mv-input flash-correct';document.getElementById('mvHint').textContent=mvWords[Math.floor(Math.random()*mvWords.length)]+(mv.streak>=3?' Streak: '+mv.streak+'!':'');setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},500)}else{mv.streak=0;mv.missed.push({w:word,h:mv.words[mv.idx].h});sfxWrong();inp.className='mv-input flash-wrong';document.getElementById('mvHint').textContent='It was: '+word;setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},1200)}}
+function checkMvAns(){const inp=document.getElementById('mvInput');const val=inp.value.trim().toLowerCase();const word=mv.words[mv.idx].w.toLowerCase();if(!val)return;if(val===word){mv.correct++;mv.streak=(mv.streak||0)+1;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();sfxCorrect();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onCorrect(null,null,mv.idx);var mvWords=['Yes!','Great!','Nice!','Super!','Brilliant!'];inp.className='vowel-input flash-correct';document.getElementById('mvHint').textContent=mvWords[Math.floor(Math.random()*mvWords.length)]+(mv.streak>=3?' \uD83D\uDD25 Streak: '+mv.streak+'!':'');setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total){if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onComplete(1);finishVowels()}else loadMvQ()},500)}else{mv.streak=0;mv.missed.push({w:word,h:mv.words[mv.idx].h});sfxWrong();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onWrong();inp.className='vowel-input flash-wrong';document.getElementById('mvHint').textContent='It was: '+word;setTimeout(()=>{mv.idx++;if(mv.idx>=mv.total)finishVowels();else loadMvQ()},1200)}}
 
 function finishVowels(){show('vowelsLevelSelect');hide('vowelsGame');const pct=mv.correct/mv.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);if(pct>=0.8)adaptiveCorrect('vowels');else if(pct<0.4)adaptiveWrong('vowels');addStars(stars);recordPlay();showResults('#e84393','_e_','Missing Vowels Done!','Level '+mv.level,stars,mv.correct,mv.total,()=>{showScreen('vowels')},mv.missed)}
 

@@ -950,26 +950,30 @@
 </div>
 
 <!-- MISSING VOWELS -->
-<div id="vowels" class="screen game-screen lit-theme">
+<div id="vowels" class="screen game-screen lit-theme vowel-game">
   <canvas class="game-canvas" id="vowelsCanvas"></canvas>
-  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#e84393">Missing Vowels</h2></div>
+  <div class="game-header" style="border-color:#ec4899"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#ec4899">Missing Vowels</h2></div>
   <div class="game-body">
     <div id="vowelsLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F9E9;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#be185d">Fill in the Gaps</div>
+        <div style="font-size:0.75rem;color:#ec4899;margin-top:4px">The vowels are missing — can you complete the word?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startVowels(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startVowels(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startVowels(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startVowels(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startVowels(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startVowels(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="vowelsGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="mvProgress" style="background:linear-gradient(90deg,#e84393,#fd79a8)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="mvProgress" style="background:linear-gradient(90deg,#ec4899,#f472b6)"></div></div>
       <div class="progress-text" id="mvProgressText"></div>
-      <div class="spell-picture" id="mvPic" style="border-color:#fd79a8;background:linear-gradient(135deg,#fff0f6,#ffe0ec)"></div>
-      <div class="mv-word" id="mvWord"></div>
-      <div class="mv-hint" id="mvHint"></div>
-      <input type="text" id="mvInput" class="mv-input" autocomplete="off" autocapitalize="off" placeholder="Type the full word...">
-      <button class="mv-submit" onclick="checkMvAns()">Check</button>
+      <div class="vowel-emoji" id="mvPic"></div>
+      <div class="vowel-puzzle" id="mvWord"></div>
+      <div class="vowel-hint" id="mvHint"></div>
+      <input type="text" id="mvInput" class="vowel-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the full word...">
+      <button class="vowel-check-btn" onclick="checkMvAns()">Check &#x2714;&#xFE0F;</button>
     </div>
   </div>
 </div>

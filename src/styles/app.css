@@ -1326,3 +1326,20 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .dict-check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #5b21b6,0 10px 24px rgba(124,58,237,0.3)}
 .dict-check-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #5b21b6}
 .dict-feedback{text-align:center;font-family:'Fredoka One',cursive;font-size:0.9rem;color:#7c3aed;min-height:28px;padding:4px;margin-top:4px}
+
+/* ===== MISSING VOWELS — Puzzle-piece design ===== */
+.vowel-game .game-header{background:rgba(255,240,248,0.88);border-bottom:2px solid rgba(236,72,153,0.15)}
+.vowel-game .game-title{color:#ec4899}
+.vowel-game .nav-btn{color:#ec4899;border-color:rgba(236,72,153,0.2)}
+.vowel-emoji{text-align:center;font-size:3.5rem;margin:16px auto 12px;width:80px;height:80px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.7);border-radius:20px;border:3px solid rgba(236,72,153,0.2);box-shadow:0 4px 16px rgba(236,72,153,0.08);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.vowel-puzzle{text-align:center;font-family:'Fredoka One',cursive;font-size:2rem;letter-spacing:4px;color:#1a1a2e;margin:12px 0;min-height:48px}
+.vowel-puzzle .mv-gap{display:inline-block;width:24px;height:36px;line-height:36px;margin:0 2px;border-bottom:3px solid #ec4899;color:#ec4899;font-size:1.8rem;animation:vowelGapPulse 2s ease-in-out infinite}
+@keyframes vowelGapPulse{0%,100%{border-color:#ec4899}50%{border-color:#f9a8d4}}
+.vowel-hint{text-align:center;font-size:0.8rem;color:#9ca3af;font-weight:600;margin:4px 0 14px;min-height:20px}
+.vowel-input{display:block;width:90%;max-width:320px;margin:0 auto 14px;padding:14px 18px;border:3px solid rgba(236,72,153,0.25);border-radius:16px;font-family:'Fredoka One',cursive;font-size:1.2rem;text-align:center;background:rgba(255,255,255,0.85);color:#2d3436;outline:none;transition:all 0.2s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.vowel-input:focus{border-color:#ec4899;box-shadow:0 0 16px rgba(236,72,153,0.15)}
+.vowel-input.flash-correct{border-color:#10b981;background:rgba(16,185,129,0.1)}
+.vowel-input.flash-wrong{border-color:#ef4444;background:rgba(239,68,68,0.08);animation:dictShake 0.4s ease}
+.vowel-check-btn{display:block;width:90%;max-width:320px;margin:0 auto;padding:14px 24px;border:none;border-radius:16px;background:linear-gradient(135deg,#ec4899,#f472b6);color:white;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #be185d,0 6px 16px rgba(236,72,153,0.2);transition:all 0.2s}
+.vowel-check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #be185d,0 10px 24px rgba(236,72,153,0.3)}
+.vowel-check-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #be185d}
