@@ -759,22 +759,26 @@
 </div>
 
 <!-- MISSING NUMBER -->
-<div id="missnum" class="screen game-screen num-theme">
+<div id="missnum" class="screen game-screen num-theme mn-game">
   <canvas class="game-canvas" id="missnumCanvas"></canvas>
-  <div class="game-header" style="border-color:#71b280"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
+  <div class="game-header" style="border-color:#a855f7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c084fc">Missing Number</h2></div>
   <div class="game-body">
     <div id="mnLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F52E;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#d8b4fe">Cosmic Enigma</div>
+        <div style="font-size:0.75rem;color:#c084fc;margin-top:4px">Find the number hiding in the equation!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
-        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
-        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">&#x2728;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">&#x1F52E;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">&#x1F30C;</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
       </div>
     </div>
     <div id="mnGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#134e5e,#71b280)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#a855f7,#d8b4fe)"></div></div>
       <div class="progress-text" id="mnProgressText"></div>
-      <div class="maths-display"><div class="maths-q" id="mnQuestion" style="color:#134e5e"></div><div class="maths-ans" id="mnAnswer" style="color:#134e5e">_</div></div>
+      <div class="maths-display"><div class="mn-equation" id="mnQuestion"></div><div class="maths-ans" id="mnAnswer">_</div></div>
       <div class="numpad" id="mnNumpad"></div>
     </div>
   </div>

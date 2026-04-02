@@ -1517,6 +1517,18 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .bonds-game .num-key:hover{background:rgba(20,184,166,0.25);border-color:#14b8a6;box-shadow:0 3px 0 rgba(20,184,166,0.4),0 0 10px rgba(20,184,166,0.12)}
 .bonds-game .num-key.enter-key{background:linear-gradient(180deg,#14b8a6,#0d9488);color:#042f2e;border-color:#14b8a6;box-shadow:0 3px 0 #0f766e}
 .bonds-game .num-key.clear-key{background:linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1));color:#fbbf24;border-color:rgba(251,191,36,0.3);box-shadow:0 3px 0 rgba(251,191,36,0.2)}
+
+/* ===== MISSING NUMBER — Cosmic Enigma ===== */
+.mn-game .game-header{background:rgba(20,5,35,0.9);border-bottom:2px solid rgba(168,85,247,0.3)}
+.mn-game .game-title{color:#c084fc;text-shadow:0 0 12px rgba(192,132,252,0.4)}
+.mn-game .nav-btn{color:#c084fc;border-color:rgba(168,85,247,0.3)}
+.mn-equation{font-family:'Fredoka One',cursive;font-size:2.4rem;color:#e9d5ff;text-align:center;margin:20px 0 8px;text-shadow:0 0 8px rgba(192,132,252,0.2)}
+.mn-game .maths-ans{color:#d8b4fe;text-shadow:0 0 12px rgba(216,180,254,0.3)}
+.mn-game .numpad{background:rgba(20,5,35,0.6);border:1px solid rgba(168,85,247,0.1);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.mn-game .num-key{background:linear-gradient(180deg,rgba(168,85,247,0.15),rgba(168,85,247,0.08));color:#d8b4fe;border:2px solid rgba(168,85,247,0.2);box-shadow:0 3px 0 rgba(168,85,247,0.25)}
+.mn-game .num-key:hover{background:rgba(168,85,247,0.25);border-color:#a855f7;box-shadow:0 3px 0 rgba(168,85,247,0.4),0 0 12px rgba(168,85,247,0.15)}
+.mn-game .num-key.enter-key{background:linear-gradient(180deg,#a855f7,#9333ea);color:#1a0530;border-color:#a855f7;box-shadow:0 3px 0 #7e22ce}
+.mn-game .num-key.clear-key{background:linear-gradient(180deg,rgba(251,191,36,0.2),rgba(251,191,36,0.1));color:#fbbf24;border-color:rgba(251,191,36,0.3);box-shadow:0 3px 0 rgba(251,191,36,0.2)}
 </style>
 </head>
 <body>
@@ -2281,22 +2293,26 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- MISSING NUMBER -->
-<div id="missnum" class="screen game-screen num-theme">
+<div id="missnum" class="screen game-screen num-theme mn-game">
   <canvas class="game-canvas" id="missnumCanvas"></canvas>
-  <div class="game-header" style="border-color:#71b280"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#134e5e">Missing Number</h2></div>
+  <div class="game-header" style="border-color:#a855f7"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#c084fc">Missing Number</h2></div>
   <div class="game-body">
     <div id="mnLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F52E;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#d8b4fe">Cosmic Enigma</div>
+        <div style="font-size:0.75rem;color:#c084fc;margin-top:4px">Find the number hiding in the equation!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
-        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
-        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
+        <div class="level-card lc-1" onclick="startMN(1)"><div class="lc-icon">&#x2728;</div><div class="lc-title">Easy</div><div class="lc-sub">Up to 10</div></div>
+        <div class="level-card lc-2" onclick="startMN(2)"><div class="lc-icon">&#x1F52E;</div><div class="lc-title">Medium</div><div class="lc-sub">Up to 20</div></div>
+        <div class="level-card lc-3" onclick="startMN(3)"><div class="lc-icon">&#x1F30C;</div><div class="lc-title">Hard</div><div class="lc-sub">Up to 100</div></div>
       </div>
     </div>
     <div id="mnGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#134e5e,#71b280)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="mnProgress" style="background:linear-gradient(90deg,#a855f7,#d8b4fe)"></div></div>
       <div class="progress-text" id="mnProgressText"></div>
-      <div class="maths-display"><div class="maths-q" id="mnQuestion" style="color:#134e5e"></div><div class="maths-ans" id="mnAnswer" style="color:#134e5e">_</div></div>
+      <div class="maths-display"><div class="mn-equation" id="mnQuestion"></div><div class="maths-ans" id="mnAnswer">_</div></div>
       <div class="numpad" id="mnNumpad"></div>
     </div>
   </div>
@@ -10892,7 +10908,7 @@ function genMNQ(lv){const type=Math.random()<0.7?'equation':'sequence';if(type==
 function startMN(lv){mn.level=lv;mn.idx=0;mn.correct=0;mn.answer='';mn.streak=0;hide('mnLevelSelect');show('mnGame');renderNumpad('mnNumpad',mnPress);loadMNQ()}
 function loadMNQ(){mn.question=genMNQ(mn.level);mn.answer='';document.getElementById('mnQuestion').textContent=mn.question.text;document.getElementById('mnAnswer').textContent='_';document.getElementById('mnProgress').style.width=(mn.idx/mn.total*100)+'%';document.getElementById('mnProgressText').textContent='Question '+(mn.idx+1)+' of '+mn.total;document.getElementById('mnFeedback').classList.remove('show')}
 function mnPress(v){if(v==='C')mn.answer='';else if(v==='enter'){checkMNAns();return}else{if(mn.answer.length<4)mn.answer+=v}document.getElementById('mnAnswer').textContent=mn.answer||'_'}
-function checkMNAns(){if(!mn.answer)return;var ok=parseInt(mn.answer)===mn.question.answer;var fb=document.getElementById('mnFeedback');var fbc=document.getElementById('mnFeedbackContent');var encouragements=['Great!','Nice!','Yes!','Smart!','Correct!'];if(ok){mn.correct++;mn.streak=(mn.streak||0)+1;var word=encouragements[Math.floor(Math.random()*encouragements.length)];var streakText=mn.streak>=3?' Streak: '+mn.streak+'!':'';fbc.innerHTML='<div class="fb-correct"><div class="fb-icon" style="background:linear-gradient(135deg,#134e5e,#71b280)">'+word+'</div><div class="fb-text" style="color:#00b894">'+word+streakText+'</div></div>'}else{mn.streak=0;fbc.innerHTML='<div class="fb-wrong"><div class="fb-icon">'+mn.question.answer+'</div><div class="fb-text">The answer was '+mn.question.answer+'</div></div>'}fb.classList.add('show');setTimeout(()=>{fb.classList.remove('show');mn.idx++;if(mn.idx>=mn.total)finishMN();else loadMNQ()},ok?600:1200)}
+function checkMNAns(){if(!mn.answer)return;var ok=parseInt(mn.answer)===mn.question.answer;var fb=document.getElementById('mnFeedback');var fbc=document.getElementById('mnFeedbackContent');var encouragements=['Great!','Nice!','Yes!','Smart!','Solved!','\u2728 Mystery solved!'];if(ok){mn.correct++;mn.streak=(mn.streak||0)+1;sfxCorrect();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onCorrect(null,null,mn.idx);var word=encouragements[Math.floor(Math.random()*encouragements.length)];var streakText=mn.streak>=3?' \uD83D\uDD25 Streak: '+mn.streak+'!':'';fbc.innerHTML='<div class="fb-correct"><div class="fb-icon" style="background:linear-gradient(135deg,#a855f7,#d8b4fe)">'+word+'</div><div class="fb-text" style="color:#a855f7">'+word+streakText+'</div></div>'}else{mn.streak=0;sfxWrong();if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onWrong();fbc.innerHTML='<div class="fb-wrong"><div class="fb-icon">'+mn.question.answer+'</div><div class="fb-text">The answer was '+mn.question.answer+'</div></div>'}if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.setProgress((mn.idx+1)/mn.total);fb.classList.add('show');setTimeout(()=>{fb.classList.remove('show');mn.idx++;if(mn.idx>=mn.total){if(window.ClassmatesNumeracyFX)ClassmatesNumeracyFX.onComplete(1);finishMN()}else loadMNQ()},ok?600:1200)}
 function finishMN(){show('mnLevelSelect');hide('mnGame');const pct=mn.correct/mn.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;checkAch('first_game',true);checkAch('first_missnum',true);state.mathsCorrect+=mn.correct;saveState();if(pct>=0.8)adaptiveCorrect('missnum');else if(pct<0.4)adaptiveWrong('missnum');addStars(stars);recordPlay();showResults('#134e5e','?=','Missing Number Done!','Level '+mn.level,stars,mn.correct,mn.total,()=>{showScreen('missnum')},null)}
 
 document.addEventListener('keydown',function(e){if(document.getElementById('missnum').classList.contains('active')&&document.getElementById('mnGame').style.display!=='none'){if(/^[0-9]$/.test(e.key))mnPress(e.key);else if(e.key==='Enter')mnPress('enter');else if(e.key==='Backspace'||e.key==='Delete')mnPress('C')}});
