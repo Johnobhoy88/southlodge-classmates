@@ -1300,3 +1300,29 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 /* Mute & dyslexia buttons — subtler */
 .mute-btn,.dyslexia-btn{border-radius:14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:all 0.2s}
 .mute-btn:hover,.dyslexia-btn:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
+
+/* ===== DICTATION GAME — Audio-centric design ===== */
+.dict-game .game-header{background:rgba(245,240,255,0.88);border-bottom:2px solid rgba(124,58,237,0.15)}
+.dict-game .game-title{color:#7c3aed}
+.dict-game .nav-btn{color:#7c3aed;border-color:rgba(124,58,237,0.2)}
+.dict-listen-zone{position:relative;width:120px;height:120px;margin:24px auto 16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dict-speaker{font-size:3rem;position:relative;z-index:2;transition:transform 0.2s}
+.dict-speaker.speaking{animation:dictSpeakerPulse 0.5s ease infinite}
+.dict-speaker-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(124,58,237,0.15);animation:dictRingPulse 2.5s ease-out infinite;opacity:0}
+.dict-ring-2{animation-delay:0.5s}
+.dict-ring-3{animation-delay:1s}
+.dict-listen-zone:hover .dict-speaker{transform:scale(1.1)}
+@keyframes dictRingPulse{0%{transform:scale(0.5);opacity:0.6}100%{transform:scale(1.4);opacity:0}}
+@keyframes dictSpeakerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.dict-repeat{display:block;margin:0 auto 20px;background:none;border:2px solid rgba(124,58,237,0.2);color:#7c3aed;font-family:'Fredoka One',cursive;font-size:0.8rem;padding:8px 20px;border-radius:14px;cursor:pointer;transition:all 0.2s}
+.dict-repeat:hover{background:rgba(124,58,237,0.08);border-color:#7c3aed}
+.dict-text-input{display:block;width:90%;max-width:320px;margin:0 auto 14px;padding:14px 18px;border:3px solid rgba(124,58,237,0.25);border-radius:16px;font-family:'Fredoka One',cursive;font-size:1.2rem;text-align:center;background:rgba(255,255,255,0.85);color:#2d3436;outline:none;transition:all 0.2s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.dict-text-input:focus{border-color:#7c3aed;box-shadow:0 0 16px rgba(124,58,237,0.15)}
+.dict-text-input.flash-correct{border-color:#10b981;background:rgba(16,185,129,0.1);animation:dictCorrect 0.4s ease}
+.dict-text-input.flash-wrong{border-color:#ef4444;background:rgba(239,68,68,0.08);animation:dictShake 0.4s ease}
+@keyframes dictCorrect{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes dictShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.dict-check-btn{display:block;width:90%;max-width:320px;margin:0 auto 14px;padding:14px 24px;border:none;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #5b21b6,0 6px 16px rgba(124,58,237,0.2);transition:all 0.2s}
+.dict-check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #5b21b6,0 10px 24px rgba(124,58,237,0.3)}
+.dict-check-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #5b21b6}
+.dict-feedback{text-align:center;font-family:'Fredoka One',cursive;font-size:0.9rem;color:#7c3aed;min-height:28px;padding:4px;margin-top:4px}

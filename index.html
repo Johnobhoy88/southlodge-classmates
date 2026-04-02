@@ -1317,6 +1317,32 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 /* Mute & dyslexia buttons — subtler */
 .mute-btn,.dyslexia-btn{border-radius:14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:all 0.2s}
 .mute-btn:hover,.dyslexia-btn:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
+
+/* ===== DICTATION GAME — Audio-centric design ===== */
+.dict-game .game-header{background:rgba(245,240,255,0.88);border-bottom:2px solid rgba(124,58,237,0.15)}
+.dict-game .game-title{color:#7c3aed}
+.dict-game .nav-btn{color:#7c3aed;border-color:rgba(124,58,237,0.2)}
+.dict-listen-zone{position:relative;width:120px;height:120px;margin:24px auto 16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dict-speaker{font-size:3rem;position:relative;z-index:2;transition:transform 0.2s}
+.dict-speaker.speaking{animation:dictSpeakerPulse 0.5s ease infinite}
+.dict-speaker-ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(124,58,237,0.15);animation:dictRingPulse 2.5s ease-out infinite;opacity:0}
+.dict-ring-2{animation-delay:0.5s}
+.dict-ring-3{animation-delay:1s}
+.dict-listen-zone:hover .dict-speaker{transform:scale(1.1)}
+@keyframes dictRingPulse{0%{transform:scale(0.5);opacity:0.6}100%{transform:scale(1.4);opacity:0}}
+@keyframes dictSpeakerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.dict-repeat{display:block;margin:0 auto 20px;background:none;border:2px solid rgba(124,58,237,0.2);color:#7c3aed;font-family:'Fredoka One',cursive;font-size:0.8rem;padding:8px 20px;border-radius:14px;cursor:pointer;transition:all 0.2s}
+.dict-repeat:hover{background:rgba(124,58,237,0.08);border-color:#7c3aed}
+.dict-text-input{display:block;width:90%;max-width:320px;margin:0 auto 14px;padding:14px 18px;border:3px solid rgba(124,58,237,0.25);border-radius:16px;font-family:'Fredoka One',cursive;font-size:1.2rem;text-align:center;background:rgba(255,255,255,0.85);color:#2d3436;outline:none;transition:all 0.2s;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.dict-text-input:focus{border-color:#7c3aed;box-shadow:0 0 16px rgba(124,58,237,0.15)}
+.dict-text-input.flash-correct{border-color:#10b981;background:rgba(16,185,129,0.1);animation:dictCorrect 0.4s ease}
+.dict-text-input.flash-wrong{border-color:#ef4444;background:rgba(239,68,68,0.08);animation:dictShake 0.4s ease}
+@keyframes dictCorrect{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes dictShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.dict-check-btn{display:block;width:90%;max-width:320px;margin:0 auto 14px;padding:14px 24px;border:none;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;box-shadow:0 4px 0 #5b21b6,0 6px 16px rgba(124,58,237,0.2);transition:all 0.2s}
+.dict-check-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #5b21b6,0 10px 24px rgba(124,58,237,0.3)}
+.dict-check-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #5b21b6}
+.dict-feedback{text-align:center;font-family:'Fredoka One',cursive;font-size:0.9rem;color:#7c3aed;min-height:28px;padding:4px;margin-top:4px}
 </style>
 </head>
 <body>
@@ -2238,26 +2264,35 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 </div>
 
 <!-- DICTATION -->
-<div id="dictation" class="screen game-screen lit-theme">
+<div id="dictation" class="screen game-screen lit-theme dict-game">
   <canvas class="game-canvas" id="dictationCanvas"></canvas>
-  <div class="game-header" style="border-color:#ab83a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6a0572">Dictation</h2></div>
+  <div class="game-header" style="border-color:#7c3aed"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#7c3aed">Dictation</h2></div>
   <div class="game-body">
     <div id="dictLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F3A7;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#5b21b6">Listen &amp; Spell</div>
+        <div style="font-size:0.75rem;color:#8b5cf6;margin-top:4px">Can you spell the word you hear?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startDict(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startDict(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startDict(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startDict(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startDict(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startDict(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="dictGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="dictProgress" style="background:linear-gradient(90deg,#6a0572,#ab83a1)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="dictProgress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
       <div class="progress-text" id="dictProgressText"></div>
-      <div class="dict-speaker" id="dictSpeaker" onclick="speakWord()">&#x1F50A;</div>
-      <button class="dict-repeat" onclick="speakWord()">Hear it again</button>
-      <input type="text" id="dictInput" class="mv-input" style="border-color:#ab83a1" autocomplete="off" autocapitalize="off" placeholder="Type what you hear...">
-      <button class="mv-submit" style="background:linear-gradient(135deg,#6a0572,#ab83a1);box-shadow:0 4px 0 #4a0350" onclick="checkDictAns()">Check</button>
-      <div class="mv-hint" id="dictHint"></div>
+      <div class="dict-listen-zone" onclick="speakWord()">
+        <div class="dict-speaker-ring"></div>
+        <div class="dict-speaker-ring dict-ring-2"></div>
+        <div class="dict-speaker-ring dict-ring-3"></div>
+        <div class="dict-speaker" id="dictSpeaker">&#x1F50A;</div>
+      </div>
+      <button class="dict-repeat" onclick="speakWord()">&#x1F504; Hear it again</button>
+      <input type="text" id="dictInput" class="dict-text-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type what you hear...">
+      <button class="dict-check-btn" onclick="checkDictAns()">Check &#x2714;&#xFE0F;</button>
+      <div class="dict-feedback" id="dictHint"></div>
     </div>
   </div>
 </div>
@@ -10203,11 +10238,11 @@ let dict={level:1,words:[],idx:0,total:10,correct:0,missed:[],streak:0};
 
 function startDict(lv){dict.level=lv;const pool=[...getSpellingWords()[lv]];shuffle(pool);dict.words=pool.slice(0,dict.total);dict.idx=0;dict.correct=0;dict.missed=[];dict.streak=0;hide('dictLevelSelect');show('dictGame');loadDictQ()}
 
-function loadDictQ(){document.getElementById('dictProgress').style.width=(dict.idx/dict.total*100)+'%';document.getElementById('dictProgressText').textContent='Word '+(dict.idx+1)+' of '+dict.total;document.getElementById('dictHint').textContent='';const inp=document.getElementById('dictInput');inp.value='';inp.className='mv-input';inp.style.borderColor='#ab83a1';inp.focus();setTimeout(speakWord,300)}
+function loadDictQ(){document.getElementById('dictProgress').style.width=(dict.idx/dict.total*100)+'%';document.getElementById('dictProgressText').textContent='Word '+(dict.idx+1)+' of '+dict.total;document.getElementById('dictHint').textContent='';const inp=document.getElementById('dictInput');inp.value='';inp.className='dict-text-input';inp.focus();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.setProgress(dict.idx/dict.total);setTimeout(speakWord,300)}
 
 function speakWord(){if(!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(dict.words[dict.idx].w);u.rate=0.8;u.pitch=1.1;u.lang='en-GB';const sp=document.getElementById('dictSpeaker');sp.classList.add('speaking');u.onend=()=>sp.classList.remove('speaking');window.speechSynthesis.speak(u)}
 
-function checkDictAns(){const inp=document.getElementById('dictInput');const val=inp.value.trim().toLowerCase();const word=dict.words[dict.idx].w.toLowerCase();if(!val)return;if(val===word){dict.correct++;dict.streak=(dict.streak||0)+1;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();sfxCorrect();var dictWords=['Great!','Well done!','Nice!','Super!'];inp.className='mv-input flash-correct';document.getElementById('dictHint').textContent=dictWords[Math.floor(Math.random()*dictWords.length)]+(dict.streak>=3?' Streak: '+dict.streak+'!':'');setTimeout(()=>{dict.idx++;if(dict.idx>=dict.total)finishDict();else loadDictQ()},500)}else{dict.streak=0;dict.missed.push({w:word,h:dict.words[dict.idx].h});sfxWrong();inp.className='mv-input flash-wrong';document.getElementById('dictHint').textContent='It was: '+word;setTimeout(()=>{dict.idx++;if(dict.idx>=dict.total)finishDict();else loadDictQ()},1200)}}
+function checkDictAns(){const inp=document.getElementById('dictInput');const val=inp.value.trim().toLowerCase();const word=dict.words[dict.idx].w.toLowerCase();if(!val)return;if(val===word){dict.correct++;dict.streak=(dict.streak||0)+1;state.spellingCorrect++;checkAch('spell_10',state.spellingCorrect>=10);checkAch('spell_50',state.spellingCorrect>=50);saveState();sfxCorrect();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onCorrect(null,null,dict.idx);var dictWords=['Great!','Well done!','Nice!','Super!','Brilliant!','Perfect!'];inp.className='dict-text-input flash-correct';document.getElementById('dictHint').textContent=dictWords[Math.floor(Math.random()*dictWords.length)]+(dict.streak>=3?' \uD83D\uDD25 Streak: '+dict.streak+'!':'');setTimeout(()=>{dict.idx++;if(dict.idx>=dict.total){if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onComplete(1);finishDict()}else loadDictQ()},500)}else{dict.streak=0;dict.missed.push({w:word,h:dict.words[dict.idx].h});sfxWrong();if(window.ClassmatesLiteracyFX)ClassmatesLiteracyFX.onWrong();inp.className='dict-text-input flash-wrong';document.getElementById('dictHint').textContent='It was: '+word;setTimeout(()=>{dict.idx++;if(dict.idx>=dict.total)finishDict();else loadDictQ()},1200)}}
 
 function finishDict(){show('dictLevelSelect');hide('dictGame');const pct=dict.correct/dict.total;const stars=pct>=.9?3:pct>=.6?2:pct>=.3?1:0;if(pct===1)checkAch('perfect_spell',true);checkAch('first_game',true);checkAch('first_dictation',true);if(pct>=0.8)adaptiveCorrect('dictation');else if(pct<0.4)adaptiveWrong('dictation');addStars(stars);recordPlay();showResults('#6a0572','\u{1F50A}','Dictation Done!','Level '+dict.level,stars,dict.correct,dict.total,()=>{showScreen('dictation')},dict.missed)}
 

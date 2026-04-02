@@ -916,26 +916,35 @@
 </div>
 
 <!-- DICTATION -->
-<div id="dictation" class="screen game-screen lit-theme">
+<div id="dictation" class="screen game-screen lit-theme dict-game">
   <canvas class="game-canvas" id="dictationCanvas"></canvas>
-  <div class="game-header" style="border-color:#ab83a1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6a0572">Dictation</h2></div>
+  <div class="game-header" style="border-color:#7c3aed"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#7c3aed">Dictation</h2></div>
   <div class="game-body">
     <div id="dictLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F3A7;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#5b21b6">Listen &amp; Spell</div>
+        <div style="font-size:0.75rem;color:#8b5cf6;margin-top:4px">Can you spell the word you hear?</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startDict(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
-        <div class="level-card lc-2" onclick="startDict(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
-        <div class="level-card lc-3" onclick="startDict(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
+        <div class="level-card lc-1" onclick="startDict(1)"><div class="lc-icon">&#x1F331;</div><div class="lc-title">Easy</div><div class="lc-sub">P1</div></div>
+        <div class="level-card lc-2" onclick="startDict(2)"><div class="lc-icon">&#x1F333;</div><div class="lc-title">Medium</div><div class="lc-sub">P2-P4</div></div>
+        <div class="level-card lc-3" onclick="startDict(3)"><div class="lc-icon">&#x1F3D4;&#xFE0F;</div><div class="lc-title">Hard</div><div class="lc-sub">P5-P7</div></div>
       </div>
     </div>
     <div id="dictGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="dictProgress" style="background:linear-gradient(90deg,#6a0572,#ab83a1)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="dictProgress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
       <div class="progress-text" id="dictProgressText"></div>
-      <div class="dict-speaker" id="dictSpeaker" onclick="speakWord()">&#x1F50A;</div>
-      <button class="dict-repeat" onclick="speakWord()">Hear it again</button>
-      <input type="text" id="dictInput" class="mv-input" style="border-color:#ab83a1" autocomplete="off" autocapitalize="off" placeholder="Type what you hear...">
-      <button class="mv-submit" style="background:linear-gradient(135deg,#6a0572,#ab83a1);box-shadow:0 4px 0 #4a0350" onclick="checkDictAns()">Check</button>
-      <div class="mv-hint" id="dictHint"></div>
+      <div class="dict-listen-zone" onclick="speakWord()">
+        <div class="dict-speaker-ring"></div>
+        <div class="dict-speaker-ring dict-ring-2"></div>
+        <div class="dict-speaker-ring dict-ring-3"></div>
+        <div class="dict-speaker" id="dictSpeaker">&#x1F50A;</div>
+      </div>
+      <button class="dict-repeat" onclick="speakWord()">&#x1F504; Hear it again</button>
+      <input type="text" id="dictInput" class="dict-text-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type what you hear...">
+      <button class="dict-check-btn" onclick="checkDictAns()">Check &#x2714;&#xFE0F;</button>
+      <div class="dict-feedback" id="dictHint"></div>
     </div>
   </div>
 </div>
