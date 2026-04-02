@@ -1059,23 +1059,27 @@
 </div>
 
 <!-- SHAPES -->
-<div id="shapes" class="screen game-screen num-theme">
+<div id="shapes" class="screen game-screen num-theme shapes-game">
   <canvas class="game-canvas" id="shapesCanvas"></canvas>
-  <div class="game-header" style="border-color:#fd79a8"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#6c5ce7">Shapes</h2></div>
+  <div class="game-header" style="border-color:#8b5cf6"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#a78bfa">Shapes</h2></div>
   <div class="game-body">
     <div id="shapesLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F536;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#c4b5fd">Kaleidoscope</div>
+        <div style="font-size:0.75rem;color:#a78bfa;margin-top:4px">Discover the world of shapes and geometry!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startShapes(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">2D shapes</div></div>
-        <div class="level-card lc-2" onclick="startShapes(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Properties</div></div>
-        <div class="level-card lc-3" onclick="startShapes(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">3D &amp; angles</div></div>
+        <div class="level-card lc-1" onclick="startShapes(1)"><div class="lc-icon">&#x25B3;</div><div class="lc-title">Easy</div><div class="lc-sub">2D shapes</div></div>
+        <div class="level-card lc-2" onclick="startShapes(2)"><div class="lc-icon">&#x2B21;</div><div class="lc-title">Medium</div><div class="lc-sub">Properties</div></div>
+        <div class="level-card lc-3" onclick="startShapes(3)"><div class="lc-icon">&#x1F4A0;</div><div class="lc-title">Hard</div><div class="lc-sub">3D &amp; angles</div></div>
       </div>
     </div>
     <div id="shapesGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="shapeProgress" style="background:linear-gradient(90deg,#6c5ce7,#fd79a8)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="shapeProgress" style="background:linear-gradient(90deg,#8b5cf6,#c4b5fd)"></div></div>
       <div class="progress-text" id="shapeProgressText"></div>
-      <div class="shape-display" id="shapeDisplay"></div>
-      <div class="ph-options" id="shapeOpts"></div>
+      <div class="shp-display" id="shapeDisplay"></div>
+      <div class="shp-opts" id="shapeOpts"></div>
     </div>
   </div>
 </div>
