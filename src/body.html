@@ -1219,12 +1219,28 @@
 </div>
 
 <!-- SEQUENCES -->
-<div id="sequence" class="screen game-screen num-theme">
+<div id="sequence" class="screen game-screen num-theme seq-game">
   <canvas class="game-canvas" id="sequenceCanvas"></canvas>
-  <div class="game-header" style="border-color:#81ecec"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#00cec9">Sequences</h2></div>
+  <div class="game-header" style="border-color:#6366f1"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#a5b4fc">Sequences</h2></div>
   <div class="game-body">
-    <div id="seqLevelSelect"><p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p><div class="level-cards"><div class="level-card lc-1" onclick="startSeq(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">Count by 1s, 2s</div></div><div class="level-card lc-2" onclick="startSeq(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Count by 5s, 10s</div></div><div class="level-card lc-3" onclick="startSeq(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Mixed patterns</div></div></div></div>
-    <div id="seqGame" style="display:none;"><div class="progress-bar"><div class="progress-fill" id="seqProgress" style="background:linear-gradient(90deg,#00cec9,#81ecec)"></div></div><div class="progress-text" id="seqProgressText"></div><div id="seqDisplay"></div><div class="ph-options" id="seqOpts"></div></div>
+    <div id="seqLevelSelect">
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F517;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#c7d2fe">Pattern Circuit</div>
+        <div style="font-size:0.75rem;color:#a5b4fc;margin-top:4px">Find the pattern — what comes next?</div>
+      </div>
+      <div class="level-cards">
+        <div class="level-card lc-1" onclick="startSeq(1)"><div class="lc-icon">&#x1F518;</div><div class="lc-title">Easy</div><div class="lc-sub">Count by 1s, 2s</div></div>
+        <div class="level-card lc-2" onclick="startSeq(2)"><div class="lc-icon">&#x1F519;</div><div class="lc-title">Medium</div><div class="lc-sub">Count by 5s, 10s</div></div>
+        <div class="level-card lc-3" onclick="startSeq(3)"><div class="lc-icon">&#x1F51F;</div><div class="lc-title">Hard</div><div class="lc-sub">Mixed patterns</div></div>
+      </div>
+    </div>
+    <div id="seqGame" style="display:none;">
+      <div class="progress-bar"><div class="progress-fill" id="seqProgress" style="background:linear-gradient(90deg,#6366f1,#a5b4fc)"></div></div>
+      <div class="progress-text" id="seqProgressText"></div>
+      <div class="seq-display" id="seqDisplay"></div>
+      <div class="seq-opts" id="seqOpts"></div>
+    </div>
   </div>
 </div>
 
