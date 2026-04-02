@@ -646,23 +646,27 @@
 </div>
 
 <!-- WORD PROBLEMS -->
-<div id="wordprob" class="screen game-screen num-theme">
+<div id="wordprob" class="screen game-screen num-theme wp-game">
   <canvas class="game-canvas" id="wordprobCanvas"></canvas>
-  <div class="game-header" style="border-color:#4286f4"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#373b44">Word Problems</h2></div>
+  <div class="game-header" style="border-color:#78716c"><button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button><button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button><h2 class="game-title" style="color:#d6d3d1">Word Problems</h2></div>
   <div class="game-body">
     <div id="wpLevelSelect">
-      <p style="color:#636e72;margin-bottom:8px;font-weight:700;">Choose your level:</p>
+      <div style="text-align:center;margin:20px 0 16px">
+        <div style="font-size:3rem;margin-bottom:8px">&#x1F4DD;</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:#e7e5e4">Story Desk</div>
+        <div style="font-size:0.75rem;color:#a8a29e;margin-top:4px">Read the story and solve the maths!</div>
+      </div>
       <div class="level-cards">
-        <div class="level-card lc-1" onclick="startWP(1)"><div class="lc-icon">1</div><div class="lc-title">Easy</div><div class="lc-sub">One step</div></div>
-        <div class="level-card lc-2" onclick="startWP(2)"><div class="lc-icon">2</div><div class="lc-title">Medium</div><div class="lc-sub">Two step</div></div>
-        <div class="level-card lc-3" onclick="startWP(3)"><div class="lc-icon">3</div><div class="lc-title">Hard</div><div class="lc-sub">Multi-step</div></div>
+        <div class="level-card lc-1" onclick="startWP(1)"><div class="lc-icon">&#x1F4D6;</div><div class="lc-title">Easy</div><div class="lc-sub">One step</div></div>
+        <div class="level-card lc-2" onclick="startWP(2)"><div class="lc-icon">&#x1F4DA;</div><div class="lc-title">Medium</div><div class="lc-sub">Two step</div></div>
+        <div class="level-card lc-3" onclick="startWP(3)"><div class="lc-icon">&#x1F9E0;</div><div class="lc-title">Hard</div><div class="lc-sub">Multi-step</div></div>
       </div>
     </div>
     <div id="wpGame" style="display:none;">
-      <div class="progress-bar"><div class="progress-fill" id="wpProgress" style="background:linear-gradient(90deg,#373b44,#4286f4)"></div></div>
+      <div class="progress-bar"><div class="progress-fill" id="wpProgress" style="background:linear-gradient(90deg,#78716c,#a8a29e)"></div></div>
       <div class="progress-text" id="wpProgressText"></div>
-      <div class="story-text" id="wpProblem" style="max-height:none;border-color:#4286f4"></div>
-      <div class="maths-ans" id="wpAnswer" style="color:#4286f4">_</div>
+      <div class="wp-problem" id="wpProblem"></div>
+      <div class="wp-ans" id="wpAnswer">_</div>
       <div class="numpad" id="wpNumpad"></div>
     </div>
   </div>
