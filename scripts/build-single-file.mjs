@@ -38,6 +38,7 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "games", "spelling-fx.js"),
     path.join(root, "src", "scripts", "games", "literacy-fx.js"),
     path.join(root, "src", "scripts", "games", "numeracy-fx.js"),
+    path.join(root, "src", "scripts", "games", "maths-scene.js"),
     path.join(root, "src", "scripts", "games", "geography-fx.js"),
     path.join(root, "src", "scripts", "games", "times-tables.js"),
     path.join(root, "src", "scripts", "games", "maths.js"),
