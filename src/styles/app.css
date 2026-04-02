@@ -1613,3 +1613,17 @@ button:focus-visible, a:focus-visible, input:focus-visible{outline:3px solid var
 .data-opts .ph-opt.ph-correct,.data-opts button.ph-correct{background:rgba(34,197,94,0.15)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
 .data-opts .ph-opt.ph-wrong,.data-opts button.ph-wrong{background:rgba(239,68,68,0.15)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
 .data-opts .ph-opt.ph-disabled,.data-opts button.ph-disabled{pointer-events:none;opacity:0.7}
+
+/* ===== MEASUREMENT — The Workshop ===== */
+.meas-game .game-header{background:rgba(6,28,32,0.93);border-bottom:2px solid rgba(8,145,178,0.3)}
+.meas-game .game-title{color:#22d3ee;text-shadow:0 0 10px rgba(34,211,238,0.25)}
+.meas-game .nav-btn{color:#22d3ee;border-color:rgba(8,145,178,0.3)}
+.meas-prompt{margin:18px auto;padding:16px 18px;max-width:360px;background:rgba(8,145,178,0.07);border:2px solid rgba(8,145,178,0.18);border-left:4px solid #0891b2;border-radius:12px;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.meas-prompt .ph-sound,.meas-prompt .ph-prompt{color:#a5f3fc;background:rgba(8,145,178,0.1);border-color:rgba(34,211,238,0.15)}
+.meas-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:320px;margin:14px auto 0;padding:0 12px}
+.meas-opts .ph-opt,.meas-opts button{padding:14px 12px;border:2px solid rgba(8,145,178,0.25);border-radius:12px;background:rgba(8,145,178,0.08);font-family:'Fredoka One',cursive;font-size:0.95rem;color:#a5f3fc;cursor:pointer;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 3px 0 rgba(6,78,96,0.4);text-align:center}
+.meas-opts .ph-opt:hover,.meas-opts button:hover{transform:translateY(-3px);border-color:#0891b2;box-shadow:0 6px 0 rgba(6,78,96,0.4),0 0 12px rgba(8,145,178,0.1)}
+.meas-opts .ph-opt:active,.meas-opts button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(6,78,96,0.4)}
+.meas-opts .ph-opt.ph-correct,.meas-opts button.ph-correct{background:rgba(34,197,94,0.2)!important;border-color:#22c55e!important;color:#86efac!important;animation:anaTileCorrect 0.3s}
+.meas-opts .ph-opt.ph-wrong,.meas-opts button.ph-wrong{background:rgba(239,68,68,0.2)!important;border-color:#ef4444!important;color:#fca5a5!important;animation:dictShake 0.4s}
+.meas-opts .ph-opt.ph-disabled,.meas-opts button.ph-disabled{pointer-events:none;opacity:0.7}
