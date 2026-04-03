@@ -316,37 +316,63 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('capitals')) return;
       var s = FXCore.getSize();
-      FXCore.emit(s.w * 0.5, s.h * 0.5, 10, {
-        spread: 5, rise: 2, decay: 0.02, size: 3,
-        color: 'rgba(48,96,192,0.8)', shape: 'star', endColor: 'rgba(160,200,240,0)'
+      var count = 8 + Math.floor(progress * 8);
+      // Blue departure-board flicker
+      FXCore.emit(s.w * 0.5, s.h * 0.48, count, {
+        spread: 5, rise: 2.5, decay: 0.018, size: 3.5,
+        color: 'rgba(48,120,220,0.8)', shape: 'star', endColor: 'rgba(160,210,255,0)'
       });
-      FXCore.emit(s.w * 0.5, s.h * 0.5, 5, {
-        spread: 3, rise: 1.5, decay: 0.025, size: 2,
-        color: 'rgba(200,220,240,0.6)'
+      // White runway-light sparks
+      FXCore.emit(s.w * 0.5, s.h * 0.48, Math.floor(count * 0.5), {
+        spread: 4, rise: 1.8, decay: 0.022, size: 2,
+        color: 'rgba(240,245,255,0.7)'
+      });
+      // Warm amber taxiway accent
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 4, {
+        spread: 3, rise: 1.2, decay: 0.025, size: 2.5,
+        color: 'rgba(255,180,50,0.6)', shape: 'diamond'
       });
       if (window.FXSound) FXSound.play('chime');
     },
     onWrong: function() {
       if (!window.FXCore || !FXCore.isActive('capitals')) return;
       var s = FXCore.getSize();
-      FXCore.emit(s.w * 0.5, s.h * 0.55, 4, {
-        spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
-        color: 'rgba(100,100,120,0.4)'
+      // Grey turbulence motes
+      FXCore.emit(s.w * 0.5, s.h * 0.55, 5, {
+        spread: 2.5, rise: -0.2, gravity: 0.025, decay: 0.012, size: 2.5,
+        color: 'rgba(100,110,130,0.5)'
       });
+      FXCore.emit(s.w * 0.5, s.h * 0.52, 3, {
+        spread: 1.5, rise: -0.1, gravity: 0.015, decay: 0.02, size: 1.5,
+        color: 'rgba(140,150,170,0.3)'
+      });
+      if (FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
       targetProgress = 1;
       if (!window.FXCore || !FXCore.isActive('capitals')) return;
       var s = FXCore.getSize();
-      for (var i = 0; i < 5; i++) {
-        FXCore.emit(s.w * (0.2 + i * 0.15), s.h * 0.4, 6, {
-          spread: 7, rise: 3, decay: 0.01, size: 4,
-          color: i % 2 === 0 ? 'rgba(48,96,192,0.7)' : 'rgba(200,220,240,0.6)',
-          shape: 'star'
+      // Runway lights celebration — blue and amber alternating
+      for (var i = 0; i < 8; i++) {
+        var isBlue = i % 2 === 0;
+        FXCore.emit(s.w * (0.1 + i * 0.1), s.h * (0.35 + (i % 3) * 0.05), 7, {
+          spread: 7, rise: 3.5, decay: 0.008, size: 4,
+          color: isBlue ? 'rgba(48,120,220,0.75)' : 'rgba(255,180,50,0.7)',
+          shape: isBlue ? 'star' : 'diamond'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['chime','correct','complete'], 100);
+      // Central white takeoff burst
+      FXCore.emit(s.w * 0.5, s.h * 0.4, 15, {
+        spread: 10, rise: 5, decay: 0.007, size: 4.5,
+        color: 'rgba(255,255,255,0.8)', shape: 'star', endColor: 'rgba(200,220,255,0)'
+      });
+      // Contrail streaks
+      FXCore.emit(s.w * 0.5, s.h * 0.45, 10, {
+        spread: 14, rise: 2, decay: 0.01, size: 2,
+        color: 'rgba(220,230,245,0.5)'
+      });
+      if (window.FXSound) FXSound.playSequence(['chime','correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };
