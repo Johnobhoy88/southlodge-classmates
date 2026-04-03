@@ -328,14 +328,11 @@ test('Platform runtime present', () => {
 console.log('\nPremium Game Components:');
 
 // FX engines present
-test('LiteracyFX engine present', () => {
-  assert(html.includes('ClassmatesLiteracyFX'), 'Missing ClassmatesLiteracyFX');
+test('FXCore engine present', () => {
+  assert(html.includes('window.FXCore'), 'Missing FXCore');
 });
-test('NumeracyFX engine present', () => {
-  assert(html.includes('ClassmatesNumeracyFX'), 'Missing ClassmatesNumeracyFX');
-});
-test('GeographyFX engine present', () => {
-  assert(html.includes('ClassmatesGeographyFX'), 'Missing ClassmatesGeographyFX');
+test('FXSound engine present', () => {
+  assert(html.includes('window.FXSound'), 'Missing FXSound');
 });
 test('LandingFX engine present', () => {
   assert(html.includes('ClassmatesLandingFX'), 'Missing ClassmatesLandingFX');
@@ -360,14 +357,11 @@ CANVAS_GAMES.forEach(g => {
 });
 
 // FX mode switching
-test('LiteracyFX setMode present', () => {
-  assert(html.includes('ClassmatesLiteracyFX.setMode'), 'Missing LiteracyFX setMode');
+test('FXCore.register present', () => {
+  assert(html.includes('FXCore.register'), 'Missing FXCore.register');
 });
-test('NumeracyFX setMode present', () => {
-  assert(html.includes('ClassmatesNumeracyFX.setMode'), 'Missing NumeracyFX setMode');
-});
-test('GeographyFX setMode present', () => {
-  assert(html.includes('ClassmatesGeographyFX.setMode'), 'Missing GeographyFX setMode');
+test('FXCore.activate present', () => {
+  assert(html.includes('FXCore.activate'), 'Missing FXCore.activate');
 });
 
 // Game theme classes

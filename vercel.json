@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run build && cp dist/classmates.html dist/index.html",
+  "outputDirectory": "dist",
+  "installCommand": "npm install"
+}

@@ -14,7 +14,8 @@
     "test:all": "node scripts/smoke-test.mjs && node scripts/logic-test.mjs && npx playwright test --reporter=list"
   },
   "dependencies": {
-    "three": "0.128.0"
+    "three": "0.128.0",
+    "zzfx": "^1.3.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
