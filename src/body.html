@@ -326,15 +326,20 @@
     <div class="teacher-page" id="tp-pupils">
       <div class="teacher-section">
         <h3>Add Pupils</h3>
-        <div class="teacher-input-row">
-          <input class="teacher-input" id="newPupilInput" placeholder="Enter pupil name..." onkeydown="if(event.key==='Enter')addPupil()" title="Type a pupil's first name and press Enter or click Add">
+        <div class="pupil-add-row">
+          <input class="teacher-input pupil-add-input" id="newPupilInput" placeholder="Pupil name" onkeydown="if(event.key==='Enter')addPupil()" title="Type a pupil's first name and press Enter or click Add">
           <button class="teacher-btn teal" onclick="addPupil()" title="Add this pupil to your class list">Add</button>
         </div>
-        <button class="teacher-btn grey" style="font-size:0.75rem;margin-bottom:12px" onclick="bulkAddPupils()" title="Paste a list of names (one per line) to add multiple pupils at once">Bulk Add (paste list)</button>
-        <div style="font-size:0.75rem;color:#86868b;margin-bottom:8px" id="pupilCount"></div>
+        <div class="pupil-add-secondary">
+          <button class="teacher-btn grey" onclick="bulkAddPupils()" title="Paste a list of names (one per line) to add multiple pupils at once">Bulk Add</button>
+          <span class="pupil-count-label" id="pupilCount"></span>
+        </div>
       </div>
       <div class="teacher-section">
-        <h3>Class List</h3>
+        <div class="pupil-list-header">
+          <h3 style="margin:0;padding:0;border:0">Class List</h3>
+          <input class="pupil-search" id="pupilSearch" placeholder="Search pupils..." oninput="filterPupilList(this.value)" title="Filter the class list by name">
+        </div>
         <div id="pupilList"></div>
       </div>
     </div>
