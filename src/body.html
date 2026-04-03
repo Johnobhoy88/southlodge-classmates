@@ -254,31 +254,31 @@
 <div id="teacher" class="screen teacher-screen">
   <div class="teacher-topbar">
     <h2>Classmates</h2>
-    <span class="school-name" id="schoolName" onclick="editSchoolName()">South Lodge Primary</span>
-    <button class="teacher-exit" onclick="showScreen('landing')">&#x2190; Sign Out</button>
+    <span class="school-name" id="schoolName" onclick="editSchoolName()" title="Click to edit your school name">South Lodge Primary</span>
+    <button class="teacher-exit" onclick="showScreen('landing')" title="Return to the main landing page">&#x2190; Sign Out</button>
   </div>
   <div class="teacher-tabs">
-    <button class="teacher-tab active" onclick="showTeacherTab('overview',this)">Overview</button>
-    <button class="teacher-tab" onclick="showTeacherTab('pupils',this)">Pupils</button>
-    <button class="teacher-tab" onclick="showTeacherTab('progress',this)">Progress</button>
-    <button class="teacher-tab" onclick="showTeacherTab('assign',this)">Assign</button>
-    <button class="teacher-tab" onclick="showTeacherTab('tools',this)">Tools</button>
-    <button class="teacher-tab" onclick="showTeacherTab('settings',this)">Settings</button>
+    <button class="teacher-tab active" onclick="showTeacherTab('overview',this)" title="Class summary, quick actions, and at-a-glance stats">Overview</button>
+    <button class="teacher-tab" onclick="showTeacherTab('pupils',this)" title="Add, remove, and manage your class list">Pupils</button>
+    <button class="teacher-tab" onclick="showTeacherTab('progress',this)" title="Track mastery, stars, streaks, and per-pupil progress">Progress</button>
+    <button class="teacher-tab" onclick="showTeacherTab('assign',this)" title="Set class assignments and spelling missions">Assign</button>
+    <button class="teacher-tab" onclick="showTeacherTab('tools',this)" title="Whiteboard, worksheets, quizzes, and reports">Tools</button>
+    <button class="teacher-tab" onclick="showTeacherTab('settings',this)" title="School details, password, backups, and data management">Settings</button>
   </div>
   <div class="teacher-body">
 
     <!-- OVERVIEW TAB -->
     <div class="teacher-page active" id="tp-overview">
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px" id="classSummary"></div>
+      <div id="classSummary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px"></div>
       <div class="teacher-section">
         <h3>Quick Actions</h3>
         <div class="actions-row">
-          <button class="teacher-btn teal" onclick="launchWhiteboard()">&#x1F4FA; Whole-Class Mode</button>
-          <button class="teacher-btn teal" onclick="generateWorksheet()">&#x1F4C4; Generate Worksheet</button>
-          <button class="teacher-btn outline" onclick="showTeacherTab('progress',document.querySelectorAll('.teacher-tab')[2])">&#x1F4CA; View Progress</button>
+          <button class="teacher-btn teal" onclick="launchWhiteboard()" title="Project maths questions on the classroom screen for whole-class practice">Whole-Class Mode</button>
+          <button class="teacher-btn teal" onclick="generateWorksheet()" title="Generate a printable maths and spelling worksheet with answer key">Generate Worksheet</button>
+          <button class="teacher-btn outline" onclick="showTeacherTab('progress',document.querySelectorAll('.teacher-tab')[2])" title="Jump to the full class progress table with sortable columns">View Progress</button>
         </div>
-        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <select id="quickAssignGame" class="teacher-input" style="width:auto;min-width:140px;font-size:0.8rem;padding:8px">
+        <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <select id="quickAssignGame" class="teacher-input" style="width:auto;min-width:160px;font-size:0.8rem;padding:8px" title="Choose a game to assign to the whole class">
             <option value="">Set assignment...</option>
             <option value="spelling">Spelling</option>
             <option value="maths">Maths</option>
@@ -288,23 +288,23 @@
             <option value="daily">Daily Challenge</option>
             <option value="phonics">Phonics</option>
           </select>
-          <button class="teacher-btn teal" style="font-size:0.8rem" onclick="quickAssign()">Assign</button>
-          <span id="quickAssignStatus" style="font-size:0.75rem;color:#636e72"></span>
+          <button class="teacher-btn teal" style="font-size:0.8rem" onclick="quickAssign()" title="Set this as the current class assignment — appears on every pupil's home screen">Assign</button>
+          <span id="quickAssignStatus" style="font-size:0.75rem;color:#86868b"></span>
         </div>
-        <div style="margin-top:12px">
-          <button class="teacher-btn outline" style="font-size:0.8rem" onclick="generateInterventionPlaylist()">&#x1F3AF; Generate Intervention Playlist</button>
+        <div style="margin-top:14px">
+          <button class="teacher-btn outline" style="font-size:0.8rem" onclick="generateInterventionPlaylist()" title="Analyse mastery data and suggest targeted activities for pupils who need extra support">Generate Intervention Playlist</button>
           <div id="interventionPlaylist" style="display:none;margin-top:10px"></div>
         </div>
       </div>
       <div class="teacher-section">
         <h3>Curriculum Alignment</h3>
-        <div style="font-size:0.85rem;color:#4a5568;line-height:1.8">
+        <div style="font-size:0.85rem;color:#1d1d1f;line-height:1.8">
           <div style="display:grid;grid-template-columns:1fr;gap:12px">
-            <div style="background:#f8fafa;border-left:4px solid #ffd200;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 1 — Early (P1, Ages 5-6)</strong><br>Short words, counting to 20, simple addition/subtraction, basic reading</div>
-            <div style="background:#f8fafa;border-left:4px solid #0984e3;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 2 — First (P2-P4, Ages 6-8)</strong><br>Longer words, place value, multiplication introduction, paragraph comprehension</div>
-            <div style="background:#f8fafa;border-left:4px solid #e17055;padding:12px 16px;border-radius:0 8px 8px 0"><strong style="color:#1a2332">Level 3 — Second (P5-P7, Ages 8-10)</strong><br>Complex spelling, all four operations, fractions, rich comprehension texts</div>
+            <div class="cfe-level-card" title="P1 pupils (ages 5-6) — foundational literacy and numeracy skills"><div class="cfe-dot" style="background:#f5a623"></div><strong>Level 1 — Early (P1, Ages 5-6)</strong><br><span style="color:#86868b">Short words, counting to 20, simple addition/subtraction, basic reading</span></div>
+            <div class="cfe-level-card" title="P2-P4 pupils (ages 6-8) — building fluency and comprehension"><div class="cfe-dot" style="background:#007aff"></div><strong>Level 2 — First (P2-P4, Ages 6-8)</strong><br><span style="color:#86868b">Longer words, place value, multiplication introduction, paragraph comprehension</span></div>
+            <div class="cfe-level-card" title="P5-P7 pupils (ages 8-10) — complex problem-solving and rich texts"><div class="cfe-dot" style="background:#ff6b4a"></div><strong>Level 3 — Second (P5-P7, Ages 8-10)</strong><br><span style="color:#86868b">Complex spelling, all four operations, fractions, rich comprehension texts</span></div>
           </div>
-          <p style="margin-top:12px;font-size:0.8rem;color:#8899aa">Aligned to Scottish Curriculum for Excellence — Literacy &amp; English and Numeracy &amp; Mathematics.</p>
+          <p style="margin-top:14px;font-size:0.78rem;color:#86868b">Aligned to Scottish Curriculum for Excellence — Literacy &amp; English and Numeracy &amp; Mathematics.</p>
         </div>
       </div>
     </div>
@@ -314,11 +314,11 @@
       <div class="teacher-section">
         <h3>Add Pupils</h3>
         <div class="teacher-input-row">
-          <input class="teacher-input" id="newPupilInput" placeholder="Enter pupil name..." onkeydown="if(event.key==='Enter')addPupil()">
-          <button class="teacher-btn teal" onclick="addPupil()">Add</button>
+          <input class="teacher-input" id="newPupilInput" placeholder="Enter pupil name..." onkeydown="if(event.key==='Enter')addPupil()" title="Type a pupil's first name and press Enter or click Add">
+          <button class="teacher-btn teal" onclick="addPupil()" title="Add this pupil to your class list">Add</button>
         </div>
-        <button class="teacher-btn grey" style="font-size:0.75rem;margin-bottom:12px" onclick="bulkAddPupils()">&#x1F4CB; Bulk Add (paste list)</button>
-        <div style="font-size:0.75rem;color:#8899aa;margin-bottom:8px" id="pupilCount"></div>
+        <button class="teacher-btn grey" style="font-size:0.75rem;margin-bottom:12px" onclick="bulkAddPupils()" title="Paste a list of names (one per line) to add multiple pupils at once">Bulk Add (paste list)</button>
+        <div style="font-size:0.75rem;color:#86868b;margin-bottom:8px" id="pupilCount"></div>
       </div>
       <div class="teacher-section">
         <h3>Class List</h3>
@@ -330,15 +330,15 @@
     <div class="teacher-page" id="tp-progress">
       <div class="teacher-section">
         <h3>Class Progress Table</h3>
-        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:8px">Click any column header to sort. Click a pupil name to see detail. Scroll horizontally on mobile.</p>
+        <p style="font-size:0.78rem;color:#86868b;margin-bottom:10px">Click any column header to sort. Click a pupil name to see their full detail. Scroll horizontally on mobile.</p>
         <div id="progressArea"></div>
       </div>
       <div class="teacher-section" id="pupilDetailSection" style="display:none">
         <h3 id="pupilDetailTitle">Pupil Detail</h3>
         <div id="pupilDetailContent"></div>
-        <div style="margin-top:12px">
-          <button class="teacher-btn teal" onclick="printPupilReport()">Print Report for Parents</button>
-          <button class="teacher-btn grey" onclick="document.getElementById('pupilDetailSection').style.display='none'">Close</button>
+        <div style="margin-top:14px;display:flex;gap:10px">
+          <button class="teacher-btn teal" onclick="printPupilReport()" title="Generate a print-friendly report suitable for sharing with parents">Print Report for Parents</button>
+          <button class="teacher-btn grey" onclick="document.getElementById('pupilDetailSection').style.display='none'" title="Close this detail panel">Close</button>
         </div>
       </div>
     </div>
@@ -347,41 +347,43 @@
     <div class="teacher-page" id="tp-assign">
       <div class="teacher-section">
         <h3>Assign Southlodge Racers</h3>
-        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:12px">Set the flagship spelling mission for the class. It appears on each pupil home screen and drives Southlodge Racers mastery reporting.</p>
-        <div style="margin-bottom:12px">
-          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Activity:</label>
+        <p style="font-size:0.78rem;color:#86868b;margin-bottom:14px">Set the flagship spelling mission for the class. It appears on each pupil home screen and drives Southlodge Racers mastery reporting.</p>
+        <div class="teacher-form-group">
+          <label class="teacher-label" title="Currently only Southlodge Racers is available as a class-wide assignment">Activity</label>
           <select class="teacher-input" id="assignActivity" style="width:100%" disabled>
             <option value="southlodgeracers">Southlodge Racers</option>
           </select>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Stage Band:</label>
+        <div class="teacher-form-group">
+          <label class="teacher-label" title="Choose the CfE level — this determines the difficulty and spelling pack options">Stage Band</label>
           <select class="teacher-input" id="assignLevel" style="width:100%" onchange="syncSouthlodgeAssignmentForm(this.value)">
             <option value="Early">Early</option>
             <option value="First">First</option>
             <option value="Second">Second</option>
           </select>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Spelling Pack:</label>
+        <div class="teacher-form-group">
+          <label class="teacher-label" title="Select a specific spelling pack — each pack targets different CfE outcomes">Spelling Pack</label>
           <select class="teacher-input" id="assignPackId" style="width:100%" onchange="syncSouthlodgeAssignmentForm()"></select>
-          <div id="assignPackMeta" style="margin-top:6px;font-size:0.78rem;color:#667788"></div>
+          <div id="assignPackMeta" style="margin-top:6px;font-size:0.76rem;color:#86868b"></div>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Mission Length:</label>
+        <div class="teacher-form-group">
+          <label class="teacher-label" title="How many gates (rounds) the pupils must complete — longer missions cover more words">Mission Length</label>
           <select class="teacher-input" id="assignMissionLength" style="width:100%">
             <option value="5">5 gates</option>
             <option value="7">7 gates</option>
             <option value="9">9 gates</option>
           </select>
         </div>
-        <div style="margin-bottom:12px">
-          <label style="font-size:0.8rem;font-weight:700;color:#4a5568;display:block;margin-bottom:4px">Message to pupils (optional):</label>
+        <div class="teacher-form-group">
+          <label class="teacher-label" title="Optional text shown on the pupil home screen alongside the assignment">Message to pupils (optional)</label>
           <input class="teacher-input" id="assignMessage" placeholder="e.g. Race the vowel teams route today.">
         </div>
-        <button class="teacher-btn teal" onclick="saveAssignment()">Set Assignment</button>
-        <button class="teacher-btn grey" onclick="clearAssignment()">Clear Assignment</button>
-        <div id="assignStatus" style="margin-top:8px;font-size:0.8rem;color:#8899aa"></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="teacher-btn teal" onclick="saveAssignment()" title="Save and publish this assignment to all pupils">Set Assignment</button>
+          <button class="teacher-btn grey" onclick="clearAssignment()" title="Remove the current assignment from all pupils' home screens">Clear Assignment</button>
+        </div>
+        <div id="assignStatus" style="margin-top:10px;font-size:0.78rem;color:#86868b"></div>
       </div>
     </div>
 
@@ -389,30 +391,39 @@
     <div class="teacher-page" id="tp-tools">
       <div class="teacher-section">
         <h3>Classroom Tools</h3>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div style="background:#f8fafa;border-radius:12px;padding:20px;text-align:center;cursor:pointer;border:1px solid #e4e8ec;transition:all 0.15s" onclick="launchWhiteboard()" onmouseover="this.style.borderColor='#11998e'" onmouseout="this.style.borderColor='#e4e8ec'">
-            <div style="font-size:2rem;margin-bottom:8px">&#x1F4FA;</div>
-            <div style="font-weight:800;color:#1a2332;font-size:0.9rem">Whole-Class Mode</div>
-            <div style="font-size:0.75rem;color:#8899aa;margin-top:4px">Project questions on the board</div>
+        <div class="tool-grid">
+          <div class="tool-card" onclick="launchWhiteboard()" title="Launch a full-screen view with maths questions — perfect for interactive whiteboard use">
+            <div class="tool-card-icon">&#x1F4FA;</div>
+            <div class="tool-card-title">Whole-Class Mode</div>
+            <div class="tool-card-desc">Project questions on the board</div>
           </div>
-          <div style="background:#f8fafa;border-radius:12px;padding:20px;text-align:center;cursor:pointer;border:1px solid #e4e8ec;transition:all 0.15s" onclick="generateWorksheet()" onmouseover="this.style.borderColor='#11998e'" onmouseout="this.style.borderColor='#e4e8ec'">
-            <div style="font-size:2rem;margin-bottom:8px">&#x1F4C4;</div>
-            <div style="font-weight:800;color:#1a2332;font-size:0.9rem">Print Worksheet</div>
-            <div style="font-size:0.75rem;color:#8899aa;margin-top:4px">Generate maths + spelling sheet</div>
+          <div class="tool-card" onclick="generateWorksheet()" title="Creates a printable PDF-style worksheet with 20 maths questions and 10 spelling words, plus answer key">
+            <div class="tool-card-icon">&#x1F4C4;</div>
+            <div class="tool-card-title">Print Worksheet</div>
+            <div class="tool-card-desc">Generate maths + spelling sheet</div>
           </div>
         </div>
       </div>
       <div class="teacher-section">
         <h3>Custom Quiz Builder</h3>
-        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:12px">Create questions for pupils. They appear as "Teacher's Quiz" in the Challenges section.</p>
-        <div class="teacher-input-row" style="flex-wrap:wrap"><input class="teacher-input" id="cqQuestion" placeholder="Question"><input class="teacher-input" id="cqA" placeholder="Option A (correct)"><input class="teacher-input" id="cqB" placeholder="Option B"><input class="teacher-input" id="cqC" placeholder="Option C"><input class="teacher-input" id="cqD" placeholder="Option D"><button class="teacher-btn teal" onclick="addCustomQ()">Add Question</button></div>
-        <div id="cqList" style="margin-top:8px"></div>
+        <p style="font-size:0.78rem;color:#86868b;margin-bottom:14px">Create questions for pupils. They appear as "Teacher's Quiz" in the Challenges section.</p>
+        <div class="quiz-builder-form">
+          <input class="teacher-input" id="cqQuestion" placeholder="Question" title="Enter the quiz question text">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+            <input class="teacher-input" id="cqA" placeholder="Option A (correct)" title="This is the correct answer — it will be shuffled when shown to pupils">
+            <input class="teacher-input" id="cqB" placeholder="Option B" title="Incorrect option B">
+            <input class="teacher-input" id="cqC" placeholder="Option C" title="Incorrect option C">
+            <input class="teacher-input" id="cqD" placeholder="Option D" title="Incorrect option D">
+          </div>
+          <div style="margin-top:10px"><button class="teacher-btn teal" onclick="addCustomQ()" title="Add this question to the custom quiz bank">Add Question</button></div>
+        </div>
+        <div id="cqList" style="margin-top:12px"></div>
       </div>
       <div class="teacher-section">
         <h3>Reports &amp; Export</h3>
         <div class="actions-row">
-          <button class="teacher-btn teal" onclick="printReport()">&#x1F5A8; Print Progress Report</button>
-          <button class="teacher-btn outline" onclick="exportCSV()">&#x1F4E5; Export as CSV</button>
+          <button class="teacher-btn teal" onclick="printReport()" title="Open a print-friendly class report showing all pupils' progress, mastery, and recommended next steps">Print Progress Report</button>
+          <button class="teacher-btn outline" onclick="exportCSV()" title="Download all progress data as a CSV spreadsheet — compatible with Excel and Google Sheets">Export as CSV</button>
         </div>
       </div>
     </div>
@@ -421,59 +432,59 @@
     <div class="teacher-page" id="tp-settings">
       <div class="teacher-section">
         <h3>School Details</h3>
-        <div class="teacher-input-row"><input class="teacher-input" id="schoolNameInput" placeholder="School name"><button class="teacher-btn teal" onclick="saveSchoolName()">Save</button></div>
+        <div class="teacher-input-row"><input class="teacher-input" id="schoolNameInput" placeholder="School name" title="This name appears in reports and on the header bar"><button class="teacher-btn teal" onclick="saveSchoolName()" title="Save the school name">Save</button></div>
       </div>
       <div class="teacher-section">
         <h3>Change Staff Password</h3>
         <form onsubmit="changePassword();return false">
           <input type="text" value="staff" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
           <div class="teacher-input-row" style="flex-wrap:wrap">
-            <input class="teacher-input" id="oldPwd" type="password" placeholder="Current password" autocomplete="current-password">
-            <input class="teacher-input" id="newPwd" type="password" placeholder="New password" autocomplete="new-password">
-            <button type="submit" class="teacher-btn teal">Change</button>
+            <input class="teacher-input" id="oldPwd" type="password" placeholder="Current password" autocomplete="current-password" title="Enter the current staff password">
+            <input class="teacher-input" id="newPwd" type="password" placeholder="New password" autocomplete="new-password" title="Choose a new password — share it only with staff">
+            <button type="submit" class="teacher-btn teal" title="Update the staff password">Change</button>
           </div>
         </form>
-        <div id="pwdStatus" style="font-size:0.8rem;margin-top:4px;min-height:20px"></div>
+        <div id="pwdStatus" style="font-size:0.78rem;margin-top:6px;min-height:20px"></div>
       </div>
       <div class="teacher-section">
         <h3>Session Timer</h3>
-        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:8px">Set a practice timer. A notification shows when time is up.</p>
+        <p style="font-size:0.78rem;color:#86868b;margin-bottom:10px">Set a practice timer. A notification shows when time is up.</p>
         <div class="actions-row">
-          <button class="teacher-btn teal" onclick="setSessionTimer(5)">5 min</button>
-          <button class="teacher-btn teal" onclick="setSessionTimer(10)">10 min</button>
-          <button class="teacher-btn teal" onclick="setSessionTimer(15)">15 min</button>
-          <button class="teacher-btn grey" onclick="clearSessionTimer()">Clear</button>
+          <button class="teacher-btn teal" onclick="setSessionTimer(5)" title="Start a 5-minute practice session timer">5 min</button>
+          <button class="teacher-btn teal" onclick="setSessionTimer(10)" title="Start a 10-minute practice session timer">10 min</button>
+          <button class="teacher-btn teal" onclick="setSessionTimer(15)" title="Start a 15-minute practice session timer">15 min</button>
+          <button class="teacher-btn grey" onclick="clearSessionTimer()" title="Cancel the current timer">Clear</button>
         </div>
-        <div id="timerStatus" style="font-size:0.8rem;margin-top:8px;color:#8899aa"></div>
+        <div id="timerStatus" style="font-size:0.78rem;margin-top:10px;color:#86868b"></div>
       </div>
       <div class="teacher-section">
         <h3>Backup &amp; Restore</h3>
-        <p style="font-size:0.8rem;color:#8899aa;margin-bottom:8px">Download one backup file for this device. Importing a backup replaces the current device data on this browser.</p>
+        <p style="font-size:0.78rem;color:#86868b;margin-bottom:10px">Download one backup file for this device. Importing a backup replaces the current device data on this browser.</p>
         <div class="actions-row">
-          <button class="teacher-btn teal" onclick="exportAppBackup()">&#x1F4E6; Download Backup</button>
-          <button class="teacher-btn outline" onclick="triggerBackupImport()">&#x1F4E4; Import Backup</button>
+          <button class="teacher-btn teal" onclick="exportAppBackup()" title="Download a JSON backup of all pupils, progress, and settings on this device">Download Backup</button>
+          <button class="teacher-btn outline" onclick="triggerBackupImport()" title="Import a previously downloaded backup file — this will replace all current data">Import Backup</button>
         </div>
         <input id="backupFileInput" type="file" accept=".json,application/json" style="display:none" onchange="handleBackupImport(event)">
-        <div id="backupSummary" style="font-size:0.8rem;color:#4a5568;margin-top:10px"></div>
-        <div id="backupStatus" style="font-size:0.8rem;min-height:20px;margin-top:6px"></div>
+        <div id="backupSummary" style="font-size:0.78rem;color:#1d1d1f;margin-top:12px"></div>
+        <div id="backupStatus" style="font-size:0.78rem;min-height:20px;margin-top:6px"></div>
       </div>
       <div class="teacher-section">
         <h3>Data Management</h3>
-        <p style="font-size:0.85rem;color:#4a5568;margin-bottom:12px">Caution: these actions cannot be undone.</p>
+        <p style="font-size:0.82rem;color:#86868b;margin-bottom:14px">Caution: these actions cannot be undone.</p>
         <div class="actions-row">
-          <button class="teacher-btn red" onclick="resetAllData()">&#x26A0; Reset All Data</button>
+          <button class="teacher-btn red" onclick="resetAllData()" title="Permanently delete all pupils, progress data, and settings from this device">Reset All Data</button>
         </div>
       </div>
       <div class="teacher-section">
         <h3>About Classmates</h3>
-        <div style="font-size:0.85rem;color:#4a5568;line-height:1.7">
+        <div style="font-size:0.82rem;color:#1d1d1f;line-height:1.8">
           <p><strong>Version:</strong> 1.1</p>
           <p><strong>Content:</strong> 34 learning modes, 18 stories, 230+ spelling words, 31 achievements</p>
           <p><strong>Subjects:</strong> Literacy, Numeracy, Geography, Challenges</p>
           <p><strong>Curriculum:</strong> Scottish Curriculum for Excellence (Early, First, Second Level)</p>
           <p><strong>Features:</strong> Adaptive difficulty, sound effects, per-pupil tracking, avatar builder, certificates, worksheets, whole-class mode, custom quiz builder, class leaderboard</p>
           <p><strong>Data:</strong> All data stored locally on this device. No internet required.</p>
-          <p style="margin-top:8px;color:#8899aa">Built for South Lodge Primary School.</p>
+          <p style="margin-top:10px;color:#86868b">Built for South Lodge Primary School.</p>
         </div>
       </div>
     </div>

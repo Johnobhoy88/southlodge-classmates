@@ -414,51 +414,51 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .pupil-name-bar strong{color:#38ef7d}
 
 /* ===== TEACHER DASHBOARD ===== */
-.teacher-screen{background:#f1f3f5;font-family:'Nunito','Trebuchet MS',sans-serif}
-.teacher-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:#1a2332;color:white;position:sticky;top:0;z-index:10}
-.teacher-topbar h2{font-size:0.95rem;color:white;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800}
-.teacher-topbar .school-name{font-size:0.75rem;color:#8899aa;cursor:pointer;text-align:center}
-.teacher-topbar .school-name:hover{color:white;text-decoration:underline}
-.teacher-exit{padding:6px 14px;border:1px solid #3a4a5c;border-radius:8px;background:transparent;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.75rem;color:#8899aa;cursor:pointer;transition:all 0.15s}
-.teacher-exit:hover{background:#2a3a4c;color:white}
-.teacher-tabs{display:flex;background:#1a2332;padding:0 20px;gap:0;border-bottom:2px solid #11998e}
-.teacher-tab{padding:10px 20px;color:#667788;font-weight:700;font-size:0.8rem;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Nunito','Trebuchet MS',sans-serif}
-.teacher-tab:hover{color:#aabbcc}
-.teacher-tab.active{color:white;border-bottom-color:#11998e}
-.teacher-body{padding:20px;max-width:800px;margin:0 auto}
+.teacher-screen{background:#f5f5f7;font-family:'Nunito','Trebuchet MS',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+.teacher-topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:rgba(255,255,255,0.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);color:#1d1d1f;position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(0,0,0,0.08)}
+.teacher-topbar h2{font-size:1.05rem;color:#1d1d1f;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:900;letter-spacing:-0.2px}
+.teacher-topbar .school-name{font-size:0.78rem;color:#86868b;cursor:pointer;text-align:center;font-weight:600;letter-spacing:0.2px;transition:color 0.2s}
+.teacher-topbar .school-name:hover{color:#1d1d1f;text-decoration:none}
+.teacher-exit{padding:6px 16px;border:none;border-radius:980px;background:#e8e8ed;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.72rem;color:#1d1d1f;cursor:pointer;transition:all 0.2s}
+.teacher-exit:hover{background:#d2d2d7}
+.teacher-tabs{display:flex;background:#fff;padding:0 32px;gap:0;border-bottom:1px solid rgba(0,0,0,0.06)}
+.teacher-tab{padding:13px 22px;color:#86868b;font-weight:600;font-size:0.8rem;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Nunito','Trebuchet MS',sans-serif;letter-spacing:0.1px}
+.teacher-tab:hover{color:#1d1d1f}
+.teacher-tab.active{color:#1d1d1f;border-bottom-color:#11998e;font-weight:700}
+.teacher-body{padding:28px 32px;max-width:980px;margin:0 auto}
 .teacher-page{display:none}
 .teacher-page.active{display:block}
-.teacher-section{background:white;border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #e4e8ec;box-shadow:none}
-.teacher-section h3{font-size:0.9rem;color:#1a2332;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #e4e8ec;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
+.teacher-section{background:#fff;border-radius:14px;padding:24px;margin-bottom:18px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.teacher-section h3{font-size:0.82rem;color:#1d1d1f;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(0,0,0,0.06);font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;font-size:0.72rem}
 .teacher-input-row{display:flex;gap:8px;margin-bottom:12px}
-.teacher-input{flex:1;padding:10px 14px;border:1px solid #d0d5dd;border-radius:8px;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.85rem;outline:none;background:white}
-.teacher-input:focus{border-color:#11998e;box-shadow:0 0 0 3px rgba(17,153,142,0.1)}
-.teacher-btn{padding:var(--space-sm) var(--space-md);border:none;border-radius:var(--radius-sm);font-family:var(--font-body);font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.15s;min-height:var(--touch-min);display:inline-flex;align-items:center;justify-content:center}
-.teacher-btn:hover{opacity:0.9}
+.teacher-input{flex:1;padding:10px 14px;border:1px solid #d2d2d7;border-radius:10px;font-family:'Nunito','Trebuchet MS',sans-serif;font-size:0.85rem;outline:none;background:#f5f5f7;transition:all 0.2s}
+.teacher-input:focus{border-color:#11998e;box-shadow:0 0 0 4px rgba(17,153,142,0.12);background:#fff}
+.teacher-btn{padding:9px 20px;border:none;border-radius:980px;font-family:'Nunito','Trebuchet MS',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.2s;min-height:var(--touch-min);display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.teacher-btn:hover{filter:brightness(0.92)}
 .teacher-btn:active{transform:scale(0.97)}
-.teacher-btn.teal{background:var(--color-primary);color:var(--color-white)}
-.teacher-btn.grey{background:#e4e8ec;color:var(--color-text-dark)}
-.teacher-btn.red{background:var(--color-error);color:var(--color-white)}
-.teacher-btn.outline{background:var(--color-white);color:var(--color-primary);border:1px solid var(--color-primary)}
-.pupil-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #f0f0f0;border-radius:6px;transition:background 0.1s}
-.pupil-row:hover{background:#f8fafa}
+.teacher-btn.teal{background:#11998e;color:#fff}
+.teacher-btn.grey{background:#e8e8ed;color:#1d1d1f}
+.teacher-btn.red{background:#ff3b30;color:#fff}
+.teacher-btn.outline{background:transparent;color:#11998e;border:1.5px solid #11998e}
+.pupil-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(0,0,0,0.04);border-radius:10px;transition:background 0.15s}
+.pupil-row:hover{background:rgba(0,0,0,0.02)}
 .pupil-row:last-child{border-bottom:none}
-.pupil-row .pupil-name{font-weight:700;color:#1a2332;font-size:0.9rem}
-.progress-table{width:100%;border-collapse:collapse;font-size:0.75rem}
-.progress-table th{background:#1a2332;color:white;padding:10px 8px;text-align:left;cursor:pointer;font-weight:700;white-space:nowrap;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.3px}
-.progress-table th:hover{background:#2a3a4c}
-.progress-table td{padding:8px;border-bottom:1px solid #f0f0f0;color:#4a5568}
-.progress-table tr:nth-child(even){background:#f8f9fa}
-.progress-table tr:hover{background:#e8f5f3}
+.pupil-row .pupil-name{font-weight:700;color:#1d1d1f;font-size:0.88rem}
+.progress-table{width:100%;border-collapse:collapse;font-size:0.78rem}
+.progress-table th{background:#f5f5f7;color:#1d1d1f;padding:11px 10px;text-align:left;cursor:pointer;font-weight:700;white-space:nowrap;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.4px;border-bottom:1px solid rgba(0,0,0,0.08)}
+.progress-table th:hover{background:#e8e8ed}
+.progress-table td{padding:10px;border-bottom:1px solid rgba(0,0,0,0.04);color:#1d1d1f}
+.progress-table tr:nth-child(even){background:rgba(0,0,0,0.015)}
+.progress-table tr:hover{background:rgba(17,153,142,0.04)}
 .progress-table-wrap{overflow-x:auto;margin:12px 0;border-radius:8px;border:1px solid #e4e8ec}
 .actions-row{display:flex;gap:8px;flex-wrap:wrap}
 .collapse-header{cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:700;color:#4a5568;padding:12px 0;font-size:0.85rem}
 .collapse-header:hover{color:#11998e}
 .collapse-content{display:none;padding:12px 0;font-size:0.85rem;color:#4a5568;line-height:1.7}
 .collapse-content.open{display:block}
-.stat-card{background:white;border:1px solid #e4e8ec;border-radius:12px;padding:16px;text-align:center;flex:1;min-width:120px}
-.stat-card .sc-val{font-size:1.8rem;font-weight:800;color:#1a2332;display:block}
-.stat-card .sc-label{font-size:0.7rem;color:#8899aa;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.stat-card{background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;padding:18px;text-align:center;flex:1;min-width:120px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.stat-card .sc-val{font-size:1.8rem;font-weight:800;color:#1d1d1f;display:block}
+.stat-card .sc-label{font-size:0.68rem;color:#86868b;font-weight:600;text-transform:uppercase;letter-spacing:0.6px}
 .summary-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
 .summary-card{border-radius:16px;padding:14px 16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.38)}
 .summary-value{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:1.55rem;line-height:1.05}
@@ -486,6 +486,22 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .card-daily .card-icon{background:linear-gradient(135deg,#6c5ce7,#a29bfe)}
 .card-daily .card-icon{margin-bottom:0}
 .card-daily .card-info{text-align:left}
+
+/* ===== TEACHER DASHBOARD COMPONENTS ===== */
+.teacher-label{font-size:0.78rem;font-weight:700;color:#1d1d1f;display:block;margin-bottom:5px;letter-spacing:0.2px}
+.teacher-form-group{margin-bottom:16px}
+.cfe-level-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:rgba(0,0,0,0.02);border-radius:12px;transition:background 0.15s}
+.cfe-level-card:hover{background:rgba(0,0,0,0.04)}
+.cfe-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:7px}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tool-card{background:#f5f5f7;border-radius:14px;padding:24px;text-align:center;cursor:pointer;border:1px solid transparent;transition:all 0.2s}
+.tool-card:hover{background:#eee;border-color:rgba(0,0,0,0.06);transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.tool-card-icon{font-size:2rem;margin-bottom:10px}
+.tool-card-title{font-weight:800;color:#1d1d1f;font-size:0.88rem}
+.tool-card-desc{font-size:0.74rem;color:#86868b;margin-top:4px}
+.quiz-builder-form{background:#f5f5f7;border-radius:14px;padding:18px}
+[title]{position:relative}
+.teacher-screen [title]:hover{cursor:help}
 
 /* ===== SPEED MATHS ===== */
 .speed-timer{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.5rem;text-align:center;margin:8px 0;transition:color 0.3s}
