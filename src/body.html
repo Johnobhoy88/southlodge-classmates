@@ -269,7 +269,20 @@
 
     <!-- OVERVIEW TAB -->
     <div class="teacher-page active" id="tp-overview">
+      <div class="welcome-banner" id="welcomeBanner">
+        <div class="welcome-greeting" id="welcomeGreeting">Good afternoon</div>
+        <div class="welcome-meta">
+          <span class="welcome-school" id="welcomeSchool">South Lodge Primary</span>
+          <span class="welcome-divider"></span>
+          <span class="welcome-date" id="welcomeDate"></span>
+        </div>
+        <div class="welcome-status" id="welcomeStatus"></div>
+      </div>
       <div id="classSummary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px"></div>
+      <div class="teacher-section attention-panel" id="attentionPanel" style="display:none">
+        <h3>Needs Attention</h3>
+        <div id="attentionList"></div>
+      </div>
       <div class="teacher-section">
         <h3>Quick Actions</h3>
         <div class="actions-row">

@@ -503,6 +503,28 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 [title]{position:relative}
 .teacher-screen [title]:hover{cursor:help}
 
+/* ===== WELCOME BANNER ===== */
+.welcome-banner{padding:28px 32px 24px;margin-bottom:20px;border-radius:16px;background:#fff;border:1px solid rgba(0,0,0,0.06);box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.welcome-greeting{font-size:1.6rem;font-weight:900;color:#1d1d1f;letter-spacing:-0.5px;line-height:1.2}
+.welcome-meta{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:0.8rem;color:#86868b;font-weight:600}
+.welcome-divider{width:3px;height:3px;border-radius:50%;background:#c7c7cc}
+.welcome-status{margin-top:10px;font-size:0.82rem;color:#86868b;line-height:1.5}
+.welcome-status strong{color:#1d1d1f;font-weight:800}
+
+/* ===== ATTENTION PANEL ===== */
+.attention-panel{border-left:3px solid #ff9500}
+.attention-panel h3{color:#1d1d1f}
+.attention-item{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
+.attention-item:last-child{border-bottom:none}
+.attention-name{font-weight:800;color:#1d1d1f;font-size:0.88rem}
+.attention-reason{font-size:0.78rem;color:#86868b;margin-top:2px}
+.attention-action{font-size:0.75rem;color:#11998e;font-weight:700;white-space:nowrap;cursor:pointer;padding:6px 14px;background:rgba(17,153,142,0.08);border-radius:980px;border:none;transition:background 0.15s}
+.attention-action:hover{background:rgba(17,153,142,0.14)}
+.attention-clear{padding:16px 0;text-align:center;color:#86868b;font-size:0.82rem;font-weight:600}
+.overview-alert{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;padding:14px 18px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.overview-panel{background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.overview-panel-title{font-size:0.72rem;font-weight:800;color:#86868b;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px}
+
 /* ===== SPEED MATHS ===== */
 .speed-timer{font-family:'Fredoka One','Comic Sans MS',cursive;font-size:3.5rem;text-align:center;margin:8px 0;transition:color 0.3s}
 .speed-timer.normal{color:#0984e3}
