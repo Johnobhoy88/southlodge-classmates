@@ -48,6 +48,7 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "games", "punctuation-scene.js"),
     path.join(root, "src", "scripts", "games", "vocab-scene.js"),
     path.join(root, "src", "scripts", "games", "reading-scene.js"),
+    path.join(root, "src", "scripts", "games", "grammar-scene.js"),
     path.join(root, "src", "scripts", "games", "times-tables.js"),
     path.join(root, "src", "scripts", "games", "maths.js"),
     path.join(root, "src", "scripts", "games", "number-bonds.js"),
