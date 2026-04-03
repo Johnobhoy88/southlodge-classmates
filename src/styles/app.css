@@ -565,6 +565,23 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .about-label{font-weight:800;color:#1d1d1f;font-size:0.76rem;text-transform:uppercase;letter-spacing:0.4px}
 .about-value{color:#86868b;font-size:0.78rem;text-align:right}
 
+/* ===== TEACHER MOBILE RESPONSIVE ===== */
+@media(max-width:640px){
+.teacher-body{padding:16px}
+.teacher-tabs{padding:0 8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.teacher-tab{padding:12px 14px;font-size:0.74rem;white-space:nowrap}
+.teacher-topbar{padding:12px 16px}
+.welcome-banner{padding:20px}
+.welcome-greeting{font-size:1.2rem}
+#classSummary{grid-template-columns:repeat(2,1fr)!important}
+.tool-grid{grid-template-columns:1fr!important}
+.assign-form-row{flex-direction:column;gap:0}
+.settings-grid{grid-template-columns:1fr}
+.pupil-card-actions{opacity:1}
+.pupil-search{width:140px;font-size:0.74rem}
+.pupil-list-header{flex-direction:column;align-items:flex-start;gap:10px}
+}
+
 /* ===== PUPILS TAB ===== */
 .pupil-add-row{display:flex;gap:10px;align-items:center}
 .pupil-add-input{flex:1;font-size:0.88rem;padding:12px 16px}
