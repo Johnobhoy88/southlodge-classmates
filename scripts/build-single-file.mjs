@@ -55,6 +55,7 @@ const sourceFiles = {
     path.join(root, "src", "scripts", "games", "bonds-scene.js"),
     path.join(root, "src", "scripts", "games", "missnum-scene.js"),
     path.join(root, "src", "scripts", "games", "placeval-scene.js"),
+    path.join(root, "src", "scripts", "games", "telltime-scene.js"),
     path.join(root, "src", "scripts", "games", "times-tables.js"),
     path.join(root, "src", "scripts", "games", "maths.js"),
     path.join(root, "src", "scripts", "games", "number-bonds.js"),
