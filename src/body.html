@@ -364,44 +364,51 @@
     <!-- ASSIGN TAB -->
     <div class="teacher-page" id="tp-assign">
       <div class="teacher-section">
-        <h3>Assign Southlodge Racers</h3>
-        <p style="font-size:0.78rem;color:#86868b;margin-bottom:14px">Set the flagship spelling mission for the class. It appears on each pupil home screen and drives Southlodge Racers mastery reporting.</p>
-        <div class="teacher-form-group">
-          <label class="teacher-label" title="Currently only Southlodge Racers is available as a class-wide assignment">Activity</label>
-          <select class="teacher-input" id="assignActivity" style="width:100%" disabled>
-            <option value="southlodgeracers">Southlodge Racers</option>
-          </select>
+        <h3>Class Assignment</h3>
+        <p style="font-size:0.78rem;color:#86868b;margin-bottom:18px">Set a class-wide assignment. It appears on every pupil's home screen when they log in.</p>
+        <div id="currentAssignBanner"></div>
+        <div class="assign-form">
+          <div class="assign-form-row">
+            <div class="teacher-form-group" style="flex:1">
+              <label class="teacher-label" title="Currently only Southlodge Racers is available as a class-wide assignment">Activity</label>
+              <select class="teacher-input" id="assignActivity" disabled>
+                <option value="southlodgeracers">Southlodge Racers</option>
+              </select>
+            </div>
+            <div class="teacher-form-group" style="flex:1">
+              <label class="teacher-label" title="Choose the CfE level — this determines the difficulty and spelling pack options">Stage Band</label>
+              <select class="teacher-input" id="assignLevel" onchange="syncSouthlodgeAssignmentForm(this.value)">
+                <option value="Early">Early</option>
+                <option value="First">First</option>
+                <option value="Second">Second</option>
+              </select>
+            </div>
+          </div>
+          <div class="assign-form-row">
+            <div class="teacher-form-group" style="flex:2">
+              <label class="teacher-label" title="Select a specific spelling pack — each pack targets different CfE outcomes">Spelling Pack</label>
+              <select class="teacher-input" id="assignPackId" onchange="syncSouthlodgeAssignmentForm()"></select>
+              <div id="assignPackMeta" style="margin-top:6px;font-size:0.76rem;color:#86868b"></div>
+            </div>
+            <div class="teacher-form-group" style="flex:1">
+              <label class="teacher-label" title="How many gates (rounds) the pupils must complete — longer missions cover more words">Mission Length</label>
+              <select class="teacher-input" id="assignMissionLength">
+                <option value="5">5 gates</option>
+                <option value="7">7 gates</option>
+                <option value="9">9 gates</option>
+              </select>
+            </div>
+          </div>
+          <div class="teacher-form-group">
+            <label class="teacher-label" title="Optional text shown on the pupil home screen alongside the assignment">Message to pupils (optional)</label>
+            <input class="teacher-input" id="assignMessage" placeholder="e.g. Race the vowel teams route today.">
+          </div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="teacher-btn teal" onclick="saveAssignment()" title="Save and publish this assignment to all pupils">Set Assignment</button>
+            <button class="teacher-btn grey" onclick="clearAssignment()" title="Remove the current assignment from all pupils' home screens">Clear</button>
+          </div>
+          <div id="assignStatus" style="margin-top:10px;font-size:0.78rem;color:#86868b"></div>
         </div>
-        <div class="teacher-form-group">
-          <label class="teacher-label" title="Choose the CfE level — this determines the difficulty and spelling pack options">Stage Band</label>
-          <select class="teacher-input" id="assignLevel" style="width:100%" onchange="syncSouthlodgeAssignmentForm(this.value)">
-            <option value="Early">Early</option>
-            <option value="First">First</option>
-            <option value="Second">Second</option>
-          </select>
-        </div>
-        <div class="teacher-form-group">
-          <label class="teacher-label" title="Select a specific spelling pack — each pack targets different CfE outcomes">Spelling Pack</label>
-          <select class="teacher-input" id="assignPackId" style="width:100%" onchange="syncSouthlodgeAssignmentForm()"></select>
-          <div id="assignPackMeta" style="margin-top:6px;font-size:0.76rem;color:#86868b"></div>
-        </div>
-        <div class="teacher-form-group">
-          <label class="teacher-label" title="How many gates (rounds) the pupils must complete — longer missions cover more words">Mission Length</label>
-          <select class="teacher-input" id="assignMissionLength" style="width:100%">
-            <option value="5">5 gates</option>
-            <option value="7">7 gates</option>
-            <option value="9">9 gates</option>
-          </select>
-        </div>
-        <div class="teacher-form-group">
-          <label class="teacher-label" title="Optional text shown on the pupil home screen alongside the assignment">Message to pupils (optional)</label>
-          <input class="teacher-input" id="assignMessage" placeholder="e.g. Race the vowel teams route today.">
-        </div>
-        <div style="display:flex;gap:10px;margin-top:6px">
-          <button class="teacher-btn teal" onclick="saveAssignment()" title="Save and publish this assignment to all pupils">Set Assignment</button>
-          <button class="teacher-btn grey" onclick="clearAssignment()" title="Remove the current assignment from all pupils' home screens">Clear Assignment</button>
-        </div>
-        <div id="assignStatus" style="margin-top:10px;font-size:0.78rem;color:#86868b"></div>
       </div>
     </div>
 
