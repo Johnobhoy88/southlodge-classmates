@@ -321,6 +321,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('continents')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.45, 10, {
         spread: 5, rise: 2, decay: 0.02, size: 3,
         color: 'rgba(37,99,235,0.8)', shape: 'star', endColor: 'rgba(200,220,255,0)'
@@ -328,6 +329,14 @@
       FXCore.emit(s.w * 0.5, s.h * 0.45, 5, {
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(22,163,74,0.6)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.45, count, {
+        spread: 6, rise: 2.5, decay: 0.015, size: 3,
+        color: 'rgba(0,200,180,0.7)', shape: 'diamond', endColor: 'rgba(0,150,130,0)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.45, count, {
+        spread: 4, rise: 2, decay: 0.02, size: 2.5,
+        color: 'rgba(180,220,255,0.5)'
       });
       if (window.FXSound) FXSound.play('correct');
     },
@@ -338,6 +347,11 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(100,100,120,0.4)'
       });
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 3, {
+        spread: 2.5, rise: -0.15, gravity: 0.025, decay: 0.018, size: 2,
+        color: 'rgba(20,40,80,0.4)'
+      });
+      if(FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -350,7 +364,23 @@
           spread: 7, rise: 3, decay: 0.01, size: 4, color: colors[i], shape: 'star'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['correct','chime','complete'], 100);
+      // 8 burst points in ocean colours
+      var oceanColors = ['rgba(0,200,180,0.8)','rgba(0,150,220,0.8)','rgba(0,180,160,0.7)','rgba(30,120,200,0.8)','rgba(0,220,200,0.7)','rgba(20,100,180,0.8)','rgba(0,170,190,0.7)','rgba(40,140,210,0.8)'];
+      for (var i = 0; i < 8; i++) {
+        var angle = (i / 8) * Math.PI * 2;
+        var ex = s.w * 0.5 + Math.cos(angle) * s.w * 0.2;
+        var ey = s.h * 0.4 + Math.sin(angle) * s.h * 0.15;
+        FXCore.emit(ex, ey, 8, {
+          spread: 7, rise: 2.5, decay: 0.009, size: 3.5,
+          color: oceanColors[i], shape: 'diamond'
+        });
+      }
+      // Central golden burst
+      FXCore.emit(s.w * 0.5, s.h * 0.4, 18, {
+        spread: 10, rise: 4, decay: 0.007, size: 5,
+        color: 'rgba(255,220,80,0.9)', shape: 'star', endColor: 'rgba(255,180,0,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };

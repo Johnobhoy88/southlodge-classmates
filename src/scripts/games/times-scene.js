@@ -317,6 +317,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('times')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.35, 12, {
         spread: 6, rise: 3, decay: 0.015, size: 3.5,
         color: 'rgba(255,140,0,0.9)', shape: 'star', endColor: 'rgba(255,200,50,0)'
@@ -324,6 +325,14 @@
       FXCore.emit(s.w * 0.5, s.h * 0.35, 6, {
         spread: 4, rise: 2, decay: 0.02, size: 2.5,
         color: 'rgba(255,80,0,0.7)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.35, count, {
+        spread: 7, rise: 4, decay: 0.012, size: 3,
+        color: 'rgba(255,120,30,0.8)', shape: 'star', endColor: 'rgba(255,60,0,0)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.35, count, {
+        spread: 5, rise: 3, decay: 0.018, size: 2,
+        color: 'rgba(255,200,80,0.6)'
       });
       if (window.FXSound) FXSound.play('correct');
     },
@@ -334,6 +343,11 @@
         spread: 2, rise: -0.3, gravity: 0.04, decay: 0.012, size: 2,
         color: 'rgba(80,40,20,0.5)'
       });
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 4, {
+        spread: 3, rise: -0.2, gravity: 0.03, decay: 0.015, size: 2.5,
+        color: 'rgba(80,20,10,0.4)'
+      });
+      if(FXCore.shake) FXCore.shake(4, 180);
       if (window.FXSound) FXSound.play('wrong');
     },
     onComplete: function() {
@@ -349,7 +363,28 @@
           shape: 'star'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['correct','correct','complete'], 80);
+      // 8 eruption points in volcano colours
+      var volcColors = ['rgba(255,80,0,0.8)','rgba(255,140,0,0.8)','rgba(255,200,50,0.8)','rgba(200,60,0,0.7)','rgba(255,100,20,0.8)','rgba(255,160,40,0.8)','rgba(220,80,10,0.7)','rgba(255,180,60,0.8)'];
+      for (var i = 0; i < 8; i++) {
+        var angle = (i / 8) * Math.PI * 2;
+        var ex = s.w * 0.5 + Math.cos(angle) * s.w * 0.2;
+        var ey = s.h * 0.3 + Math.sin(angle) * s.h * 0.15;
+        FXCore.emit(ex, ey, 10, {
+          spread: 8, rise: 3, decay: 0.008, size: 4,
+          color: volcColors[i], shape: 'star'
+        });
+      }
+      // Central golden burst
+      FXCore.emit(s.w * 0.5, s.h * 0.3, 20, {
+        spread: 12, rise: 5, decay: 0.006, size: 5,
+        color: 'rgba(255,220,80,0.9)', shape: 'star', endColor: 'rgba(255,180,0,0)'
+      });
+      // White-hot sparks
+      FXCore.emit(s.w * 0.5, s.h * 0.3, 15, {
+        spread: 10, rise: 6, decay: 0.01, size: 2,
+        color: 'rgba(255,255,220,0.9)', endColor: 'rgba(255,200,100,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','celebration','complete'], 80);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };

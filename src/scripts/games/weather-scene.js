@@ -331,6 +331,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('weather')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.4, 10, {
         spread: 5, rise: 2, decay: 0.02, size: 3,
         color: 'rgba(100,200,255,0.8)', shape: 'star', endColor: 'rgba(255,240,180,0)'
@@ -338,6 +339,14 @@
       FXCore.emit(s.w * 0.5, s.h * 0.4, 5, {
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(255,220,100,0.6)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.4, count, {
+        spread: 6, rise: 3, decay: 0.014, size: 3,
+        color: 'rgba(255,180,60,0.7)', shape: 'star', endColor: 'rgba(255,140,20,0)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.4, count, {
+        spread: 4, rise: 2, decay: 0.02, size: 2,
+        color: 'rgba(180,210,255,0.6)'
       });
       if (window.FXSound) FXSound.play('correct');
     },
@@ -348,6 +357,11 @@
         spread: 2, rise: -0.2, gravity: 0.03, decay: 0.015, size: 2,
         color: 'rgba(100,100,130,0.4)'
       });
+      FXCore.emit(s.w * 0.3, s.h * 0.5, 3, {
+        spread: 2.5, rise: -0.15, gravity: 0.025, decay: 0.018, size: 2.5,
+        color: 'rgba(60,60,80,0.4)'
+      });
+      if(FXCore.shake) FXCore.shake(4, 200);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -361,7 +375,28 @@
           spread: 7, rise: 3, decay: 0.01, size: 4, color: rainbow[i], shape: 'star'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['correct','chime','complete'], 100);
+      // 7 ROYGBIV rainbow bursts
+      var roygbiv = ['rgba(255,0,0,0.8)','rgba(255,127,0,0.8)','rgba(255,255,0,0.8)','rgba(0,200,0,0.8)','rgba(0,100,255,0.8)','rgba(75,0,130,0.8)','rgba(148,0,211,0.8)'];
+      for (var i = 0; i < 7; i++) {
+        var angle = (i / 7) * Math.PI;
+        var rx = s.w * 0.5 + Math.cos(angle) * s.w * 0.25;
+        var ry = s.h * 0.35 - Math.sin(angle) * s.h * 0.15;
+        FXCore.emit(rx, ry, 10, {
+          spread: 8, rise: 3, decay: 0.008, size: 4,
+          color: roygbiv[i], shape: 'star'
+        });
+      }
+      // Golden sunburst
+      FXCore.emit(s.w * 0.5, s.h * 0.35, 20, {
+        spread: 12, rise: 5, decay: 0.006, size: 5,
+        color: 'rgba(255,220,80,0.9)', shape: 'star', endColor: 'rgba(255,180,0,0)'
+      });
+      // White lightning sparks
+      FXCore.emit(s.w * 0.5, s.h * 0.35, 12, {
+        spread: 10, rise: 6, decay: 0.012, size: 2,
+        color: 'rgba(255,255,255,0.9)', endColor: 'rgba(200,220,255,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','celebration','complete'], 90);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };
