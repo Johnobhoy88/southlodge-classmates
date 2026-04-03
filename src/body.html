@@ -416,16 +416,36 @@
     <div class="teacher-page" id="tp-tools">
       <div class="teacher-section">
         <h3>Classroom Tools</h3>
-        <div class="tool-grid">
+        <div class="tool-grid" style="grid-template-columns:repeat(3,1fr)">
           <div class="tool-card" onclick="launchWhiteboard()" title="Launch a full-screen view with maths questions — perfect for interactive whiteboard use">
             <div class="tool-card-icon">&#x1F4FA;</div>
             <div class="tool-card-title">Whole-Class Mode</div>
             <div class="tool-card-desc">Project questions on the board</div>
           </div>
-          <div class="tool-card" onclick="generateWorksheet()" title="Creates a printable PDF-style worksheet with 20 maths questions and 10 spelling words, plus answer key">
+          <div class="tool-card" onclick="generateWorksheet()" title="Creates a printable worksheet with 20 maths questions and 10 spelling words, plus answer key">
             <div class="tool-card-icon">&#x1F4C4;</div>
             <div class="tool-card-title">Print Worksheet</div>
-            <div class="tool-card-desc">Generate maths + spelling sheet</div>
+            <div class="tool-card-desc">Maths + spelling sheet</div>
+          </div>
+          <div class="tool-card" onclick="showTeacherTab('settings',document.querySelectorAll('.teacher-tab')[5]);document.querySelector('[onclick*=setSessionTimer]').scrollIntoView({behavior:'smooth'})" title="Set a 5, 10, or 15 minute practice timer for the class">
+            <div class="tool-card-icon">&#x23F1;</div>
+            <div class="tool-card-title">Session Timer</div>
+            <div class="tool-card-desc">Timed practice sessions</div>
+          </div>
+        </div>
+      </div>
+      <div class="teacher-section">
+        <h3>Reports &amp; Export</h3>
+        <div class="tool-grid">
+          <div class="tool-card" onclick="printReport()" title="Open a print-friendly class report showing all pupils' progress, mastery, and recommended next steps">
+            <div class="tool-card-icon">&#x1F4CA;</div>
+            <div class="tool-card-title">Print Report</div>
+            <div class="tool-card-desc">Full class progress report</div>
+          </div>
+          <div class="tool-card" onclick="exportCSV()" title="Download all progress data as a CSV spreadsheet — compatible with Excel and Google Sheets">
+            <div class="tool-card-icon">&#x1F4E5;</div>
+            <div class="tool-card-title">Export CSV</div>
+            <div class="tool-card-desc">Spreadsheet download</div>
           </div>
         </div>
       </div>
@@ -433,43 +453,44 @@
         <h3>Custom Quiz Builder</h3>
         <p style="font-size:0.78rem;color:#86868b;margin-bottom:14px">Create questions for pupils. They appear as "Teacher's Quiz" in the Challenges section.</p>
         <div class="quiz-builder-form">
-          <input class="teacher-input" id="cqQuestion" placeholder="Question" title="Enter the quiz question text">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+          <input class="teacher-input" id="cqQuestion" placeholder="Question" title="Enter the quiz question text" style="font-size:0.88rem">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
             <input class="teacher-input" id="cqA" placeholder="Option A (correct)" title="This is the correct answer — it will be shuffled when shown to pupils">
             <input class="teacher-input" id="cqB" placeholder="Option B" title="Incorrect option B">
             <input class="teacher-input" id="cqC" placeholder="Option C" title="Incorrect option C">
             <input class="teacher-input" id="cqD" placeholder="Option D" title="Incorrect option D">
           </div>
-          <div style="margin-top:10px"><button class="teacher-btn teal" onclick="addCustomQ()" title="Add this question to the custom quiz bank">Add Question</button></div>
+          <div style="margin-top:12px"><button class="teacher-btn teal" onclick="addCustomQ()" title="Add this question to the custom quiz bank">Add Question</button></div>
         </div>
-        <div id="cqList" style="margin-top:12px"></div>
-      </div>
-      <div class="teacher-section">
-        <h3>Reports &amp; Export</h3>
-        <div class="actions-row">
-          <button class="teacher-btn teal" onclick="printReport()" title="Open a print-friendly class report showing all pupils' progress, mastery, and recommended next steps">Print Progress Report</button>
-          <button class="teacher-btn outline" onclick="exportCSV()" title="Download all progress data as a CSV spreadsheet — compatible with Excel and Google Sheets">Export as CSV</button>
-        </div>
+        <div id="cqList" style="margin-top:14px"></div>
       </div>
     </div>
 
     <!-- SETTINGS TAB -->
     <div class="teacher-page" id="tp-settings">
-      <div class="teacher-section">
-        <h3>School Details</h3>
-        <div class="teacher-input-row"><input class="teacher-input" id="schoolNameInput" placeholder="School name" title="This name appears in reports and on the header bar"><button class="teacher-btn teal" onclick="saveSchoolName()" title="Save the school name">Save</button></div>
-      </div>
-      <div class="teacher-section">
-        <h3>Change Staff Password</h3>
-        <form onsubmit="changePassword();return false">
-          <input type="text" value="staff" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
-          <div class="teacher-input-row" style="flex-wrap:wrap">
-            <input class="teacher-input" id="oldPwd" type="password" placeholder="Current password" autocomplete="current-password" title="Enter the current staff password">
-            <input class="teacher-input" id="newPwd" type="password" placeholder="New password" autocomplete="new-password" title="Choose a new password — share it only with staff">
-            <button type="submit" class="teacher-btn teal" title="Update the staff password">Change</button>
+      <div class="settings-grid">
+        <div class="teacher-section">
+          <h3>School Details</h3>
+          <div class="teacher-form-group">
+            <label class="teacher-label" title="This name appears in reports and on the header bar">School Name</label>
+            <div class="teacher-input-row"><input class="teacher-input" id="schoolNameInput" placeholder="School name"><button class="teacher-btn teal" onclick="saveSchoolName()">Save</button></div>
           </div>
-        </form>
-        <div id="pwdStatus" style="font-size:0.78rem;margin-top:6px;min-height:20px"></div>
+        </div>
+        <div class="teacher-section">
+          <h3>Security</h3>
+          <form onsubmit="changePassword();return false">
+            <input type="text" value="staff" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none">
+            <div class="teacher-form-group">
+              <label class="teacher-label" title="Change the staff access password">Staff Password</label>
+              <div class="teacher-input-row">
+                <input class="teacher-input" id="oldPwd" type="password" placeholder="Current" autocomplete="current-password" title="Enter the current staff password">
+                <input class="teacher-input" id="newPwd" type="password" placeholder="New" autocomplete="new-password" title="Choose a new password — share it only with staff">
+                <button type="submit" class="teacher-btn teal">Change</button>
+              </div>
+            </div>
+          </form>
+          <div id="pwdStatus" style="font-size:0.76rem;margin-top:4px;min-height:18px"></div>
+        </div>
       </div>
       <div class="teacher-section">
         <h3>Session Timer</h3>
@@ -484,32 +505,31 @@
       </div>
       <div class="teacher-section">
         <h3>Backup &amp; Restore</h3>
-        <p style="font-size:0.78rem;color:#86868b;margin-bottom:10px">Download one backup file for this device. Importing a backup replaces the current device data on this browser.</p>
-        <div class="actions-row">
+        <p style="font-size:0.78rem;color:#86868b;margin-bottom:12px">Download one backup file for this device. Importing a backup replaces the current device data on this browser.</p>
+        <div class="actions-row" style="margin-bottom:14px">
           <button class="teacher-btn teal" onclick="exportAppBackup()" title="Download a JSON backup of all pupils, progress, and settings on this device">Download Backup</button>
           <button class="teacher-btn outline" onclick="triggerBackupImport()" title="Import a previously downloaded backup file — this will replace all current data">Import Backup</button>
         </div>
         <input id="backupFileInput" type="file" accept=".json,application/json" style="display:none" onchange="handleBackupImport(event)">
-        <div id="backupSummary" style="font-size:0.78rem;color:#1d1d1f;margin-top:12px"></div>
-        <div id="backupStatus" style="font-size:0.78rem;min-height:20px;margin-top:6px"></div>
+        <div id="backupSummary" style="font-size:0.78rem;color:#1d1d1f"></div>
+        <div id="backupStatus" style="font-size:0.78rem;min-height:18px;margin-top:4px"></div>
       </div>
-      <div class="teacher-section">
-        <h3>Data Management</h3>
-        <p style="font-size:0.82rem;color:#86868b;margin-bottom:14px">Caution: these actions cannot be undone.</p>
-        <div class="actions-row">
+      <div class="settings-grid">
+        <div class="teacher-section" style="border-left:3px solid #ff3b30">
+          <h3>Data Management</h3>
+          <p style="font-size:0.78rem;color:#86868b;margin-bottom:12px">Caution: these actions cannot be undone.</p>
           <button class="teacher-btn red" onclick="resetAllData()" title="Permanently delete all pupils, progress data, and settings from this device">Reset All Data</button>
         </div>
-      </div>
-      <div class="teacher-section">
-        <h3>About Classmates</h3>
-        <div style="font-size:0.82rem;color:#1d1d1f;line-height:1.8">
-          <p><strong>Version:</strong> 1.1</p>
-          <p><strong>Content:</strong> 34 learning modes, 18 stories, 230+ spelling words, 31 achievements</p>
-          <p><strong>Subjects:</strong> Literacy, Numeracy, Geography, Challenges</p>
-          <p><strong>Curriculum:</strong> Scottish Curriculum for Excellence (Early, First, Second Level)</p>
-          <p><strong>Features:</strong> Adaptive difficulty, sound effects, per-pupil tracking, avatar builder, certificates, worksheets, whole-class mode, custom quiz builder, class leaderboard</p>
-          <p><strong>Data:</strong> All data stored locally on this device. No internet required.</p>
-          <p style="margin-top:10px;color:#86868b">Built for South Lodge Primary School.</p>
+        <div class="teacher-section">
+          <h3>About</h3>
+          <div class="about-grid">
+            <div class="about-item"><span class="about-label">Version</span><span class="about-value">1.1</span></div>
+            <div class="about-item"><span class="about-label">Content</span><span class="about-value">34 modes, 18 stories, 230+ words</span></div>
+            <div class="about-item"><span class="about-label">Subjects</span><span class="about-value">Literacy, Numeracy, Geography</span></div>
+            <div class="about-item"><span class="about-label">Curriculum</span><span class="about-value">Scottish CfE (Early, First, Second)</span></div>
+            <div class="about-item"><span class="about-label">Data</span><span class="about-value">Local only, no internet required</span></div>
+          </div>
+          <p style="margin-top:12px;font-size:0.76rem;color:#86868b">Built for South Lodge Primary School.</p>
         </div>
       </div>
     </div>
