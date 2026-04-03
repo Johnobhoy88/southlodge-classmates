@@ -289,45 +289,72 @@
 
   if (window.FXCore) FXCore.register('sequence', scene);
 
+  function hexToRgba(hex, a) {
+    var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+  }
+
   window.ClassmatesSequenceScene = {
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('sequence')) return;
       var s = FXCore.getSize();
-      var color = DOMINO_COLORS[idx % DOMINO_COLORS.length];
-      FXCore.emit(s.w * 0.5, s.h * 0.45, 10, {
-        spread: 5, rise: 2, decay: 0.02, size: 3,
-        color: color.replace('#', 'rgba(') ? 'rgba(100,200,255,0.8)' : 'rgba(100,200,255,0.8)',
-        shape: 'diamond', endColor: 'rgba(255,255,255,0)'
+      var dc = DOMINO_COLORS[idx % DOMINO_COLORS.length];
+      var count = 8 + Math.floor(progress * 8);
+      // Primary burst in domino colour
+      FXCore.emit(s.w * 0.5, s.h * 0.45, count, {
+        spread: 5, rise: 2.5, decay: 0.018, size: 3.5,
+        color: hexToRgba(dc, 0.8), shape: 'diamond', endColor: 'rgba(255,255,255,0)'
       });
-      FXCore.emit(s.w * 0.5, s.h * 0.45, 5, {
-        spread: 3, rise: 1.5, decay: 0.025, size: 2,
-        color: 'rgba(200,200,255,0.6)'
+      // Secondary warm sparkle
+      FXCore.emit(s.w * 0.5, s.h * 0.45, Math.floor(count * 0.6), {
+        spread: 3.5, rise: 1.8, decay: 0.022, size: 2,
+        color: 'rgba(255,240,200,0.7)', shape: 'star'
       });
-      if (window.FXSound) FXSound.play('click');
+      // Tiny white sparks
+      FXCore.emit(s.w * 0.5, s.h * 0.42, 4, {
+        spread: 6, rise: 3, decay: 0.03, size: 1.5,
+        color: 'rgba(255,255,255,0.5)'
+      });
+      if (window.FXSound) FXSound.play('correct');
     },
     onWrong: function() {
       if (!window.FXCore || !FXCore.isActive('sequence')) return;
       var s = FXCore.getSize();
-      FXCore.emit(s.w * 0.5, s.h * 0.5, 4, {
-        spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
-        color: 'rgba(80,80,100,0.4)'
+      // Dark domino-coloured embers fall
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 5, {
+        spread: 2, rise: -0.3, gravity: 0.03, decay: 0.012, size: 2.5,
+        color: 'rgba(80,70,100,0.5)'
       });
+      FXCore.emit(s.w * 0.5, s.h * 0.48, 3, {
+        spread: 1.5, rise: -0.1, gravity: 0.02, decay: 0.02, size: 1.5,
+        color: 'rgba(120,100,140,0.3)'
+      });
+      if (FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
       targetProgress = 1;
       if (!window.FXCore || !FXCore.isActive('sequence')) return;
       var s = FXCore.getSize();
-      // Cascade of domino colours
-      for (var i = 0; i < 6; i++) {
-        var dc = DOMINO_COLORS[i * 2 % DOMINO_COLORS.length];
-        FXCore.emit(s.w * (0.15 + i * 0.14), s.h * 0.4, 5, {
-          spread: 6, rise: 3, decay: 0.01, size: 3.5,
-          color: 'rgba(' + parseInt(dc.slice(1,3),16) + ',' + parseInt(dc.slice(3,5),16) + ',' + parseInt(dc.slice(5,7),16) + ',0.7)',
-          shape: 'diamond'
+      // Grand domino cascade — all colours
+      for (var i = 0; i < DOMINO_COLORS.length; i++) {
+        var dc = DOMINO_COLORS[i];
+        FXCore.emit(s.w * (0.08 + i * 0.084), s.h * (0.3 + (i % 2) * 0.1), 6, {
+          spread: 7, rise: 3.5, decay: 0.008, size: 4,
+          color: hexToRgba(dc, 0.75), shape: i % 2 === 0 ? 'diamond' : 'star'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['click','click','click','complete'], 80);
+      // Central golden burst
+      FXCore.emit(s.w * 0.5, s.h * 0.4, 15, {
+        spread: 10, rise: 4, decay: 0.008, size: 5,
+        color: 'rgba(255,215,0,0.8)', shape: 'star', endColor: 'rgba(255,255,255,0)'
+      });
+      // White sparkle rain
+      FXCore.emit(s.w * 0.5, s.h * 0.35, 12, {
+        spread: 12, rise: 2, decay: 0.01, size: 2,
+        color: 'rgba(255,255,255,0.6)'
+      });
+      if (window.FXSound) FXSound.playSequence(['click','correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };
