@@ -357,6 +357,7 @@
     onCorrect: function(noteIndex) {
       if (!window.FXCore || !FXCore.isActive('phonics')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.4, 12, {
         spread: 6, rise: 2.5, decay: 0.018, size: 3,
         color: 'rgba(72,255,167,0.8)', shape: 'star', endColor: 'rgba(180,130,255,0)'
@@ -364,6 +365,14 @@
       FXCore.emit(s.w * 0.5, s.h * 0.4, 6, {
         spread: 4, rise: 2, decay: 0.022, size: 2,
         color: 'rgba(255,230,120,0.7)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.35, count, {
+        spread: 7, rise: 3, decay: 0.015, size: 3.5,
+        color: 'rgba(100,200,255,0.8)', shape: 'star', endColor: 'rgba(72,255,167,0)'
+      });
+      FXCore.emit(s.w * 0.5, s.h * 0.4, Math.floor(count * 0.6), {
+        spread: 2, rise: 1.2, decay: 0.03, size: 1.2,
+        color: 'rgba(220,240,255,0.5)'
       });
       if (window.FXSound) FXSound.play('chime');
     },
@@ -374,6 +383,11 @@
         spread: 2, rise: -0.2, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(100,80,120,0.4)'
       });
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 3, {
+        spread: 3, rise: -0.3, gravity: 0.03, decay: 0.018, size: 2.5,
+        color: 'rgba(60,40,80,0.5)'
+      });
+      if(FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -386,7 +400,17 @@
           spread: 7, rise: 3, decay: 0.012, size: 4, color: colors[i], shape: 'star'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['chime','correct','complete'], 120);
+      var auroraColors = ['rgba(72,255,167,0.7)','rgba(100,200,255,0.7)','rgba(180,130,255,0.7)','rgba(120,230,200,0.7)','rgba(244,114,182,0.7)','rgba(150,180,255,0.7)','rgba(200,255,180,0.7)','rgba(140,100,240,0.7)'];
+      for (var j = 0; j < auroraColors.length; j++) {
+        FXCore.emit(s.w * (0.08 + j * 0.12), s.h * (0.25 + Math.sin(j) * 0.1), 8, {
+          spread: 9, rise: 3.5, decay: 0.01, size: 4.5, color: auroraColors[j], shape: 'star'
+        });
+      }
+      FXCore.emit(s.w * 0.5, s.h * 0.4, 15, {
+        spread: 10, rise: 2, decay: 0.008, size: 5,
+        color: 'rgba(255,215,0,0.8)', shape: 'star', endColor: 'rgba(255,215,0,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };

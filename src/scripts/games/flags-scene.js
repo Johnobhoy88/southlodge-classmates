@@ -343,12 +343,28 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('flags')) return;
       var s = FXCore.getSize();
+      var count = 6 + Math.floor(progress * 10);
       // Multi-colour celebration burst
       var colors = ['rgba(220,38,38,0.8)','rgba(37,99,235,0.8)','rgba(22,163,74,0.8)','rgba(234,179,8,0.8)'];
       for (var i = 0; i < 4; i++) {
         FXCore.emit(s.w * 0.5, s.h * 0.4, 4, {
           spread: 6, rise: 2.5, decay: 0.018, size: 3,
           color: colors[i], shape: 'star', endColor: 'rgba(255,255,255,0)'
+        });
+      }
+      // Confetti-like multi-colour burst
+      var confettiColors = ['rgba(255,0,100,0.7)','rgba(0,200,255,0.7)','rgba(255,200,0,0.7)','rgba(120,0,255,0.7)','rgba(0,255,120,0.7)'];
+      for (var i = 0; i < confettiColors.length; i++) {
+        FXCore.emit(s.w * (0.35 + i * 0.075), s.h * 0.38, Math.ceil(count / 5), {
+          spread: 5, rise: 2, decay: 0.02, size: 2.5,
+          color: confettiColors[i], shape: 'circle'
+        });
+      }
+      // Tiny gold sparkles
+      for (var i = 0; i < 5; i++) {
+        FXCore.emit(s.w * (0.4 + i * 0.05), s.h * 0.36, 2, {
+          spread: 2, rise: 1.2, decay: 0.03, size: 1.2,
+          color: 'rgba(255,215,0,0.7)', shape: 'star'
         });
       }
       if (window.FXSound) FXSound.play('celebration');
@@ -360,6 +376,12 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(100,100,120,0.4)'
       });
+      // Darker muted burst
+      FXCore.emit(s.w * 0.5, s.h * 0.48, 3, {
+        spread: 3, rise: -0.2, gravity: 0.03, decay: 0.012, size: 2.5,
+        color: 'rgba(60,60,80,0.5)'
+      });
+      if(FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -376,7 +398,28 @@
           });
         }
       }
-      if (window.FXSound) FXSound.playSequence(['celebration','celebration','complete'], 80);
+      // Confetti rain — scattered bursts across the full width
+      var flagColors = ['rgba(220,38,38,0.7)','rgba(37,99,235,0.7)','rgba(22,163,74,0.7)','rgba(234,179,8,0.7)','rgba(255,255,255,0.6)','rgba(124,58,237,0.7)','rgba(6,182,212,0.7)','rgba(236,72,153,0.7)'];
+      for (var i = 0; i < flagColors.length; i++) {
+        FXCore.emit(s.w * (0.05 + i * 0.12), s.h * 0.15, 6, {
+          spread: 4, rise: -1, gravity: 0.04, decay: 0.006, size: 3,
+          color: flagColors[i], shape: 'circle'
+        });
+      }
+      // Central golden firework burst — the grand star
+      FXCore.emit(s.w * 0.5, s.h * 0.25, 15, {
+        spread: 14, rise: 3, decay: 0.005, size: 6,
+        color: 'rgba(255,215,0,0.95)', shape: 'star', endColor: 'rgba(255,255,200,0)'
+      });
+      // Extra golden sparkle ring
+      for (var i = 0; i < 8; i++) {
+        var angle = (i / 8) * Math.PI * 2;
+        FXCore.emit(s.w * 0.5 + Math.cos(angle) * s.w * 0.12, s.h * 0.25 + Math.sin(angle) * s.h * 0.08, 4, {
+          spread: 5, rise: 1.5, decay: 0.01, size: 3,
+          color: 'rgba(255,220,80,0.8)', shape: 'star'
+        });
+      }
+      if (window.FXSound) FXSound.playSequence(['celebration','chime','celebration','chime','celebration','complete'], 80);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };

@@ -349,6 +349,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('placeval')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.4, 10, {
         spread: 4, rise: 2, decay: 0.02, size: 2.5,
         color: 'rgba(100,200,100,0.7)', shape: 'circle', endColor: 'rgba(200,240,200,0)'
@@ -357,6 +358,18 @@
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(255,255,255,0.5)'
       });
+      // Bamboo leaf burst — green and teal
+      FXCore.emit(s.w * 0.5, s.h * 0.42, count, {
+        spread: 6, rise: 1.8, decay: 0.018, size: 2.5,
+        color: 'rgba(90,180,120,0.7)', shape: 'circle', endColor: 'rgba(180,240,200,0)'
+      });
+      // Tiny dew-drop sparkles
+      for (var i = 0; i < 4; i++) {
+        FXCore.emit(s.w * (0.42 + i * 0.05), s.h * 0.38, 2, {
+          spread: 2, rise: 1, decay: 0.03, size: 1.2,
+          color: 'rgba(220,255,240,0.6)', shape: 'star'
+        });
+      }
       if (window.FXSound) FXSound.play('chime');
     },
     onWrong: function() {
@@ -366,19 +379,35 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(80,100,80,0.4)'
       });
+      // Darker mist-like burst
+      FXCore.emit(s.w * 0.5, s.h * 0.48, 3, {
+        spread: 3, rise: -0.2, gravity: 0.03, decay: 0.012, size: 2.5,
+        color: 'rgba(50,70,50,0.5)'
+      });
+      if(FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
       targetProgress = 1;
       if (!window.FXCore || !FXCore.isActive('placeval')) return;
       var s = FXCore.getSize();
-      var colors = ['rgba(100,200,100,0.7)','rgba(150,230,150,0.6)','rgba(200,255,200,0.6)','rgba(255,220,120,0.6)','rgba(120,210,120,0.7)'];
-      for (var i = 0; i < colors.length; i++) {
-        FXCore.emit(s.w * (0.2 + i * 0.15), s.h * 0.35, 5, {
-          spread: 5, rise: 2.5, decay: 0.012, size: 3, color: colors[i]
+      // 7 bamboo-forest themed bursts across the screen
+      var bambooColors = [
+        'rgba(100,200,100,0.8)','rgba(150,230,150,0.7)','rgba(80,180,120,0.8)',
+        'rgba(200,255,200,0.7)','rgba(120,210,120,0.8)','rgba(160,240,180,0.7)',
+        'rgba(100,220,160,0.7)'
+      ];
+      for (var i = 0; i < bambooColors.length; i++) {
+        FXCore.emit(s.w * (0.1 + i * 0.115), s.h * (0.25 + (i % 2) * 0.1), 7, {
+          spread: 7, rise: 3, decay: 0.009, size: 3.5, color: bambooColors[i], shape: 'circle'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['chime','chime','complete'], 120);
+      // Central golden lantern burst — lantern light radiating
+      FXCore.emit(s.w * 0.5, s.h * 0.3, 15, {
+        spread: 10, rise: 2, decay: 0.007, size: 5,
+        color: 'rgba(255,220,120,0.9)', shape: 'star', endColor: 'rgba(255,255,200,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['chime','click','chime','click','complete'], 120);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };

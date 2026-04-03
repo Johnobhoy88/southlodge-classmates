@@ -347,6 +347,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('datahandling')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.4, 10, {
         spread: 5, rise: 2, decay: 0.02, size: 3,
         color: 'rgba(100,180,220,0.8)', shape: 'star', endColor: 'rgba(200,230,255,0)'
@@ -355,6 +356,18 @@
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(60,160,60,0.6)'
       });
+      // Weather-station wind burst
+      FXCore.emit(s.w * 0.5, s.h * 0.42, count, {
+        spread: 7, rise: 1.8, decay: 0.018, size: 2.5,
+        color: 'rgba(140,210,240,0.7)', shape: 'star', endColor: 'rgba(220,240,255,0)'
+      });
+      // Tiny instrument sparkles
+      for (var i = 0; i < 4; i++) {
+        FXCore.emit(s.w * (0.42 + i * 0.05), s.h * 0.38, 2, {
+          spread: 2, rise: 1, decay: 0.03, size: 1.2,
+          color: 'rgba(255,255,220,0.6)', shape: 'star'
+        });
+      }
       if (window.FXSound) FXSound.play('click');
     },
     onWrong: function() {
@@ -364,19 +377,35 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(100,100,110,0.4)'
       });
+      // Darker storm-cloud burst
+      FXCore.emit(s.w * 0.5, s.h * 0.48, 3, {
+        spread: 3, rise: -0.3, gravity: 0.03, decay: 0.012, size: 2.5,
+        color: 'rgba(70,70,80,0.5)'
+      });
+      if(FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
       targetProgress = 1;
       if (!window.FXCore || !FXCore.isActive('datahandling')) return;
       var s = FXCore.getSize();
-      var colors = ['rgba(100,180,220,0.7)','rgba(60,160,60,0.7)','rgba(255,200,50,0.6)','rgba(200,100,150,0.6)','rgba(100,200,200,0.7)'];
-      for (var i = 0; i < colors.length; i++) {
-        FXCore.emit(s.w * (0.2 + i * 0.15), s.h * 0.35, 5, {
-          spread: 6, rise: 2.5, decay: 0.012, size: 3.5, color: colors[i], shape: 'star'
+      // 7 weather-themed bursts across the sky
+      var weatherColors = [
+        'rgba(100,180,220,0.8)','rgba(60,160,60,0.8)','rgba(255,200,50,0.7)',
+        'rgba(200,100,150,0.7)','rgba(100,200,200,0.8)','rgba(140,210,240,0.7)',
+        'rgba(180,220,100,0.7)'
+      ];
+      for (var i = 0; i < weatherColors.length; i++) {
+        FXCore.emit(s.w * (0.1 + i * 0.115), s.h * (0.25 + (i % 2) * 0.1), 7, {
+          spread: 8, rise: 3, decay: 0.009, size: 4, color: weatherColors[i], shape: 'star'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['click','chime','complete'], 110);
+      // Central golden star burst — sunshine breaking through
+      FXCore.emit(s.w * 0.5, s.h * 0.3, 15, {
+        spread: 10, rise: 2, decay: 0.007, size: 5,
+        color: 'rgba(255,215,0,0.9)', shape: 'star', endColor: 'rgba(255,255,200,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['click','chime','click','chime','complete'], 110);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };
