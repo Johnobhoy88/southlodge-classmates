@@ -89,6 +89,22 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise wall texture — organic warm plaster/terracotta
+  function drawWallNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H * 0.62; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.006 + t * 0.03, ny * 0.006);
+        var l = 42 + n * 10;
+        ctx.fillStyle = 'hsl(' + Math.round(28 + n * 5) + ',25%,' + Math.round(Math.max(20, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawOven() {
     var ox = W * 0.4, oy = H * 0.25;
     var ow = W * 0.2, oh = H * 0.2;
@@ -334,8 +350,9 @@
     var t = time * 0.001;
     for (var i = 0; i < flourDust.length; i++) {
       var f = flourDust[i];
-      f.x += f.speedX + Math.sin(t * 0.3 + f.phase) * 0.03;
-      f.y += f.speedY;
+      var nDrift = FXCore.noise2D(f.x * 0.008 + t * 0.2, f.y * 0.008 + i * 6) * 0.25;
+      f.x += f.speedX + Math.sin(t * 0.3 + f.phase) * 0.03 + nDrift;
+      f.y += f.speedY + nDrift * 0.15;
       if (f.y < H * 0.45) { f.y = H * 0.85; f.x = rand(W * 0.1, W * 0.9); }
       if (f.x < W * 0.05) f.x = W * 0.95;
       if (f.x > W * 0.95) f.x = W * 0.05;
@@ -345,6 +362,35 @@
       ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend oven fire glow — warm bloom across kitchen
+  function drawKitchenGlow() {
+    var t = time * 0.001;
+    var fireFlicker = 0.8 + Math.sin(t * 4) * 0.06 + Math.sin(t * 7) * 0.04 + progress * 0.15;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Oven fire bloom — large warm glow
+    var ox = W * 0.4, oy = H * 0.35;
+    var glowR = W * (0.2 + progress * 0.1);
+    ctx.globalAlpha = (0.05 + progress * 0.05) * brightness * fireFlicker;
+    var fg = ctx.createRadialGradient(ox, oy, 0, ox, oy, glowR);
+    fg.addColorStop(0, 'rgba(255,150,50,0.2)');
+    fg.addColorStop(0.3, 'rgba(255,120,30,0.08)');
+    fg.addColorStop(1, 'rgba(255,100,20,0)');
+    ctx.fillStyle = fg;
+    ctx.fillRect(ox - glowR, oy - glowR, glowR * 2, glowR * 2);
+
+    // Warm ambient on countertop
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var cGlow = ctx.createRadialGradient(W * 0.5, H * 0.65, 0, W * 0.5, H * 0.65, W * 0.4);
+    cGlow.addColorStop(0, 'rgba(255,200,120,0.1)');
+    cGlow.addColorStop(1, 'rgba(255,200,120,0)');
+    ctx.fillStyle = cGlow;
+    ctx.fillRect(0, H * 0.45, W, H * 0.4);
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -363,6 +409,7 @@
     },
     draw: function() {
       drawWall();
+      drawWallNoise();
       drawOven();
       drawShelf();
       drawHerbs();
@@ -371,6 +418,7 @@
       drawCuttingBoard();
       drawSteam();
       drawFlour();
+      drawKitchenGlow();
     },
     exit: function() {}
   };
