@@ -19,6 +19,7 @@
   var W = 0, H = 0, time = 0, dt = 0;
   var keys = {};
   var touchLeft = false, touchRight = false, touchJump = false;
+  var levelStartTime = 0;
 
   var gameState = {
     stage: 'title',       // title, cutscene, playing, boss, win, lose
@@ -151,10 +152,10 @@
         });
       }
 
-      // Word trigger zones (not in first or last section)
+      // Word trigger zones — visible portal gates at ground level
       if (s > 0 && s <= wordsNeeded) {
         triggers.push({
-          x: sx + sectionW * 0.4, y: 0, w: sectionW * 0.2, h: H,
+          x: sx + sectionW * 0.45, y: groundY - 60, w: 30, h: 60,
           triggered: false, wordIdx: s - 1
         });
       }
@@ -199,6 +200,7 @@
 
     camera.x = 0;
     camera.y = 0;
+    levelStartTime = time;
   }
 
   // ==================== PHYSICS ====================
@@ -730,6 +732,51 @@
       ctx.fillRect(0, 0, W, H);
     }
 
+    // Stars (level 3 only)
+    if (lvl === 3) {
+      ctx.globalAlpha = 0.6;
+      for (var si = 0; si < 40; si++) {
+        var starX = ((si * 137 + 53) % W);
+        var starY = ((si * 89 + 17) % (H * 0.5));
+        var twinkle = 0.4 + Math.sin(t * 2 + si * 0.7) * 0.3;
+        ctx.globalAlpha = twinkle;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(starX, starY, 1 + (si % 3) * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    // Distant mountains/hills silhouette
+    var mountainParallax = camera.x * 0.15;
+    ctx.globalAlpha = 0.2;
+    ctx.fillStyle = lvl === 1 ? '#1a6a30' : lvl === 2 ? '#1a3a4a' : '#1a0a2a';
+    ctx.beginPath();
+    ctx.moveTo(0, H * 0.65);
+    for (var mi = 0; mi <= W; mi += 40) {
+      var mh = Math.sin((mi + mountainParallax) * 0.008) * 40 + Math.sin((mi + mountainParallax) * 0.015) * 20;
+      ctx.lineTo(mi, H * 0.55 - mh);
+    }
+    ctx.lineTo(W, H * 0.65);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Animated clouds
+    ctx.globalAlpha = lvl === 3 ? 0.08 : 0.15;
+    for (var ci = 0; ci < 5; ci++) {
+      var cloudX = ((ci * 200 + t * (12 + ci * 3)) % (W + 200)) - 100;
+      var cloudY = 30 + ci * 25;
+      ctx.fillStyle = lvl === 3 ? '#554488' : '#fff';
+      ctx.beginPath();
+      ctx.arc(cloudX, cloudY, 18, 0, Math.PI * 2);
+      ctx.arc(cloudX + 20, cloudY - 5, 22, 0, Math.PI * 2);
+      ctx.arc(cloudX + 40, cloudY, 16, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
     // Parallax trees (background layer)
     var parallax = camera.x * 0.3;
     ctx.globalAlpha = 0.25;
@@ -740,10 +787,14 @@
       if (dx < -50 || dx > W + 50) continue;
       if (d.type === 'tree') {
         ctx.fillStyle = lvl === 1 ? '#1a5a20' : lvl === 2 ? '#2a4a3a' : '#2a1a3a';
+        // Trunk
+        ctx.fillRect(dx - 3, d.y - 12 * d.size, 6, 14 * d.size);
+        // Canopy — layered circles
         ctx.beginPath();
         ctx.arc(dx, d.y - 20 * d.size, 15 * d.size, 0, Math.PI * 2);
+        ctx.arc(dx - 8 * d.size, d.y - 16 * d.size, 10 * d.size, 0, Math.PI * 2);
+        ctx.arc(dx + 8 * d.size, d.y - 16 * d.size, 10 * d.size, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillRect(dx - 2, d.y - 8 * d.size, 4, 10 * d.size);
       }
     }
     ctx.globalAlpha = 1;
@@ -761,15 +812,93 @@
       if (p.type === 'ground') {
         ctx.fillStyle = gameState.level === 1 ? '#4a8a30' : gameState.level === 2 ? '#3a5a4a' : '#3a2a4a';
         ctx.fillRect(px, py, p.w, p.h);
+        // Grass top strip
         ctx.fillStyle = gameState.level === 1 ? '#5aa040' : gameState.level === 2 ? '#4a6a5a' : '#4a3a5a';
         ctx.fillRect(px, py, p.w, 4);
+        // Grass tufts
+        ctx.fillStyle = gameState.level === 1 ? '#6ab850' : gameState.level === 2 ? '#5a7a6a' : '#5a4a6a';
+        var visibleLeft = Math.max(0, Math.floor(-px / 18));
+        var visibleRight = Math.min(Math.ceil(p.w / 18), Math.ceil((W - px) / 18));
+        for (var g = visibleLeft; g < visibleRight; g++) {
+          var gx = px + g * 18 + ((g * 7) % 5);
+          ctx.beginPath();
+          ctx.moveTo(gx, py);
+          ctx.lineTo(gx + 2, py - 4 - (g % 3));
+          ctx.lineTo(gx + 4, py);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(gx + 7, py);
+          ctx.lineTo(gx + 9, py - 3 - (g % 2));
+          ctx.lineTo(gx + 11, py);
+          ctx.fill();
+        }
+        // Occasional flowers/mushrooms on ground
+        for (var fi = visibleLeft; fi < visibleRight; fi += 4) {
+          var fx = px + fi * 18 + 10;
+          if ((fi * 13) % 7 < 2) {
+            // Small flower
+            ctx.fillStyle = (fi % 2 === 0) ? '#ff6b9d' : '#ffd700';
+            ctx.beginPath();
+            ctx.arc(fx, py - 3, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = gameState.level === 1 ? '#3a7a20' : '#3a5a4a';
+            ctx.fillRect(fx - 0.5, py - 2, 1, 3);
+          } else if ((fi * 13) % 7 === 3) {
+            // Small mushroom
+            ctx.fillStyle = '#cc4444';
+            ctx.beginPath();
+            ctx.arc(fx, py - 4, 3, Math.PI, 0);
+            ctx.fill();
+            ctx.fillStyle = '#ddc8a0';
+            ctx.fillRect(fx - 1, py - 4, 2, 4);
+            // Mushroom dots
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(fx - 1, py - 5, 0.8, 0, Math.PI * 2);
+            ctx.arc(fx + 1.5, py - 5.5, 0.6, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
       } else {
         var alpha = p.type === 'crumble' && p.crumbleTimer > 0 ? Math.max(0, 1 - p.crumbleTimer / 30) : 1;
         ctx.globalAlpha = alpha;
         ctx.fillStyle = p.type === 'moving' ? '#6a9aff' : p.type === 'crumble' ? '#c4a060' : '#8a6a40';
         ctx.fillRect(px, py, p.w, p.h);
+        // Highlight strip
         ctx.fillStyle = p.type === 'moving' ? '#8ab4ff' : p.type === 'crumble' ? '#d4b070' : '#9a7a50';
         ctx.fillRect(px, py, p.w, 3);
+        // Wood grain lines for wood platforms
+        if (p.type === 'wood') {
+          ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+          ctx.lineWidth = 0.5;
+          for (var wg = 0; wg < p.w; wg += 12) {
+            ctx.beginPath();
+            ctx.moveTo(px + wg, py + 4);
+            ctx.bezierCurveTo(px + wg + 3, py + 3, px + wg + 6, py + 7, px + wg + 10, py + 5);
+            ctx.stroke();
+          }
+          // Wood end caps
+          ctx.fillStyle = 'rgba(0,0,0,0.1)';
+          ctx.fillRect(px, py, 3, p.h);
+          ctx.fillRect(px + p.w - 3, py, 3, p.h);
+        }
+        // Moving platform glow
+        if (p.type === 'moving') {
+          ctx.strokeStyle = 'rgba(106,154,255,0.4)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(px - 1, py - 1, p.w + 2, p.h + 2);
+        }
+        // Crumble cracks
+        if (p.type === 'crumble' && p.crumbleTimer > 0) {
+          ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(px + p.w * 0.3, py);
+          ctx.lineTo(px + p.w * 0.35, py + p.h);
+          ctx.moveTo(px + p.w * 0.7, py);
+          ctx.lineTo(px + p.w * 0.65, py + p.h);
+          ctx.stroke();
+        }
         ctx.globalAlpha = 1;
       }
     }
@@ -782,13 +911,51 @@
     // Invulnerability blink
     if (gameState.invulnTimer > 0 && Math.floor(gameState.invulnTimer * 10) % 2 === 0) return;
 
+    // Footstep trail particles when moving on ground
+    if (player.onGround && Math.abs(player.vx) > 0.5 && Math.floor(time * 0.05) % 3 === 0) {
+      particles.push({
+        x: player.x + player.w / 2, y: player.y + player.h,
+        vx: (Math.random() - 0.5) * 0.5, vy: -Math.random() * 0.5,
+        life: 0.5, decay: 0.03, size: 2 + Math.random(), color: 'rgba(78,205,196,0.4)'
+      });
+    }
+
     ctx.save();
     ctx.translate(px + player.w / 2, py + player.h / 2);
     if (!player.facingRight) ctx.scale(-1, 1);
 
-    // Body
+    // Squash/stretch on jump
+    var scaleX = 1, scaleY = 1;
+    if (!player.onGround) {
+      if (player.vy < -3) { scaleX = 0.85; scaleY = 1.15; }  // stretching up
+      else if (player.vy > 3) { scaleX = 1.1; scaleY = 0.9; } // squashing down
+    }
+    ctx.scale(scaleX, scaleY);
+
+    // Leaf cape/wings (behind body)
+    var t = time * 0.001;
+    var capeWave = Math.sin(t * 3) * 3;
+    ctx.fillStyle = '#2a8a50';
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(-3, -player.h / 2 + 10);
+    ctx.quadraticCurveTo(-14 - capeWave, 0, -10 - capeWave, player.h / 2 - 6);
+    ctx.lineTo(-3, player.h / 2 - 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Body (rounded)
     ctx.fillStyle = '#4ecdc4';
-    ctx.fillRect(-player.w / 2, -player.h / 2 + 4, player.w, player.h - 4);
+    ctx.beginPath();
+    ctx.ellipse(0, 2, player.w / 2, player.h / 2 - 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Belly highlight
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.beginPath();
+    ctx.ellipse(1, 4, player.w / 2 - 4, player.h / 2 - 8, 0, 0, Math.PI * 2);
+    ctx.fill();
 
     // Head
     ctx.fillStyle = '#45b7d1';
@@ -796,21 +963,69 @@
     ctx.arc(0, -player.h / 2 + 6, 10, 0, Math.PI * 2);
     ctx.fill();
 
-    // Eyes
-    ctx.fillStyle = '#fff';
+    // Pointed ears
+    ctx.fillStyle = '#45b7d1';
     ctx.beginPath();
-    ctx.arc(3, -player.h / 2 + 4, 3, 0, Math.PI * 2);
+    ctx.moveTo(-7, -player.h / 2 + 0);
+    ctx.lineTo(-11, -player.h / 2 - 6);
+    ctx.lineTo(-3, -player.h / 2 + 2);
     ctx.fill();
-    ctx.fillStyle = '#1a1a2e';
     ctx.beginPath();
-    ctx.arc(4, -player.h / 2 + 4, 1.5, 0, Math.PI * 2);
+    ctx.moveTo(7, -player.h / 2 + 0);
+    ctx.lineTo(11, -player.h / 2 - 6);
+    ctx.lineTo(3, -player.h / 2 + 2);
+    ctx.fill();
+    // Inner ear
+    ctx.fillStyle = '#ff9aa2';
+    ctx.beginPath();
+    ctx.moveTo(-7, -player.h / 2 + 1);
+    ctx.lineTo(-9, -player.h / 2 - 3);
+    ctx.lineTo(-4, -player.h / 2 + 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(7, -player.h / 2 + 1);
+    ctx.lineTo(9, -player.h / 2 - 3);
+    ctx.lineTo(4, -player.h / 2 + 2);
     ctx.fill();
 
-    // Legs (animated)
+    // Eyes (larger, expressive)
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.ellipse(4, -player.h / 2 + 5, 3.5, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(-2, -player.h / 2 + 5, 2.5, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Pupils
+    ctx.fillStyle = '#1a1a2e';
+    ctx.beginPath();
+    ctx.arc(5, -player.h / 2 + 5, 1.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(-1, -player.h / 2 + 5, 1.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Eye shine
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(5.5, -player.h / 2 + 4, 0.7, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Smile
+    ctx.strokeStyle = '#2a6a6a';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(3, -player.h / 2 + 8, 4, 0.1, Math.PI - 0.1);
+    ctx.stroke();
+
+    // Legs (animated, rounder)
     var legOffset = player.onGround ? Math.sin(player.animFrame * Math.PI / 2) * 4 : 2;
     ctx.fillStyle = '#3a9a8a';
-    ctx.fillRect(-6, player.h / 2 - 6, 5, 6 + legOffset);
-    ctx.fillRect(1, player.h / 2 - 6, 5, 6 - legOffset);
+    ctx.beginPath();
+    ctx.ellipse(-4, player.h / 2 - 2 + legOffset * 0.5, 3, 4 + legOffset * 0.3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(4, player.h / 2 - 2 - legOffset * 0.5, 3, 4 - legOffset * 0.3, 0, 0, Math.PI * 2);
+    ctx.fill();
 
     ctx.restore();
   }
@@ -942,6 +1157,118 @@
     ctx.globalAlpha = 1;
   }
 
+  function drawTriggerGates() {
+    var t = time * 0.001;
+    for (var i = 0; i < triggers.length; i++) {
+      var tr = triggers[i];
+      if (tr.triggered) continue;
+      var tx = tr.x - camera.x;
+      var ty = tr.y - camera.y;
+      if (tx < -40 || tx > W + 40) continue;
+
+      // Glowing portal
+      var pulse = 0.6 + Math.sin(t * 3 + i) * 0.3;
+      ctx.globalAlpha = pulse * 0.3;
+      var glow = ctx.createRadialGradient(tx + tr.w / 2, ty + tr.h / 2, 5, tx + tr.w / 2, ty + tr.h / 2, 40);
+      glow.addColorStop(0, 'rgba(78,205,196,0.5)');
+      glow.addColorStop(1, 'rgba(78,205,196,0)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(tx - 20, ty - 10, tr.w + 40, tr.h + 20);
+
+      // Portal frame
+      ctx.globalAlpha = pulse * 0.7;
+      ctx.strokeStyle = '#4ecdc4';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(tx, ty, tr.w, tr.h);
+
+      // Inner shimmer
+      ctx.fillStyle = 'rgba(78,205,196,' + (pulse * 0.15) + ')';
+      ctx.fillRect(tx + 2, ty + 2, tr.w - 4, tr.h - 4);
+
+      // Sparkle particles inside portal
+      for (var sp = 0; sp < 3; sp++) {
+        var sparkY = ty + tr.h * (0.2 + (Math.sin(t * 2 + sp * 2 + i) + 1) * 0.3);
+        var sparkX = tx + tr.w * 0.3 + Math.sin(t * 3 + sp * 1.5) * tr.w * 0.2;
+        ctx.globalAlpha = pulse * 0.5;
+        ctx.fillStyle = '#ffd700';
+        ctx.beginPath();
+        ctx.arc(sparkX, sparkY, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // "SPELL!" label
+      ctx.globalAlpha = pulse;
+      ctx.fillStyle = '#ffd700';
+      ctx.font = 'bold 11px "Fredoka One",cursive';
+      ctx.textAlign = 'center';
+      ctx.fillText('SPELL!', tx + tr.w / 2, ty - 8);
+
+      // Arrow pointing down
+      ctx.beginPath();
+      ctx.moveTo(tx + tr.w / 2 - 5, ty - 3);
+      ctx.lineTo(tx + tr.w / 2 + 5, ty - 3);
+      ctx.lineTo(tx + tr.w / 2, ty + 3);
+      ctx.fill();
+      ctx.textAlign = 'left';
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function drawDirectionArrow() {
+    // Find next untriggered gate
+    var nextGate = null;
+    for (var i = 0; i < triggers.length; i++) {
+      if (!triggers[i].triggered) { nextGate = triggers[i]; break; }
+    }
+    if (!nextGate) return;
+
+    var t = time * 0.001;
+    var arrowX, arrowDir;
+    var gateScreenX = nextGate.x + nextGate.w / 2 - camera.x;
+
+    if (gateScreenX > W - 30) {
+      arrowX = W - 40;
+      arrowDir = 1;
+    } else if (gateScreenX < 30) {
+      arrowX = 40;
+      arrowDir = -1;
+    } else {
+      return; // gate is on screen, no arrow needed
+    }
+
+    var bob = Math.sin(t * 4) * 3;
+    ctx.globalAlpha = 0.6;
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath();
+    if (arrowDir > 0) {
+      ctx.moveTo(arrowX + bob, H * 0.5 - 10);
+      ctx.lineTo(arrowX + 15 + bob, H * 0.5);
+      ctx.lineTo(arrowX + bob, H * 0.5 + 10);
+    } else {
+      ctx.moveTo(arrowX - bob, H * 0.5 - 10);
+      ctx.lineTo(arrowX - 15 - bob, H * 0.5);
+      ctx.lineTo(arrowX - bob, H * 0.5 + 10);
+    }
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+
+  function drawTutorial() {
+    if (gameState.stage !== 'playing') return;
+    var elapsed = (time - levelStartTime) * 0.001;
+    if (elapsed > 8) return;
+    var alpha = elapsed < 6 ? 0.8 : (8 - elapsed) / 2;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(W * 0.1, H * 0.02, W * 0.8, 28);
+    ctx.fillStyle = '#fff';
+    ctx.font = '12px "Fredoka One",cursive';
+    ctx.textAlign = 'center';
+    ctx.fillText('Walk to the glowing portals \u2192 Spell words to progress!', W / 2, H * 0.02 + 18);
+    ctx.textAlign = 'left';
+    ctx.globalAlpha = 1;
+  }
+
   function drawHUD() {
     // HP hearts
     for (var i = 0; i < MAX_HP; i++) {
@@ -1014,20 +1341,25 @@
       }
     }
 
-    // Letter choices
+    // Letter choices (large buttons)
     var choiceY = H * 0.45;
-    var choiceSpacing = 60;
+    var choiceSpacing = 70;
     var startX = W / 2 - (gameState.wordChoices.length * choiceSpacing) / 2 + choiceSpacing / 2;
-    ctx.font = 'bold 22px "Fredoka One",cursive';
+    ctx.font = 'bold 26px "Fredoka One",cursive';
     for (var i = 0; i < gameState.wordChoices.length; i++) {
       var cx = startX + i * choiceSpacing;
+      // Button shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.beginPath();
+      ctx.arc(cx, choiceY + 2, 28, 0, Math.PI * 2);
+      ctx.fill();
       // Button background
       ctx.fillStyle = '#2a5a8a';
       ctx.beginPath();
-      ctx.arc(cx, choiceY, 22, 0, Math.PI * 2);
+      ctx.arc(cx, choiceY, 28, 0, Math.PI * 2);
       ctx.fill();
       ctx.strokeStyle = '#4a8acc';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.stroke();
       // Letter
       ctx.fillStyle = '#fff';
@@ -1228,11 +1560,14 @@
 
       drawBackground(gameState.level);
       drawPlatforms();
+      drawTriggerGates();
       drawCheckpoints();
       drawEnemies();
       drawPlayer();
       drawParticles();
       drawHUD();
+      drawTutorial();
+      drawDirectionArrow();
       drawWordPrompt();
       drawTouchControls();
       drawFlash();
@@ -1307,60 +1642,49 @@
       // Word prompt letter selection
       if (gameState.wordPromptActive) {
         var choiceY = H * 0.45;
-        var choiceSpacing = 60;
+        var choiceSpacing = 70;
         var startX = W / 2 - (gameState.wordChoices.length * choiceSpacing) / 2 + choiceSpacing / 2;
         for (var c = 0; c < gameState.wordChoices.length; c++) {
           var cx = startX + c * choiceSpacing;
           var dist = Math.sqrt((tx - cx) * (tx - cx) + (ty - choiceY) * (ty - choiceY));
-          if (dist < 28) {
+          if (dist < 32) {
             selectLetter(gameState.wordChoices[c]);
             return;
           }
         }
         return;
       }
-
-      // Touch controls
-      if (ty > H - 90) {
-        if (tx < 80) { touchLeft = true; setTimeout(function(){ touchLeft = false; }, 100); }
-        else if (tx < 150) { touchRight = true; setTimeout(function(){ touchRight = false; }, 100); }
-        else if (tx > W - 95) { touchJump = true; setTimeout(function(){ touchJump = false; }, 150); }
-      }
     }
   }
 
-  function handleTouchStart(e) {
-    e.preventDefault();
+  function updateTouchButtons(touches) {
     var rect = canvas.getBoundingClientRect();
-    for (var i = 0; i < e.touches.length; i++) {
-      var tx = e.touches[i].clientX - rect.left;
-      var ty = e.touches[i].clientY - rect.top;
+    touchLeft = false; touchRight = false; touchJump = false;
+    for (var i = 0; i < touches.length; i++) {
+      var tx = touches[i].clientX - rect.left;
+      var ty = touches[i].clientY - rect.top;
       if (ty > H - 90) {
         if (tx < 80) touchLeft = true;
         else if (tx < 150) touchRight = true;
         else if (tx > W - 95) touchJump = true;
       }
     }
+  }
+
+  function handleTouchStart(e) {
+    e.preventDefault();
+    updateTouchButtons(e.touches);
     handleTap(e);
   }
 
+  function handleTouchMove(e) {
+    e.preventDefault();
+    updateTouchButtons(e.touches);
+  }
+
   function handleTouchEnd(e) {
-    if (e.touches.length === 0) {
-      touchLeft = false; touchRight = false; touchJump = false;
-    } else {
-      // Recalculate which buttons are still held
-      var rect = canvas.getBoundingClientRect();
-      touchLeft = false; touchRight = false; touchJump = false;
-      for (var i = 0; i < e.touches.length; i++) {
-        var tx = e.touches[i].clientX - rect.left;
-        var ty = e.touches[i].clientY - rect.top;
-        if (ty > H - 90) {
-          if (tx < 80) touchLeft = true;
-          else if (tx < 150) touchRight = true;
-          else if (tx > W - 95) touchJump = true;
-        }
-      }
-    }
+    e.preventDefault();
+    updateTouchButtons(e.touches);
   }
 
   // ==================== PUBLIC API ====================
@@ -1383,7 +1707,8 @@
     document.addEventListener('keyup', handleKeyUp);
     canvas.addEventListener('click', handleTap);
     canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-    canvas.addEventListener('touchend', handleTouchEnd);
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
 
     canvas.style.pointerEvents = 'auto';
     animId = requestAnimationFrame(loop);
@@ -1397,6 +1722,7 @@
     document.removeEventListener('keyup', handleKeyUp);
     canvas.removeEventListener('click', handleTap);
     canvas.removeEventListener('touchstart', handleTouchStart);
+    canvas.removeEventListener('touchmove', handleTouchMove);
     canvas.removeEventListener('touchend', handleTouchEnd);
     canvas.style.pointerEvents = 'none';
   }
