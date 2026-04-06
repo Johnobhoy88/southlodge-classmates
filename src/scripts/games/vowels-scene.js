@@ -236,6 +236,23 @@
     ctx.globalAlpha = 1;
   }
 
+  // Layer 1b: Noise-based water texture overlay
+  function drawWaterNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.03 + progress * 0.025) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = 0; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.006 + t * 0.15, ny * 0.006 + t * 0.08);
+        var depth = ny / H;
+        var l = 14 + n * 10 - depth * 6;
+        ctx.fillStyle = 'hsl(' + Math.round(200 + depth * 20) + ',45%,' + Math.round(Math.max(4, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   // Layer 2: Sandy ocean floor
   function drawOceanFloor() {
     var floorY = H * 0.88;
@@ -367,9 +384,10 @@
       var f = fish[i];
       if (progress < f.minProgress) continue;
 
-      // Movement
+      // Movement — noise-based organic drift
+      var noiseDrift = FXCore.noise2D(f.x * 0.005 + t * 0.3, f.y * 0.005 + i * 10) * 0.4;
       f.x += f.speed * 0.5;
-      f.y += f.yDrift + Math.sin(t * 0.5 + f.swimPhase) * 0.2;
+      f.y += f.yDrift + Math.sin(t * 0.5 + f.swimPhase) * 0.2 + noiseDrift;
       var tailWag = Math.sin(t * f.swimSpeed + f.swimPhase) * 0.3;
 
       // Wrap
@@ -519,6 +537,42 @@
     ctx.globalAlpha = 1;
   }
 
+  // Layer 9: Screen-blend glow layer (bloom on light sources)
+  function drawGlowLayer() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Glow at light ray source points (top of canvas)
+    for (var i = 0; i < 5; i++) {
+      var rx = W * (0.15 + i * 0.18) + Math.sin(t * 0.3 + i * 2) * 20;
+      var glowR = 60 + progress * 30;
+      ctx.globalAlpha = (0.06 + progress * 0.05) * brightness;
+      var rg = ctx.createRadialGradient(rx, 0, 0, rx, 0, glowR);
+      rg.addColorStop(0, 'rgba(180,230,255,0.25)');
+      rg.addColorStop(0.5, 'rgba(140,200,240,0.08)');
+      rg.addColorStop(1, 'rgba(140,200,240,0)');
+      ctx.fillStyle = rg;
+      ctx.fillRect(rx - glowR, 0, glowR * 2, glowR * 1.5);
+    }
+
+    // Glow around caustic spots on ocean floor
+    for (var i = 0; i < caustics.length; i++) {
+      var c = caustics[i];
+      var cx = c.x + Math.sin(t * c.speed + c.phase) * 20;
+      var cy = c.y + Math.cos(t * c.speed * 0.7 + c.phase) * 8;
+      var sz = c.size * 1.5;
+      ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+      var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, sz);
+      cg.addColorStop(0, 'rgba(160,220,255,0.2)');
+      cg.addColorStop(1, 'rgba(160,220,255,0)');
+      ctx.fillStyle = cg;
+      ctx.fillRect(cx - sz, cy - sz, sz * 2, sz * 2);
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SOUND ENGINE ====================
   var audioCtx = null;
 
@@ -622,6 +676,7 @@
 
     // Draw all layers
     drawOcean();
+    drawWaterNoise();
     drawOceanFloor();
     drawCaustics();
     drawShelves();
@@ -629,6 +684,7 @@
     drawFish();
     drawFloatingVowels();
     drawBubbles();
+    drawGlowLayer();
 
     updateParticles(dt);
     drawParticles();
