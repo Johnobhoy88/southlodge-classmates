@@ -224,6 +224,24 @@
     ctx.fill();
   }
 
+  // Noise snow terrain — organic icy surface detail
+  function drawSnowNoise() {
+    var t = time * 0.001;
+    var groundY = Math.floor(H * 0.68);
+    var noiseAlpha = (0.03 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = groundY; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.007 + t * 0.04, ny * 0.007);
+        var depth = (ny - groundY) / (H - groundY);
+        var l = 40 + n * 12 - depth * 10;
+        ctx.fillStyle = 'hsl(' + Math.round(215 + n * 5) + ',' + Math.round(8 + depth * 4) + '%,' + Math.round(Math.max(15, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawCrystals() {
     var t = time * 0.001;
     for (var i = 0; i < crystals.length; i++) {
@@ -283,8 +301,9 @@
     for (var i = 0; i < snowflakes.length; i++) {
       var s = snowflakes[i];
       if (i / snowflakes.length > intensity) continue;
+      var nWind = FXCore.noise2D(s.x * 0.005 + t * 0.2, s.y * 0.005 + i * 5) * 0.35;
       s.y += s.speed * 0.5;
-      s.x += s.windDrift * 0.4 + Math.sin(t * s.wobbleSpeed + s.wobble) * 0.3;
+      s.x += s.windDrift * 0.4 + Math.sin(t * s.wobbleSpeed + s.wobble) * 0.3 + nWind;
       if (s.y > H + 5) { s.y = -5; s.x = rand(0, W); }
       if (s.x > W + 5) s.x = -5;
       ctx.globalAlpha = (0.3 + progress * 0.3) * brightness;
@@ -341,6 +360,45 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend aurora glow and crystal bloom
+  function drawFrostGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Aurora bloom — soft glow along aurora band positions
+    for (var i = 0; i < auroraWaves.length; i++) {
+      var a = auroraWaves[i];
+      var auroraY = a.y + a.width * 0.5;
+      var bloomH = a.width * 3;
+      ctx.globalAlpha = (0.04 + progress * 0.05) * brightness;
+      var ag = ctx.createLinearGradient(0, auroraY - bloomH, 0, auroraY + bloomH);
+      ag.addColorStop(0, a.color + '0)');
+      ag.addColorStop(0.4, a.color + '0.08)');
+      ag.addColorStop(0.6, a.color + '0.06)');
+      ag.addColorStop(1, a.color + '0)');
+      ctx.fillStyle = ag;
+      ctx.fillRect(0, auroraY - bloomH, W, bloomH * 2);
+    }
+
+    // Crystal tip glow
+    for (var i = 0; i < crystals.length; i++) {
+      var c = crystals[i];
+      if (progress < c.minProgress) continue;
+      var growFactor = Math.min(1, (progress - c.minProgress) / 0.3 + 0.3);
+      var h = c.maxH * growFactor;
+      var shimmer = 0.5 + Math.sin(t * 1.5 + c.phase) * 0.2;
+      ctx.globalAlpha = shimmer * 0.08 * brightness;
+      var cg = ctx.createRadialGradient(c.x, c.baseY - h, 0, c.x, c.baseY - h, c.width * 3);
+      cg.addColorStop(0, 'rgba(180,230,255,0.2)');
+      cg.addColorStop(1, 'rgba(180,230,255,0)');
+      ctx.fillStyle = cg;
+      ctx.fillRect(c.x - c.width * 3, c.baseY - h - c.width * 3, c.width * 6, c.width * 6);
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -361,10 +419,12 @@
       drawMountains();
       drawFrozenLake();
       drawSnowGround();
+      drawSnowNoise();
       drawCrystals();
       drawFrostEdges();
       drawVapour();
       drawSnow();
+      drawFrostGlow();
     },
     exit: function() {}
   };
