@@ -218,6 +218,25 @@
     ctx.fillRect(0, H * 0.7, W, H * 0.3);
   }
 
+  // Noise meadow texture — organic grass/ground detail
+  function drawMeadowNoise() {
+    var t = time * 0.001;
+    var groundY = Math.floor(H * 0.7);
+    var noiseAlpha = (0.03 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = groundY; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.007 + t * 0.05, ny * 0.007 + t * 0.02);
+        var depth = (ny - groundY) / (H - groundY);
+        var hue = 140 - depth * 10;
+        var l = 16 + n * 8;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',' + Math.round(35 + n * 8) + '%,' + Math.round(Math.max(8, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawGrass() {
     var t = time * 0.001;
     for (var i = 0; i < grassBlades.length; i++) {
@@ -277,8 +296,9 @@
     for (var i = 0; i < fireflies.length; i++) {
       var f = fireflies[i];
       if (progress < f.minProgress) continue;
-      f.x += f.driftX + Math.sin(t * 0.4 + f.phase) * 0.15;
-      f.y += f.driftY + Math.cos(t * 0.5 + f.phase) * 0.1;
+      var nDrift = FXCore.noise2D(f.x * 0.008 + t * 0.25, f.y * 0.008 + i * 7) * 0.35;
+      f.x += f.driftX + Math.sin(t * 0.4 + f.phase) * 0.15 + nDrift;
+      f.y += f.driftY + Math.cos(t * 0.5 + f.phase) * 0.1 + nDrift * 0.3;
       if (f.x < 0) f.x = W; if (f.x > W) f.x = 0;
       if (f.y < H * 0.4) f.y = H * 0.85; if (f.y > H * 0.9) f.y = H * 0.4;
 
@@ -323,6 +343,39 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend aurora glow and firefly bloom
+  function drawMeadowGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Aurora bloom — wide soft glow along aurora bands
+    for (var i = 0; i < auroraWaves.length; i++) {
+      var a = auroraWaves[i];
+      var bandY = a.y + a.width * 0.5;
+      var bloomH = a.width * 3;
+      ctx.globalAlpha = (0.04 + progress * 0.05) * brightness;
+      var ag = ctx.createLinearGradient(0, bandY - bloomH, 0, bandY + bloomH);
+      ag.addColorStop(0, a.color + '0)');
+      ag.addColorStop(0.3, a.color + '0.08)');
+      ag.addColorStop(0.7, a.color + '0.05)');
+      ag.addColorStop(1, a.color + '0)');
+      ctx.fillStyle = ag;
+      ctx.fillRect(0, bandY - bloomH, W, bloomH * 2);
+    }
+
+    // Horizon dusk glow
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var hg = ctx.createRadialGradient(W * 0.5, H * 0.5, 0, W * 0.5, H * 0.5, W * 0.5);
+    hg.addColorStop(0, 'rgba(255,180,120,0.1)');
+    hg.addColorStop(0.5, 'rgba(255,150,100,0.04)');
+    hg.addColorStop(1, 'rgba(255,150,100,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, H * 0.3, W, H * 0.4);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -342,10 +395,12 @@
       drawMountains();
       drawHills();
       drawMeadow();
+      drawMeadowNoise();
       drawGrass();
       drawFlowers();
       drawSoundSymbols();
       drawFireflies();
+      drawMeadowGlow();
     },
     exit: function() {}
   };
