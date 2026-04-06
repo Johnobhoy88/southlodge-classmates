@@ -24228,7 +24228,7 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
 
 (function(){
   // ============================================================
-  // WORD FOREST PLATFORMER — TICK 2: Hand-crafted Mario-quality levels
+  // WORD FOREST PLATFORMER — TICK 3: Enemy polish + game feel juice
   // Mario/Sonic quality platformer with spelling integration.
   // Tile-based levels, proper physics, hand-crafted maps.
   // For the kids of South Lodge Primary, Invergordon
@@ -24322,6 +24322,12 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
   var checkpoint = null;
   var finishPos = null;
   var bgTheme = 'forest';
+
+  // ==================== GAME FEEL ====================
+  var floatingTexts = [];     // Score popups, combo text
+  var freezeTimer = 0;        // Freeze-frame on stomp (Mario-style hit stop)
+  var comboCount = 0;         // Consecutive stomps without touching ground
+  var comboTimer = 0;
 
   // ==================== SPELLING ====================
   var wordList = [];
@@ -24810,6 +24816,7 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
         coins++;
         playSound('starCollect');
         spawnParticles(co.x + co.w / 2, co.y + co.h / 2, 6, '#ffd700', 2);
+        spawnText(co.x + co.w / 2, co.y - 5, '+10', '#ffd700', 12);
       }
     }
 
@@ -24927,11 +24934,17 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
             damagePlayer();
             e.alive = false;
           } else if (P.vy > 0 && P.y + P.h < e.y + e.h * 0.6) {
-            // Stomp!
+            // === STOMP! Mario-style juice ===
+            freezeTimer = 0.06; // Hit-stop freeze frame
+            comboCount++;
+            comboTimer = 1.5;
+            var stompScore = 100 * comboCount; // Combo multiplier!
+
             if (e.type === 'shell' && !e.isShell) {
               e.isShell = true;
               e.shellVx = P.facingR ? 5 : -5;
               P.vy = JUMP_FORCE * 0.5;
+              spawnText(e.x + e.w / 2, e.y - 10, 'SHELL!', '#f1c40f', 16);
             } else if (e.type === 'shell' && e.isShell) {
               e.shellVx = P.facingR ? 5 : -5;
               P.vy = JUMP_FORCE * 0.5;
@@ -24939,11 +24952,17 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
               e.alive = false;
               P.vy = JUMP_FORCE * 0.6;
             }
-            score += 100;
-            playSound('correct');
-            spawnParticles(e.x + e.w / 2, e.y + e.h / 2, 8, '#ffd700', 3);
+            score += stompScore;
+            spawnText(e.x + e.w / 2, e.y - 5, '+' + stompScore, '#ffd700', comboCount > 1 ? 18 : 14);
+            if (comboCount > 1) spawnText(e.x + e.w / 2, e.y - 25, comboCount + 'x COMBO!', '#ff6b6b', 12);
+            playSound(comboCount > 2 ? 'streak' : 'correct');
+            spawnParticles(e.x + e.w / 2, e.y + e.h / 2, 8 + comboCount * 2, '#ffd700', 3);
+            // Screen shake scales with combo
+            shakeTimer = 0.08 + comboCount * 0.02;
+            shakeAmt = 2 + comboCount;
           } else {
             damagePlayer();
+            comboCount = 0;
           }
         }
       }
@@ -24990,6 +25009,8 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
         wordsSpelled++;
         score += 200;
         playSound('streak');
+        spawnText(P.x + P.w / 2, P.y - 20, '+200 WORD!', '#4ecdc4', 18);
+        freezeTimer = 0.1; // Satisfying pause on word complete
         // Open the nearest closed gate
         for (var i = 0; i < spellGates.length; i++) {
           if (!spellGates[i].open) {
@@ -25097,6 +25118,34 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
       p.life -= p.decay;
       if (p.life <= 0) particles.splice(i, 1);
     }
+  }
+
+  // ==================== FLOATING TEXT ====================
+  function spawnText(x, y, text, color, size) {
+    floatingTexts.push({ x: x, y: y, text: text, color: color || '#fff', size: size || 14, life: 1, vy: -2 });
+  }
+
+  function updateFloatingTexts() {
+    for (var i = floatingTexts.length - 1; i >= 0; i--) {
+      var ft = floatingTexts[i];
+      ft.y += ft.vy;
+      ft.vy *= 0.95;
+      ft.life -= dt * 1.2;
+      if (ft.life <= 0) floatingTexts.splice(i, 1);
+    }
+  }
+
+  function drawFloatingTexts() {
+    for (var i = 0; i < floatingTexts.length; i++) {
+      var ft = floatingTexts[i];
+      ctx.globalAlpha = ft.life;
+      ctx.fillStyle = ft.color;
+      ctx.font = 'bold ' + ft.size + 'px "Fredoka One",cursive';
+      ctx.textAlign = 'center';
+      ctx.fillText(ft.text, ft.x - cam.x, ft.y - cam.y);
+    }
+    ctx.textAlign = 'left';
+    ctx.globalAlpha = 1;
   }
 
   // ==================== SOUND ====================
@@ -25905,6 +25954,14 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
 
     updateTransition();
 
+    // Freeze-frame (hit stop on stomp — makes it feel impactful)
+    if (freezeTimer > 0) { freezeTimer -= dt; ctx.restore(); animId = requestAnimationFrame(loop); return; }
+
+    // Combo timer decay
+    if (comboTimer > 0) { comboTimer -= dt; if (comboTimer <= 0) comboCount = 0; }
+    // Reset combo when landing
+    if (P.onGround && comboCount > 0 && comboTimer < 0.5) comboCount = 0;
+
     if (stage === 'title') {
       drawTitleScreen();
     } else if (stage === 'playing') {
@@ -25912,15 +25969,26 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
       updateEntities();
       updateCamera();
       updateParticles();
-      // Crumble platform timers
+      updateFloatingTexts();
+      // Crumble platform timers + activation when player stands on them
       for (var i = 0; i < crumblePlatforms.length; i++) {
         var kp = crumblePlatforms[i];
+        if (!kp.active) continue;
+        // Start crumbling when player stands on this tile
+        if (kp.timer === 0 && P.onGround) {
+          var pc = Math.floor((P.x + P.w / 2) / T);
+          var pr = Math.floor((P.y + P.h + 2) / T);
+          if (pc === kp.col && pr === kp.row) {
+            kp.timer = 0.01; // Start crumble countdown
+          }
+        }
         if (kp.timer > 0) {
           kp.timer += dt;
-          if (kp.timer > 1) {
+          if (kp.timer > 0.8) {
             kp.active = false;
             map[kp.row][kp.col] = '.';
-            spawnParticles(kp.col * T + T / 2, kp.row * T + 5, 6, '#c4a060', 2);
+            spawnParticles(kp.col * T + T / 2, kp.row * T + 5, 8, '#c4a060', 2);
+            playSound('wrong');
           }
         }
       }
@@ -25938,6 +26006,7 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
       drawEnemies();
       drawPlayer();
       drawParticles();
+      drawFloatingTexts();
       drawHUD();
       drawTutorial();
       drawSpellPrompt();
