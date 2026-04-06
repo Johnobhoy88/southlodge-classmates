@@ -209,6 +209,23 @@
     ctx.fill();
   }
 
+  // Layer 1b: Noise cave wall texture — rocky organic surface
+  function drawCaveNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.035 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.05, ny * 0.005);
+        var depth = ny / H;
+        var l = 8 + n * 8 - depth * 4;
+        ctx.fillStyle = 'hsl(' + Math.round(260 - depth * 20) + ',30%,' + Math.round(Math.max(2, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   // Layer 2: Crystals
   function drawCrystals() {
     var t = time * 0.001;
@@ -388,9 +405,10 @@
       var c = creatures[i];
       if (progress < c.minProgress) continue;
 
-      // Drift
-      c.x += c.speedX + Math.sin(t * 0.3 + c.phase) * 0.15;
-      c.y += c.speedY + Math.cos(t * 0.4 + c.phase) * 0.1;
+      // Drift — noise-based organic floating
+      var nDrift = FXCore.noise2D(c.x * 0.008 + t * 0.2, c.y * 0.008 + i * 7) * 0.25;
+      c.x += c.speedX + Math.sin(t * 0.3 + c.phase) * 0.15 + nDrift;
+      c.y += c.speedY + Math.cos(t * 0.4 + c.phase) * 0.1 + nDrift * 0.5;
       // Wrap
       if (c.x < W * 0.05) c.x = W * 0.95;
       if (c.x > W * 0.95) c.x = W * 0.05;
@@ -488,6 +506,41 @@
       ctx.arc(d.x, d.y - 3, 0.8, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Layer 8: Screen-blend crystal glow bloom
+  function drawCrystalBloom() {
+    var t = time * 0.001;
+    var pulse = crystalPulse;
+    ctx.globalCompositeOperation = 'screen';
+
+    for (var i = 0; i < crystals.length; i++) {
+      var c = crystals[i];
+      var basePulse = 0.5 + Math.sin(t * c.pulseSpeed + c.pulsePhase) * 0.2;
+      var intensity = (basePulse + pulse * 0.8) * brightness * (0.4 + progress * 0.4);
+      var bloomR = c.glowRadius * (1.8 + pulse * 0.6);
+
+      ctx.globalAlpha = intensity * 0.12;
+      var bg = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, bloomR);
+      bg.addColorStop(0, c.colorBase + '0.3)');
+      bg.addColorStop(0.4, c.colorBase + '0.08)');
+      bg.addColorStop(1, c.colorBase + '0)');
+      ctx.fillStyle = bg;
+      ctx.fillRect(c.x - bloomR, c.y - bloomR, bloomR * 2, bloomR * 2);
+    }
+
+    // Central ambient glow — cave atmosphere
+    var ambientR = Math.min(W, H) * 0.5;
+    ctx.globalAlpha = (0.03 + progress * 0.03 + pulse * 0.05) * brightness;
+    var ag = ctx.createRadialGradient(W * 0.5, H * 0.4, 0, W * 0.5, H * 0.4, ambientR);
+    ag.addColorStop(0, 'rgba(140,100,220,0.15)');
+    ag.addColorStop(0.5, 'rgba(80,120,200,0.05)');
+    ag.addColorStop(1, 'rgba(80,120,200,0)');
+    ctx.fillStyle = ag;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -589,12 +642,14 @@
 
     // Draw all layers
     drawCaveWalls();
+    drawCaveNoise();
     drawStalactites();
     drawCrystals();
     drawCreatures();
     drawCaveDust();
     drawPool();
     updateDroplets(dt);
+    drawCrystalBloom();
 
     // Particles on top
     updateParticles(dt);
