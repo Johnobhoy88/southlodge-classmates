@@ -317,9 +317,10 @@
     var t = time * 0.001;
     for (var i = 0; i < sawdust.length; i++) {
       var s = sawdust[i];
-      // Drift in gentle loops
-      s.x += s.speedX + Math.sin(t * 0.5 + s.phase) * 0.1;
-      s.y += s.speedY + Math.cos(t * 0.3 + s.phase) * 0.05;
+      // Drift in gentle loops with noise-based organic movement
+      var nDrift = FXCore.noise2D(s.x * 0.006 + t * 0.2, s.y * 0.006 + i * 7) * 0.3;
+      s.x += s.speedX + Math.sin(t * 0.5 + s.phase) * 0.1 + nDrift * 0.4;
+      s.y += s.speedY + Math.cos(t * 0.3 + s.phase) * 0.05 + nDrift * 0.2;
       if (s.x < 0) s.x = W; if (s.x > W) s.x = 0;
       if (s.y < 0) s.y = H * 0.75; if (s.y > H * 0.75) s.y = 0;
 
@@ -334,6 +335,36 @@
       ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // ==================== NOISE / GLOW / DRIFT ====================
+
+  function drawWorkshopNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < Math.floor(H * 0.55); ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.03, ny * 0.005);
+        var l = 18 + n * 8;
+        ctx.fillStyle = 'hsl(25,30%,' + Math.round(Math.max(10, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawLampGlow() {
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+    var lg = ctx.createRadialGradient(W * 0.5, H * 0.12, 0, W * 0.5, H * 0.12, W * 0.35);
+    lg.addColorStop(0, 'rgba(255,200,120,0.15)');
+    lg.addColorStop(0.4, 'rgba(255,180,100,0.05)');
+    lg.addColorStop(1, 'rgba(255,160,80,0)');
+    ctx.fillStyle = lg;
+    ctx.fillRect(W * 0.15, 0, W * 0.7, H * 0.5);
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -359,11 +390,13 @@
 
     draw: function(context, w, h, t) {
       drawWalls();
+      drawWorkshopNoise();
       drawLamp();
       drawGears();
       drawShelves();
       drawBench();
       drawSawdust();
+      drawLampGlow();
     },
 
     exit: function() {}

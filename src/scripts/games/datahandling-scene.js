@@ -80,12 +80,13 @@
       var c = clouds[i];
       var cx = c.x + t * c.speed * 18;
       if (cx > W + c.w) cx -= W + c.w * 2;
+      var nDrift = FXCore.noise2D(cx * 0.006 + t * 0.2, c.y * 0.006 + i * 7) * 0.3;
       ctx.globalAlpha = c.opacity * brightness * (1 - progress * 0.3);
       ctx.fillStyle = c.isGrey ? '#c8c8d0' : '#fff';
       var pw = c.w / c.puffs;
       for (var p = 0; p < c.puffs; p++) {
         ctx.beginPath();
-        ctx.arc(cx + p * pw * 0.7, c.y + Math.sin(p * 1.5) * 4, pw * 0.42, 0, Math.PI * 2);
+        ctx.arc(cx + p * pw * 0.7 + nDrift * 5, c.y + Math.sin(p * 1.5) * 4 + nDrift * 3, pw * 0.42, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -311,6 +312,45 @@
     ctx.globalAlpha = 1;
   }
 
+  // ==================== NOISE / GLOW / DRIFT ====================
+
+  function drawHillNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = Math.floor(H * 0.65); ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.03, ny * 0.005);
+        var l = 30 + n * 8;
+        ctx.fillStyle = 'hsl(130,25%,' + Math.round(Math.max(18, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawStationGlow() {
+    ctx.globalCompositeOperation = 'screen';
+    // Sky ambient glow
+    ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+    var sg = ctx.createRadialGradient(W * 0.5, H * 0.15, 0, W * 0.5, H * 0.15, W * 0.5);
+    sg.addColorStop(0, 'rgba(140,200,240,0.15)');
+    sg.addColorStop(0.4, 'rgba(140,200,240,0.05)');
+    sg.addColorStop(1, 'rgba(140,200,240,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(0, 0, W, H * 0.5);
+    // Instrument glow around station
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var ig = ctx.createRadialGradient(W * 0.5, H * 0.48, 0, W * 0.5, H * 0.48, W * 0.18);
+    ig.addColorStop(0, 'rgba(220,230,200,0.12)');
+    ig.addColorStop(0.5, 'rgba(220,230,200,0.04)');
+    ig.addColorStop(1, 'rgba(220,230,200,0)');
+    ctx.fillStyle = ig;
+    ctx.fillRect(W * 0.3, H * 0.3, W * 0.4, H * 0.4);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -327,6 +367,7 @@
     },
     draw: function() {
       drawSky();
+      drawHillNoise();
       drawClouds();
       drawHills();
       drawFence();
@@ -337,6 +378,7 @@
       drawWeatherVane();
       drawGrass();
       drawWindLines();
+      drawStationGlow();
     },
     exit: function() {}
   };

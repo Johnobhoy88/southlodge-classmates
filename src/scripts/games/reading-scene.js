@@ -317,9 +317,10 @@
     for (var i = 0; i < sparks.length; i++) {
       var s = sparks[i];
       if (progress < s.minProgress) continue;
-      // Rise and drift
+      // Rise and drift with noise-based organic movement
+      var nDrift = FXCore.noise2D(s.x * 0.006 + t * 0.2, s.y * 0.006 + i * 7) * 0.3;
       s.y -= s.speed * 0.5;
-      s.x += s.drift * 0.3 + Math.sin(t * 2 + i) * 0.2;
+      s.x += s.drift * 0.3 + Math.sin(t * 2 + i) * 0.2 + nDrift * 1.5;
       s.life -= 0.005;
       // Reset when dead or off screen
       if (s.life <= 0 || s.y < H * 0.05) {
@@ -356,6 +357,36 @@
     ctx.globalAlpha = 1;
   }
 
+  // ==================== NOISE / GLOW / DRIFT ====================
+
+  function drawForestNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.03, ny * 0.005);
+        var l = 8 + n * 8;
+        ctx.fillStyle = 'hsl(140,20%,' + Math.round(Math.max(3, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawFireGlow() {
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+    var fg = ctx.createRadialGradient(W * 0.5, H * 0.7, 0, W * 0.5, H * 0.7, W * 0.4);
+    fg.addColorStop(0, 'rgba(255,140,40,0.15)');
+    fg.addColorStop(0.4, 'rgba(255,100,20,0.05)');
+    fg.addColorStop(1, 'rgba(255,80,10,0)');
+    ctx.fillStyle = fg;
+    ctx.fillRect(W * 0.1, H * 0.3, W * 0.8, H * 0.7);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -371,6 +402,7 @@
     },
     draw: function() {
       drawSky();
+      drawForestNoise();
       drawStars();
       drawTrees();
       drawGround();
@@ -380,6 +412,7 @@
       drawCampfire();
       drawSparks();
       drawSmoke();
+      drawFireGlow();
     },
     exit: function() {}
   };
