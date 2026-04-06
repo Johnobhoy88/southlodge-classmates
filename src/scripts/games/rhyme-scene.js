@@ -67,6 +67,22 @@
     ctx.fillRect(0, 0, W, H);
   }
 
+  // Noise satin texture — organic velvet/fabric shimmer
+  function drawSatinNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.02 + progress * 0.018) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.04, ny * 0.005 + t * 0.02);
+        var l = 25 + n * 10;
+        ctx.fillStyle = 'hsl(' + Math.round(275 + n * 10) + ',' + Math.round(15 + n * 5) + '%,' + Math.round(Math.max(10, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawDoily() {
     var cx = W * 0.5, cy = H * 0.55;
     var r = Math.min(W, H) * 0.35;
@@ -296,8 +312,9 @@
     for (var i = 0; i < notes.length; i++) {
       var n = notes[i];
       if (progress < n.minProgress) continue;
-      n.y -= n.speed * 0.4;
-      n.x += n.drift * 0.2;
+      var nDrift = FXCore.noise2D(n.x * 0.007 + time * 0.0003, n.y * 0.007 + i * 6) * 0.3;
+      n.y -= n.speed * 0.4 + nDrift * 0.1;
+      n.x += n.drift * 0.2 + nDrift;
       n.rotation += n.rotSpeed;
       if (n.y < -n.size) { n.y = H * 0.65; n.x = rand(W * 0.25, W * 0.75); }
       ctx.save();
@@ -333,6 +350,38 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend mirror glow and music box gold bloom
+  function drawMusicBoxGlow() {
+    var t = time * 0.001;
+    var mirrorShimmer = 0.7 + Math.sin(t * 0.8) * 0.15 + progress * 0.2;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Mirror light bloom — warm glow from lid mirror
+    var midX = W * 0.5, midY = H * 0.25;
+    var bloomR = Math.min(W, H) * (0.2 + progress * 0.1);
+    ctx.globalAlpha = mirrorShimmer * (0.05 + progress * 0.04) * brightness;
+    var mg = ctx.createRadialGradient(midX, midY, 0, midX, midY, bloomR);
+    mg.addColorStop(0, 'rgba(255,240,200,0.18)');
+    mg.addColorStop(0.4, 'rgba(255,230,180,0.06)');
+    mg.addColorStop(1, 'rgba(255,230,180,0)');
+    ctx.fillStyle = mg;
+    ctx.fillRect(midX - bloomR, midY - bloomR, bloomR * 2, bloomR * 2);
+
+    // Ballerina glow — delicate point of light
+    var cx = W * 0.5, cy = H * 0.55;
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 30);
+    bg.addColorStop(0, 'rgba(255,200,220,0.15)');
+    bg.addColorStop(1, 'rgba(255,200,220,0)');
+    ctx.fillStyle = bg;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -349,6 +398,7 @@
     },
     draw: function() {
       drawBackground();
+      drawSatinNoise();
       drawDoily();
       drawMusicBox();
       drawLid();
@@ -356,6 +406,7 @@
       drawBallerina();
       drawNotes();
       drawSparkles();
+      drawMusicBoxGlow();
     },
     exit: function() {}
   };
