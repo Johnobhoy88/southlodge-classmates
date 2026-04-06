@@ -180,6 +180,25 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise mist texture — organic fog/atmosphere detail
+  function drawMistNoise() {
+    var t = time * 0.001;
+    var mistFade = 1 - progress * 0.5; // clears with progress
+    var noiseAlpha = (0.025 + progress * 0.015) * brightness * mistFade;
+    if (noiseAlpha < 0.005) return;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.004 + t * 0.08, ny * 0.004 + t * 0.04);
+        if (n < -0.2) continue; // skip dark areas
+        var l = 65 + n * 15;
+        ctx.fillStyle = 'hsl(' + Math.round(140 + n * 20) + ',' + Math.round(8 + n * 4) + '%,' + Math.round(Math.min(85, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawGround() {
     var gy = H * 0.88;
     ctx.globalAlpha = brightness;
@@ -242,8 +261,9 @@
     for (var i = 0; i < dragonflies.length; i++) {
       var d = dragonflies[i];
       if (progress < d.minProgress) continue;
-      d.x += d.driftX + Math.sin(t * 0.5 + d.pathPhase) * 0.3;
-      d.y += d.driftY + Math.cos(t * 0.7 + d.pathPhase) * 0.2;
+      var nDrift = FXCore.noise2D(d.x * 0.008 + t * 0.3, d.y * 0.008 + i * 8) * 0.4;
+      d.x += d.driftX + Math.sin(t * 0.5 + d.pathPhase) * 0.3 + nDrift;
+      d.y += d.driftY + Math.cos(t * 0.7 + d.pathPhase) * 0.2 + nDrift * 0.3;
       if (d.x < W * 0.05) d.x = W * 0.95;
       if (d.x > W * 0.95) d.x = W * 0.05;
       if (d.y < H * 0.1) d.y = H * 0.6;
@@ -314,6 +334,37 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend lantern glow and morning light bloom
+  function drawForestGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Lantern warm glow bloom
+    var lx = W * 0.55, ly = H * 0.78;
+    var glowPulse = 0.6 + Math.sin(t * 1.2) * 0.15 + progress * 0.3;
+    var glowR = 50 + progress * 20;
+    ctx.globalAlpha = glowPulse * 0.06 * brightness;
+    var lg = ctx.createRadialGradient(lx, ly, 0, lx, ly, glowR);
+    lg.addColorStop(0, 'rgba(255,220,120,0.2)');
+    lg.addColorStop(0.4, 'rgba(255,200,100,0.06)');
+    lg.addColorStop(1, 'rgba(255,200,100,0)');
+    ctx.fillStyle = lg;
+    ctx.fillRect(lx - glowR, ly - glowR, glowR * 2, glowR * 2);
+
+    // Morning sun glow from top-right
+    var sunR = W * (0.3 + progress * 0.15);
+    ctx.globalAlpha = (0.03 + progress * 0.04) * brightness;
+    var sg = ctx.createRadialGradient(W * 0.8, H * 0.05, 0, W * 0.8, H * 0.05, sunR);
+    sg.addColorStop(0, 'rgba(255,240,200,0.12)');
+    sg.addColorStop(0.5, 'rgba(255,220,180,0.04)');
+    sg.addColorStop(1, 'rgba(255,220,180,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(W * 0.8 - sunR, 0, sunR * 2, sunR);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -331,6 +382,7 @@
       drawSky();
       drawBambooLayer(farStalks, 0.15 + progress * 0.1, 'hsl(130,15%,' + Math.round(55 * brightness) + '%)', 1);
       drawMist(H * 0.25, H * 0.15, 0.3);
+      drawMistNoise();
       drawBambooLayer(midStalks, 0.25 + progress * 0.15, 'hsl(125,25%,' + Math.round(40 * brightness) + '%)', 2);
       drawMist(H * 0.5, H * 0.12, 0.2);
       drawGround();
@@ -339,6 +391,7 @@
       drawDewDrops();
       drawDragonflies();
       drawFallingLeaves();
+      drawForestGlow();
     },
     exit: function() {}
   };
