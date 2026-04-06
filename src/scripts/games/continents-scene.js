@@ -230,6 +230,54 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise landscape texture — organic patchwork field detail from above
+  function drawFieldNoise() {
+    var t = time * 0.001;
+    var landY = Math.floor(H * 0.6);
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = landY; ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.03, ny * 0.005);
+        var depth = (ny - landY) / (H - landY);
+        var hue = 120 + n * 30;
+        var l = 30 + n * 12 - depth * 6;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',' + Math.round(30 + n * 10) + '%,' + Math.round(Math.max(12, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend sky and balloon glow bloom
+  function drawAerialGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Bright sky ambient bloom
+    var skyR = W * (0.35 + progress * 0.1);
+    ctx.globalAlpha = (0.03 + progress * 0.04) * brightness;
+    var sg = ctx.createRadialGradient(W * 0.5, H * 0.2, 0, W * 0.5, H * 0.2, skyR);
+    sg.addColorStop(0, 'rgba(200,230,255,0.1)');
+    sg.addColorStop(0.5, 'rgba(180,220,250,0.04)');
+    sg.addColorStop(1, 'rgba(180,220,250,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(0, 0, W, H * 0.6);
+
+    // Balloon envelope warm radiance
+    var bx = W * 0.5, by = H * 0.2;
+    var balloonR = Math.min(W, H) * 0.2;
+    ctx.globalAlpha = (0.04 + progress * 0.03) * brightness;
+    var bg = ctx.createRadialGradient(bx, by, 0, bx, by, balloonR);
+    bg.addColorStop(0, 'rgba(255,200,100,0.12)');
+    bg.addColorStop(0.5, 'rgba(255,180,80,0.04)');
+    bg.addColorStop(1, 'rgba(255,180,80,0)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(bx - balloonR, by - balloonR, balloonR * 2, balloonR * 2);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   function drawClouds() {
     var t = time * 0.001;
     for (var i = 0; i < clouds.length; i++) {
@@ -273,8 +321,9 @@
     for (var i = 0; i < mapLabels.length; i++) {
       var m = mapLabels[i];
       if (m.minProgress && progress < m.minProgress) continue;
-      m.y -= m.speed * 0.3;
-      m.x += m.drift * 0.2;
+      var nDrift = FXCore.noise2D(m.x * 0.006 + time * 0.0002, m.y * 0.006 + i * 6) * 0.25;
+      m.y -= m.speed * 0.3 + nDrift * 0.1;
+      m.x += m.drift * 0.2 + nDrift;
       m.rotation += m.rotSpeed;
       if (m.y < H * 0.5) { m.y = H * 0.88; m.x = rand(W * 0.1, W * 0.9); }
       ctx.save();
@@ -306,11 +355,13 @@
       drawSky();
       drawHorizon();
       drawLandscape();
+      drawFieldNoise();
       drawClouds();
       drawBirds();
       drawBalloonEnvelope();
       drawBasket();
       drawMapLabels();
+      drawAerialGlow();
     },
     exit: function() {}
   };
