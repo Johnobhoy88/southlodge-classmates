@@ -1,6 +1,6 @@
 (function(){
   // ============================================================
-  // WORD FOREST PLATFORMER — TICK 3: Enemy polish + game feel juice
+  // WORD FOREST PLATFORMER — TICK 4: Power-ups + enhanced blocks
   // Mario/Sonic quality platformer with spelling integration.
   // Tile-based levels, proper physics, hand-crafted maps.
   // For the kids of South Lodge Primary, Invergordon
@@ -94,6 +94,8 @@
   var checkpoint = null;
   var finishPos = null;
   var bgTheme = 'forest';
+  var powerups = [];           // Active power-up items floating in world
+  var brickDebris = [];        // Brick shatter pieces
 
   // ==================== GAME FEEL ====================
   var floatingTexts = [];     // Score popups, combo text
@@ -231,6 +233,9 @@
     springs = [];
     questionBlocks = [];
     crumblePlatforms = [];
+    powerups = [];
+    brickDebris = [];
+    floatingTexts = [];
     checkpoint = null;
     finishPos = null;
     boss = null;
@@ -416,25 +421,109 @@
     return null;
   }
 
+  var qBlockHitCount = 0; // Track how many ?-blocks hit to cycle power-up types
+
   function hitBlockBelow(c, r) {
-    // Question block
+    // === QUESTION BLOCK ===
     for (var i = 0; i < questionBlocks.length; i++) {
       var qb = questionBlocks[i];
       if (qb.col === c && qb.row === r && !qb.hit) {
         qb.hit = true;
         qb.bounceTimer = 0.3;
-        map[r][c] = 'G'; // Turn into solid
-        // Spawn coin above
-        collectibles.push({ x: c * T + 8, y: (r - 1) * T, w: 16, h: 16, alive: true, type: 'coin', animTimer: 0, popUp: 1 });
+        map[r][c] = 'G'; // Becomes solid used block
+        freezeTimer = 0.04;
+        qBlockHitCount++;
+
+        // Every 3rd ?-block gives a power-up, others give coins
+        if (qBlockHitCount % 3 === 0) {
+          // Spawn power-up — cycle through types
+          var puTypes = ['shield', 'speed', 'doublejump'];
+          var puType = puTypes[Math.floor(qBlockHitCount / 3 - 1) % puTypes.length];
+          powerups.push({
+            x: c * T + 4, y: (r - 1) * T,
+            w: 24, h: 24, type: puType, alive: true,
+            vy: -3, floatY: (r - 1) * T, emerged: false,
+            animTimer: 0
+          });
+          playSound('streak');
+          spawnText(c * T + T / 2, (r - 2) * T, 'POWER-UP!', '#a78bfa', 14);
+        } else {
+          // Spawn coin with pop-up animation
+          collectibles.push({
+            x: c * T + 8, y: (r - 1) * T, w: 16, h: 16,
+            alive: true, type: 'coin', animTimer: 0, popUp: 1
+          });
+          score += 10;
+          coins++;
+          spawnText(c * T + T / 2, (r - 1) * T - 5, '+10', '#ffd700', 12);
+        }
         playSound('starCollect');
-        score += 10;
-        coins++;
+        spawnParticles(c * T + T / 2, r * T, 6, '#f1c40f', 2);
+        // Bump enemies standing on top of block
+        for (var j = 0; j < entities.length; j++) {
+          var e = entities[j];
+          if (!e.alive) continue;
+          var ec = Math.floor((e.x + e.w / 2) / T);
+          var er = Math.floor((e.y + e.h) / T);
+          if (ec === c && er === r) {
+            e.alive = false;
+            score += 100;
+            spawnParticles(e.x + e.w / 2, e.y, 8, '#ff6b6b', 3);
+            spawnText(e.x + e.w / 2, e.y - 10, '+100', '#ff6b6b', 14);
+          }
+        }
+        return;
       }
     }
-    // Brick (breakable later with power-up)
+
+    // === BRICK BLOCK ===
     if (tileAt(c, r) === 'B') {
-      // For now just bounce
-      spawnParticles(c * T + T / 2, r * T + T, 4, '#8a6a40', 3);
+      if (P.hasShield || P.speedBoostTimer > 0) {
+        // Powered-up player can SHATTER bricks
+        map[r][c] = '.';
+        shakeTimer = 0.06;
+        shakeAmt = 3;
+        playSound('correct');
+        // Spawn 4 debris pieces that fly outward
+        for (var d = 0; d < 4; d++) {
+          brickDebris.push({
+            x: c * T + (d % 2) * T / 2 + 4,
+            y: r * T + Math.floor(d / 2) * T / 2 + 4,
+            vx: (d % 2 === 0 ? -1 : 1) * (2 + Math.random() * 2),
+            vy: -4 - Math.random() * 3,
+            size: 8 + Math.random() * 4,
+            rot: 0, rotSpeed: (Math.random() - 0.5) * 0.3,
+            life: 1
+          });
+        }
+        // May contain a hidden coin
+        if (Math.random() > 0.5) {
+          collectibles.push({
+            x: c * T + 8, y: (r - 1) * T, w: 16, h: 16,
+            alive: true, type: 'coin', animTimer: 0, popUp: 1
+          });
+          score += 10;
+          coins++;
+          spawnText(c * T + T / 2, (r - 1) * T - 5, '+10', '#ffd700', 12);
+        }
+        spawnParticles(c * T + T / 2, r * T + T / 2, 10, '#b07040', 3);
+      } else {
+        // Non-powered: bricks just bounce
+        spawnParticles(c * T + T / 2, r * T + T, 3, '#8a6a40', 2);
+        // Still bump enemies on top
+        for (var j = 0; j < entities.length; j++) {
+          var e = entities[j];
+          if (!e.alive) continue;
+          var ec = Math.floor((e.x + e.w / 2) / T);
+          var er = Math.floor((e.y + e.h) / T);
+          if (ec === c && er === r) {
+            e.alive = false;
+            score += 100;
+            spawnParticles(e.x + e.w / 2, e.y, 6, '#ff6b6b', 3);
+            spawnText(e.x + e.w / 2, e.y - 10, '+100', '#ff6b6b', 14);
+          }
+        }
+      }
     }
   }
 
@@ -589,6 +678,43 @@
         playSound('starCollect');
         spawnParticles(co.x + co.w / 2, co.y + co.h / 2, 6, '#ffd700', 2);
         spawnText(co.x + co.w / 2, co.y - 5, '+10', '#ffd700', 12);
+      }
+    }
+
+    // --- Power-up pickup ---
+    for (var i = powerups.length - 1; i >= 0; i--) {
+      var pu = powerups[i];
+      if (!pu.alive) continue;
+      // Float up from block then hover
+      if (!pu.emerged) {
+        pu.y += pu.vy;
+        pu.vy += 0.1;
+        if (pu.vy >= 0) { pu.emerged = true; pu.floatY = pu.y; }
+      } else {
+        pu.y = pu.floatY + Math.sin(time * 0.004 + i) * 4;
+      }
+      pu.animTimer += dt;
+      // Pickup collision
+      if (P.x + P.w > pu.x && P.x < pu.x + pu.w && P.y + P.h > pu.y && P.y < pu.y + pu.h) {
+        pu.alive = false;
+        freezeTimer = 0.08;
+        playSound('streak');
+        if (pu.type === 'shield') {
+          P.hasShield = true;
+          spawnText(P.x + P.w / 2, P.y - 15, 'SHIELD!', '#4ecdc4', 16);
+          spawnParticles(P.x + P.w / 2, P.y + P.h / 2, 12, '#4ecdc4', 3);
+        } else if (pu.type === 'speed') {
+          P.speedBoostTimer = 8;
+          spawnText(P.x + P.w / 2, P.y - 15, 'SPEED!', '#f1c40f', 16);
+          spawnParticles(P.x + P.w / 2, P.y + P.h / 2, 12, '#f1c40f', 3);
+        } else if (pu.type === 'doublejump') {
+          P.hasDoubleJump = true;
+          spawnText(P.x + P.w / 2, P.y - 15, 'DOUBLE JUMP!', '#a78bfa', 16);
+          spawnParticles(P.x + P.w / 2, P.y + P.h / 2, 12, '#a78bfa', 3);
+        }
+        score += 50;
+        shakeTimer = 0.1;
+        shakeAmt = 3;
       }
     }
 
@@ -1238,6 +1364,65 @@
     }
   }
 
+  function drawPowerups() {
+    var t = time * 0.001;
+    for (var i = 0; i < powerups.length; i++) {
+      var pu = powerups[i];
+      if (!pu.alive) continue;
+      var px = pu.x - cam.x;
+      var py = pu.y - cam.y;
+      if (px < -30 || px > W + 30) continue;
+
+      var pulse = 0.8 + Math.sin(t * 4 + i) * 0.2;
+
+      // Glow halo
+      ctx.globalAlpha = 0.2 * pulse;
+      var glowColor = pu.type === 'shield' ? '#4ecdc4' : pu.type === 'speed' ? '#f1c40f' : '#a78bfa';
+      var glow = ctx.createRadialGradient(px + 12, py + 12, 0, px + 12, py + 12, 20);
+      glow.addColorStop(0, glowColor); glow.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath(); ctx.arc(px + 12, py + 12, 20, 0, Math.PI * 2); ctx.fill();
+
+      ctx.globalAlpha = pulse;
+      // Box body
+      ctx.fillStyle = pu.type === 'shield' ? '#4ecdc4' : pu.type === 'speed' ? '#f1c40f' : '#a78bfa';
+      ctx.beginPath();
+      ctx.arc(px + 12, py + 12, 11, 0, Math.PI * 2);
+      ctx.fill();
+      // Icon
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 13px "Fredoka One",cursive';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(pu.type === 'shield' ? '\uD83D\uDEE1' : pu.type === 'speed' ? '\u26A1' : '\uD83E\uDEB6', px + 12, py + 12);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function drawBrickDebris() {
+    for (var i = brickDebris.length - 1; i >= 0; i--) {
+      var d = brickDebris[i];
+      d.x += d.vx;
+      d.y += d.vy;
+      d.vy += 0.3;
+      d.rot += d.rotSpeed;
+      d.life -= dt * 1.5;
+      if (d.life <= 0) { brickDebris.splice(i, 1); continue; }
+
+      ctx.save();
+      ctx.translate(d.x - cam.x, d.y - cam.y);
+      ctx.rotate(d.rot);
+      ctx.globalAlpha = d.life;
+      ctx.fillStyle = '#b07040';
+      ctx.fillRect(-d.size / 2, -d.size / 2, d.size, d.size);
+      ctx.strokeStyle = '#8a5a30';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(-d.size / 2, -d.size / 2, d.size, d.size);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawFinishFlag() {
     if (!finishPos) return;
     var fx = finishPos.x - cam.x;
@@ -1490,6 +1675,21 @@
     ctx.fillStyle = '#4ecdc4';
     ctx.font = '11px "Fredoka One",cursive';
     ctx.fillText('Gates: ' + wordsSpelled + '/' + totalGates, 10, 68);
+
+    // Active power-up indicators
+    var puY = 82;
+    if (P.hasShield) {
+      ctx.fillStyle = '#4ecdc4'; ctx.font = '10px "Fredoka One",cursive';
+      ctx.fillText('\uD83D\uDEE1 Shield', 10, puY); puY += 14;
+    }
+    if (P.speedBoostTimer > 0) {
+      ctx.fillStyle = '#f1c40f'; ctx.font = '10px "Fredoka One",cursive';
+      ctx.fillText('\u26A1 Speed ' + Math.ceil(P.speedBoostTimer) + 's', 10, puY); puY += 14;
+    }
+    if (P.hasDoubleJump) {
+      ctx.fillStyle = '#a78bfa'; ctx.font = '10px "Fredoka One",cursive';
+      ctx.fillText('\uD83E\uDEB6 Double Jump', 10, puY);
+    }
 
     // Direction arrow to next gate
     drawDirectionArrow();
@@ -1771,8 +1971,10 @@
 
       drawBackground();
       drawTiles();
+      drawBrickDebris();
       drawSprings();
       drawCollectibles();
+      drawPowerups();
       drawFinishFlag();
       drawSpellGates();
       drawEnemies();
