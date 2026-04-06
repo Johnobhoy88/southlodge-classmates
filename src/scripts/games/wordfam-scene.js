@@ -170,6 +170,56 @@
     ctx.fillRect(0, H * 0.65, W, 6);
   }
 
+  // Noise ground texture — organic soil and grass detail
+  function drawGroundNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.03 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    var groundY = Math.floor(H * 0.65);
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = groundY; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.007 + t * 0.06, ny * 0.007);
+        var depth = (ny - groundY) / (H - groundY);
+        var hue = 30 - depth * 10;
+        var l = 18 + n * 10 - depth * 6;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',35%,' + Math.round(Math.max(6, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend golden hour glow
+  function drawGoldenGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Warm sunlight bloom from upper-right
+    var sunR = Math.min(W, H) * (0.5 + progress * 0.2);
+    ctx.globalAlpha = (0.06 + progress * 0.06) * brightness;
+    var sg = ctx.createRadialGradient(W * 0.7, H * 0.3, 0, W * 0.7, H * 0.3, sunR);
+    sg.addColorStop(0, 'rgba(255,200,100,0.2)');
+    sg.addColorStop(0.4, 'rgba(255,180,80,0.06)');
+    sg.addColorStop(1, 'rgba(255,180,80,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle glow around flower pots
+    for (var i = 0; i < pots.length; i++) {
+      var p = pots[i];
+      if (progress < p.minProgress || !p.hasFlower) continue;
+      ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+      var pg = ctx.createRadialGradient(p.x, p.y - p.plantH, 0, p.x, p.y - p.plantH, 20);
+      pg.addColorStop(0, 'rgba(255,220,100,0.15)');
+      pg.addColorStop(1, 'rgba(255,220,100,0)');
+      ctx.fillStyle = pg;
+      ctx.fillRect(p.x - 20, p.y - p.plantH - 20, 40, 40);
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   function drawTrellises() {
     var t = time * 0.001;
     for (var i = 0; i < trellises.length; i++) {
@@ -348,8 +398,9 @@
     for (var i = 0; i < butterflies.length; i++) {
       var bf = butterflies[i];
       if (progress < bf.minProgress) continue;
-      bf.x += bf.driftX + Math.sin(t * 0.4 + bf.pathPhase) * 0.3;
-      bf.y += bf.driftY + Math.cos(t * 0.5 + bf.pathPhase) * 0.2;
+      var nDrift = FXCore.noise2D(bf.x * 0.008 + t * 0.25, bf.y * 0.008 + i * 8) * 0.4;
+      bf.x += bf.driftX + Math.sin(t * 0.4 + bf.pathPhase) * 0.3 + nDrift;
+      bf.y += bf.driftY + Math.cos(t * 0.5 + bf.pathPhase) * 0.2 + nDrift * 0.3;
       if (bf.x < -10) bf.x = W + 10;
       if (bf.x > W + 10) bf.x = -10;
       if (bf.y < H * 0.2) bf.y = H * 0.7;
@@ -439,6 +490,7 @@
       drawSky();
       drawTreeline();
       drawGround();
+      drawGroundNoise();
       drawStones();
       drawTrellises();
       drawGardenBeds();
@@ -447,6 +499,7 @@
       drawPollen();
       drawButterflies();
       drawWateringCan();
+      drawGoldenGlow();
     },
     exit: function() {}
   };
