@@ -127,6 +127,24 @@
     ctx.fillRect(0, 0, W, H);
   }
 
+  // Noise water texture — organic ocean current overlay
+  function drawWaterNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.03 + progress * 0.025) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = 0; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.006 + t * 0.12, ny * 0.006 + t * 0.06);
+        var depth = ny / H;
+        var hue = 185 + depth * 25;
+        var l = 30 + n * 12 - depth * 10;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',50%,' + Math.round(Math.max(8, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawSunrays() {
     var t = time * 0.001;
     var rayAlpha = (0.03 + progress * 0.05) * brightness;
@@ -301,8 +319,9 @@
     for (var i = 0; i < fish.length; i++) {
       var f = fish[i];
       if (progress < f.minProgress) continue;
+      var nDrift = FXCore.noise2D(f.x * 0.005 + t * 0.25, f.y * 0.005 + i * 9) * 0.35;
       f.x += f.speed * 0.5;
-      f.y += f.yDrift + Math.sin(t * 0.5 + f.swimPhase) * 0.15;
+      f.y += f.yDrift + Math.sin(t * 0.5 + f.swimPhase) * 0.15 + nDrift;
       var tailWag = Math.sin(t * f.swimSpeed + f.swimPhase) * 0.25;
       if (f.speed > 0 && f.x > W + f.size * 3) f.x = -f.size * 3;
       if (f.speed < 0 && f.x < -f.size * 3) f.x = W + f.size * 3;
@@ -383,6 +402,42 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend reef glow — sunlight bloom and coral aura
+  function drawReefGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Sunray entry bloom at surface
+    for (var i = 0; i < 5; i++) {
+      var rx = W * (0.15 + i * 0.17) + Math.sin(t * 0.2 + i * 1.5) * 15;
+      var glowR = 50 + progress * 25;
+      ctx.globalAlpha = (0.05 + progress * 0.04) * brightness;
+      var rg = ctx.createRadialGradient(rx, 0, 0, rx, 0, glowR);
+      rg.addColorStop(0, 'rgba(255,255,200,0.2)');
+      rg.addColorStop(0.5, 'rgba(255,240,180,0.06)');
+      rg.addColorStop(1, 'rgba(255,240,180,0)');
+      ctx.fillStyle = rg;
+      ctx.fillRect(rx - glowR, 0, glowR * 2, glowR * 1.5);
+    }
+
+    // Coral glow halos
+    for (var i = 0; i < corals.length; i++) {
+      var c = corals[i];
+      if (c.minProgress && progress < c.minProgress) continue;
+      ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+      var cg = ctx.createRadialGradient(c.x, c.baseY - c.h * 0.3, 0, c.x, c.baseY - c.h * 0.3, c.w);
+      cg.addColorStop(0, 'rgba(255,180,200,0.12)');
+      cg.addColorStop(1, 'rgba(255,180,200,0)');
+      ctx.fillStyle = cg;
+      ctx.beginPath();
+      ctx.arc(c.x, c.baseY - c.h * 0.3, c.w, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -398,6 +453,7 @@
     },
     draw: function() {
       drawWater();
+      drawWaterNoise();
       drawSunrays();
       drawSandyFloor();
       drawCorals();
@@ -405,6 +461,7 @@
       drawFish();
       drawPlankton();
       drawBubbles();
+      drawReefGlow();
     },
     exit: function() {}
   };
