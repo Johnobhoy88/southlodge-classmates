@@ -1,6 +1,6 @@
 (function(){
   // ============================================================
-  // WORD FOREST PLATFORMER — TICK 1: Physics + Tile Engine Core
+  // WORD FOREST PLATFORMER — TICK 2: Hand-crafted Mario-quality levels
   // Mario/Sonic quality platformer with spelling integration.
   // Tile-based levels, proper physics, hand-crafted maps.
   // For the kids of South Lodge Primary, Invergordon
@@ -111,58 +111,76 @@
   // ==================== LEVELS ====================
   // Level 1: Forest Clearing (Easy) — test level for Tick 1
   var LEVELS = [
-    // Level 1 — Forest Clearing
+    // ==========================================
+    // LEVEL 1 — "Forest Clearing" (Easy)
+    // Teaches: running, jumping gaps, coins, spell gates
+    // Gentle difficulty curve, wide platforms, small gaps
+    // ==========================================
     {
       name: 'Forest Clearing',
       theme: 'forest',
       map: [
-        '................................................................................',
-        '................................................................................',
-        '................................................................................',
-        '...........CCC.........C.C.C.......CCC.......C...C.....CCC........C.C...........',
-        '..........?B?B?........................................?..?.........B.............',
-        '................................................................................',
-        '..........................................PP.PP.............PP..PP................',
-        '..........C..C......E.......C.C..C.............E...C.C.............C.C...........',
-        '.....C...GGGG....GGGGGGG...GGGG.GGG..W..GGGGGGGGG..GGGG..W..GGGGG.GGGG...F....',
-        '....GGG..............................................S.........................GGG',
-        'GGGGGGGGGGG....GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG',
-        'GGGGGGGGGGG....GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG',
+        //         1111111111222222222233333333334444444444555555555566666666667777777777888888888899999999990000000000
+        //1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345
+        '...........................................................................................................',
+        '...........................................................................................................',
+        '.........C.C.C...............C...............C.C...............CCC....................C.C....................',
+        '.........?B?..............................................?..?.....?B?B?...................................',
+        '...........................................................................................................',
+        '.......................C.C........PP..PP.........C.C.C..............................................C.C.C...',
+        '..................GGGGG...........E.........GGGGGGG....E.....PP..PP..PP.........C.C..C...................',
+        '...........C.C.............C.C.GGGGGGGGG.............GGGGG..............C.C..GGGGGGGG.....C..C....F......',
+        '..C......GGGGG...GGGGG.....................W..GGGGG..........W..GGGGG..GGGG.........W..GGGGGGG..GGGG.....',
+        '..GG.............................................................S............................S.........GGG',
+        'GGGGGGGGGGG...GGGGGGGGGGG...GGGGGGGGGGGGGGGGGGGGGGG...GGGGGGGGGGGGGGGG...GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG',
+        'GGGGGGGGGGG...GGGGGGGGGGG...GGGGGGGGGGGGGGGGGGGGGGG...GGGGGGGGGGGGGGGG...GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG',
+        'GGGGGGGGGGG...GGGGGGGGGGG...GGGGGGGGGGGGGGGGGGGGGGG...GGGGGGGGGGGGGGGG...GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG',
       ],
-      words: 1 // difficulty
+      words: 1
     },
-    // Level 2 and 3 — placeholders, will be designed in Tick 2-3
+    // ==========================================
+    // LEVEL 2 — "Misty Cavern" (Medium)
+    // Teaches: tighter jumps, more enemies, springs, ?-blocks
+    // Underground theme, narrower platforms, longer gaps
+    // ==========================================
     {
       name: 'Misty Cavern',
       theme: 'cave',
       map: [
-        '................................................................................',
-        '................................................................................',
-        '......CCC.............C.C.C..........CCC.........C.C.C........CCC................',
-        '.....?B?B?............B...B..........?..?....................?.B.?.................',
-        '..............E.................................PP.PP............................',
-        '..................PP.PP......E.....C.C.C............E....C.C.C...................',
-        '....C..C.C...GGGGGGG...GGGG.GGG..W..GGGGGGGG.GGGGG..W..GGGGG..W..GGGG..F.....',
-        '...GGG.................................S..............................S.......GGG.',
-        'GGGGGGGGG.....GGGGGGG....GGGGGGGGGGGGGGGGG....GGGGGGGGG....GGGGGGGGGGGGGGGGGGG.',
-        'GGGGGGGGG.....GGGGGGG....GGGGGGGGGGGGGGGGG....GGGGGGGGG....GGGGGGGGGGGGGGGGGGG.',
+        '...............................................................................................................',
+        '........CCC....................C.C.....................CCC...............C.C.C.................CCC..............',
+        '.......?B?B?...............................................................?..?B?...........?..?B?............',
+        '.........................PP..PP.......E..........PP..PP.PP.....E...............................................',
+        '..............E......GGGGG.....C.C.GGGGGGG............E.....GGGGG..C.C..............C.C.C...................',
+        '..........GGGGGG...........C.C..........E....GGGGGGG.....GGGGG.........PP..PP..PP.........C.C...C.........',
+        '....C.C.............GGGG...........W..GGGGG.........W..GGGGG......W..GGGGGGG......W..GGGGGG.GGGG..F.......',
+        '...GGG........S.............S...................S................S...................S...............S...GGG..',
+        'GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGGGGGGGGGGG',
+        'GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGGGGGGGGGGG',
+        'GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGG...GGGGGGGGGGGGGGGGG',
       ],
       words: 2
     },
+    // ==========================================
+    // LEVEL 3 — "Dark Tower" (Hard)
+    // Teaches: precision jumps, crumble platforms, multiple enemies
+    // Vertical emphasis, smallest platforms, most gates
+    // ==========================================
     {
       name: 'Dark Tower',
       theme: 'tower',
       map: [
-        '................................................................................',
-        '...........CCC..........C.C.C.........CCC.........C.C.C......CCC................',
-        '..........?B?B?..........B.B..........?..?..........B.B.....?.B.?................',
-        '...............E...............PP.PP.........PP.PP.....E...........E..............',
-        '............GGGGGGG......GGG.GGG..W..GGGGG.GGG..W..GGGGG.GGG..W..GGGG..F......',
-        '.....C.C.C.................S............S................S..........C.C...........',
-        '....GGGGG....GGGGGG....GGGGGGGGG....GGGGGGGGG....GGGGGGGGG....GGGGGGGG..........',
-        '...........................E...............E...............E....................GGG',
-        'GGGGGGG......GGGGGGG.....GGGGGGGG.....GGGGGGGG.....GGGGGGGG.....GGGGGGGGGGGGGGG',
-        'GGGGGGG......GGGGGGG.....GGGGGGGG.....GGGGGGGG.....GGGGGGGG.....GGGGGGGGGGGGGGG',
+        '.......................................................................................................................',
+        '..........CCC.................C.C.C.................CCC.................C.C.C.................CCC.................C.C.....',
+        '.........?B?B?...............................................?..?B?..............?B?..?..............?..?B?B?............',
+        '...............3.........PP..PP.......E..3..........PP..PP.......3.E..........PP..PP......3.E..........PP..PP...........',
+        '............GGGGG.....C.C.GGGGGG..GGGGG......C.C.GGGGGGG..GGGGG.....C.C.GGGGGG..GGGGG.....C.C.GGGGGG..GGGGG........',
+        '........GGGG.....E........E.....GGGG...E..........E....GGGG...E........E.....GGGG...E.........E.....GGGG...E.........',
+        '...C.C..........W..GGGGG.....W..GGGGG......W..GGGGG.....W..GGGGG......W..GGGGG................GGGG.GGGG..F...........',
+        '..GGG.......S...........S...........S...........S...........S...........S...........S...................S.........GGG...',
+        'GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGGGGGGGGGG',
+        'GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGGGGGGGGGG',
+        'GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGG..GGGGGGGGGGGGGGG',
       ],
       words: 3
     }
