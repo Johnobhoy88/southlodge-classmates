@@ -304,6 +304,55 @@
     };
   }
 
+  // ==================== SIMPLEX NOISE 2D ====================
+  // Compact 2D simplex noise. Returns -1..1.
+  // Usage: FXCore.noise2D(x, y) — scale inputs for frequency.
+  var _F2 = 0.5 * (Math.sqrt(3) - 1);
+  var _G2 = (3 - Math.sqrt(3)) / 6;
+  var _grad2 = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
+  var _perm = new Array(512);
+  (function(){
+    var p = [];
+    for (var i = 0; i < 256; i++) p[i] = i;
+    for (var i = 255; i > 0; i--) {
+      var j = Math.floor((i + 1) * 0.5 * (Math.sin(i * 127.1 + 311.7) + 1));
+      j = j % (i + 1);
+      var t = p[i]; p[i] = p[j]; p[j] = t;
+    }
+    for (var i = 0; i < 512; i++) _perm[i] = p[i & 255];
+  })();
+
+  function noise2D(xin, yin) {
+    var s = (xin + yin) * _F2;
+    var i = Math.floor(xin + s), j = Math.floor(yin + s);
+    var t = (i + j) * _G2;
+    var x0 = xin - (i - t), y0 = yin - (j - t);
+    var i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
+    var x1 = x0 - i1 + _G2, y1 = y0 - j1 + _G2;
+    var x2 = x0 - 1 + 2 * _G2, y2 = y0 - 1 + 2 * _G2;
+    var ii = i & 255, jj = j & 255;
+    var n0 = 0, n1 = 0, n2 = 0;
+    var t0 = 0.5 - x0 * x0 - y0 * y0;
+    if (t0 >= 0) { t0 *= t0; var g = _grad2[_perm[ii + _perm[jj]] & 7]; n0 = t0 * t0 * (g[0] * x0 + g[1] * y0); }
+    var t1 = 0.5 - x1 * x1 - y1 * y1;
+    if (t1 >= 0) { t1 *= t1; var g = _grad2[_perm[ii + i1 + _perm[jj + j1]] & 7]; n1 = t1 * t1 * (g[0] * x1 + g[1] * y1); }
+    var t2 = 0.5 - x2 * x2 - y2 * y2;
+    if (t2 >= 0) { t2 *= t2; var g = _grad2[_perm[ii + 1 + _perm[jj + 1]] & 7]; n2 = t2 * t2 * (g[0] * x2 + g[1] * y2); }
+    return 70 * (n0 + n1 + n2);
+  }
+
+  // Fractional Brownian Motion — layered noise for richer textures
+  // FXCore.fbm(x, y, octaves) — returns ~-1..1
+  function fbm(x, y, octaves) {
+    octaves = octaves || 4;
+    var val = 0, amp = 0.5, freq = 1;
+    for (var i = 0; i < octaves; i++) {
+      val += amp * noise2D(x * freq, y * freq);
+      freq *= 2; amp *= 0.5;
+    }
+    return val;
+  }
+
   // ==================== PUBLIC API ====================
   window.FXCore = {
     // Scene management
@@ -329,6 +378,10 @@
     // Screen shake
     shake: screenShake,
     getShakeOffset: getShakeOffset,
+
+    // Noise
+    noise2D: noise2D,
+    fbm: fbm,
 
     // State accessors (for scenes to read)
     getCanvas: function() { return canvas; },
