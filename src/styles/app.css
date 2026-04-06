@@ -568,6 +568,22 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .sf-stat{font-weight:600}
 .sf-streak-badge{color:#ffd93d;animation:sfPulse 0.5s ease}
 
+/* ===== NUMBER FORGE ===== */
+.nf-game-area{position:relative;z-index:2;padding:20px;max-width:500px;margin:0 auto;width:100%}
+.nf-question{background:rgba(26,10,10,0.85);border:2px solid rgba(255,106,26,0.3);border-radius:20px;padding:24px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.nf-prompt{font-family:var(--font-display);font-size:2.2rem;color:#ffd93d;text-align:center;margin:16px 0;text-shadow:0 0 16px rgba(255,106,26,0.5)}
+.nf-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.nf-opt{padding:16px;border:2px solid rgba(255,106,26,0.25);border-radius:14px;background:rgba(80,30,10,0.4);color:#f0e0d0;font-family:var(--font-display);font-size:1.3rem;cursor:pointer;transition:all 0.15s;min-height:var(--touch-min)}
+.nf-opt:hover{border-color:rgba(255,106,26,0.6);background:rgba(80,30,10,0.6);transform:translateY(-2px)}
+.nf-opt.nf-correct{border-color:#6aee6a;background:rgba(106,238,106,0.2);color:#6aee6a;animation:sfPulse 0.4s ease}
+.nf-opt.nf-wrong{border-color:#ee6a6a;background:rgba(238,106,106,0.2);color:#ee6a6a}
+.nf-craft-hint{text-align:center;font-size:0.82rem;color:#ffd93d;margin:10px 0;font-weight:600}
+.nf-progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin:16px 0 8px;overflow:hidden}
+.nf-progress-fill{height:100%;background:linear-gradient(90deg,#cc4400,#ff6a1a);border-radius:3px;transition:width 0.4s ease}
+.nf-stats{display:flex;justify-content:center;gap:16px;font-size:0.78rem;color:rgba(240,224,208,0.6)}
+.nf-stat{font-weight:600}
+.nf-streak-badge{color:#ffd93d;animation:sfPulse 0.5s ease}
+
 /* ===== CFE SECTION (V2) ===== */
 .cfe-grid{display:grid;grid-template-columns:1fr;gap:12px}
 .cfe-desc{color:#86868b;font-size:0.8rem}
