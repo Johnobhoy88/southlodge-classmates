@@ -24228,7 +24228,7 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
 
 (function(){
   // ============================================================
-  // WORD FOREST PLATFORMER — TICK 6: Boss fight + level complete celebration
+  // WORD FOREST PLATFORMER — TICK 7: Audio + HUD + death animation
   // Mario/Sonic quality platformer with spelling integration.
   // Tile-based levels, proper physics, hand-crafted maps.
   // For the kids of South Lodge Primary, Invergordon
@@ -24676,7 +24676,7 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
             vy: -3, floatY: (r - 1) * T, emerged: false,
             animTimer: 0
           });
-          playSound('streak');
+          playSound('powerup');
           spawnText(c * T + T / 2, (r - 2) * T, 'POWER-UP!', '#a78bfa', 14);
         } else {
           // Spawn coin with pop-up animation
@@ -24764,6 +24764,8 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
       P.deathTimer += dt;
       P.vy += GRAVITY * 0.5;
       P.y += P.vy;
+      P.x += P.vx;
+      P.deathSpin = (P.deathSpin || 0) + dt * 8; // Spin animation
       return;
     }
 
@@ -25172,8 +25174,12 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
     spawnParticles(P.x + P.w / 2, P.y + P.h / 2, 8, '#ff6b6b', 3);
     if (P.hp <= 0) {
       P.dead = true;
-      P.vy = JUMP_FORCE;
+      P.vy = JUMP_FORCE * 1.2;
+      P.vx = (Math.random() - 0.5) * 3;
       P.deathTimer = 0;
+      P.deathSpin = 0;
+      playSound('die');
+      freezeTimer = 0.3; // Long freeze on death for dramatic impact
     }
   }
 
@@ -25617,8 +25623,33 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
   }
 
   // ==================== SOUND ====================
+  // Map game actions to FXSound library names
+  var SOUND_MAP = {
+    jump: 'pop',
+    land: 'tap',
+    coin: 'starCollect',
+    stomp: 'correct',
+    comboStomp: 'streak',
+    damage: 'wrong',
+    die: 'wrongDeep',
+    spring: 'whoosh',
+    gateOpen: 'celebration',
+    wordComplete: 'levelUp',
+    letterCorrect: 'correctHigh',
+    letterWrong: 'wrongGentle',
+    powerup: 'streak',
+    brickBreak: 'pop',
+    bossHit: 'correctHigh',
+    bossDefeat: 'complete',
+    levelComplete: 'celebration',
+    blockHit: 'click',
+    checkpoint: 'correctSoft'
+  };
   function playSound(name) {
-    try { if (window.FXSound) FXSound.play(name); } catch(e) {}
+    try {
+      var mapped = SOUND_MAP[name] || name;
+      if (window.FXSound) FXSound.play(mapped);
+    } catch(e) {}
   }
 
   // ==================== CAMERA ====================
@@ -26127,9 +26158,30 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
   }
 
   function drawPlayer() {
-    if (P.dead && P.deathTimer > 2) return;
+    if (P.dead && P.deathTimer > 2.5) return;
     var px = P.x - cam.x;
     var py = P.y - cam.y;
+
+    // Death spin animation
+    if (P.dead) {
+      ctx.save();
+      ctx.translate(px + P.w / 2, py + P.h / 2);
+      ctx.rotate(P.deathSpin || 0);
+      ctx.globalAlpha = Math.max(0, 1 - P.deathTimer / 2.5);
+      ctx.fillStyle = '#e74c3c';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, P.w * 0.55, P.h * 0.42, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(3, -4, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#1a1a2e';
+      // X eyes for dead
+      ctx.lineWidth = 2; ctx.strokeStyle = '#1a1a2e';
+      ctx.beginPath(); ctx.moveTo(1, -6); ctx.lineTo(5, -2); ctx.moveTo(5, -6); ctx.lineTo(1, -2); ctx.stroke();
+      ctx.restore();
+      ctx.globalAlpha = 1;
+      return;
+    }
 
     // Blink when invulnerable
     if (P.invuln > 0 && Math.floor(P.invuln * 10) % 2 === 0) return;
@@ -26334,27 +26386,95 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
   }
 
   function drawHUD() {
-    // HP hearts
+    // === HUD BACKGROUND STRIP ===
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.fillRect(0, 0, W, 56);
+
+    // === HP HEARTS (left) ===
     for (var i = 0; i < MAX_HP; i++) {
-      ctx.font = '22px serif';
-      ctx.fillText(i < P.hp ? '\u2764\uFE0F' : '\uD83D\uDDA4', 10 + i * 26, 28);
+      var hx = 10 + i * 24, hy = 8;
+      if (i < P.hp) {
+        ctx.fillStyle = '#e74c3c';
+        // Draw a heart shape
+        ctx.beginPath();
+        ctx.moveTo(hx + 8, hy + 6);
+        ctx.bezierCurveTo(hx + 8, hy + 2, hx + 2, hy, hx + 2, hy + 4);
+        ctx.bezierCurveTo(hx + 2, hy + 8, hx + 8, hy + 12, hx + 8, hy + 14);
+        ctx.bezierCurveTo(hx + 8, hy + 12, hx + 14, hy + 8, hx + 14, hy + 4);
+        ctx.bezierCurveTo(hx + 14, hy, hx + 8, hy + 2, hx + 8, hy + 6);
+        ctx.fill();
+        // Shine
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.beginPath(); ctx.arc(hx + 5, hy + 5, 2, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.fillStyle = '#444';
+        ctx.beginPath();
+        ctx.moveTo(hx + 8, hy + 6);
+        ctx.bezierCurveTo(hx + 8, hy + 2, hx + 2, hy, hx + 2, hy + 4);
+        ctx.bezierCurveTo(hx + 2, hy + 8, hx + 8, hy + 12, hx + 8, hy + 14);
+        ctx.bezierCurveTo(hx + 8, hy + 12, hx + 14, hy + 8, hx + 14, hy + 4);
+        ctx.bezierCurveTo(hx + 14, hy, hx + 8, hy + 2, hx + 8, hy + 6);
+        ctx.fill();
+      }
     }
-    // Coins
+
+    // === COINS (center-left) ===
     ctx.fillStyle = '#ffd700';
-    ctx.font = 'bold 14px "Fredoka One",cursive';
-    ctx.fillText('\u2B50 ' + coins, 10, 50);
-    // Score
+    ctx.font = 'bold 13px "Fredoka One",cursive';
+    var coinIconX = 10 + MAX_HP * 24 + 8;
+    // Spinning coin icon
+    var coinSpin = Math.abs(Math.cos(time * 0.004)) * 6;
+    ctx.beginPath(); ctx.ellipse(coinIconX + 6, 16, coinSpin, 6, 0, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#fff';
+    ctx.fillText('x' + coins, coinIconX + 16, 20);
+
+    // === SCORE (right) ===
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px "Fredoka One",cursive';
     ctx.textAlign = 'right';
-    ctx.fillText('Score: ' + score, W - 10, 24);
-    // Level name
-    ctx.font = '11px "Fredoka One",cursive';
-    ctx.fillText(LEVELS[level - 1] ? LEVELS[level - 1].name : '', W - 10, 42);
+    ctx.fillText(score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','), W - 10, 18);
+
+    // === LEVEL NAME (right, below score) ===
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '10px "Fredoka One",cursive';
+    var lvlName = bossArena ? 'BOSS FIGHT' : (LEVELS[level - 1] ? LEVELS[level - 1].name : '');
+    ctx.fillText(lvlName, W - 10, 32);
     ctx.textAlign = 'left';
-    // Word progress
-    ctx.fillStyle = '#4ecdc4';
-    ctx.font = '11px "Fredoka One",cursive';
-    ctx.fillText('Gates: ' + wordsSpelled + '/' + totalGates, 10, 68);
+
+    // === GATE PROGRESS BAR (bottom of HUD strip) ===
+    if (!bossArena && totalGates > 0) {
+      var barW = W * 0.4;
+      var barX = (W - barW) / 2;
+      var barY = 42;
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fillRect(barX, barY, barW, 8);
+      ctx.fillStyle = '#4ecdc4';
+      ctx.fillRect(barX, barY, barW * (wordsSpelled / totalGates), 8);
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(barX, barY, barW, 8);
+      // Gate markers
+      for (var i = 0; i < totalGates; i++) {
+        var mx = barX + barW * ((i + 1) / totalGates);
+        ctx.fillStyle = i < wordsSpelled ? '#ffd700' : 'rgba(255,255,255,0.3)';
+        ctx.beginPath(); ctx.arc(mx, barY + 4, 3, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = '#fff';
+      ctx.font = '8px "Fredoka One",cursive';
+      ctx.textAlign = 'center';
+      ctx.fillText('GATES ' + wordsSpelled + '/' + totalGates, W / 2, barY - 2);
+      ctx.textAlign = 'left';
+    }
+
+    // === LEVEL TIMER (top center) ===
+    var elapsed = Math.floor((time - levelStartTime) / 1000);
+    var mins = Math.floor(elapsed / 60);
+    var secs = elapsed % 60;
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '10px "Fredoka One",cursive';
+    ctx.textAlign = 'center';
+    ctx.fillText((mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs, W / 2, 18);
+    ctx.textAlign = 'left';
 
     // Active power-up indicators
     var puY = 82;
