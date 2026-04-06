@@ -24228,7 +24228,7 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
 
 (function(){
   // ============================================================
-  // WORD FOREST PLATFORMER — TICK 5: Visual polish + parallax + animation
+  // WORD FOREST PLATFORMER — TICK 6: Boss fight + level complete celebration
   // Mario/Sonic quality platformer with spelling integration.
   // Tile-based levels, proper physics, hand-crafted maps.
   // For the kids of South Lodge Primary, Invergordon
@@ -24343,6 +24343,9 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
 
   // ==================== BOSS ====================
   var boss = null;
+  var bossArena = false;
+  var celebrationTimer = 0;    // Level complete celebration
+  var celebrationParticles = [];
 
   // ==================== LEVELS ====================
   // Level 1: Forest Clearing (Easy) — test level for Tick 1
@@ -25193,11 +25196,347 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
   }
 
   function levelComplete() {
-    if (level < 3) {
-      startTransition('nextLevel');
-    } else {
-      startTransition('win');
+    // Start celebration before transitioning
+    stage = 'celebration';
+    celebrationTimer = 3;
+    celebrationParticles = [];
+    playSound('streak');
+    P.vx = 0;
+    // Burst of confetti
+    for (var i = 0; i < 40; i++) {
+      celebrationParticles.push({
+        x: P.x + P.w / 2 + (Math.random() - 0.5) * 60,
+        y: P.y - 20 + (Math.random() - 0.5) * 40,
+        vx: (Math.random() - 0.5) * 8,
+        vy: -Math.random() * 8 - 3,
+        size: 3 + Math.random() * 4,
+        color: ['#ffd700','#4ecdc4','#e74c3c','#3498db','#2ecc71','#f39c12','#a78bfa'][Math.floor(Math.random() * 7)],
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.2,
+        life: 1
+      });
     }
+  }
+
+  function updateCelebration() {
+    if (stage !== 'celebration') return;
+    celebrationTimer -= dt;
+    // Update confetti particles
+    for (var i = celebrationParticles.length - 1; i >= 0; i--) {
+      var p = celebrationParticles[i];
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.15; p.rot += p.rotSpeed;
+      p.life -= dt * 0.4;
+      if (p.life <= 0) celebrationParticles.splice(i, 1);
+    }
+    // Spawn more confetti periodically
+    if (Math.random() > 0.7) {
+      celebrationParticles.push({
+        x: P.x + (Math.random() - 0.5) * W * 0.5,
+        y: cam.y - 10,
+        vx: (Math.random() - 0.5) * 3,
+        vy: Math.random() * 2 + 1,
+        size: 3 + Math.random() * 3,
+        color: ['#ffd700','#4ecdc4','#e74c3c','#3498db','#2ecc71'][Math.floor(Math.random() * 5)],
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.15,
+        life: 1
+      });
+    }
+    if (celebrationTimer <= 0) {
+      if (level < 3) {
+        startTransition('nextLevel');
+      } else {
+        startTransition('boss');
+      }
+    }
+  }
+
+  function drawCelebration() {
+    // Draw the level behind the celebration
+    drawBackground(); drawTiles(); drawSprings(); drawCollectibles();
+    drawPowerups(); drawFinishFlag(); drawSpellGates();
+    drawEnemies(); drawPlayer();
+    // Confetti
+    for (var i = 0; i < celebrationParticles.length; i++) {
+      var p = celebrationParticles[i];
+      ctx.save();
+      ctx.translate(p.x - cam.x, p.y - cam.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+    // Banner
+    var bannerAlpha = Math.min(1, (3 - celebrationTimer) * 2);
+    ctx.globalAlpha = bannerAlpha;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(0, H * 0.3, W, H * 0.2);
+    ctx.fillStyle = '#ffd700';
+    ctx.font = 'bold 28px "Fredoka One",cursive';
+    ctx.textAlign = 'center';
+    ctx.fillText('LEVEL COMPLETE!', W / 2, H * 0.38);
+    ctx.fillStyle = '#fff';
+    ctx.font = '16px "Fredoka One",cursive';
+    ctx.fillText('Score: ' + score + '  Coins: ' + coins, W / 2, H * 0.46);
+    ctx.textAlign = 'left';
+    ctx.globalAlpha = 1;
+  }
+
+  // ==================== BOSS FIGHT ====================
+  function initBoss() {
+    bossArena = true;
+    stage = 'playing';
+    bgTheme = 'tower';
+    // Build a flat arena map
+    var arenaW = 20;
+    var arenaH = 10;
+    map = [];
+    mapW = arenaW; mapH = arenaH;
+    for (var r = 0; r < arenaH; r++) {
+      map[r] = [];
+      for (var c = 0; c < arenaW; c++) {
+        if (r >= arenaH - 2) map[r][c] = 'G';
+        else if (r === arenaH - 5 && (c === 3 || c === 4 || c === 15 || c === 16)) map[r][c] = 'P';
+        else map[r][c] = '.';
+      }
+    }
+    // Clear level entities
+    entities = []; collectibles = []; spellGates = [];
+    springs = []; questionBlocks = []; crumblePlatforms = [];
+    powerups = []; brickDebris = []; floatingTexts = []; particles = [];
+    finishPos = null;
+
+    // Boss object
+    boss = {
+      x: arenaW * T / 2 - 24, y: 2 * T,
+      w: 48, h: 56, hp: 12, maxHp: 12,
+      phase: 1, attackTimer: 2,
+      floatingWords: [],
+      shieldAngle: 0, hitFlash: 0,
+      defeated: false, defeatTimer: 0
+    };
+
+    // Player in arena
+    P.x = 3 * T; P.y = (arenaH - 3) * T;
+    P.vx = 0; P.vy = 0; P.hp = MAX_HP;
+    P.dead = false; P.invuln = 0;
+    cam.x = 0; cam.y = 0;
+
+    wordList = getWords(3);
+    wordQueue = shuffle(wordList.slice());
+  }
+
+  function updateBoss() {
+    if (!boss || boss.defeated) {
+      if (boss && boss.defeatTimer > 0) {
+        boss.defeatTimer -= dt;
+        if (boss.defeatTimer <= 0) startTransition('win');
+        // Explosion particles
+        if (Math.random() > 0.5) {
+          spawnParticles(boss.x + Math.random() * boss.w, boss.y + Math.random() * boss.h, 3, ['#ffd700','#e74c3c','#a78bfa'][Math.floor(Math.random()*3)], 4);
+        }
+      }
+      return;
+    }
+    var t = time * 0.001;
+    boss.shieldAngle += dt * 2;
+    if (boss.hitFlash > 0) boss.hitFlash -= dt;
+
+    // Movement — bob and strafe
+    boss.y = 2 * T + Math.sin(t * 0.8) * 20;
+    boss.x = mapW * T / 2 - boss.w / 2 + Math.sin(t * 0.4) * (mapW * T * 0.2);
+
+    // Phase 2: faster + more words
+    var spawnRate = boss.phase === 1 ? 2.2 : 1.4;
+    var maxWords = boss.phase === 1 ? 3 : 5;
+
+    boss.attackTimer -= dt;
+    if (boss.attackTimer <= 0 && boss.floatingWords.length < maxWords) {
+      boss.attackTimer = spawnRate;
+      var wordObj = nextWord();
+      var isMisspelled = Math.random() > 0.5;
+      var display = isMisspelled ? misspell(wordObj.w) : wordObj.w;
+      boss.floatingWords.push({
+        x: boss.x + boss.w / 2 + (Math.random() - 0.5) * 30,
+        y: boss.y + boss.h,
+        word: display, correct: !isMisspelled,
+        vx: (Math.random() - 0.5) * 2,
+        vy: 1.2 + Math.random() * 0.8,
+        life: 1, size: 16
+      });
+    }
+
+    // Update floating words
+    for (var i = boss.floatingWords.length - 1; i >= 0; i--) {
+      var fw = boss.floatingWords[i];
+      fw.x += fw.vx; fw.y += fw.vy;
+      fw.life -= dt * 0.12;
+      if (fw.life <= 0 || fw.y > mapH * T + 20) {
+        boss.floatingWords.splice(i, 1); continue;
+      }
+      // Player collision
+      if (P.invuln <= 0 && !P.dead) {
+        if (P.x + P.w > fw.x - 25 && P.x < fw.x + 25 &&
+            P.y + P.h > fw.y - 12 && P.y < fw.y + 12) {
+          boss.floatingWords.splice(i, 1);
+          if (fw.correct) {
+            // Correct word — damage boss!
+            boss.hp--;
+            boss.hitFlash = 0.2;
+            score += 300;
+            freezeTimer = 0.08;
+            shakeTimer = 0.15; shakeAmt = 5;
+            playSound('streak');
+            spawnParticles(fw.x, fw.y, 12, '#ffd700', 4);
+            spawnText(fw.x, fw.y - 15, '-1 HP!', '#ffd700', 18);
+            if (boss.hp <= 6 && boss.phase === 1) {
+              boss.phase = 2;
+              spawnText(boss.x + boss.w / 2, boss.y - 20, 'PHASE 2!', '#e74c3c', 22);
+              shakeTimer = 0.5; shakeAmt = 8;
+            }
+            if (boss.hp <= 0) {
+              boss.defeated = true;
+              boss.defeatTimer = 2.5;
+              playSound('streak');
+              shakeTimer = 1; shakeAmt = 10;
+              // Massive explosion
+              for (var j = 0; j < 30; j++) {
+                spawnParticles(boss.x + Math.random() * boss.w, boss.y + Math.random() * boss.h, 2, '#ffd700', 5);
+              }
+              spawnText(boss.x + boss.w / 2, boss.y - 10, 'DEFEATED!', '#ffd700', 28);
+            }
+          } else {
+            // Misspelled word — hurts player
+            damagePlayer();
+            spawnText(fw.x, fw.y - 10, 'MISSPELLED!', '#e74c3c', 14);
+          }
+        }
+      }
+    }
+  }
+
+  function misspell(word) {
+    var arr = word.split('');
+    var idx = Math.floor(Math.random() * arr.length);
+    var alpha = 'abcdefghijklmnopqrstuvwxyz';
+    var rep;
+    do { rep = alpha[Math.floor(Math.random() * 26)]; } while (rep === arr[idx]);
+    arr[idx] = rep;
+    return arr.join('');
+  }
+
+  function drawBoss() {
+    if (!boss) return;
+    var t = time * 0.001;
+    var bx = boss.x - cam.x, by = boss.y - cam.y;
+
+    if (boss.defeated) {
+      // Exploding boss
+      ctx.globalAlpha = Math.max(0, boss.defeatTimer / 2.5);
+      ctx.fillStyle = '#6a3a8a';
+      ctx.beginPath(); ctx.ellipse(bx + boss.w / 2, by + boss.h / 2, boss.w / 2, boss.h / 2, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      return;
+    }
+
+    // Glow aura
+    ctx.globalAlpha = 0.15 + (boss.phase === 2 ? 0.1 : 0);
+    var glowR = 60 + Math.sin(t * 2) * 10;
+    var gg = ctx.createRadialGradient(bx + boss.w / 2, by + boss.h / 2, 0, bx + boss.w / 2, by + boss.h / 2, glowR);
+    gg.addColorStop(0, boss.phase === 2 ? 'rgba(255,50,50,0.4)' : 'rgba(160,50,255,0.4)');
+    gg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(bx + boss.w / 2, by + boss.h / 2, glowR, 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Hit flash
+    if (boss.hitFlash > 0) { ctx.globalAlpha = 0.5 + Math.sin(boss.hitFlash * 30) * 0.5; }
+
+    // Robe body
+    ctx.fillStyle = boss.phase === 2 ? '#8a1a1a' : '#3a1a5a';
+    ctx.beginPath();
+    ctx.moveTo(bx + 4, by + boss.h * 0.35);
+    ctx.quadraticCurveTo(bx - 4, by + boss.h, bx + boss.w / 2, by + boss.h + 5);
+    ctx.quadraticCurveTo(bx + boss.w + 4, by + boss.h, bx + boss.w - 4, by + boss.h * 0.35);
+    ctx.closePath(); ctx.fill();
+
+    // Head
+    ctx.fillStyle = boss.phase === 2 ? '#cc2020' : '#5a2a7a';
+    ctx.beginPath(); ctx.arc(bx + boss.w / 2, by + boss.h * 0.25, 18, 0, Math.PI * 2); ctx.fill();
+
+    // Hood
+    ctx.fillStyle = boss.phase === 2 ? '#6a0a0a' : '#2a0a4a';
+    ctx.beginPath();
+    ctx.moveTo(bx + boss.w / 2 - 20, by + boss.h * 0.35);
+    ctx.quadraticCurveTo(bx + boss.w / 2, by - 5, bx + boss.w / 2 + 20, by + boss.h * 0.35);
+    ctx.fill();
+
+    // Eyes
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath();
+    ctx.arc(bx + boss.w / 2 - 6, by + boss.h * 0.23, 3.5, 0, Math.PI * 2);
+    ctx.arc(bx + boss.w / 2 + 6, by + boss.h * 0.23, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    // Pupils
+    ctx.fillStyle = '#1a0a0a';
+    var lookDir = P.x > boss.x + boss.w / 2 ? 1 : -1;
+    ctx.beginPath();
+    ctx.arc(bx + boss.w / 2 - 6 + lookDir, by + boss.h * 0.23, 1.5, 0, Math.PI * 2);
+    ctx.arc(bx + boss.w / 2 + 6 + lookDir, by + boss.h * 0.23, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Orbiting letter shield
+    ctx.globalAlpha = 0.5;
+    var orbitR = 35 + boss.phase * 5;
+    for (var i = 0; i < 8; i++) {
+      var angle = boss.shieldAngle + (i / 8) * Math.PI * 2;
+      var ox = bx + boss.w / 2 + Math.cos(angle) * orbitR;
+      var oy = by + boss.h / 2 + Math.sin(angle) * orbitR * 0.5;
+      ctx.fillStyle = i % 2 === 0 ? '#ffd700' : '#a78bfa';
+      ctx.font = 'bold 12px "Fredoka One",cursive';
+      ctx.textAlign = 'center';
+      ctx.fillText(String.fromCharCode(65 + (i * 3 + Math.floor(t)) % 26), ox, oy + 4);
+    }
+    ctx.textAlign = 'left';
+    ctx.globalAlpha = 1;
+
+    // Floating words
+    for (var i = 0; i < boss.floatingWords.length; i++) {
+      var fw = boss.floatingWords[i];
+      var fwx = fw.x - cam.x, fwy = fw.y - cam.y;
+      ctx.globalAlpha = fw.life;
+      // Word bubble background
+      var wordW = ctx.measureText ? fw.word.length * 9 : fw.word.length * 8;
+      ctx.fillStyle = fw.correct ? 'rgba(78,205,196,0.3)' : 'rgba(231,76,60,0.3)';
+      ctx.beginPath();
+      ctx.arc(fwx, fwy, wordW / 2 + 8, 0, Math.PI * 2);
+      ctx.fill();
+      // Word text
+      ctx.fillStyle = fw.correct ? '#4ecdc4' : '#e74c3c';
+      ctx.font = 'bold ' + fw.size + 'px "Fredoka One",cursive';
+      ctx.textAlign = 'center';
+      ctx.fillText(fw.word, fwx, fwy + 5);
+      // Border glow
+      ctx.strokeStyle = fw.correct ? '#2a9a8a' : '#c0392b';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(fwx, fwy, wordW / 2 + 8, 0, Math.PI * 2); ctx.stroke();
+    }
+    ctx.textAlign = 'left';
+    ctx.globalAlpha = 1;
+
+    // HP bar
+    var barW = boss.w * 2;
+    var barX = bx + boss.w / 2 - barW / 2;
+    var barY = by - 20;
+    ctx.fillStyle = '#333'; ctx.fillRect(barX, barY, barW, 8);
+    ctx.fillStyle = boss.phase === 2 ? '#e74c3c' : '#9b59b6';
+    ctx.fillRect(barX, barY, barW * (boss.hp / boss.maxHp), 8);
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.strokeRect(barX, barY, barW, 8);
+    ctx.fillStyle = '#fff'; ctx.font = '8px "Fredoka One",cursive'; ctx.textAlign = 'center';
+    ctx.fillText('WORD WEAVER', bx + boss.w / 2, barY - 4);
+    ctx.textAlign = 'left';
   }
 
   // ==================== TRANSITIONS ====================
@@ -25209,8 +25548,11 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
     if (transTimer <= 0) {
       if (transTarget === 'nextLevel') {
         level++;
+        bossArena = false;
         stage = 'playing';
         loadLevel(level);
+      } else if (transTarget === 'boss') {
+        initBoss();
       } else if (transTarget === 'win') {
         stage = 'win';
       } else if (transTarget === 'lose') {
@@ -26306,6 +26648,8 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
       if (P.dead && P.deathTimer > 2) {
         stage = 'lose';
       }
+      // Boss update
+      if (bossArena && boss) updateBoss();
 
       drawBackground();
       drawTiles();
@@ -26316,11 +26660,12 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
       drawFinishFlag();
       drawSpellGates();
       drawEnemies();
+      if (bossArena && boss) drawBoss();
       drawPlayer();
       drawParticles();
       drawFloatingTexts();
       drawHUD();
-      drawTutorial();
+      if (!bossArena) drawTutorial();
       drawSpellPrompt();
       drawTouchControls();
       // Flash
@@ -26329,6 +26674,9 @@ let scot={questions:[],idx:0,total:20,correct:0,streak:0,missed:[]};
         ctx.fillRect(0, 0, W, H);
         flashTimer -= dt;
       }
+    } else if (stage === 'celebration') {
+      updateCelebration();
+      drawCelebration();
     } else if (stage === 'win') {
       drawWinScreen();
     } else if (stage === 'lose') {
