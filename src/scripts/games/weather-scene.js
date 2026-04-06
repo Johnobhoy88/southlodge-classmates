@@ -127,6 +127,25 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise cloud texture — organic storm cloud detail
+  function drawCloudNoise() {
+    var t = time * 0.001;
+    var stormAmount = Math.max(0, 1 - progress * 1.2);
+    var noiseAlpha = (0.03 + stormAmount * 0.03) * brightness;
+    if (noiseAlpha < 0.005) return;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W * 0.6; nx += 16) {
+      for (var ny = 0; ny < H * 0.35; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.1, ny * 0.005 + t * 0.05);
+        if (n < -0.15) continue;
+        var l = 15 + n * 12;
+        ctx.fillStyle = 'hsl(230,' + Math.round(12 + n * 5) + '%,' + Math.round(Math.max(5, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawSunRays() {
     var t = time * 0.001;
     var sunX = W * 0.82, sunY = H * 0.12;
@@ -265,8 +284,9 @@
     var t = time * 0.001;
     for (var i = 0; i < leaves.length; i++) {
       var l = leaves[i];
-      l.x += l.speed;
-      l.y += Math.sin(t * 2 + l.wobblePhase) * 0.5;
+      var nWind = FXCore.noise2D(l.x * 0.005 + t * 0.2, l.y * 0.005 + i * 5) * 0.5;
+      l.x += l.speed + nWind;
+      l.y += Math.sin(t * 2 + l.wobblePhase) * 0.5 + nWind * 0.3;
       l.rotation += l.rotSpeed;
       if (l.x > W + 10) { l.x = W * 0.1; l.y = rand(H * 0.3, H * 0.7); }
       var stormAmount = Math.max(0, 1 - progress * 1.2);
@@ -282,6 +302,42 @@
       ctx.fill();
       ctx.restore();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend sun/rainbow glow bloom
+  function drawWeatherGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Sun clearing bloom — warm glow from the clearing side
+    var sunX = W * 0.82, sunY = H * 0.12;
+    var sunStrength = 0.2 + progress * 0.6;
+    var sunR = Math.min(W, H) * (0.25 + progress * 0.15);
+    ctx.globalAlpha = sunStrength * 0.06 * brightness;
+    var sg = ctx.createRadialGradient(sunX, sunY, 0, sunX, sunY, sunR);
+    sg.addColorStop(0, 'rgba(255,240,180,0.18)');
+    sg.addColorStop(0.3, 'rgba(255,220,120,0.06)');
+    sg.addColorStop(1, 'rgba(255,200,80,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(sunX - sunR, sunY - sunR, sunR * 2, sunR * 2);
+
+    // Rainbow arc soft glow
+    if (progress > 0.2) {
+      var arcX = W * 0.55, arcY = H * 0.75;
+      var arcR = Math.min(W, H) * 0.45;
+      ctx.globalAlpha = (progress - 0.2) * 0.04 * brightness;
+      var rg = ctx.createRadialGradient(arcX, arcY, arcR * 0.7, arcX, arcY, arcR * 1.1);
+      rg.addColorStop(0, 'rgba(255,200,150,0)');
+      rg.addColorStop(0.4, 'rgba(255,200,150,0.06)');
+      rg.addColorStop(0.6, 'rgba(200,220,255,0.04)');
+      rg.addColorStop(1, 'rgba(200,220,255,0)');
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.arc(arcX, arcY, arcR * 1.1, Math.PI, 0);
+      ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -313,6 +369,7 @@
     },
     draw: function() {
       drawSplitSky();
+      drawCloudNoise();
       drawStormClouds();
       drawSunRays();
       drawRainbow();
@@ -321,6 +378,7 @@
       drawPuddles();
       drawTrees();
       drawLeaves();
+      drawWeatherGlow();
     },
     exit: function() {}
   };
