@@ -81,6 +81,22 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise brick wall texture — organic dark masonry detail
+  function drawBrickNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.015) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.02, ny * 0.005);
+        var l = 8 + n * 6;
+        ctx.fillStyle = 'hsl(' + Math.round(18 + n * 4) + ',14%,' + Math.round(Math.max(3, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawWindow() {
     var wx = W * 0.18, wy = H * 0.08, ww = W * 0.1, wh = H * 0.2;
     ctx.globalAlpha = (0.4 + progress * 0.3) * brightness;
@@ -298,8 +314,9 @@
     var t = time * 0.001;
     for (var i = 0; i < dustMotes.length; i++) {
       var d = dustMotes[i];
-      d.x += d.speedX + Math.sin(t * 0.3 + d.phase) * 0.05;
-      d.y += d.speedY + Math.cos(t * 0.4 + d.phase) * 0.04;
+      var nDrift = FXCore.noise2D(d.x * 0.008 + t * 0.15, d.y * 0.008 + i * 6) * 0.3;
+      d.x += d.speedX + Math.sin(t * 0.3 + d.phase) * 0.05 + nDrift;
+      d.y += d.speedY + Math.cos(t * 0.4 + d.phase) * 0.04 + nDrift * 0.2;
       if (d.x < W * 0.05) d.x = W * 0.6;
       if (d.x > W * 0.65) d.x = W * 0.05;
       if (d.y < 0) d.y = H * 0.7;
@@ -313,6 +330,39 @@
       ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend brass and window light glow
+  function drawClockworkGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Window light bloom — warm glow spreading from window
+    var wx = W * 0.22, wy = H * 0.15;
+    var glowR = W * (0.25 + progress * 0.1);
+    ctx.globalAlpha = (0.05 + progress * 0.04) * brightness;
+    var wg = ctx.createRadialGradient(wx, wy, 0, wx, wy, glowR);
+    wg.addColorStop(0, 'rgba(255,220,130,0.15)');
+    wg.addColorStop(0.3, 'rgba(255,200,100,0.06)');
+    wg.addColorStop(1, 'rgba(255,200,100,0)');
+    ctx.fillStyle = wg;
+    ctx.fillRect(0, 0, wx + glowR, wy + glowR);
+
+    // Massive back gear brass gleam
+    var gx = W * 0.7, gy = H * 0.35;
+    var gR = Math.min(W, H) * 0.2;
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var gg = ctx.createRadialGradient(gx - gR * 0.2, gy - gR * 0.2, 0, gx, gy, gR);
+    gg.addColorStop(0, 'rgba(220,190,120,0.12)');
+    gg.addColorStop(0.5, 'rgba(200,170,100,0.04)');
+    gg.addColorStop(1, 'rgba(200,170,100,0)');
+    ctx.fillStyle = gg;
+    ctx.beginPath();
+    ctx.arc(gx, gy, gR, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -332,6 +382,7 @@
     },
     draw: function() {
       drawWall();
+      drawBrickNoise();
       drawWindow();
       // Back gears
       for (var i = 0; i < gears.length; i++) { if (gears[i].depth === 'back') drawGear(gears[i]); }
@@ -344,6 +395,7 @@
       // Front gears
       for (var i = 0; i < gears.length; i++) { if (gears[i].depth === 'front') drawGear(gears[i]); }
       drawDustMotes();
+      drawClockworkGlow();
     },
     exit: function() {}
   };
