@@ -193,6 +193,25 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise terrain texture — organic Highland ground detail
+  function drawTerrainNoise() {
+    var t = time * 0.001;
+    var groundY = Math.floor(H * 0.65);
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = groundY; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.006 + t * 0.03, ny * 0.006);
+        var depth = (ny - groundY) / (H - groundY);
+        var hue = 140 - depth * 115; // green to brown
+        var l = 18 + n * 8 - depth * 4;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',' + Math.round(25 - depth * 10) + '%,' + Math.round(Math.max(8, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawGround() {
     var gg = ctx.createLinearGradient(0, H * 0.65, 0, H);
     gg.addColorStop(0, 'hsl(140,' + Math.round(30 + progress * 10) + '%,' + Math.round(22 * brightness) + '%)');
@@ -303,8 +322,9 @@
     var t = time * 0.001;
     for (var i = 0; i < steamPuffs.length; i++) {
       var s = steamPuffs[i];
-      var sx = s.x + Math.sin(t * 0.5 + s.phase) * 10 + t * s.driftX * 20;
-      var sy = s.y + t * s.driftY * 10 + Math.cos(t * 0.3 + s.phase) * 5;
+      var nWind = FXCore.noise2D(s.x * 0.005 + t * 0.2, s.y * 0.005 + i * 6) * 5;
+      var sx = s.x + Math.sin(t * 0.5 + s.phase) * 10 + t * s.driftX * 20 + nWind;
+      var sy = s.y + t * s.driftY * 10 + Math.cos(t * 0.3 + s.phase) * 5 + nWind * 0.3;
       // Wrap
       if (sx > W + 30) sx -= W + 60;
       var puffSize = s.size * (0.5 + progress * 0.5);
@@ -339,6 +359,36 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend mountain haze and atmospheric glow
+  function drawHighlandGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Mountain haze — soft blue atmospheric glow at mountain line
+    var hazeY = H * 0.4;
+    var hazeH = H * 0.15;
+    ctx.globalAlpha = (0.04 + progress * 0.03) * brightness;
+    var hg = ctx.createLinearGradient(0, hazeY, 0, hazeY + hazeH);
+    hg.addColorStop(0, 'rgba(180,200,220,0)');
+    hg.addColorStop(0.4, 'rgba(180,200,220,0.08)');
+    hg.addColorStop(0.7, 'rgba(160,190,210,0.05)');
+    hg.addColorStop(1, 'rgba(160,190,210,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, hazeY, W, hazeH);
+
+    // Sky ambient glow — subtle blue bloom
+    var skyR = W * (0.35 + progress * 0.1);
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var sg = ctx.createRadialGradient(W * 0.5, H * 0.15, 0, W * 0.5, H * 0.15, skyR);
+    sg.addColorStop(0, 'rgba(200,220,255,0.1)');
+    sg.addColorStop(0.5, 'rgba(180,210,240,0.04)');
+    sg.addColorStop(1, 'rgba(180,210,240,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(0, 0, W, H * 0.5);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -359,12 +409,14 @@
       drawBackgroundPines();
       drawHills();
       drawGround();
+      drawTerrainNoise();
       drawTrack();
       drawStation();
       drawSignal();
       drawSteam();
       drawForegroundPines();
       drawBirds();
+      drawHighlandGlow();
     },
     exit: function() {}
   };
