@@ -1,6 +1,6 @@
 (function(){
   // ============================================================
-  // WORD FOREST PLATFORMER — TICK 4: Power-ups + enhanced blocks
+  // WORD FOREST PLATFORMER — TICK 5: Visual polish + parallax + animation
   // Mario/Sonic quality platformer with spelling integration.
   // Tile-based levels, proper physics, hand-crafted maps.
   // For the kids of South Lodge Primary, Invergordon
@@ -1069,74 +1069,154 @@
 
   function drawBackground() {
     var t = time * 0.001;
-    // Sky gradient
-    var g;
+
+    // === LAYER 0: SKY GRADIENT ===
+    var g = ctx.createLinearGradient(0, 0, 0, H);
     if (bgTheme === 'forest') {
-      g = ctx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, '#4a90d9'); g.addColorStop(0.6, '#7ec8e3'); g.addColorStop(1, '#c8e6c9');
+      g.addColorStop(0, '#3a80d0'); g.addColorStop(0.35, '#6ab8e8');
+      g.addColorStop(0.65, '#a8dce8'); g.addColorStop(1, '#d0ecc8');
     } else if (bgTheme === 'cave') {
-      g = ctx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, '#1a1a2e'); g.addColorStop(0.5, '#16213e'); g.addColorStop(1, '#0f3460');
+      g.addColorStop(0, '#0a0a1a'); g.addColorStop(0.3, '#12182e');
+      g.addColorStop(0.7, '#0f2848'); g.addColorStop(1, '#0a1830');
     } else {
-      g = ctx.createLinearGradient(0, 0, 0, H);
-      g.addColorStop(0, '#2d1b69'); g.addColorStop(0.5, '#1a0a3e'); g.addColorStop(1, '#0d0521');
+      g.addColorStop(0, '#1a0840'); g.addColorStop(0.3, '#2a1060');
+      g.addColorStop(0.7, '#180838'); g.addColorStop(1, '#0a0420');
     }
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
 
-    // Parallax mountains (layer 1, far)
-    ctx.globalAlpha = 0.25;
-    var px1 = -(cam.x * 0.1) % W;
-    ctx.fillStyle = bgTheme === 'forest' ? '#5a9a60' : bgTheme === 'cave' ? '#1a2a4a' : '#2a1a4a';
-    for (var i = -1; i < 3; i++) {
-      for (var m = 0; m < 4; m++) {
-        var mx = px1 + i * W + m * (W / 4);
-        var mh = 40 + Math.sin(m * 1.7 + i * 3) * 20;
-        ctx.beginPath();
-        ctx.moveTo(mx - 60, H);
-        ctx.lineTo(mx, H - mh);
-        ctx.lineTo(mx + 60, H);
-        ctx.fill();
-      }
-    }
-
-    // Parallax trees (layer 2, mid)
-    ctx.globalAlpha = 0.35;
-    var px2 = -(cam.x * 0.25) % (W * 0.5);
-    ctx.fillStyle = bgTheme === 'forest' ? '#2a6a30' : bgTheme === 'cave' ? '#0a1a30' : '#1a0a30';
-    for (var i = -1; i < 5; i++) {
-      var tx = px2 + i * 80;
-      ctx.beginPath();
-      ctx.arc(tx, H - 10, 18 + Math.sin(i * 2.3) * 6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillRect(tx - 2, H - 10, 4, 15);
-    }
-
-    // Animated clouds (forest only)
+    // === SUN / MOON ===
     if (bgTheme === 'forest') {
-      ctx.globalAlpha = 0.5;
+      // Sun with rays
+      var sunX = W * 0.78, sunY = H * 0.12;
+      ctx.globalAlpha = 0.15;
+      var sg = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 80);
+      sg.addColorStop(0, '#fff8d0'); sg.addColorStop(0.3, 'rgba(255,240,180,0.3)'); sg.addColorStop(1, 'rgba(255,200,100,0)');
+      ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(sunX, sunY, 80, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = '#fff8e0'; ctx.beginPath(); ctx.arc(sunX, sunY, 14, 0, Math.PI * 2); ctx.fill();
+    } else if (bgTheme === 'tower') {
+      // Moon
+      var moonX = W * 0.2, moonY = H * 0.1;
+      ctx.globalAlpha = 0.12;
+      var mg = ctx.createRadialGradient(moonX, moonY, 5, moonX, moonY, 60);
+      mg.addColorStop(0, '#e0e8ff'); mg.addColorStop(1, 'rgba(200,210,255,0)');
+      ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(moonX, moonY, 60, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 0.6;
+      ctx.fillStyle = '#e8ecff'; ctx.beginPath(); ctx.arc(moonX, moonY, 12, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#1a0840'; ctx.beginPath(); ctx.arc(moonX + 5, moonY - 3, 10, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // === STARS (cave + tower) ===
+    if (bgTheme !== 'forest') {
       ctx.fillStyle = '#fff';
-      for (var i = 0; i < 4; i++) {
-        var cx = ((t * (8 + i * 3) + i * 200) % (W + 200)) - 100;
-        var cy = 30 + i * 25;
-        ctx.beginPath();
-        ctx.arc(cx, cy, 20, 0, Math.PI * 2);
-        ctx.arc(cx + 15, cy - 5, 15, 0, Math.PI * 2);
-        ctx.arc(cx + 30, cy, 18, 0, Math.PI * 2);
-        ctx.fill();
+      for (var i = 0; i < 50; i++) {
+        var sx = (i * 97 + 13) % W;
+        var sy = (i * 53 + 7) % (H * 0.55);
+        var twink = 0.2 + Math.sin(t * (1.5 + (i % 5) * 0.4) + i * 1.7) * 0.3;
+        ctx.globalAlpha = twink;
+        ctx.beginPath(); ctx.arc(sx, sy, 0.8 + (i % 4) * 0.4, 0, Math.PI * 2); ctx.fill();
       }
     }
 
-    // Stars (tower only)
-    if (bgTheme === 'tower') {
-      ctx.fillStyle = '#fff';
-      for (var i = 0; i < 30; i++) {
-        var sx = (i * 97 + 13) % W;
-        var sy = (i * 53 + 7) % (H * 0.5);
-        var twink = 0.3 + Math.sin(t * 2 + i * 1.7) * 0.3;
-        ctx.globalAlpha = twink;
+    // === LAYER 1: FAR MOUNTAINS (parallax 0.08) ===
+    ctx.globalAlpha = bgTheme === 'forest' ? 0.2 : 0.15;
+    var farCol = bgTheme === 'forest' ? '#6aaa70' : bgTheme === 'cave' ? '#0a1a3a' : '#2a1050';
+    var px1 = -(cam.x * 0.08);
+    ctx.fillStyle = farCol;
+    ctx.beginPath(); ctx.moveTo(0, H);
+    for (var x = -20; x <= W + 40; x += 10) {
+      var worldX = x - px1;
+      var mh = 55 + Math.sin(worldX * 0.008) * 25 + Math.sin(worldX * 0.003) * 15;
+      ctx.lineTo(x, H - mh);
+    }
+    ctx.lineTo(W + 40, H); ctx.fill();
+
+    // === LAYER 2: MID HILLS (parallax 0.2) ===
+    ctx.globalAlpha = bgTheme === 'forest' ? 0.3 : 0.2;
+    var midCol = bgTheme === 'forest' ? '#3a8a40' : bgTheme === 'cave' ? '#0a1530' : '#1a0838';
+    var px2 = -(cam.x * 0.2);
+    ctx.fillStyle = midCol;
+    ctx.beginPath(); ctx.moveTo(0, H);
+    for (var x = -20; x <= W + 40; x += 8) {
+      var worldX = x - px2;
+      var mh = 35 + Math.sin(worldX * 0.012 + 2) * 18 + Math.sin(worldX * 0.005 + 1) * 12;
+      ctx.lineTo(x, H - mh);
+    }
+    ctx.lineTo(W + 40, H); ctx.fill();
+
+    // === LAYER 3: NEAR TREES/STALACTITES (parallax 0.35) ===
+    ctx.globalAlpha = bgTheme === 'forest' ? 0.35 : 0.25;
+    var px3 = -(cam.x * 0.35);
+    if (bgTheme === 'forest') {
+      // Pine tree silhouettes
+      ctx.fillStyle = '#1a5a20';
+      for (var i = -2; i < Math.ceil(W / 55) + 3; i++) {
+        var tx = ((i * 55 + px3) % (W + 110)) - 55;
+        var th = 30 + (i * 7 + 13) % 20;
+        // Trunk
+        ctx.fillRect(tx - 2, H - 5, 4, 8);
+        // Canopy layers
+        for (var l = 0; l < 3; l++) {
+          var lw = (14 - l * 3) + Math.sin(i * 2.3) * 3;
+          ctx.beginPath();
+          ctx.moveTo(tx, H - 8 - th + l * 10);
+          ctx.lineTo(tx - lw, H - 8 - th + l * 10 + 14);
+          ctx.lineTo(tx + lw, H - 8 - th + l * 10 + 14);
+          ctx.fill();
+        }
+      }
+    } else if (bgTheme === 'cave') {
+      // Stalactites hanging from top
+      ctx.fillStyle = '#0a1528';
+      for (var i = -2; i < Math.ceil(W / 40) + 3; i++) {
+        var sx = ((i * 40 + px3) % (W + 80)) - 40;
+        var sh = 15 + (i * 11 + 7) % 25;
         ctx.beginPath();
-        ctx.arc(sx, sy, 1 + (i % 3) * 0.5, 0, Math.PI * 2);
+        ctx.moveTo(sx - 8, 0); ctx.lineTo(sx, sh); ctx.lineTo(sx + 8, 0);
+        ctx.fill();
+      }
+      // Stalagmites from bottom
+      for (var i = -2; i < Math.ceil(W / 50) + 3; i++) {
+        var sx = ((i * 50 + 20 + px3) % (W + 100)) - 50;
+        var sh = 10 + (i * 13 + 3) % 18;
+        ctx.beginPath();
+        ctx.moveTo(sx - 6, H); ctx.lineTo(sx, H - sh); ctx.lineTo(sx + 6, H);
+        ctx.fill();
+      }
+    } else {
+      // Tower: broken columns and arches
+      ctx.fillStyle = '#12062a';
+      for (var i = -1; i < Math.ceil(W / 70) + 2; i++) {
+        var cx = ((i * 70 + px3) % (W + 140)) - 70;
+        var ch = 20 + (i * 9 + 5) % 30;
+        ctx.fillRect(cx - 4, H - ch, 8, ch);
+        ctx.fillRect(cx - 6, H - ch, 12, 3);
+      }
+    }
+
+    // === CLOUDS (forest + tower) ===
+    if (bgTheme === 'forest') {
+      ctx.fillStyle = '#fff';
+      for (var i = 0; i < 5; i++) {
+        var cx = ((t * (6 + i * 2.5) + i * 180) % (W + 250)) - 120;
+        var cy = 25 + i * 22 + Math.sin(t * 0.3 + i) * 4;
+        ctx.globalAlpha = 0.4 + (i % 2) * 0.15;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18 + i * 2, 0, Math.PI * 2);
+        ctx.arc(cx + 14, cy - 6, 14 + i, 0, Math.PI * 2);
+        ctx.arc(cx + 28, cy - 2, 16 + i, 0, Math.PI * 2);
+        ctx.arc(cx + 10, cy + 4, 12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (bgTheme === 'tower') {
+      // Wispy clouds
+      ctx.fillStyle = 'rgba(100,80,140,0.15)';
+      for (var i = 0; i < 3; i++) {
+        var cx = ((t * (4 + i * 2) + i * 250) % (W + 300)) - 150;
+        var cy = 40 + i * 30;
+        ctx.globalAlpha = 0.12;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 60, 8, 0, 0, Math.PI * 2);
         ctx.fill();
       }
     }
@@ -1159,25 +1239,55 @@
         var sy = r * T - cam.y;
 
         if (tile === 'G') {
-          // Ground tile
+          // Ground tile — rich layered detail
           var isTop = r === 0 || tileAt(c, r - 1) !== 'G';
-          ctx.fillStyle = bgTheme === 'forest' ? '#5a9a40' : bgTheme === 'cave' ? '#4a5a6a' : '#4a3a5a';
+          var isBot = r >= mapH - 1 || tileAt(c, r + 1) !== 'G';
+          // Main body
+          if (bgTheme === 'forest') {
+            ctx.fillStyle = isTop ? '#5a9a40' : '#6a5a3a';
+          } else if (bgTheme === 'cave') {
+            ctx.fillStyle = isTop ? '#4a5a6a' : '#3a4a5a';
+          } else {
+            ctx.fillStyle = isTop ? '#4a3a5a' : '#3a2a4a';
+          }
           ctx.fillRect(sx, sy, T, T);
           if (isTop) {
+            // Top surface highlight
             ctx.fillStyle = bgTheme === 'forest' ? '#6ab450' : bgTheme === 'cave' ? '#5a6a7a' : '#5a4a6a';
-            ctx.fillRect(sx, sy, T, 4);
-            // Grass tufts
-            if (bgTheme === 'forest' && c % 2 === 0) {
+            ctx.fillRect(sx, sy, T, 5);
+            // Bright edge line
+            ctx.fillStyle = bgTheme === 'forest' ? '#7cc860' : bgTheme === 'cave' ? '#6a7a8a' : '#6a5a7a';
+            ctx.fillRect(sx, sy, T, 2);
+            // Grass tufts (forest) / crystals (cave) / cracks (tower)
+            if (bgTheme === 'forest') {
               ctx.fillStyle = '#7ac460';
-              ctx.fillRect(sx + 4, sy - 3, 2, 4);
-              ctx.fillRect(sx + 12, sy - 4, 2, 5);
-              ctx.fillRect(sx + 22, sy - 2, 2, 3);
+              var seed = c * 7 + r * 13;
+              ctx.fillRect(sx + (seed % 8) + 2, sy - 3, 2, 4);
+              ctx.fillRect(sx + (seed % 12) + 8, sy - 5, 2, 6);
+              ctx.fillRect(sx + (seed % 10) + 18, sy - 2, 2, 3);
+              if (c % 3 === 0) { // Occasional flower
+                ctx.fillStyle = ['#f472b6','#facc15','#fb923c','#a78bfa'][(c + r) % 4];
+                ctx.beginPath(); ctx.arc(sx + 14, sy - 3, 2, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#4ade80';
+                ctx.fillRect(sx + 13, sy - 1, 2, 3);
+              }
+            } else if (bgTheme === 'cave') {
+              if (c % 4 === 0) {
+                ctx.fillStyle = 'rgba(100,180,255,0.2)';
+                ctx.beginPath(); ctx.arc(sx + 10, sy - 1, 3, 0, Math.PI * 2); ctx.fill();
+              }
+            }
+          } else {
+            // Sub-surface texture — darker patches for depth
+            ctx.fillStyle = 'rgba(0,0,0,0.06)';
+            var hash = (c * 31 + r * 17) % 29;
+            ctx.fillRect(sx + (hash % 12) + 2, sy + (hash % 8) + 4, 4 + hash % 5, 3 + hash % 4);
+            // Occasional stone/pebble
+            if (hash % 7 === 0) {
+              ctx.fillStyle = 'rgba(0,0,0,0.04)';
+              ctx.beginPath(); ctx.arc(sx + 16 + hash % 10, sy + 12 + hash % 12, 3, 0, Math.PI * 2); ctx.fill();
             }
           }
-          // Texture dots
-          ctx.fillStyle = 'rgba(0,0,0,0.06)';
-          ctx.fillRect(sx + 8, sy + 12, 2, 2);
-          ctx.fillRect(sx + 20, sy + 8, 2, 2);
         } else if (tile === 'B') {
           // Brick
           ctx.fillStyle = '#b07040';
