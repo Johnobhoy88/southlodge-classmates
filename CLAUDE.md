@@ -26,6 +26,9 @@ npm test         # 126 smoke checks + 26 logic tests = 152 total
 - `src/scripts/teacher/` — teacher dashboard (summary, reports, authoring, tools)
 - `src/scripts/platform/` — app state, shell, module system, bootstrap
 - `src/scripts/pupil/` — pupil home, avatar (with equipped cosmetics store)
+- `src/scripts/platform/sfx.js` — sound engine, confetti, flash feedback
+- `src/scripts/platform/utils.js` — shared utilities (shuffle, rand, escapeHtml, etc.)
+- `src/scripts/platform/game-shell.js` — shared game constants (stars, encouragements)
 - `src/scripts/flagship/` — Southlodge Racers admin panel
 - `src/scripts/app.js` — legacy runtime (being decomposed)
 - `src/body.html` — all markup
@@ -41,7 +44,7 @@ npm test         # 126 smoke checks + 26 logic tests = 152 total
 
 ## Tests
 ```
-npm test           # 164 checks: 129 smoke + 35 logic
+npm test           # 278 checks: 243 smoke + 35 logic
 npm run test:smoke # artifact integrity, offline contract, module presence, build completeness
 npm run test:logic # VM-sandboxed module tests (storage, spelling, maths, etc.)
 npx playwright test # E2E tests: landing, teacher flow, game cards, pupil home
@@ -63,6 +66,8 @@ npx playwright test # E2E tests: landing, teacher flow, game cards, pupil home
 - v0.6.0 — all 39 games verified working, missed items, CSS design tokens
 - v0.7.0 — Premium Spelling "Word Forest" (Canvas 2D scene, Web Audio, particles)
 - v0.7.1 — Full-screen forest, avatar store with 21 cosmetics, star-based coin economy
+- v2.0.0 — V2: Platform spine extraction, premium teacher dashboard, Highland Dash 2.0,
+           Spellbound Forest, Number Forge, 41 games, 278+ tests
 
 ## Premium Game Pattern (spelling-fx.js)
 The spelling game is the flagship — the quality bar for every other game.
