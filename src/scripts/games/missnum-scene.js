@@ -117,6 +117,25 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise sand texture — organic dune/desert surface detail
+  function drawSandNoise() {
+    var t = time * 0.001;
+    var sandY = Math.floor(H * 0.44);
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = sandY; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.006 + t * 0.04, ny * 0.006);
+        var depth = (ny - sandY) / (H - sandY);
+        var hue = 35 - depth * 7;
+        var l = 38 + n * 10 - depth * 6;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',' + Math.round(45 + n * 8) + '%,' + Math.round(Math.max(20, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawHeatShimmer() {
     var t = time * 0.001;
     ctx.globalAlpha = (0.02 + progress * 0.03) * brightness;
@@ -307,8 +326,9 @@
   function drawSandParticles() {
     for (var i = 0; i < sandParticles.length; i++) {
       var s = sandParticles[i];
-      s.x += s.speedX;
-      s.y += s.speedY;
+      var nWind = FXCore.noise2D(s.x * 0.005 + time * 0.0003, s.y * 0.005 + i * 5) * 0.3;
+      s.x += s.speedX + nWind;
+      s.y += s.speedY + nWind * 0.15;
       if (s.x > W + 5) { s.x = -5; s.y = rand(H * 0.4, H * 0.85); }
       ctx.globalAlpha = s.opacity * (0.5 + progress * 0.3) * brightness;
       ctx.fillStyle = '#d4b070';
@@ -316,6 +336,34 @@
       ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend sunset and golden hour glow
+  function drawDesertGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Sun bloom — warm golden radiance
+    var sx = W * 0.7, sy = H * (0.38 - progress * 0.08);
+    var sunR = Math.min(W, H) * (0.3 + progress * 0.15);
+    ctx.globalAlpha = (0.05 + progress * 0.05) * brightness;
+    var sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sunR);
+    sg.addColorStop(0, 'rgba(255,200,80,0.18)');
+    sg.addColorStop(0.3, 'rgba(255,180,60,0.06)');
+    sg.addColorStop(1, 'rgba(255,150,30,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(sx - sunR, sy - sunR, sunR * 2, sunR * 2);
+
+    // Warm horizon haze
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var hg = ctx.createLinearGradient(0, H * 0.35, 0, H * 0.55);
+    hg.addColorStop(0, 'rgba(255,180,80,0)');
+    hg.addColorStop(0.4, 'rgba(255,180,80,0.08)');
+    hg.addColorStop(1, 'rgba(255,180,80,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, H * 0.35, W, H * 0.2);
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -336,6 +384,7 @@
     draw: function() {
       drawSky();
       drawDistantDunes();
+      drawSandNoise();
       drawHeatShimmer();
       drawColumns();
       drawArch();
@@ -343,6 +392,7 @@
       drawCacti();
       drawHawk();
       drawSandParticles();
+      drawDesertGlow();
     },
     exit: function() {}
   };
