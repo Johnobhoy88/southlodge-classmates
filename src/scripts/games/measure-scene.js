@@ -73,6 +73,22 @@
     }
   }
 
+  // Noise wood grain texture — organic panel and bench detail
+  function drawWoodNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.015) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = 0; ny < H * 0.5; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.008 + t * 0.02, ny * 0.003);
+        var l = 30 + n * 10;
+        ctx.fillStyle = 'hsl(' + Math.round(25 + n * 5) + ',20%,' + Math.round(Math.max(15, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawPegTools() {
     for (var i = 0; i < pegTools.length; i++) {
       var t = pegTools[i];
@@ -342,9 +358,10 @@
   function drawWoodShavings() {
     for (var i = 0; i < woodShavings.length; i++) {
       var s = woodShavings[i];
+      var nDrift = FXCore.noise2D(s.x * 0.01 + time * 0.0001, s.y * 0.01 + i * 5) * 1.5;
       ctx.save();
-      ctx.translate(s.x, s.y);
-      ctx.rotate(s.angle);
+      ctx.translate(s.x + nDrift, s.y + nDrift * 0.3);
+      ctx.rotate(s.angle + nDrift * 0.02);
       ctx.globalAlpha = 0.15 * brightness;
       ctx.strokeStyle = s.color;
       ctx.lineWidth = 1;
@@ -391,6 +408,34 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend warm workshop glow — overhead lamp and brass gleam
+  function drawWorkshopGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Overhead workshop lamp — warm pool of light on bench
+    var lampX = W * 0.5, lampY = H * 0.35;
+    var glowR = W * (0.25 + progress * 0.1);
+    ctx.globalAlpha = (0.05 + progress * 0.04) * brightness;
+    var lg = ctx.createRadialGradient(lampX, lampY, 0, lampX, lampY, glowR);
+    lg.addColorStop(0, 'rgba(255,220,150,0.15)');
+    lg.addColorStop(0.4, 'rgba(255,200,120,0.05)');
+    lg.addColorStop(1, 'rgba(255,200,120,0)');
+    ctx.fillStyle = lg;
+    ctx.fillRect(lampX - glowR, lampY - glowR * 0.5, glowR * 2, glowR * 1.5);
+
+    // Brass weight gleam
+    var wx = W * 0.82, wy = H * 0.48;
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var bg = ctx.createRadialGradient(wx, wy, 0, wx, wy, 20);
+    bg.addColorStop(0, 'rgba(255,220,100,0.15)');
+    bg.addColorStop(1, 'rgba(255,220,100,0)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(wx - 20, wy - 20, 40, 40);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -406,6 +451,7 @@
     },
     draw: function() {
       drawWall();
+      drawWoodNoise();
       drawPegTools();
       drawBench();
       drawBalanceScale();
@@ -416,6 +462,7 @@
       drawSpiritLevel();
       drawWoodShavings();
       drawPencil();
+      drawWorkshopGlow();
     },
     exit: function() {}
   };
