@@ -8,7 +8,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.5;
+  var progress = 0, targetProgress = 0, brightness = 0.75;
   var time = 0;
 
   var windowPanels = [];
@@ -343,14 +343,14 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.5;
+      progress = 0; targetProgress = 0; brightness = 0.75;
       generateScene();
     },
     resize: function(w, h) { W = w; H = h; generateScene(); },
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.5 + progress * 0.5) - brightness) * 0.02;
+      brightness += ((0.75 + progress * 0.25) - brightness) * 0.02;
     },
     draw: function() {
       drawStoneWalls();
@@ -370,6 +370,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('shapes')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       var jc = JEWEL_COLORS[idx % JEWEL_COLORS.length];
       FXCore.emit(s.w * 0.5, s.h * 0.4, 10, {
         spread: 5, rise: 2, decay: 0.02, size: 3,
@@ -378,6 +379,17 @@
       FXCore.emit(s.w * 0.5, s.h * 0.4, 5, {
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(255,250,220,0.6)'
+      });
+      // Stained-glass jewel burst — complementary gem colour
+      var nextJc = JEWEL_COLORS[(idx + 2) % JEWEL_COLORS.length];
+      FXCore.emit(s.w * 0.5, s.h * 0.38, count, {
+        spread: 6, rise: 2.3, decay: 0.018, size: 2.5,
+        color: nextJc.fill + '0.7)', shape: 'diamond', endColor: nextJc.fill + '0)'
+      });
+      // Tiny candlelight sparkles
+      FXCore.emit(s.w * 0.5, s.h * 0.4, 4, {
+        spread: 2, rise: 1, decay: 0.03, size: 1.5,
+        color: 'rgba(255,180,80,0.9)', shape: 'star'
       });
       if (window.FXSound) FXSound.play('chime');
     },
@@ -388,6 +400,12 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(60,60,80,0.4)'
       });
+      // Darker stone-shadow burst
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 4, {
+        spread: 1.5, rise: -0.2, gravity: 0.03, decay: 0.02, size: 1.8,
+        color: 'rgba(30,30,50,0.5)'
+      });
+      if (FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -400,7 +418,21 @@
           color: JEWEL_COLORS[i].fill + '0.7)', shape: 'diamond'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['chime','chime','complete'], 120);
+      // Cathedral celebration — 6 jewel bursts across the nave
+      var gemOrder = [0, 4, 1, 3, 2, 0];
+      for (var j = 0; j < 6; j++) {
+        var gc = JEWEL_COLORS[gemOrder[j]];
+        FXCore.emit(s.w * (0.1 + j * 0.14), s.h * (0.2 + Math.sin(j * 1.1) * 0.12), 5, {
+          spread: 6, rise: 2.5, decay: 0.012, size: 3.5,
+          color: gc.fill + '0.7)', shape: j % 2 === 0 ? 'diamond' : 'circle'
+        });
+      }
+      // Central golden star burst
+      FXCore.emit(s.w * 0.5, s.h * 0.35, 15, {
+        spread: 8, rise: 3, decay: 0.008, size: 5,
+        color: 'rgba(255,215,0,0.8)', shape: 'star', endColor: 'rgba(255,230,150,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };
