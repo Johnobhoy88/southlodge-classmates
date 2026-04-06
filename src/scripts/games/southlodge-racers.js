@@ -212,6 +212,11 @@
     setMessage(milestone.text, milestone.tone, milestone.streak >= 8 ? 1200 : 900);
     RACER.session.speedBoost += milestone.boost;
     RACER.session.cameraKick += milestone.boost * 0.12;
+    // Shield regeneration: earn a shield back at streak 5 and 8
+    if (milestone.streak >= 5 && RACER.session.shields < 3) {
+      RACER.session.shields = Math.min(3, RACER.session.shields + 1);
+      setMessage(milestone.text + ' +Shield!', milestone.tone, 1200);
+    }
     if (milestone.confetti && typeof launchConfetti === 'function') launchConfetti(900);
     if (typeof sfxLevelUp === 'function' && milestone.streak >= 5) sfxLevelUp();
     else if (typeof sfxStreak === 'function') sfxStreak();
@@ -597,7 +602,9 @@
     setText('racerProgress', progress);
     setText('racerStreak', 'Streak ' + RACER.session.streak + ' · Best ' + RACER.session.maxStreak);
     setText('racerSpeed', Math.round(speed * 4) + ' mph');
-    setText('racerShield', 'Shield ' + RACER.session.shields);
+    setText('racerShield', RACER.session.shields >= 3 ? 'Full shield' : 'Shield ' + RACER.session.shields);
+    var dist = RACER.session.distance || 0;
+    setText('racerDist', dist >= 1000 ? (dist / 1000).toFixed(1) + ' km' : Math.round(dist) + ' m');
   }
 
   function setMessage(text, tone, duration) {
@@ -871,6 +878,8 @@
     RACER.session.currentSpeed = targetSpeed;
     RACER.session.speedBoost = Math.max(0, RACER.session.speedBoost - delta * 4.2);
     RACER.session.penalty = Math.max(0, RACER.session.penalty - delta * 3.6);
+    RACER.session.distance += targetSpeed * delta * 0.5;
+    RACER.session.elapsedTime += delta;
     RACER.session.cameraKick = (RACER.session.cameraKick || 0) * Math.max(0, 1 - delta * 4.5);
     RACER.session.laneLean = (RACER.session.laneLean || 0) * Math.max(0, 1 - delta * 6);
 
@@ -1027,7 +1036,9 @@
       rewardPreview: config.rewardPreview || null,
       countdownActive: false,
       running: false,
-      nextSpawnDelay: 0
+      nextSpawnDelay: 0,
+      distance: 0,
+      elapsedTime: 0
     };
     RACER.active = true;
     bindInput();
