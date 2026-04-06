@@ -107,6 +107,23 @@
     ctx.fillRect(0, 0, W, H);
   }
 
+  // Noise sky texture — organic atmosphere detail
+  function drawSkyNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.02 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H * 0.55; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.004 + t * 0.06, ny * 0.004 + t * 0.03);
+        var height = ny / (H * 0.55);
+        var l = 55 + n * 12 + height * 8;
+        ctx.fillStyle = 'hsl(' + Math.round(210 - height * 10) + ',' + Math.round(40 + n * 10) + '%,' + Math.round(Math.min(80, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawClouds() {
     var t = time * 0.001;
     for (var i = 0; i < clouds.length; i++) {
@@ -271,8 +288,9 @@
     for (var i = 0; i < confetti.length; i++) {
       if (i / confetti.length > confettiAmount) continue;
       var c = confetti[i];
+      var nWind = FXCore.noise2D(c.x * 0.005 + t * 0.2, c.y * 0.005 + i * 4) * 0.35;
       c.y += c.fallSpeed * 0.5;
-      c.x += c.drift * 0.3 + Math.sin(t * 2 + c.wobblePhase) * 0.3;
+      c.x += c.drift * 0.3 + Math.sin(t * 2 + c.wobblePhase) * 0.3 + nWind;
       c.rotation += c.rotSpeed;
       if (c.y > H + 10) { c.y = -10; c.x = rand(0, W); }
       if (c.x < -10) c.x = W + 10;
@@ -310,6 +328,39 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend firework glow and celebration bloom
+  function drawCelebrationGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Firework glow halos
+    for (var i = 0; i < fireworks.length; i++) {
+      var fw = fireworks[i];
+      if (fw.life <= 0) continue;
+      var glowR = 40 + (1 - fw.life) * 30;
+      ctx.globalAlpha = fw.life * 0.1 * brightness;
+      var fg = ctx.createRadialGradient(fw.x, fw.y, 0, fw.x, fw.y, glowR);
+      fg.addColorStop(0, fw.color.replace(')', ',0.2)').replace('#', 'rgba('));
+      fg.addColorStop(1, 'rgba(255,255,255,0)');
+      // Approximate hex-to-glow
+      ctx.fillStyle = 'rgba(255,200,150,0.1)';
+      ctx.beginPath();
+      ctx.arc(fw.x, fw.y, glowR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Festive sky bloom — warm glow across upper sky
+    ctx.globalAlpha = (0.03 + progress * 0.04) * brightness;
+    var skyGlow = ctx.createRadialGradient(W * 0.5, H * 0.15, 0, W * 0.5, H * 0.15, W * 0.5);
+    skyGlow.addColorStop(0, 'rgba(255,220,150,0.1)');
+    skyGlow.addColorStop(0.5, 'rgba(255,180,120,0.04)');
+    skyGlow.addColorStop(1, 'rgba(255,180,120,0)');
+    ctx.fillStyle = skyGlow;
+    ctx.fillRect(0, 0, W, H * 0.5);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -326,6 +377,7 @@
     },
     draw: function(context, w, h, t) {
       drawSky();
+      drawSkyNoise();
       drawClouds();
       drawFireworks(0.016);
       drawBunting();
@@ -333,6 +385,7 @@
       drawFlagpoles();
       drawConfetti();
       drawCountryLabels();
+      drawCelebrationGlow();
     },
     exit: function() { fireworks = []; }
   };
