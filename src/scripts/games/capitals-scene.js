@@ -67,11 +67,40 @@
     ctx.fillRect(W * 0.05, H * 0.05, W * 0.9, H * 0.4);
   }
 
+  function drawTerminalNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = Math.floor(H * 0.45); ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.03, ny * 0.005);
+        var l = 48 + n * 8;
+        ctx.fillStyle = 'hsl(220,6%,' + Math.round(Math.max(38, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawRunwayGlow() {
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+    var gg = ctx.createRadialGradient(W * 0.5, H * 0.25, 0, W * 0.5, H * 0.25, W * 0.45);
+    gg.addColorStop(0, 'rgba(200,220,255,0.15)');
+    gg.addColorStop(0.4, 'rgba(180,200,240,0.05)');
+    gg.addColorStop(1, 'rgba(160,180,220,0)');
+    ctx.fillStyle = gg;
+    ctx.fillRect(W * 0.05, H * 0.05, W * 0.9, H * 0.5);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   function drawClouds() {
     var t = time * 0.001;
     for (var i = 0; i < clouds.length; i++) {
       var c = clouds[i];
-      var cx = c.x + t * c.speed * 12;
+      var nDriftCloud = FXCore.noise2D(c.x * 0.006 + t * 0.2, c.y * 0.006 + i * 7) * 0.3;
+      var cx = c.x + t * c.speed * 12 + nDriftCloud * 6;
       if (cx > W * 0.9 + c.w) cx -= W * 0.85 + c.w * 2;
       if (cx < W * 0.05 - c.w) cx += W * 0.85 + c.w * 2;
       ctx.globalAlpha = c.opacity * brightness;
@@ -297,6 +326,7 @@
     },
     draw: function() {
       drawFloor();
+      drawTerminalNoise();
       drawCeiling();
       drawSky();
       drawClouds();
@@ -306,6 +336,7 @@
       drawPlane();
       drawWindowFrame();
       drawCityLabels();
+      drawRunwayGlow();
     },
     exit: function() {}
   };

@@ -225,12 +225,41 @@
     ctx.globalAlpha = 1;
   }
 
+  function drawFloorNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.03, ny * 0.005);
+        var l = 10 + n * 8;
+        ctx.fillStyle = 'hsl(230,8%,' + Math.round(Math.max(5, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawSpotlightGlow() {
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+    var gg = ctx.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, W * 0.35);
+    gg.addColorStop(0, 'rgba(255,240,200,0.15)');
+    gg.addColorStop(0.4, 'rgba(255,230,180,0.05)');
+    gg.addColorStop(1, 'rgba(255,220,160,0)');
+    ctx.fillStyle = gg;
+    ctx.fillRect(W * 0.15, H * 0.1, W * 0.7, H * 0.7);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   function drawDustMotes() {
     var t = time * 0.001;
     for (var i = 0; i < dustMotes.length; i++) {
       var d = dustMotes[i];
-      d.x += d.speedX + Math.sin(t * 0.3 + d.phase) * 0.04;
-      d.y += d.speedY + Math.cos(t * 0.4 + d.phase) * 0.03;
+      var nDrift = FXCore.noise2D(d.x * 0.006 + t * 0.2, d.y * 0.006 + i * 7) * 0.3;
+      d.x += d.speedX + Math.sin(t * 0.3 + d.phase) * 0.04 + nDrift;
+      d.y += d.speedY + Math.cos(t * 0.4 + d.phase) * 0.03 + nDrift * 0.5;
       if (d.x < W * 0.1) d.x = W * 0.9;
       if (d.x > W * 0.9) d.x = W * 0.1;
       if (d.y < H * 0.05) d.y = H * 0.7;
@@ -277,12 +306,14 @@
     },
     draw: function() {
       drawFloor();
+      drawFloorNoise();
       drawSpotlight();
       drawChainPath();
       drawRipples();
       drawDominoes();
       drawFloatingNums();
       drawDustMotes();
+      drawSpotlightGlow();
     },
     exit: function() {}
   };

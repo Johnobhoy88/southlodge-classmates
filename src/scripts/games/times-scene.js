@@ -101,7 +101,8 @@
     var t = time * 0.001;
     for (var i = 0; i < smokeClouds.length; i++) {
       var c = smokeClouds[i];
-      var cx = c.x + Math.sin(t * c.speed + c.phase) * 20 + c.drift * t * 5;
+      var nDriftSmoke = FXCore.noise2D(c.x * 0.006 + t * 0.2, c.y * 0.006 + i * 7) * 0.3;
+      var cx = c.x + Math.sin(t * c.speed + c.phase) * 20 + c.drift * t * 5 + nDriftSmoke * 8;
       var cy = c.y + Math.cos(t * c.speed * 0.5 + c.phase) * 8;
       // Wrap
       if (cx > W * 0.8) cx -= W * 0.6;
@@ -232,13 +233,42 @@
     ctx.globalAlpha = 1;
   }
 
+  function drawLavaNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = Math.floor(H * 0.5); ny < H; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.03, ny * 0.005);
+        var l = 12 + n * 8;
+        ctx.fillStyle = 'hsl(10,45%,' + Math.round(Math.max(6, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawVolcanoGlow() {
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+    var gg = ctx.createRadialGradient(W * 0.5, H * 0.3, 0, W * 0.5, H * 0.3, W * 0.4);
+    gg.addColorStop(0, 'rgba(255,80,0,0.15)');
+    gg.addColorStop(0.4, 'rgba(255,50,0,0.05)');
+    gg.addColorStop(1, 'rgba(200,30,0,0)');
+    ctx.fillStyle = gg;
+    ctx.fillRect(W * 0.1, 0, W * 0.8, H * 0.7);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   function drawEmbers() {
     var t = time * 0.001;
     for (var i = 0; i < embers.length; i++) {
       var e = embers[i];
       if (progress < e.minProgress) continue;
+      var nDrift = FXCore.noise2D(e.x * 0.006 + t * 0.2, e.y * 0.006 + i * 7) * 0.3;
       e.y -= e.speed * 0.6;
-      e.x += e.drift * 0.3 + Math.sin(t * 2 + i) * 0.3;
+      e.x += e.drift * 0.3 + Math.sin(t * 2 + i) * 0.3 + nDrift;
       e.life -= 0.004;
       if (e.life <= 0 || e.y < H * 0.02) {
         e.x = W * 0.5 + rand(-W * 0.08, W * 0.08);
@@ -301,12 +331,14 @@
     },
     draw: function() {
       drawSky();
+      drawLavaNoise();
       drawSmokeClouds();
       drawMountain();
       drawLavaStreams();
       drawRocks();
       drawAsh();
       drawEmbers();
+      drawVolcanoGlow();
     },
     exit: function() {}
   };
