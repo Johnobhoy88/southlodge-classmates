@@ -7,7 +7,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.6;
+  var progress = 0, targetProgress = 0, brightness = 0.8;
   var time = 0;
 
   var herbs = [];
@@ -352,14 +352,14 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.6;
+      progress = 0; targetProgress = 0; brightness = 0.8;
       generateScene();
     },
     resize: function(w, h) { W = w; H = h; generateScene(); },
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.6 + progress * 0.4) - brightness) * 0.02;
+      brightness += ((0.8 + progress * 0.2) - brightness) * 0.02;
     },
     draw: function() {
       drawWall();
@@ -381,6 +381,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('fractions')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.5, 10, {
         spread: 5, rise: 2, decay: 0.02, size: 3,
         color: 'rgba(240,200,80,0.8)', shape: 'circle', endColor: 'rgba(255,230,150,0)'
@@ -388,6 +389,16 @@
       FXCore.emit(s.w * 0.5, s.h * 0.5, 5, {
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(200,60,30,0.6)'
+      });
+      // Warm oven-glow burst
+      FXCore.emit(s.w * 0.5, s.h * 0.48, count, {
+        spread: 6, rise: 1.8, decay: 0.018, size: 3,
+        color: 'rgba(255,150,30,0.7)', endColor: 'rgba(255,200,80,0)'
+      });
+      // Tiny flour sparkles
+      FXCore.emit(s.w * 0.5, s.h * 0.52, 4, {
+        spread: 2, rise: 2.5, decay: 0.03, size: 1.5,
+        color: 'rgba(255,248,240,0.9)', shape: 'star'
       });
       if (window.FXSound) FXSound.play('click');
     },
@@ -398,6 +409,12 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(120,80,50,0.4)'
       });
+      // Darker burnt crust burst
+      FXCore.emit(s.w * 0.5, s.h * 0.57, 3, {
+        spread: 1.5, rise: -0.3, gravity: 0.03, decay: 0.02, size: 2.5,
+        color: 'rgba(80,40,20,0.5)'
+      });
+      if(FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -410,7 +427,20 @@
           spread: 6, rise: 2.5, decay: 0.012, size: 3.5, color: colors[i], shape: 'circle'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['click','chime','complete'], 110);
+      // Kitchen themed bursts across the scene
+      var kitchenColors = ['rgba(255,150,30,0.7)','rgba(240,200,80,0.7)','rgba(200,60,30,0.65)','rgba(50,130,50,0.6)','rgba(255,180,60,0.7)','rgba(230,180,70,0.65)','rgba(180,50,20,0.6)'];
+      for (var j = 0; j < 7; j++) {
+        FXCore.emit(s.w * (0.1 + j * 0.115), s.h * (0.25 + (j % 3) * 0.08), 5, {
+          spread: 5, rise: 2.5, decay: 0.01, size: 4,
+          color: kitchenColors[j], shape: j % 2 === 0 ? 'circle' : 'star'
+        });
+      }
+      // Central golden star burst
+      FXCore.emit(s.w * 0.5, s.h * 0.4, 15, {
+        spread: 8, rise: 3, decay: 0.008, size: 5,
+        color: 'rgba(255,215,0,0.8)', shape: 'star'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };

@@ -7,7 +7,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.6;
+  var progress = 0, targetProgress = 0, brightness = 0.8;
   var time = 0;
 
   var gears = [];
@@ -344,14 +344,14 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.6;
+      progress = 0; targetProgress = 0; brightness = 0.8;
       generateScene();
     },
     resize: function(w, h) { W = w; H = h; generateScene(); },
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.6 + progress * 0.4) - brightness) * 0.02;
+      brightness += ((0.8 + progress * 0.2) - brightness) * 0.02;
     },
     draw: function() {
       drawWall();

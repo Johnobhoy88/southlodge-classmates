@@ -7,7 +7,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.6;
+  var progress = 0, targetProgress = 0, brightness = 0.8;
   var time = 0;
   var wheelAngle = 0;
 
@@ -327,7 +327,7 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.6;
+      progress = 0; targetProgress = 0; brightness = 0.8;
       wheelAngle = 0;
       generateScene();
     },
@@ -335,7 +335,7 @@
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.6 + progress * 0.4) - brightness) * 0.02;
+      brightness += ((0.8 + progress * 0.2) - brightness) * 0.02;
     },
     draw: function() {
       drawOcean();
@@ -357,6 +357,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('compass')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.5, 10, {
         spread: 5, rise: 2, decay: 0.02, size: 3,
         color: 'rgba(196,160,80,0.8)', shape: 'star', endColor: 'rgba(255,230,150,0)'
@@ -364,6 +365,16 @@
       FXCore.emit(s.w * 0.5, s.h * 0.5, 5, {
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(180,220,255,0.6)'
+      });
+      // Nautical ocean burst — sea-foam teal
+      FXCore.emit(s.w * 0.5, s.h * 0.48, count, {
+        spread: 6, rise: 2.5, decay: 0.018, size: 2.5,
+        color: 'rgba(100,200,220,0.7)', endColor: 'rgba(180,240,255,0)'
+      });
+      // Tiny brass sparkles
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 4, {
+        spread: 2, rise: 1, decay: 0.03, size: 1.5,
+        color: 'rgba(255,230,150,0.9)', shape: 'star'
       });
       if (window.FXSound) FXSound.play('chime');
     },
@@ -374,6 +385,12 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(80,100,120,0.4)'
       });
+      // Deeper ocean-dark burst
+      FXCore.emit(s.w * 0.5, s.h * 0.55, 3, {
+        spread: 1.5, rise: -0.2, gravity: 0.03, decay: 0.02, size: 1.8,
+        color: 'rgba(40,60,90,0.5)'
+      });
+      if (FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -387,7 +404,20 @@
           shape: 'star'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['chime','correct','complete'], 100);
+      // Nautical themed celebration — 7 bursts across the ocean
+      var nautColors = ['rgba(100,200,220,0.7)','rgba(180,220,255,0.6)','rgba(196,160,80,0.7)','rgba(90,180,200,0.7)','rgba(220,240,255,0.6)','rgba(138,106,64,0.7)','rgba(100,200,220,0.7)'];
+      for (var j = 0; j < 7; j++) {
+        FXCore.emit(s.w * (0.1 + j * 0.12), s.h * (0.25 + Math.sin(j) * 0.1), 5, {
+          spread: 6, rise: 2.5, decay: 0.012, size: 3.5,
+          color: nautColors[j], shape: j % 2 === 0 ? 'star' : 'circle'
+        });
+      }
+      // Central golden star burst
+      FXCore.emit(s.w * 0.5, s.h * 0.45, 15, {
+        spread: 8, rise: 3, decay: 0.008, size: 5,
+        color: 'rgba(255,215,0,0.8)', shape: 'star', endColor: 'rgba(255,230,150,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };
