@@ -222,6 +222,24 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise nebula texture — organic gas cloud detail
+  function drawNebulaNoiseOverlay() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.025) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H; ny += 16) {
+        var n = FXCore.fbm(nx * 0.004 + t * 0.08, ny * 0.004 + t * 0.04, 3);
+        if (n < -0.1) continue; // skip dark areas for performance
+        var hue = 260 + n * 40;
+        var l = 8 + n * 14;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',50%,' + Math.round(Math.max(2, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawPlanets() {
     var t = time * 0.001;
     for (var i = 0; i < planets.length; i++) {
@@ -310,8 +328,9 @@
     ctx.textBaseline = 'middle';
     for (var i = 0; i < floatingSymbols.length; i++) {
       var s = floatingSymbols[i];
-      s.y -= s.speed * 0.3;
-      s.x += s.drift * 0.2;
+      var nDrift = FXCore.noise2D(s.x * 0.006 + time * 0.0003, s.y * 0.006 + i * 5) * 0.3;
+      s.y -= s.speed * 0.3 + nDrift * 0.15;
+      s.x += s.drift * 0.2 + nDrift;
       s.rotation += s.rotSpeed;
       if (s.y < -s.size * 2) { s.y = H + s.size * 2; s.x = rand(0, W); }
       if (s.x < -30) s.x = W + 30;
@@ -436,6 +455,48 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend glow bloom — nebulae and bright star bleed
+  function drawSpaceGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Nebula bloom — large soft glow at each nebula center
+    for (var i = 0; i < nebulae.length; i++) {
+      var n = nebulae[i];
+      var cx = n.cx + Math.sin(t * n.driftX + n.phase) * 30;
+      var cy = n.cy + Math.cos(t * n.driftY + n.phase) * 20;
+      var bloomR = n.r * (0.6 + progress * 0.3);
+      ctx.globalAlpha = (0.06 + progress * 0.06) * brightness;
+      var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, bloomR);
+      bg.addColorStop(0, n.color + '0.2)');
+      bg.addColorStop(0.4, n.color + '0.06)');
+      bg.addColorStop(1, n.color + '0)');
+      ctx.fillStyle = bg;
+      ctx.fillRect(cx - bloomR, cy - bloomR, bloomR * 2, bloomR * 2);
+    }
+
+    // Planet halos — subtle screen-blend glow around each planet
+    for (var i = 0; i < planets.length; i++) {
+      var p = planets[i];
+      if (p.minProgress && progress < p.minProgress) continue;
+      var px = p.x + Math.sin(t * p.drift * 10) * 15;
+      var py = p.y + Math.sin(t * p.bobSpeed) * p.bobAmp;
+      var haloR = p.r * 3;
+      ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+      var pg = ctx.createRadialGradient(px, py, 0, px, py, haloR);
+      pg.addColorStop(0, p.color1.replace(')', ',0.2)').replace('#', 'rgba('));
+      pg.addColorStop(1, 'rgba(0,0,0,0)');
+      // Use color1 hex as approximate glow
+      ctx.fillStyle = 'rgba(200,200,255,0.08)';
+      ctx.beginPath();
+      ctx.arc(px, py, haloR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SOUND ENGINE ====================
   var audioCtx = null;
 
@@ -526,6 +587,7 @@
 
     // Draw all layers back-to-front
     drawSky();
+    drawNebulaNoiseOverlay();
     drawStars();
     drawNebulae();
     drawConstellations();
@@ -533,6 +595,7 @@
     drawFloatingSymbols();
     drawComets(dt);
     drawTelescope();
+    drawSpaceGlow();
 
     // Particles on top
     updateParticles(dt);
