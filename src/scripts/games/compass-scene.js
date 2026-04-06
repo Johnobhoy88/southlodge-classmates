@@ -61,6 +61,24 @@
     ctx.fillRect(0, 0, W, H);
   }
 
+  // Noise ocean texture — organic sea surface detail
+  function drawOceanNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = 0; ny < H * 0.5; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.1, ny * 0.006 + t * 0.05);
+        var depth = ny / (H * 0.5);
+        var hue = 205 + n * 8;
+        var l = 40 + n * 12 - depth * 8;
+        ctx.fillStyle = 'hsl(' + Math.round(hue) + ',' + Math.round(50 + n * 8) + '%,' + Math.round(Math.max(20, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawHorizon() {
     var hy = H * 0.28;
     ctx.globalAlpha = (0.2 + progress * 0.15) * brightness;
@@ -307,8 +325,9 @@
     for (var i = 0; i < sprayDrops.length; i++) {
       var s = sprayDrops[i];
       s.life -= 0.01;
+      var nWind = FXCore.noise2D(s.x * 0.006 + t * 0.25, s.y * 0.006 + i * 6) * 0.4;
       s.y -= s.speed * 0.3;
-      s.x += Math.sin(t * 2 + s.phase) * 0.5;
+      s.x += Math.sin(t * 2 + s.phase) * 0.5 + nWind;
       if (s.life <= 0) {
         s.x = rand(W * 0.35, W * 0.65);
         s.y = H * 0.45 + rand(-5, 5);
@@ -320,6 +339,35 @@
       ctx.arc(s.x, s.y, s.size * s.life, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend compass glow and ocean shimmer
+  function drawNauticalGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Compass rose brass glow
+    var cx = W * 0.5, cy = H * 0.58;
+    var glowR = Math.min(W, H) * 0.15;
+    var glowAmount = 0.2 + progress * 0.5;
+    ctx.globalAlpha = glowAmount * 0.05 * brightness;
+    var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowR);
+    cg.addColorStop(0, 'rgba(255,215,100,0.15)');
+    cg.addColorStop(0.4, 'rgba(255,200,80,0.05)');
+    cg.addColorStop(1, 'rgba(255,200,80,0)');
+    ctx.fillStyle = cg;
+    ctx.fillRect(cx - glowR, cy - glowR, glowR * 2, glowR * 2);
+
+    // Ocean horizon shimmer — light bloom along horizon
+    ctx.globalAlpha = (0.03 + progress * 0.04) * brightness;
+    var hg = ctx.createLinearGradient(0, H * 0.22, 0, H * 0.38);
+    hg.addColorStop(0, 'rgba(200,230,255,0)');
+    hg.addColorStop(0.4, 'rgba(200,230,255,0.06)');
+    hg.addColorStop(1, 'rgba(200,230,255,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, H * 0.22, W, H * 0.16);
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -339,6 +387,7 @@
     },
     draw: function() {
       drawOcean();
+      drawOceanNoise();
       drawHorizon();
       drawWaves();
       drawSeagulls();
@@ -347,6 +396,7 @@
       drawCompassRose();
       drawSpray();
       drawWheel();
+      drawNauticalGlow();
     },
     exit: function() {}
   };
