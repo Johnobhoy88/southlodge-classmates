@@ -67,6 +67,9 @@
     }));
     storageRemoveItem(stateKey(normalized));
     storageRemoveItem(avatarKey(normalized));
+    var pins = storageGetJson(PIN_KEY, {});
+    delete pins[normalized];
+    storageSetJson(PIN_KEY, pins);
     return pupils;
   }
 
@@ -90,6 +93,48 @@
     return pupilState;
   }
 
+  var PIN_KEY = 'classmates_pins';
+
+  function getPins() {
+    return storageGetJson(PIN_KEY, {});
+  }
+
+  function setPupilPin(name, pin) {
+    var normalized = normalizeName(name);
+    if (!normalized || !/^\d{4}$/.test(pin)) return false;
+    var pins = getPins();
+    pins[normalized] = pin;
+    storageSetJson(PIN_KEY, pins);
+    return true;
+  }
+
+  function getPupilPin(name) {
+    var normalized = normalizeName(name);
+    if (!normalized) return null;
+    var pins = getPins();
+    return pins[normalized] || null;
+  }
+
+  function verifyPupilPin(name, pin) {
+    var stored = getPupilPin(name);
+    return stored !== null && stored === pin;
+  }
+
+  function listPupilsWithPins() {
+    var pins = getPins();
+    return Object.keys(pins).filter(function(name) {
+      return !!pins[name];
+    });
+  }
+
+  function removePupilPin(name) {
+    var normalized = normalizeName(name);
+    if (!normalized) return;
+    var pins = getPins();
+    delete pins[normalized];
+    storageSetJson(PIN_KEY, pins);
+  }
+
   window.ClassmatesPupils = {
     listPupils: listPupils,
     savePupils: savePupils,
@@ -99,6 +144,11 @@
     resetPupilProgress: resetPupilProgress,
     getPupilState: getPupilState,
     savePupilState: savePupilState,
-    getStateKey: stateKey
+    getStateKey: stateKey,
+    setPupilPin: setPupilPin,
+    getPupilPin: getPupilPin,
+    verifyPupilPin: verifyPupilPin,
+    listPupilsWithPins: listPupilsWithPins,
+    removePupilPin: removePupilPin
   };
 })();
