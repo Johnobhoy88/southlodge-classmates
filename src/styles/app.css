@@ -369,8 +369,8 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .landing-btn.btn-staff:hover{background:rgba(255,255,255,0.85);color:#1B5E20;border-color:rgba(46,125,50,0.4)}
 .landing-btn.btn-guest{background:rgba(255,255,255,0.65);color:#636e72;border:2px solid rgba(0,0,0,0.1);box-shadow:0 3px 0 #ccc,0 6px 20px rgba(0,0,0,0.1);font-size:0.95rem;padding:14px 24px;border-radius:14px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .landing-btn.btn-guest:hover{background:rgba(255,255,255,0.85);color:#2d3436;border-color:rgba(0,0,0,0.2);box-shadow:0 3px 0 #ccc,0 10px 30px rgba(0,0,0,0.15);transform:translateY(-2px)}
-.landing-link{background:none;border:none;color:rgba(255,255,255,0.6);font-size:0.8rem;cursor:pointer;text-decoration:underline;font-family:'Nunito','Trebuchet MS',sans-serif;padding:4px 8px;transition:color 0.2s}
-.landing-link:hover{color:rgba(255,255,255,0.9)}
+.landing-link{background:none;border:none;color:rgba(30,80,50,0.55);font-size:0.8rem;cursor:pointer;text-decoration:underline;font-family:'Nunito','Trebuchet MS',sans-serif;padding:4px 8px;transition:color 0.2s;font-weight:600}
+.landing-link:hover{color:rgba(30,80,50,0.85)}
 .landing-footer{margin-top:auto;padding:20px 0;text-align:center;font-size:0.6rem;color:rgba(30,80,50,0.45);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;position:relative;z-index:1}
 .pupil-select{margin:20px auto;max-width:300px}
 .pupil-select-title{font-size:0.85rem;color:#636e72;font-weight:700;margin-bottom:8px}
