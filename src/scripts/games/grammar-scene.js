@@ -130,6 +130,22 @@
     }
   }
 
+  // Noise metal wall texture — organic industrial surface detail
+  function drawMetalNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.02 + progress * 0.015) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H * 0.7; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005 + t * 0.015, ny * 0.005);
+        var l = 42 + n * 8;
+        ctx.fillStyle = 'hsl(210,' + Math.round(6 + n * 3) + '%,' + Math.round(Math.max(25, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawPipes() {
     ctx.globalAlpha = (0.5 + progress * 0.3) * brightness;
     for (var i = 0; i < pipes.length; i++) {
@@ -293,8 +309,9 @@
     for (var i = 0; i < steamPuffs.length; i++) {
       var s = steamPuffs[i];
       if (s.minProgress && progress < s.minProgress) continue;
-      var sx = s.x + Math.sin(t * 0.5 + s.phase) * 8 + s.driftX * t * 15;
-      var sy = s.y + s.driftY * t * 10 + Math.cos(t * 0.3 + s.phase) * 3;
+      var nDrift = FXCore.noise2D(s.x * 0.005 + t * 0.2, s.y * 0.005 + i * 7) * 4;
+      var sx = s.x + Math.sin(t * 0.5 + s.phase) * 8 + s.driftX * t * 15 + nDrift;
+      var sy = s.y + s.driftY * t * 10 + Math.cos(t * 0.3 + s.phase) * 3 + nDrift * 0.3;
       if (sy < -20) sy += H * 0.15;
       ctx.globalAlpha = s.opacity * (0.4 + progress * 0.5) * brightness;
       ctx.fillStyle = 'rgba(200,210,220,0.4)';
@@ -322,6 +339,39 @@
       ctx.fillText(l.text, 0, 0);
       ctx.restore();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend indicator light glow and factory bloom
+  function drawFactoryGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Indicator light bloom — coloured glow from sorting lights
+    for (var i = 0; i < lights.length; i++) {
+      var l = lights[i];
+      var pulse = 0.5 + Math.sin(t * 2 + l.phase) * 0.3;
+      var glowR = l.r * 6;
+      ctx.globalAlpha = pulse * (0.04 + progress * 0.04) * brightness;
+      var lg = ctx.createRadialGradient(l.x, l.y, 0, l.x, l.y, glowR);
+      lg.addColorStop(0, l.type.color.replace(')', ',0.15)').replace('#', 'rgba('));
+      // Use neutral since hex-to-rgba is tricky
+      ctx.fillStyle = 'rgba(200,200,220,0.08)';
+      ctx.beginPath();
+      ctx.arc(l.x, l.y, glowR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Overhead factory ambient — soft industrial light
+    ctx.globalAlpha = (0.03 + progress * 0.03) * brightness;
+    var ag = ctx.createLinearGradient(0, 0, 0, H * 0.5);
+    ag.addColorStop(0, 'rgba(200,210,230,0.08)');
+    ag.addColorStop(0.5, 'rgba(200,210,230,0.03)');
+    ag.addColorStop(1, 'rgba(200,210,230,0)');
+    ctx.fillStyle = ag;
+    ctx.fillRect(0, 0, W, H * 0.5);
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -355,6 +405,7 @@
     },
     draw: function() {
       drawWall();
+      drawMetalNoise();
       drawPipes();
       drawGears();
       drawConveyor();
@@ -363,6 +414,7 @@
       drawLights();
       drawSteam();
       drawFloatingLabels();
+      drawFactoryGlow();
     },
     exit: function() {}
   };
