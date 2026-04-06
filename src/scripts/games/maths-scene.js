@@ -8,7 +8,7 @@
 
   var canvas, ctx, animId, running = false;
   var W = 0, H = 0;
-  var progress = 0, targetProgress = 0, brightness = 0.55;
+  var progress = 0, targetProgress = 0, brightness = 0.75;
   var particles = [];
   var time = 0;
 
@@ -521,7 +521,7 @@
 
     // Smooth progress and brightness
     progress += (targetProgress - progress) * 0.03;
-    var targetBright = 0.55 + progress * 0.45;
+    var targetBright = 0.75 + progress * 0.25;
     brightness += (targetBright - brightness) * 0.02;
 
     // Draw all layers back-to-front
@@ -556,7 +556,7 @@
     running = true;
     targetProgress = 0;
     progress = 0;
-    brightness = 0.55;
+    brightness = 0.75;
     particles = [];
     comets = [];
     nextComet = 5000 + Math.random() * 10000;

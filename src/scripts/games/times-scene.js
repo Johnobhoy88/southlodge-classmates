@@ -7,7 +7,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.45;
+  var progress = 0, targetProgress = 0, brightness = 0.7;
   var time = 0;
   var lightningFlash = 0;
   var nextLightning = 8000;
@@ -288,7 +288,7 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.45;
+      progress = 0; targetProgress = 0; brightness = 0.7;
       lightningFlash = 0; nextLightning = 6000;
       generateScene();
     },
@@ -296,7 +296,7 @@
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.45 + progress * 0.55) - brightness) * 0.02;
+      brightness += ((0.7 + progress * 0.3) - brightness) * 0.02;
       updateLightning(dt);
     },
     draw: function() {
