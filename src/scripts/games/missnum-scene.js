@@ -7,7 +7,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.55;
+  var progress = 0, targetProgress = 0, brightness = 0.75;
   var time = 0;
   var hawkAngle = 0;
 
@@ -323,7 +323,7 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.55;
+      progress = 0; targetProgress = 0; brightness = 0.75;
       hawkAngle = 0;
       generateScene();
     },
@@ -331,7 +331,7 @@
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.55 + progress * 0.45) - brightness) * 0.02;
+      brightness += ((0.75 + progress * 0.25) - brightness) * 0.02;
     },
     draw: function() {
       drawSky();

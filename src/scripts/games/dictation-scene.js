@@ -9,7 +9,7 @@
 
   var canvas, ctx, animId, running = false;
   var W = 0, H = 0;
-  var progress = 0, targetProgress = 0, brightness = 0.5;
+  var progress = 0, targetProgress = 0, brightness = 0.75;
   var particles = [];
   var time = 0;
   var crystalPulse = 0; // spikes when word is spoken
@@ -581,7 +581,7 @@
 
     // Smooth progress and brightness
     progress += (targetProgress - progress) * 0.03;
-    var targetBright = 0.5 + progress * 0.5;
+    var targetBright = 0.75 + progress * 0.25;
     brightness += (targetBright - brightness) * 0.02;
 
     // Decay crystal pulse
@@ -618,7 +618,7 @@
     running = true;
     targetProgress = 0;
     progress = 0;
-    brightness = 0.5;
+    brightness = 0.75;
     crystalPulse = 0;
     particles = [];
     droplets = [];

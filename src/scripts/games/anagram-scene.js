@@ -7,7 +7,7 @@
   // For the kids of South Lodge Primary, Invergordon
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.55;
+  var progress = 0, targetProgress = 0, brightness = 0.75;
   var time = 0;
 
   // Scene elements
@@ -341,7 +341,7 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.55;
+      progress = 0; targetProgress = 0; brightness = 0.75;
       generateScene();
     },
 
@@ -353,7 +353,7 @@
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      var targetBright = 0.55 + progress * 0.45;
+      var targetBright = 0.75 + progress * 0.25;
       brightness += (targetBright - brightness) * 0.02;
     },
 
