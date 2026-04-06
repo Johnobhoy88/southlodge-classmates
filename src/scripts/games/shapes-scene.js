@@ -129,6 +129,22 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise stone wall texture — organic rough masonry
+  function drawStoneNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.015) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 16) {
+      for (var ny = 0; ny < H * 0.75; ny += 16) {
+        var n = FXCore.noise2D(nx * 0.005, ny * 0.005 + t * 0.02);
+        var l = 10 + n * 8;
+        ctx.fillStyle = 'hsl(220,' + Math.round(6 + n * 3) + '%,' + Math.round(Math.max(3, l)) + '%)';
+        ctx.fillRect(nx, ny, 16, 16);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawPillars() {
     ctx.globalAlpha = (0.3 + progress * 0.15) * brightness;
     var pillarColor = 'hsl(220,6%,' + Math.round(18 * brightness) + '%)';
@@ -321,8 +337,9 @@
     var t = time * 0.001;
     for (var i = 0; i < dustMotes.length; i++) {
       var d = dustMotes[i];
-      d.x += d.speedX + Math.sin(t * 0.3 + d.phase) * 0.04;
-      d.y += d.speedY + Math.cos(t * 0.4 + d.phase) * 0.03;
+      var nDrift = FXCore.noise2D(d.x * 0.008 + t * 0.15, d.y * 0.008 + i * 7) * 0.3;
+      d.x += d.speedX + Math.sin(t * 0.3 + d.phase) * 0.04 + nDrift;
+      d.y += d.speedY + Math.cos(t * 0.4 + d.phase) * 0.03 + nDrift * 0.2;
       if (d.x < W * 0.15) d.x = W * 0.85;
       if (d.x > W * 0.85) d.x = W * 0.15;
       if (d.y < H * 0.1) d.y = H * 0.8;
@@ -336,6 +353,39 @@
       ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend stained glass glow — jewel bloom on window and candles
+  function drawCathedralGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Rose window glow — large radial bloom
+    var cx = W * 0.5, cy = H * 0.3;
+    var windowR = Math.min(W, H) * 0.28;
+    var bloomR = windowR * (1.3 + progress * 0.3);
+    ctx.globalAlpha = (0.05 + progress * 0.06) * brightness;
+    var wg = ctx.createRadialGradient(cx, cy, windowR * 0.3, cx, cy, bloomR);
+    wg.addColorStop(0, 'rgba(200,180,255,0.15)');
+    wg.addColorStop(0.4, 'rgba(180,150,220,0.05)');
+    wg.addColorStop(1, 'rgba(150,120,200,0)');
+    ctx.fillStyle = wg;
+    ctx.fillRect(cx - bloomR, cy - bloomR, bloomR * 2, bloomR * 2);
+
+    // Candle glow bloom
+    for (var i = 0; i < candles.length; i++) {
+      var c = candles[i];
+      var flicker = 0.7 + Math.sin(t * 5 + c.phase) * 0.15;
+      ctx.globalAlpha = (0.03 + progress * 0.03) * brightness * flicker;
+      var cg = ctx.createRadialGradient(c.x, c.y - 3, 0, c.x, c.y, 25);
+      cg.addColorStop(0, 'rgba(255,180,80,0.2)');
+      cg.addColorStop(1, 'rgba(255,150,50,0)');
+      ctx.fillStyle = cg;
+      ctx.fillRect(c.x - 25, c.y - 28, 50, 50);
+    }
+
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
   }
 
@@ -354,12 +404,14 @@
     },
     draw: function() {
       drawStoneWalls();
+      drawStoneNoise();
       drawPillars();
       drawWindow();
       drawLightBeams();
       drawFloor();
       drawCandles();
       drawDustMotes();
+      drawCathedralGlow();
     },
     exit: function() {}
   };
