@@ -550,6 +550,24 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .quick-assign-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .quick-assign-row select{width:auto;min-width:160px;font-size:0.8rem;padding:8px}
 
+/* ===== SPELLBOUND FOREST ===== */
+.sf-game-area{position:relative;z-index:2;padding:20px;max-width:500px;margin:0 auto;width:100%}
+.sf-question{background:rgba(10,26,14,0.85);border:2px solid rgba(127,221,106,0.3);border-radius:20px;padding:24px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.sf-prompt{font-family:var(--font-display);font-size:1rem;color:#e8f0e0;text-align:center;margin-bottom:12px;line-height:1.4}
+.sf-display{font-family:var(--font-display);font-size:2rem;color:#7fdd6a;text-align:center;margin:16px 0;letter-spacing:4px;text-shadow:0 0 12px rgba(127,221,106,0.4)}
+.sf-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.sf-opt{padding:14px;border:2px solid rgba(127,221,106,0.25);border-radius:14px;background:rgba(42,90,58,0.4);color:#e8f0e0;font-family:var(--font-display);font-size:1rem;cursor:pointer;transition:all 0.15s;min-height:var(--touch-min)}
+.sf-opt:hover{border-color:rgba(127,221,106,0.6);background:rgba(42,90,58,0.6);transform:translateY(-2px)}
+.sf-opt.sf-correct{border-color:#6aee6a;background:rgba(106,238,106,0.2);color:#6aee6a;animation:sfPulse 0.4s ease}
+.sf-opt.sf-wrong{border-color:#ee6a6a;background:rgba(238,106,106,0.2);color:#ee6a6a}
+@keyframes sfPulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.sf-hint-area{margin-top:12px;padding:12px;background:rgba(106,184,238,0.15);border:1px solid rgba(106,184,238,0.3);border-radius:12px;color:#6ab8ee;font-size:0.85rem;text-align:center}
+.sf-progress-bar{height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin:16px 0 8px;overflow:hidden}
+.sf-progress-fill{height:100%;background:linear-gradient(90deg,#2a7a3a,#7fdd6a);border-radius:3px;transition:width 0.4s ease}
+.sf-stats{display:flex;justify-content:center;gap:16px;font-size:0.78rem;color:rgba(232,240,224,0.6)}
+.sf-stat{font-weight:600}
+.sf-streak-badge{color:#ffd93d;animation:sfPulse 0.5s ease}
+
 /* ===== CFE SECTION (V2) ===== */
 .cfe-grid{display:grid;grid-template-columns:1fr;gap:12px}
 .cfe-desc{color:#86868b;font-size:0.8rem}

@@ -143,6 +143,7 @@
         <div class="subject-card card-reading" onclick="startGame('reading')"><div class="card-icon">Bb</div><div class="card-title">Reading</div><div class="card-desc">Stories &amp; questions</div></div>
         <div class="subject-card card-grammar" onclick="startGame('grammar')"><div class="card-icon">N V</div><div class="card-title">Grammar</div><div class="card-desc">Word types</div></div>
         <div class="subject-card card-rhyme" onclick="startGame('rhyme')"><div class="card-icon">&#x266B;</div><div class="card-title">Rhyming</div><div class="card-desc">Match sounds</div></div>
+        <div class="subject-card card-spellforest" onclick="startGame('spellforest')" style="border-color:#7fdd6a"><div class="card-icon">&#x1F332;</div><div class="card-title">Spellbound Forest</div><div class="card-desc">Grow the enchanted forest!</div></div>
       </div>
     </div>
 
@@ -661,6 +662,19 @@
     </div>
   </div>
   <div class="feedback-overlay" id="ttFeedback"><div class="fb-content" id="ttFeedbackContent"></div></div>
+</div>
+
+<!-- SPELLBOUND FOREST -->
+<div id="spellforest" class="screen game-screen" style="position:relative;overflow:hidden;background:#0b1a2e">
+  <canvas id="sfCanvas" style="position:absolute;inset:0;width:100%;height:100%;z-index:0"></canvas>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh">
+    <div class="game-header" style="border-color:#7fdd6a;background:rgba(10,26,14,0.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)">
+      <button class="nav-btn" onclick="goHome()" title="Back">&larr; Back</button>
+      <button class="nav-btn home-btn" onclick="showScreen('landing')" title="Home">&#x1F3E0; Home</button>
+      <h2 class="game-title" style="color:#7fdd6a">&#x1F332; Spellbound Forest</h2>
+    </div>
+    <div class="sf-game-area" id="sfPanel" style="display:none"></div>
+  </div>
 </div>
 
 <!-- READING -->
