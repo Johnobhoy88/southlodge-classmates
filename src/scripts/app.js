@@ -326,7 +326,7 @@ function finishSpelling(){if(window.ClassmatesSpellingFX){ClassmatesSpellingFX.o
 // ==================== SPELLING PLATFORMER ====================
 var _platformerActive=false;
 function launchSpellingPlatformer(){_platformerActive=true;hide('spellingLevelSelect');hide('spellingGame');if(window.ClassmatesSpellingFX){ClassmatesSpellingFX.stop()}var c=document.getElementById('spellCanvas');if(c){c.style.pointerEvents='auto';c.style.zIndex='10'}if(window.ClassmatesSpellingPlatformer){ClassmatesSpellingPlatformer.init(c);ClassmatesSpellingPlatformer.start()}}
-function stopSpellingPlatformer(){_platformerActive=false;if(window.ClassmatesSpellingPlatformer){ClassmatesSpellingPlatformer.stop()}var c=document.getElementById('spellCanvas');if(c){c.style.pointerEvents='none';c.style.zIndex='0'}show('spellingLevelSelect')}
+function stopSpellingPlatformer(){if(!_platformerActive)return;_platformerActive=false;if(window.ClassmatesSpellingPlatformer){ClassmatesSpellingPlatformer.stop()}var c=document.getElementById('spellCanvas');if(c){c.style.pointerEvents='none';c.style.zIndex='0'}show('spellingLevelSelect')}
 
 // ==================== MATHS ====================
 let ma={level:1,idx:0,total:10,correct:0,answer:'',question:null,streak:0,bestStreak:0};
