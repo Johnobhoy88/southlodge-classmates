@@ -301,6 +301,52 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise cobblestone texture — organic ground surface detail
+  function drawCobbleNoise() {
+    var t = time * 0.001;
+    var groundY = Math.floor(H * 0.63);
+    var noiseAlpha = (0.025 + progress * 0.015) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = groundY; ny < H; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.007, ny * 0.007 + t * 0.015);
+        var depth = (ny - groundY) / (H - groundY);
+        var l = 38 + n * 10 - depth * 6;
+        ctx.fillStyle = 'hsl(' + Math.round(30 + n * 5) + ',' + Math.round(8 + n * 3) + '%,' + Math.round(Math.max(20, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Screen-blend sunlight glow and market warmth
+  function drawMarketGlow() {
+    ctx.globalCompositeOperation = 'screen';
+
+    // Sun bloom — warm morning light
+    var sx = W * 0.8, sy = H * 0.08;
+    var sunR = Math.min(W, H) * (0.2 + progress * 0.1);
+    ctx.globalAlpha = (0.04 + progress * 0.04) * brightness;
+    var sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sunR);
+    sg.addColorStop(0, 'rgba(255,240,180,0.15)');
+    sg.addColorStop(0.3, 'rgba(255,220,120,0.05)');
+    sg.addColorStop(1, 'rgba(255,200,80,0)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(sx - sunR, sy - sunR * 0.5, sunR * 2, sunR * 1.5);
+
+    // Warm market ambient — cheerful glow over stalls area
+    ctx.globalAlpha = (0.02 + progress * 0.03) * brightness;
+    var mg = ctx.createLinearGradient(0, H * 0.3, 0, H * 0.6);
+    mg.addColorStop(0, 'rgba(255,220,150,0.06)');
+    mg.addColorStop(0.5, 'rgba(255,200,120,0.03)');
+    mg.addColorStop(1, 'rgba(255,200,120,0)');
+    ctx.fillStyle = mg;
+    ctx.fillRect(0, H * 0.3, W, H * 0.3);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   function drawCart() {
     var cx = W * 0.85, cy = H * 0.65;
     ctx.globalAlpha = (0.35 + progress * 0.25) * brightness;
@@ -349,8 +395,9 @@
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (var i = 0; i < priceTags.length; i++) {
       var p = priceTags[i];
-      p.y -= p.speed * 0.3;
-      p.x += p.drift * 0.2;
+      var nDrift = FXCore.noise2D(p.x * 0.007 + time * 0.0003, p.y * 0.007 + i * 5) * 0.25;
+      p.y -= p.speed * 0.3 + nDrift * 0.1;
+      p.x += p.drift * 0.2 + nDrift;
       p.rotation += p.rotSpeed;
       if (p.y < H * 0.1) { p.y = H * 0.55; p.x = rand(W * 0.1, W * 0.9); }
       ctx.save();
@@ -383,12 +430,14 @@
       drawClouds();
       drawRooftops();
       drawCobbles();
+      drawCobbleNoise();
       drawStalls();
       drawBunting();
       drawFruit();
       drawCart();
       drawBirds();
       drawPriceTags();
+      drawMarketGlow();
     },
     exit: function() {}
   };
