@@ -1,6 +1,6 @@
 (function(){
   // ============================================================
-  // WORD FOREST PLATFORMER — TICK 7: Audio + HUD + death animation
+  // WORD FOREST PLATFORMER — TICK 8: Final polish — pause, stars, save, back button
   // Mario/Sonic quality platformer with spelling integration.
   // Tile-based levels, proper physics, hand-crafted maps.
   // For the kids of South Lodge Primary, Invergordon
@@ -2389,6 +2389,11 @@
     ctx.beginPath(); ctx.arc(W - 60, H - 50, 34, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#000'; ctx.font = '16px "Fredoka One",cursive';
     ctx.fillText('JUMP', W - 60, H - 44);
+    // Pause button (top-right)
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(W - 38, 62, 10, 18);
+    ctx.fillRect(W - 24, 62, 10, 18);
     ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   }
@@ -2433,27 +2438,151 @@
     ctx.textAlign = 'left';
   }
 
+  // ==================== SAVE / LOAD ====================
+  function saveProgress() {
+    try {
+      var data = {
+        highScore: Math.max(score, loadHighScore()),
+        bestCoins: Math.max(coins, loadBestCoins()),
+        levelsBeaten: Math.max(level, loadLevelsBeaten()),
+        bossBeaten: stage === 'win' && bossArena
+      };
+      localStorage.setItem('classmates_platformer', JSON.stringify(data));
+    } catch(e) {}
+  }
+  function loadHighScore() { try { var d = JSON.parse(localStorage.getItem('classmates_platformer')); return d && d.highScore || 0; } catch(e) { return 0; } }
+  function loadBestCoins() { try { var d = JSON.parse(localStorage.getItem('classmates_platformer')); return d && d.bestCoins || 0; } catch(e) { return 0; } }
+  function loadLevelsBeaten() { try { var d = JSON.parse(localStorage.getItem('classmates_platformer')); return d && d.levelsBeaten || 0; } catch(e) { return 0; } }
+
+  function calcStars() {
+    // 3 stars: beat boss + high coins. 2 stars: beat all levels. 1 star: beat level 1
+    if (bossArena && boss && boss.defeated) return 3;
+    if (level >= 3) return 2;
+    return 1;
+  }
+
+  function drawStar(x, y, r, filled) {
+    ctx.fillStyle = filled ? '#ffd700' : '#444';
+    ctx.beginPath();
+    for (var i = 0; i < 10; i++) {
+      var rad = i % 2 === 0 ? r : r * 0.4;
+      var angle = (i * Math.PI / 5) - Math.PI / 2;
+      if (i === 0) ctx.moveTo(x + Math.cos(angle) * rad, y + Math.sin(angle) * rad);
+      else ctx.lineTo(x + Math.cos(angle) * rad, y + Math.sin(angle) * rad);
+    }
+    ctx.closePath(); ctx.fill();
+    if (filled) {
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.beginPath(); ctx.arc(x - r * 0.15, y - r * 0.2, r * 0.3, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
   function drawWinScreen() {
+    var t = time * 0.001;
     ctx.fillStyle = '#0a1a2a'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#ffd700'; ctx.font = 'bold 32px "Fredoka One",cursive'; ctx.textAlign = 'center';
-    ctx.fillText('YOU WIN!', W / 2, H * 0.28);
-    ctx.fillStyle = '#4ecdc4'; ctx.font = '16px "Fredoka One",cursive';
-    ctx.fillText('The forest is saved!', W / 2, H * 0.4);
-    ctx.fillText('Score: ' + score + '  |  Coins: ' + coins, W / 2, H * 0.52);
-    ctx.fillStyle = '#fff'; ctx.font = '14px "Fredoka One",cursive';
-    ctx.fillText('Tap to play again', W / 2, H * 0.7);
+
+    // Animated confetti in background
+    ctx.globalAlpha = 0.3;
+    for (var i = 0; i < 20; i++) {
+      var cx = ((t * (10 + i * 3) + i * 80) % (W + 40)) - 20;
+      var cy = ((t * (20 + i * 5) + i * 60) % (H + 40)) - 20;
+      ctx.fillStyle = ['#ffd700','#4ecdc4','#e74c3c','#3498db','#2ecc71'][i % 5];
+      ctx.fillRect(cx, cy, 4 + i % 3, 3);
+    }
+    ctx.globalAlpha = 1;
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffd700'; ctx.font = 'bold 30px "Fredoka One",cursive';
+    ctx.fillText('YOU WIN!', W / 2, H * 0.18);
+    ctx.fillStyle = '#4ecdc4'; ctx.font = '15px "Fredoka One",cursive';
+    ctx.fillText('The Word Weaver is defeated!', W / 2, H * 0.27);
+
+    // Stars
+    var stars = calcStars();
+    for (var i = 0; i < 3; i++) {
+      var sx = W / 2 - 50 + i * 50;
+      var bob = Math.sin(t * 2 + i * 0.5) * 3;
+      drawStar(sx, H * 0.36 + bob, i < stars ? 16 : 14, i < stars);
+    }
+
+    // Stats
+    ctx.fillStyle = '#fff'; ctx.font = '13px "Fredoka One",cursive';
+    ctx.fillText('Score: ' + score.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','), W / 2, H * 0.5);
+    ctx.fillText('Coins: ' + coins + '  |  Time: ' + formatTime(), W / 2, H * 0.57);
+    var hs = loadHighScore();
+    if (score > hs) {
+      ctx.fillStyle = '#ffd700'; ctx.font = 'bold 12px "Fredoka One",cursive';
+      ctx.fillText('NEW HIGH SCORE!', W / 2, H * 0.64);
+    } else if (hs > 0) {
+      ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font = '11px "Fredoka One",cursive';
+      ctx.fillText('Best: ' + hs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','), W / 2, H * 0.64);
+    }
+
+    // Buttons
+    drawScreenButton(W / 2, H * 0.78, 'Play Again', '#4ecdc4');
+    drawScreenButton(W / 2, H * 0.9, 'Back to Spelling', '#888');
+
     ctx.textAlign = 'left';
+    saveProgress();
   }
 
   function drawLoseScreen() {
     ctx.fillStyle = '#1a0a0a'; ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = '#e74c3c'; ctx.font = 'bold 32px "Fredoka One",cursive'; ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', W / 2, H * 0.28);
-    ctx.fillStyle = '#fff'; ctx.font = '16px "Fredoka One",cursive';
-    ctx.fillText('Don\'t give up!', W / 2, H * 0.4);
-    ctx.fillText('Score: ' + score, W / 2, H * 0.52);
-    ctx.font = '14px "Fredoka One",cursive';
-    ctx.fillText('Tap to try again', W / 2, H * 0.7);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#e74c3c'; ctx.font = 'bold 30px "Fredoka One",cursive';
+    ctx.fillText('GAME OVER', W / 2, H * 0.2);
+    ctx.fillStyle = '#fff'; ctx.font = '15px "Fredoka One",cursive';
+    ctx.fillText('Don\'t give up!', W / 2, H * 0.32);
+    ctx.fillText('Score: ' + score + '  |  Coins: ' + coins, W / 2, H * 0.42);
+
+    // Encouragement
+    var msgs = ['Every expert was once a beginner!', 'Try again — you\'ll get further!', 'Practice makes perfect!', 'The forest needs you!'];
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '12px "Fredoka One",cursive';
+    ctx.fillText(msgs[Math.floor(time * 0.0001) % msgs.length], W / 2, H * 0.52);
+
+    drawScreenButton(W / 2, H * 0.68, 'Try Again', '#e74c3c');
+    drawScreenButton(W / 2, H * 0.8, 'Back to Spelling', '#888');
+
+    ctx.textAlign = 'left';
+    saveProgress();
+  }
+
+  function drawScreenButton(x, y, text, color) {
+    var bw = 160, bh = 34;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x - bw / 2 + 8, y - bh / 2);
+    ctx.lineTo(x + bw / 2 - 8, y - bh / 2);
+    ctx.quadraticCurveTo(x + bw / 2, y - bh / 2, x + bw / 2, y - bh / 2 + 8);
+    ctx.lineTo(x + bw / 2, y + bh / 2 - 8);
+    ctx.quadraticCurveTo(x + bw / 2, y + bh / 2, x + bw / 2 - 8, y + bh / 2);
+    ctx.lineTo(x - bw / 2 + 8, y + bh / 2);
+    ctx.quadraticCurveTo(x - bw / 2, y + bh / 2, x - bw / 2, y + bh / 2 - 8);
+    ctx.lineTo(x - bw / 2, y - bh / 2 + 8);
+    ctx.quadraticCurveTo(x - bw / 2, y - bh / 2, x - bw / 2 + 8, y - bh / 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '13px "Fredoka One",cursive';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(text, x, y);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  function formatTime() {
+    var elapsed = Math.floor((time - levelStartTime) / 1000);
+    var mins = Math.floor(elapsed / 60);
+    var secs = elapsed % 60;
+    return (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+  }
+
+  // ==================== PAUSE ====================
+  function drawPauseScreen() {
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 28px "Fredoka One",cursive';
+    ctx.fillText('PAUSED', W / 2, H * 0.3);
+    drawScreenButton(W / 2, H * 0.5, 'Resume', '#4ecdc4');
+    drawScreenButton(W / 2, H * 0.62, 'Restart Level', '#f39c12');
+    drawScreenButton(W / 2, H * 0.74, 'Quit to Menu', '#888');
     ctx.textAlign = 'left';
   }
 
@@ -2569,6 +2698,13 @@
     } else if (stage === 'celebration') {
       updateCelebration();
       drawCelebration();
+    } else if (stage === 'paused') {
+      // Draw the level frozen behind the pause overlay
+      drawBackground(); drawTiles(); drawSprings(); drawCollectibles();
+      drawPowerups(); drawFinishFlag(); drawSpellGates(); drawEnemies();
+      if (bossArena && boss) drawBoss();
+      drawPlayer(); drawHUD();
+      drawPauseScreen();
     } else if (stage === 'win') {
       drawWinScreen();
     } else if (stage === 'lose') {
@@ -2591,6 +2727,11 @@
     keys[e.key] = true;
     if (spellActive && /^[a-z]$/i.test(e.key)) pickLetter(e.key.toLowerCase());
     if (e.key === ' ') e.preventDefault();
+    // Pause toggle
+    if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+      if (stage === 'playing') { stage = 'paused'; return; }
+      if (stage === 'paused') { stage = 'playing'; return; }
+    }
   }
   function onKeyUp(e) { keys[e.key] = false; }
 
@@ -2618,11 +2759,18 @@
     var ty = e.changedTouches[0].clientY - rect.top;
 
     if (stage === 'title') {
-      stage = 'playing'; level = 1; score = 0; coins = 0; loadLevel(1);
+      stage = 'playing'; level = 1; score = 0; coins = 0; bossArena = false; loadLevel(1);
       return;
     }
-    if (stage === 'win' || stage === 'lose') {
-      stage = 'title'; return;
+    // Delegate win/lose/pause button taps to onClick logic
+    if (stage === 'win' || stage === 'lose' || stage === 'paused') {
+      onClick({ clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY });
+      return;
+    }
+
+    // Pause button tap (top-right corner)
+    if (stage === 'playing' && tx > W - 50 && ty < 90 && ty > 55) {
+      stage = 'paused'; return;
     }
 
     // Spell prompt letter tap
@@ -2652,19 +2800,46 @@
     }
   }
 
+  function hitButton(tx, ty, btnX, btnY) {
+    return Math.abs(tx - btnX) < 80 && Math.abs(ty - btnY) < 18;
+  }
+
+  function goBackToSpelling() {
+    stop();
+    if (window.stopSpellingPlatformer) stopSpellingPlatformer();
+  }
+
   function onClick(e) {
+    var rect = canvas.getBoundingClientRect();
+    var tx = e.clientX - rect.left;
+    var ty = e.clientY - rect.top;
+
     if (stage === 'title') {
-      stage = 'playing'; level = 1; score = 0; coins = 0; loadLevel(1);
+      stage = 'playing'; level = 1; score = 0; coins = 0; bossArena = false; loadLevel(1);
       return;
     }
-    if (stage === 'win' || stage === 'lose') {
-      stage = 'title'; return;
+
+    if (stage === 'win') {
+      if (hitButton(tx, ty, W / 2, H * 0.78)) { stage = 'title'; return; } // Play again
+      if (hitButton(tx, ty, W / 2, H * 0.9)) { goBackToSpelling(); return; } // Back
+      return;
     }
+
+    if (stage === 'lose') {
+      if (hitButton(tx, ty, W / 2, H * 0.68)) { stage = 'title'; return; } // Try again
+      if (hitButton(tx, ty, W / 2, H * 0.8)) { goBackToSpelling(); return; } // Back
+      return;
+    }
+
+    if (stage === 'paused') {
+      if (hitButton(tx, ty, W / 2, H * 0.5)) { stage = 'playing'; return; } // Resume
+      if (hitButton(tx, ty, W / 2, H * 0.62)) { loadLevel(level); stage = 'playing'; return; } // Restart
+      if (hitButton(tx, ty, W / 2, H * 0.74)) { goBackToSpelling(); return; } // Quit
+      return;
+    }
+
     // Spell prompt click
     if (spellActive && spellChoices.length > 0) {
-      var rect = canvas.getBoundingClientRect();
-      var tx = e.clientX - rect.left;
-      var ty = e.clientY - rect.top;
       var choiceY = H * 0.48;
       var spacing = 70;
       var startX = W / 2 - (spellChoices.length * spacing) / 2 + spacing / 2;
