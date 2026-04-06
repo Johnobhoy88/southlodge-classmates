@@ -111,6 +111,25 @@
     ctx.globalAlpha = 1;
   }
 
+  // Noise ocean texture — organic moonlit water surface
+  function drawOceanNoise() {
+    var t = time * 0.001;
+    var noiseAlpha = (0.025 + progress * 0.02) * brightness;
+    ctx.globalAlpha = noiseAlpha;
+    var oceanY = Math.floor(H * 0.4);
+    var oceanH = Math.floor(H * 0.25);
+    for (var nx = 0; nx < W; nx += 14) {
+      for (var ny = oceanY; ny < oceanY + oceanH; ny += 14) {
+        var n = FXCore.noise2D(nx * 0.006 + t * 0.12, ny * 0.008 + t * 0.06);
+        var depth = (ny - oceanY) / oceanH;
+        var l = 10 + n * 8 + depth * 4;
+        ctx.fillStyle = 'hsl(' + Math.round(210 + n * 10) + ',30%,' + Math.round(Math.max(4, l)) + '%)';
+        ctx.fillRect(nx, ny, 14, 14);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawShip() {
     var sx = W * 0.65, sy = H * 0.38;
     var t = time * 0.001;
@@ -292,7 +311,8 @@
     var t = time * 0.001;
     for (var i = 0; i < palms.length; i++) {
       var p = palms[i];
-      var sway = Math.sin(t * p.sway + p.phase) * 4;
+      var nWind = FXCore.noise2D(p.x * 0.005 + t * 0.2, t * 0.1 + i * 10) * 2;
+      var sway = Math.sin(t * p.sway + p.phase) * 4 + nWind;
       ctx.globalAlpha = (0.4 + progress * 0.25) * brightness;
 
       // Trunk — curved
@@ -350,6 +370,37 @@
     ctx.globalAlpha = 1;
   }
 
+  // Screen-blend moonlight and treasure glow bloom
+  function drawCoveGlow() {
+    var t = time * 0.001;
+    ctx.globalCompositeOperation = 'screen';
+
+    // Moonlight bloom — silver-blue from moon position
+    var mx = W * 0.75, my = H * 0.1;
+    var moonR = Math.min(W, H) * (0.25 + progress * 0.1);
+    ctx.globalAlpha = (0.05 + progress * 0.04) * brightness;
+    var mg = ctx.createRadialGradient(mx, my, 0, mx, my, moonR);
+    mg.addColorStop(0, 'rgba(200,220,255,0.15)');
+    mg.addColorStop(0.3, 'rgba(180,200,240,0.06)');
+    mg.addColorStop(1, 'rgba(180,200,240,0)');
+    ctx.fillStyle = mg;
+    ctx.fillRect(mx - moonR, my - moonR * 0.5, moonR * 2, moonR * 1.5);
+
+    // Treasure chest gold glow
+    var cx = W * 0.5, cy = H * 0.72;
+    var glowInt = 0.4 + progress * 0.5 + Math.sin(t * 1.5) * 0.1;
+    ctx.globalAlpha = glowInt * 0.06 * brightness;
+    var tg = ctx.createRadialGradient(cx, cy - 5, 0, cx, cy, 45);
+    tg.addColorStop(0, 'rgba(255,200,50,0.2)');
+    tg.addColorStop(0.5, 'rgba(255,180,30,0.06)');
+    tg.addColorStop(1, 'rgba(255,180,30,0)');
+    ctx.fillStyle = tg;
+    ctx.fillRect(cx - 45, cy - 50, 90, 90);
+
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+  }
+
   // ==================== SCENE INTERFACE ====================
   var scene = {
     enter: function(canvas, context, w, h) {
@@ -368,6 +419,7 @@
       drawMoon();
       drawStars();
       drawOcean();
+      drawOceanNoise();
       drawShip();
       drawCliffs();
       drawBeach();
@@ -375,6 +427,7 @@
       drawRowboat();
       drawPalms();
       drawCoinSparkles();
+      drawCoveGlow();
     },
     exit: function() {}
   };
