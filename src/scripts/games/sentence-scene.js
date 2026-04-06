@@ -6,7 +6,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.55;
+  var progress = 0, targetProgress = 0, brightness = 0.75;
   var time = 0;
 
   var clouds = [];
@@ -343,14 +343,14 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.55;
+      progress = 0; targetProgress = 0; brightness = 0.75;
       generateScene();
     },
     resize: function(w, h) { W = w; H = h; generateScene(); },
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.55 + progress * 0.45) - brightness) * 0.02;
+      brightness += ((0.75 + progress * 0.25) - brightness) * 0.02;
     },
     draw: function() {
       drawSky();
@@ -375,6 +375,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('sentence')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       // Steam burst — white puffs
       FXCore.emit(s.w * 0.5, s.h * 0.4, 8, {
         spread: 5, rise: 2, decay: 0.02, size: 4,
@@ -383,6 +384,16 @@
       FXCore.emit(s.w * 0.5, s.h * 0.4, 5, {
         spread: 3, rise: 1.5, decay: 0.025, size: 2,
         color: 'rgba(76,175,80,0.7)', shape: 'star'
+      });
+      // Highland green pine burst
+      FXCore.emit(s.w * 0.5, s.h * 0.42, count, {
+        spread: 6, rise: 1.8, decay: 0.018, size: 3,
+        color: 'rgba(60,140,70,0.7)', endColor: 'rgba(120,180,130,0)'
+      });
+      // Tiny sparkles
+      FXCore.emit(s.w * 0.5, s.h * 0.38, 4, {
+        spread: 2, rise: 2.5, decay: 0.03, size: 1.5,
+        color: 'rgba(255,255,230,0.9)', shape: 'star'
       });
       if (window.FXSound) FXSound.play('pop');
     },
@@ -393,6 +404,12 @@
         spread: 2, rise: -0.2, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(100,100,120,0.4)'
       });
+      // Darker soot burst
+      FXCore.emit(s.w * 0.5, s.h * 0.52, 3, {
+        spread: 1.5, rise: -0.3, gravity: 0.03, decay: 0.02, size: 2.5,
+        color: 'rgba(60,55,50,0.5)'
+      });
+      if(FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -406,7 +423,20 @@
           color: 'rgba(220,230,240,0.7)', endColor: 'rgba(255,255,255,0)'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['pop','correct','complete'], 100);
+      // Highland themed bursts across the scene
+      var railColors = ['rgba(76,175,80,0.7)','rgba(60,140,70,0.7)','rgba(90,200,100,0.6)','rgba(93,64,55,0.6)','rgba(100,180,110,0.7)','rgba(120,200,140,0.6)','rgba(80,160,90,0.65)','rgba(70,150,80,0.7)'];
+      for (var j = 0; j < 8; j++) {
+        FXCore.emit(s.w * (0.1 + j * 0.1), s.h * (0.25 + (j % 3) * 0.08), 5, {
+          spread: 5, rise: 2.5, decay: 0.01, size: 4,
+          color: railColors[j], shape: j % 2 === 0 ? 'star' : 'circle'
+        });
+      }
+      // Central golden star burst
+      FXCore.emit(s.w * 0.5, s.h * 0.35, 15, {
+        spread: 8, rise: 3, decay: 0.008, size: 5,
+        color: 'rgba(255,215,0,0.8)', shape: 'star'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };

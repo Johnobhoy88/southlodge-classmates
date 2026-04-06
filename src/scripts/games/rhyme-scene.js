@@ -7,7 +7,7 @@
   // Built on FXCore shared modules.
   // ============================================================
 
-  var progress = 0, targetProgress = 0, brightness = 0.55;
+  var progress = 0, targetProgress = 0, brightness = 0.75;
   var time = 0;
   var ballerinaAngle = 0;
 
@@ -337,7 +337,7 @@
   var scene = {
     enter: function(canvas, context, w, h) {
       ctx = context; W = w; H = h;
-      progress = 0; targetProgress = 0; brightness = 0.55;
+      progress = 0; targetProgress = 0; brightness = 0.75;
       ballerinaAngle = 0;
       generateScene();
     },
@@ -345,7 +345,7 @@
     update: function(dt, t) {
       time = t;
       progress += (targetProgress - progress) * 0.03;
-      brightness += ((0.55 + progress * 0.45) - brightness) * 0.02;
+      brightness += ((0.75 + progress * 0.25) - brightness) * 0.02;
     },
     draw: function() {
       drawBackground();
@@ -366,6 +366,7 @@
     onCorrect: function(idx) {
       if (!window.FXCore || !FXCore.isActive('rhyme')) return;
       var s = FXCore.getSize();
+      var count = 8 + Math.floor(progress * 8);
       FXCore.emit(s.w * 0.5, s.h * 0.45, 10, {
         spread: 4, rise: 2, decay: 0.018, size: 2.5,
         color: 'rgba(255,215,0,0.8)', shape: 'diamond', endColor: 'rgba(255,240,200,0)'
@@ -373,6 +374,16 @@
       FXCore.emit(s.w * 0.5, s.h * 0.45, 6, {
         spread: 3, rise: 1.5, decay: 0.022, size: 2,
         color: 'rgba(240,192,208,0.6)'
+      });
+      // Music box rose-pink burst
+      FXCore.emit(s.w * 0.5, s.h * 0.43, count, {
+        spread: 5, rise: 2.2, decay: 0.02, size: 2,
+        color: 'rgba(248,224,234,0.7)', shape: 'diamond', endColor: 'rgba(240,192,208,0)'
+      });
+      // Tiny golden sparkles like music box glitter
+      FXCore.emit(s.w * 0.5, s.h * 0.45, 4, {
+        spread: 2, rise: 1.2, decay: 0.028, size: 1.5,
+        color: 'rgba(201,168,76,0.9)', shape: 'diamond'
       });
       if (window.FXSound) FXSound.play('chime');
     },
@@ -383,6 +394,12 @@
         spread: 2, rise: -0.1, gravity: 0.02, decay: 0.015, size: 2,
         color: 'rgba(100,60,80,0.4)'
       });
+      // Deeper velvet-dark burst
+      FXCore.emit(s.w * 0.5, s.h * 0.5, 3, {
+        spread: 1.5, rise: -0.15, gravity: 0.025, decay: 0.02, size: 1.8,
+        color: 'rgba(58,31,10,0.5)'
+      });
+      if (FXCore.shake) FXCore.shake(3, 150);
       if (window.FXSound) FXSound.play('wrongGentle');
     },
     onComplete: function() {
@@ -395,7 +412,20 @@
           spread: 5, rise: 2.5, decay: 0.012, size: 3, color: colors[i], shape: 'diamond'
         });
       }
-      if (window.FXSound) FXSound.playSequence(['chime','chime','complete'], 100);
+      // Music box celebration — 8 bursts of lavender, rose, and gold
+      var boxColors = ['rgba(240,192,208,0.7)','rgba(201,168,76,0.7)','rgba(248,224,234,0.6)','rgba(255,215,0,0.7)','rgba(139,42,58,0.5)','rgba(255,223,128,0.7)','rgba(240,192,208,0.6)','rgba(201,168,76,0.7)'];
+      for (var j = 0; j < 8; j++) {
+        FXCore.emit(s.w * (0.08 + j * 0.11), s.h * (0.2 + Math.sin(j * 0.8) * 0.15), 5, {
+          spread: 5, rise: 2, decay: 0.013, size: 3,
+          color: boxColors[j], shape: 'diamond'
+        });
+      }
+      // Central golden star burst
+      FXCore.emit(s.w * 0.5, s.h * 0.4, 15, {
+        spread: 8, rise: 3, decay: 0.008, size: 5,
+        color: 'rgba(255,215,0,0.8)', shape: 'star', endColor: 'rgba(255,240,200,0)'
+      });
+      if (window.FXSound) FXSound.playSequence(['correct','streak','complete'], 100);
     },
     setProgress: function(pct) { targetProgress = Math.max(0, Math.min(1, pct || 0)); }
   };
