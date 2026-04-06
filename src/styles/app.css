@@ -511,19 +511,49 @@ body.dyslexia-mode .story-text{background:#fdf6e3!important;font-size:1.1rem!imp
 .welcome-status{margin-top:10px;font-size:0.82rem;color:#86868b;line-height:1.5}
 .welcome-status strong{color:#1d1d1f;font-weight:800}
 
-/* ===== ATTENTION PANEL ===== */
-.attention-panel{border-left:3px solid #ff9500}
-.attention-panel h3{color:#1d1d1f}
+/* ===== ATTENTION PANEL (V2 — Intervention-first) ===== */
+.attention-panel{border-left:4px solid #ff3b30;border-radius:16px;background:linear-gradient(135deg,#fff5f5,#fff);animation:attentionSlide 0.3s ease}
+@keyframes attentionSlide{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.attention-header{display:flex;align-items:center;gap:10px}
+.attention-panel h3{color:#1d1d1f;margin:0}
+.attention-badge{background:#ff3b30;color:#fff;font-size:0.7rem;font-weight:800;padding:2px 8px;border-radius:980px;min-width:20px;text-align:center}
 .attention-item{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
 .attention-item:last-child{border-bottom:none}
 .attention-name{font-weight:800;color:#1d1d1f;font-size:0.88rem}
 .attention-reason{font-size:0.78rem;color:#86868b;margin-top:2px}
-.attention-action{font-size:0.75rem;color:#11998e;font-weight:700;white-space:nowrap;cursor:pointer;padding:6px 14px;background:rgba(17,153,142,0.08);border-radius:980px;border:none;transition:background 0.15s}
-.attention-action:hover{background:rgba(17,153,142,0.14)}
+.attention-action{font-size:0.75rem;color:#fff;font-weight:700;white-space:nowrap;cursor:pointer;padding:7px 16px;background:#11998e;border-radius:980px;border:none;transition:all 0.15s;box-shadow:0 2px 4px rgba(17,153,142,0.2)}
+.attention-action:hover{background:#0e7a6e;transform:translateY(-1px);box-shadow:0 3px 8px rgba(17,153,142,0.3)}
 .attention-clear{padding:16px 0;text-align:center;color:#86868b;font-size:0.82rem;font-weight:600}
 .overview-alert{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;padding:14px 18px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .overview-panel{background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .overview-panel-title{font-size:0.72rem;font-weight:800;color:#86868b;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px}
+
+/* ===== OVERVIEW STAT GRID (V2) ===== */
+.overview-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+@media(max-width:700px){.overview-stat-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== SKILL GAP BARS ===== */
+.skill-gap-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04)}
+.skill-gap-row:last-child{border-bottom:none}
+.skill-gap-label{width:80px;font-size:0.78rem;font-weight:700;color:#1d1d1f;text-align:right;flex-shrink:0}
+.skill-gap-bar{flex:1;height:20px;background:#f0f0f0;border-radius:10px;overflow:hidden;position:relative}
+.skill-gap-fill{height:100%;border-radius:10px;transition:width 0.6s ease;min-width:2px}
+.skill-gap-pct{width:40px;font-size:0.75rem;font-weight:700;text-align:right;flex-shrink:0}
+
+/* ===== QUICK ACTIONS GRID (V2) ===== */
+.quick-actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+@media(max-width:600px){.quick-actions-grid{grid-template-columns:repeat(2,1fr)}}
+.quick-action-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;cursor:pointer;transition:all 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.quick-action-card:hover{border-color:var(--color-primary);background:rgba(17,153,142,0.03);transform:translateY(-2px);box-shadow:0 4px 12px rgba(17,153,142,0.12)}
+.qa-icon{font-size:1.4rem;font-weight:800;color:var(--color-primary);font-family:var(--font-display)}
+.qa-label{font-size:0.72rem;font-weight:700;color:#1d1d1f;text-align:center}
+.quick-assign-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.quick-assign-row select{width:auto;min-width:160px;font-size:0.8rem;padding:8px}
+
+/* ===== CFE SECTION (V2) ===== */
+.cfe-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.cfe-desc{color:#86868b;font-size:0.8rem}
+.cfe-footer{margin-top:14px;font-size:0.78rem;color:#86868b}
 
 /* ===== PUPIL DETAIL PANEL ===== */
 .detail-block{margin-top:18px}

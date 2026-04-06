@@ -278,21 +278,49 @@
         </div>
         <div class="welcome-status" id="welcomeStatus"></div>
       </div>
-      <div id="classSummary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px"></div>
+
+      <!-- INTERVENTION-FIRST: Who needs help comes first -->
       <div class="teacher-section attention-panel" id="attentionPanel" style="display:none">
-        <h3>Needs Attention</h3>
+        <div class="attention-header">
+          <h3>Who Needs Help</h3>
+          <span class="attention-badge" id="attentionCount"></span>
+        </div>
         <div id="attentionList"></div>
       </div>
+
+      <!-- Skill gap overview — dynamically rendered -->
+      <div class="teacher-section" id="skillGapSection" style="display:none">
+        <h3>Class Skill Gaps</h3>
+        <div id="skillGapBars"></div>
+      </div>
+
+      <!-- Class summary stats -->
+      <div id="classSummary" class="overview-stat-grid"></div>
+
+      <!-- Quick Actions -->
       <div class="teacher-section">
         <h3>Quick Actions</h3>
-        <div class="actions-row">
-          <button class="teacher-btn teal" onclick="launchWhiteboard()" title="Project maths questions on the classroom screen for whole-class practice">Whole-Class Mode</button>
-          <button class="teacher-btn teal" onclick="generateWorksheet()" title="Generate a printable maths and spelling worksheet with answer key">Generate Worksheet</button>
-          <button class="teacher-btn outline" onclick="showTeacherTab('progress',document.querySelectorAll('.teacher-tab')[2])" title="Jump to the full class progress table with sortable columns">View Progress</button>
+        <div class="quick-actions-grid">
+          <div class="quick-action-card" onclick="quickAssignFromOverview('spelling')" title="Assign spelling to the class">
+            <div class="qa-icon">Aa</div>
+            <div class="qa-label">Assign Spelling</div>
+          </div>
+          <div class="quick-action-card" onclick="quickAssignFromOverview('maths')" title="Assign maths to the class">
+            <div class="qa-icon">1+2</div>
+            <div class="qa-label">Assign Maths</div>
+          </div>
+          <div class="quick-action-card" onclick="quickAssignFromOverview('hdash')" title="Assign Southlodge Racers">
+            <div class="qa-icon" style="font-size:1.2rem">&#x1F3CE;</div>
+            <div class="qa-label">Assign Racers</div>
+          </div>
+          <div class="quick-action-card" onclick="launchWhiteboard()" title="Whole-class whiteboard mode">
+            <div class="qa-icon" style="font-size:1.2rem">&#x1F4FA;</div>
+            <div class="qa-label">Whole Class</div>
+          </div>
         </div>
-        <div style="margin-top:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <select id="quickAssignGame" class="teacher-input" style="width:auto;min-width:160px;font-size:0.8rem;padding:8px" title="Choose a game to assign to the whole class">
-            <option value="">Set assignment...</option>
+        <div class="quick-assign-row">
+          <select id="quickAssignGame" class="teacher-input" title="Choose a game to assign to the whole class">
+            <option value="">More assignments...</option>
             <option value="spelling">Spelling</option>
             <option value="maths">Maths</option>
             <option value="times">Times Tables</option>
@@ -300,25 +328,34 @@
             <option value="hdash">Southlodge Racers</option>
             <option value="daily">Daily Challenge</option>
             <option value="phonics">Phonics</option>
+            <option value="bonds">Number Bonds</option>
+            <option value="fractions">Fractions</option>
+            <option value="vocab">Vocabulary</option>
           </select>
-          <button class="teacher-btn teal" style="font-size:0.8rem" onclick="quickAssign()" title="Set this as the current class assignment — appears on every pupil's home screen">Assign</button>
+          <button class="teacher-btn teal" onclick="quickAssign()" title="Set this as the current class assignment">Assign</button>
           <span id="quickAssignStatus" style="font-size:0.75rem;color:#86868b"></span>
         </div>
-        <div style="margin-top:14px">
-          <button class="teacher-btn outline" style="font-size:0.8rem" onclick="generateInterventionPlaylist()" title="Analyse mastery data and suggest targeted activities for pupils who need extra support">Generate Intervention Playlist</button>
-          <div id="interventionPlaylist" style="display:none;margin-top:10px"></div>
+      </div>
+
+      <!-- Reports quick access -->
+      <div class="teacher-section">
+        <h3>Reports</h3>
+        <div class="actions-row">
+          <button class="teacher-btn outline" onclick="showTeacherTab('progress',document.querySelectorAll('.teacher-tab')[2])" title="View full progress table">Progress Table</button>
+          <button class="teacher-btn outline" onclick="generateWorksheet()" title="Generate a printable worksheet">Print Worksheet</button>
+          <button class="teacher-btn outline" onclick="exportCSV()" title="Download class data as CSV">Export CSV</button>
         </div>
       </div>
-      <div class="teacher-section">
+
+      <!-- Curriculum alignment -->
+      <div class="teacher-section cfe-section">
         <h3>Curriculum Alignment</h3>
-        <div style="font-size:0.85rem;color:#1d1d1f;line-height:1.8">
-          <div style="display:grid;grid-template-columns:1fr;gap:12px">
-            <div class="cfe-level-card" title="P1 pupils (ages 5-6) — foundational literacy and numeracy skills"><div class="cfe-dot" style="background:#f5a623"></div><strong>Level 1 — Early (P1, Ages 5-6)</strong><br><span style="color:#86868b">Short words, counting to 20, simple addition/subtraction, basic reading</span></div>
-            <div class="cfe-level-card" title="P2-P4 pupils (ages 6-8) — building fluency and comprehension"><div class="cfe-dot" style="background:#007aff"></div><strong>Level 2 — First (P2-P4, Ages 6-8)</strong><br><span style="color:#86868b">Longer words, place value, multiplication introduction, paragraph comprehension</span></div>
-            <div class="cfe-level-card" title="P5-P7 pupils (ages 8-10) — complex problem-solving and rich texts"><div class="cfe-dot" style="background:#ff6b4a"></div><strong>Level 3 — Second (P5-P7, Ages 8-10)</strong><br><span style="color:#86868b">Complex spelling, all four operations, fractions, rich comprehension texts</span></div>
-          </div>
-          <p style="margin-top:14px;font-size:0.78rem;color:#86868b">Aligned to Scottish Curriculum for Excellence — Literacy &amp; English and Numeracy &amp; Mathematics.</p>
+        <div class="cfe-grid">
+          <div class="cfe-level-card" title="P1 pupils (ages 5-6)"><div class="cfe-dot" style="background:#f5a623"></div><strong>Level 1 — Early (P1)</strong><br><span class="cfe-desc">Short words, counting, simple operations, basic reading</span></div>
+          <div class="cfe-level-card" title="P2-P4 pupils (ages 6-8)"><div class="cfe-dot" style="background:#007aff"></div><strong>Level 2 — First (P2-P4)</strong><br><span class="cfe-desc">Longer words, place value, multiplication, comprehension</span></div>
+          <div class="cfe-level-card" title="P5-P7 pupils (ages 8-10)"><div class="cfe-dot" style="background:#ff6b4a"></div><strong>Level 3 — Second (P5-P7)</strong><br><span class="cfe-desc">Complex spelling, all operations, fractions, rich texts</span></div>
         </div>
+        <p class="cfe-footer">Aligned to Scottish Curriculum for Excellence — Literacy &amp; English and Numeracy &amp; Mathematics.</p>
       </div>
     </div>
 
